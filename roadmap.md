@@ -1,5 +1,10 @@
 # Roadmap
 
+## Remix setup
+- [x] Verify copied Drizzle migrations were cleared and the new migration journal is empty and valid.
+- [ ] Replace the 37 requested secret values — secure replacement form was declined; waiting for user submission.
+- [ ] Replace remaining legacy email calls with managed feature-specific sending — waiting for the user to configure an owned sender domain.
+
 ## Done
 - [x] Make cart "Pay Selected / Checkout Now" button visually clickable (`.btn-glow` CSS + button markup in CartDrawer.tsx).
 - [x] Support agent memory: update `ai-support-chat` system prompt to physical furniture business; deployed.
