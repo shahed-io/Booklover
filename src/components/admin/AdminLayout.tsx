@@ -1,0 +1,686 @@
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import BrandLogo from '@/components/store/BrandLogo';
+import logoIcon from '@/assets/logo-icon.webp';
+import { NavLink, useLocation, Outlet } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { Navigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useAdminPrefetch, prefetchAdminRoute } from '@/hooks/useAdminPrefetch';
+import AdminCommandPalette from '@/components/admin/AdminCommandPalette';
+import AdminScrollController from '@/components/admin/AdminScrollController';
+import { useAdminCopyAnywhere } from '@/hooks/useAdminCopyAnywhere';
+import AdminHeroHeader from '@/components/admin/AdminHeroHeader';
+import { useAdmin2FA, getStoredToken, setStoredToken } from '@/hooks/useAdmin2FA';
+
+import {
+  LayoutDashboard, Package, ShoppingCart, Users, Settings,
+  LogOut, Menu, X, Bell, Search, ChevronDown, ChevronRight,
+  Grid3X3, Percent, FileText, CreditCard, Headphones, TrendingUp, Receipt,
+  Megaphone, Shield, Database, Gift, BookOpen, HelpCircle, Globe, Layout, FolderDown,
+  Bot, KeyRound, Star, BarChart2,
+  ImageIcon, ImageOff, ArrowLeftRight, Wallet, Sliders, Flame, Mail, Facebook, Layers, ShieldCheck, MessageCircle, Brain, AlertTriangle, Palette, Sparkles, Activity, Network, Trophy,
+  ShoppingCart as ShopIcon, CreditCard as CreditIcon,
+  ShoppingBag,
+  Wrench,
+} from 'lucide-react';
+
+
+interface AdminNotif {
+  id: string;
+  type: 'order' | 'payment' | 'ticket' | 'stock';
+  title: string;
+  message: string;
+  time: string;
+  link?: string;
+}
+
+type MenuItem = { icon: any; label: string; path: string; badge?: 'live' | 'new' };
+type MenuSection = { title: string; items: MenuItem[] };
+
+// ─── Premium per-item color palette (filled gradient chips) ───
+const ITEM_PALETTE: Array<[string, string]> = [
+  ['262 83% 62%', '252 83% 70%'], // violet
+  ['158 70% 45%', '160 70% 38%'], // emerald
+  ['28 92% 56%',  '20 92% 52%'],  // orange
+  ['330 82% 60%', '316 82% 60%'], // pink
+  ['0 78% 60%',   '350 80% 55%'], // red
+  ['38 92% 52%',  '30 92% 50%'],  // gold
+  ['142 70% 42%', '152 70% 38%'], // green
+  ['199 88% 50%', '188 88% 46%'], // sky
+  ['258 78% 58%', '268 78% 60%'], // indigo
+  ['172 80% 40%', '182 80% 38%'], // teal
+  ['12 88% 58%',  '22 88% 56%'],  // coral
+  ['286 75% 58%', '296 75% 56%'], // fuchsia
+];
+function getItemAccent(path: string): { from: string; to: string } {
+  let h = 0;
+  for (let i = 0; i < path.length; i++) h = (h * 31 + path.charCodeAt(i)) >>> 0;
+  const [from, to] = ITEM_PALETTE[h % ITEM_PALETTE.length];
+  return { from, to };
+}
+
+// ─── Grouped sidebar — clear sections instead of one long flat list ───
+const MENU_SECTIONS: MenuSection[] = [
+  {
+    title: 'Overview',
+    items: [
+      { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+    ],
+  },
+  {
+    title: 'Sales',
+    items: [
+      { icon: ShoppingCart, label: 'Orders', path: '/admin/orders', badge: 'live' },
+      { icon: ShopIcon, label: 'Abandoned Checkouts', path: '/admin/abandoned-checkouts', badge: 'new' },
+      { icon: ShoppingCart, label: 'Quick Sale', path: '/admin/quick-sale' },
+      { icon: CreditCard, label: 'Payment Links', path: '/admin/payment-links', badge: 'new' },
+      { icon: FileText, label: 'Invoice Generator', path: '/admin/invoices' },
+      { icon: Palette, label: 'Invoice Design', path: '/admin/invoice-design', badge: 'new' },
+      { icon: CreditCard, label: 'Payments', path: '/admin/payments' },
+      { icon: ShoppingCart, label: 'Checkout Settings', path: '/admin/checkout-settings', badge: 'new' },
+      { icon: CreditCard, label: 'bKash PGW', path: '/admin/bkash-pgw', badge: 'new' },
+      { icon: CreditCard, label: 'SSLCommerz PGW', path: '/admin/sslcommerz-pgw', badge: 'new' },
+      { icon: CreditCard, label: 'EPS Gateway', path: '/admin/eps-gateway', badge: 'new' },
+      { icon: Receipt, label: 'bKash Transactions', path: '/admin/bkash-transactions', badge: 'new' },
+      { icon: CreditCard, label: 'Uddoktapay PGW', path: '/admin/uddoktapay-pgw', badge: 'new' },
+    ],
+  },
+  {
+    title: 'Catalog',
+    items: [
+      { icon: Package, label: 'Products', path: '/admin/products' },
+      { icon: Grid3X3, label: 'Categories', path: '/admin/categories' },
+      { icon: Sliders, label: 'Attributes', path: '/admin/attributes' },
+      { icon: AlertTriangle, label: 'Inventory Alerts', path: '/admin/inventory-alerts' },
+      { icon: ArrowLeftRight, label: 'Import / Export', path: '/admin/import-export' },
+      { icon: Star, label: 'Product Reviews', path: '/admin/product-reviews' },
+    ],
+  },
+  {
+    title: 'Customers',
+    items: [
+      { icon: Users, label: 'All Customers', path: '/admin/customers' },
+      { icon: Wallet, label: 'Wallet', path: '/admin/wallet' },
+      { icon: Headphones, label: 'Support Tickets', path: '/admin/tickets' },
+      { icon: MessageCircle, label: 'Live Chat', path: '/admin/live-chat' },
+      { icon: Mail, label: 'Newsletter', path: '/admin/newsletter' },
+      { icon: Activity, label: 'Email Dashboard', path: '/admin/email-dashboard', badge: 'new' },
+    ],
+  },
+  {
+    title: 'Storefront',
+    items: [
+      { icon: Sliders, label: 'Hero Banner', path: '/admin/hero-banner' },
+      { icon: Flame, label: 'Flash Sale', path: '/admin/flash-sale' },
+      { icon: Star, label: 'Testimonials', path: '/admin/testimonials' },
+      { icon: Megaphone, label: 'Announcement Bar', path: '/admin/announcement-bar' },
+      { icon: Layers, label: 'Popup Banner', path: '/admin/popup-banner' },
+      { icon: Megaphone, label: 'Notices', path: '/admin/notices', badge: 'new' },
+      { icon: Layout, label: 'Pages', path: '/admin/pages' },
+      { icon: Layout, label: 'Footer Settings', path: '/admin/footer-settings' },
+      { icon: FileText, label: 'Text Manager', path: '/admin/text-manager' },
+      { icon: Palette, label: 'Themes', path: '/admin/themes' },
+      { icon: Star, label: 'Customer Reviews', path: '/admin/customer-reviews', badge: 'new' },
+    ],
+  },
+  {
+    title: 'Marketing',
+    items: [
+      { icon: Percent, label: 'Coupons', path: '/admin/coupons' },
+      
+      
+      { icon: Gift, label: 'Referrals', path: '/admin/referrals' },
+      { icon: TrendingUp, label: 'Affiliates', path: '/admin/affiliates' },
+      { icon: Megaphone, label: 'Marketing Hub', path: '/admin/marketing' },
+      { icon: Facebook, label: 'Facebook Pixel', path: '/admin/facebook-pixel' },
+      { icon: Users, label: 'FB Custom Audiences', path: '/admin/custom-audiences' },
+      { icon: BarChart2, label: 'Google Ads', path: '/admin/google-ads' },
+      { icon: Megaphone, label: 'Other Pixels', path: '/admin/marketing-pixels' },
+    ],
+  },
+  {
+    title: 'Content & SEO',
+    items: [
+      { icon: BookOpen, label: 'Blog', path: '/admin/blog' },
+      { icon: Sparkles, label: 'AI Blog Topics', path: '/admin/blog/ai-topics', badge: 'new' },
+      { icon: Network, label: 'Topical Authority', path: '/admin/blog/topical-authority', badge: 'new' },
+      { icon: HelpCircle, label: 'Help Center', path: '/admin/help' },
+      { icon: ImageIcon, label: 'Media Library', path: '/admin/media-library' },
+      { icon: Globe, label: 'SEO Manager', path: '/admin/seo' },
+      { icon: FileText, label: 'Product Content (AI)', path: '/admin/seo/product-content', badge: 'new' },
+      { icon: ImageOff, label: 'Image SEO Audit', path: '/admin/seo/image-audit', badge: 'new' },
+      { icon: Activity, label: 'SEO Monitor', path: '/admin/seo-monitor', badge: 'new' },
+      { icon: TrendingUp, label: 'Semrush Rankings', path: '/admin/semrush', badge: 'new' },
+      { icon: Search, label: 'Search Console', path: '/admin/seo/search-console' },
+      { icon: ShoppingBag, label: 'Google Feed', path: '/admin/google-feed', badge: 'new' },
+      { icon: Search, label: 'Google Indexing', path: '/admin/google-indexing', badge: 'new' },
+      { icon: ShieldCheck, label: 'Site Verification', path: '/admin/site-verification' },
+    ],
+  },
+  {
+    title: 'Reports',
+    items: [
+      { icon: TrendingUp, label: 'Analytics & Reports', path: '/admin/reports' },
+    ],
+  },
+  {
+    title: 'Integrations',
+    items: [
+      { icon: Bot, label: 'Telegram Shop Bot', path: '/admin/telegram-bot' },
+    ],
+  },
+  {
+    title: 'AI Tools',
+    items: [
+      { icon: Sparkles, label: 'AI FAQ Generator', path: '/admin/ai-faq-generator', badge: 'new' },
+      { icon: Sparkles, label: 'AI Review Generator', path: '/admin/ai-review-generator', badge: 'new' },
+      { icon: Sparkles, label: 'AI API Config', path: '/admin/ai-config' },
+    ],
+  },
+    {
+    title: 'System',
+    items: [
+      { icon: Users, label: 'Staff Management', path: '/admin/staff' },
+      { icon: Shield, label: 'Admin Roles', path: '/admin/roles' },
+      { icon: ShieldCheck, label: '2FA Security', path: '/admin/security', badge: 'new' },
+      { icon: Shield, label: 'Copy Protection', path: '/admin/copy-protection', badge: 'new' },
+      { icon: Database, label: 'Backup', path: '/admin/backup' },
+      { icon: Settings, label: 'General Settings', path: '/admin/settings' },
+      { icon: Globe, label: 'Multi Currency', path: '/admin/currencies', badge: 'new' },
+      { icon: Wrench, label: 'Maintenance Mode', path: '/admin/maintenance', badge: 'live' },
+    ],
+  },
+];
+
+// Build a flat lookup for the current page title
+const ALL_ITEMS_FLAT = MENU_SECTIONS.flatMap(s => s.items);
+
+const getPageTitle = (pathname: string): { title: string; section: string } => {
+  // longest-prefix match
+  const sorted = [...ALL_ITEMS_FLAT].sort((a, b) => b.path.length - a.path.length);
+  for (const item of sorted) {
+    if (pathname === item.path || pathname.startsWith(item.path + '/')) {
+      const section = MENU_SECTIONS.find(s => s.items.some(i => i.path === item.path))?.title || '';
+      return { title: item.label, section };
+    }
+  }
+  return { title: 'Admin Panel', section: '' };
+};
+
+const AdminLayout = () => {
+  const { user, isAdmin, loading, signOut: rawSignOut } = useAuth();
+  const { status: get2faStatus, validateSession, logout: logout2fa } = useAdmin2FA();
+  const [twoFaChecked, setTwoFaChecked] = useState(false);
+  const [twoFaRequired, setTwoFaRequired] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [collapsedSections, setCollapsedSections] = useState<string[]>([]);
+  const [showNotifPanel, setShowNotifPanel] = useState(false);
+  const [adminNotifs, setAdminNotifs] = useState<AdminNotif[]>([]);
+  const [notifCount, setNotifCount] = useState(0);
+  const [navSearch, setNavSearch] = useState('');
+  const [cmdOpen, setCmdOpen] = useState(false);
+  const location = useLocation();
+
+  // Wrap signOut to clear 2FA session token
+  const signOut = useCallback(async () => {
+    const t = getStoredToken();
+    if (t) { try { await logout2fa(t); } catch { /* ignore */ } }
+    setStoredToken(null);
+    await rawSignOut();
+  }, [rawSignOut, logout2fa]);
+
+  // Verify 2FA session on mount + when user changes
+  useEffect(() => {
+    let cancelled = false;
+    if (!user || !isAdmin) { setTwoFaChecked(false); setTwoFaRequired(false); return; }
+    setTwoFaChecked(false);
+    (async () => {
+      try {
+        const s = await get2faStatus();
+        if (cancelled) return;
+        if (s?.systemEnabled === false) {
+          // Master switch off → no 2FA required at all
+          setTwoFaRequired(false);
+          setTwoFaChecked(true);
+          return;
+        }
+        if (!s?.enabled) {
+          // Not enrolled → require enrollment (but allow access to /admin/security)
+          setTwoFaRequired(true);
+          setTwoFaChecked(true);
+          return;
+        }
+        const tok = getStoredToken();
+        if (!tok) { setTwoFaRequired(true); setTwoFaChecked(true); return; }
+        const r = await validateSession(tok);
+        if (cancelled) return;
+        if (r?.valid) { setTwoFaRequired(false); setTwoFaChecked(true); }
+        else { setStoredToken(null); setTwoFaRequired(true); setTwoFaChecked(true); }
+      } catch (e) {
+        if (!cancelled) { setTwoFaRequired(true); setTwoFaChecked(true); }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user, isAdmin, get2faStatus, validateSession]);
+
+
+  // Global ⌘K / Ctrl+K shortcut for command palette
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCmdOpen(o => !o);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  // ⚡ Eagerly prefetch ALL admin sub-pages during browser idle time
+  // → menu clicks resolve instantly (no chunk download wait)
+  useAdminPrefetch();
+
+  const pageMeta = useMemo(() => getPageTitle(location.pathname), [location.pathname]);
+
+  // Filter sections by search
+  const visibleSections = useMemo(() => {
+    if (!navSearch.trim()) return MENU_SECTIONS;
+    const q = navSearch.toLowerCase();
+    return MENU_SECTIONS
+      .map(s => ({ ...s, items: s.items.filter(i => i.label.toLowerCase().includes(q)) }))
+      .filter(s => s.items.length > 0);
+  }, [navSearch]);
+
+  // Fetch admin notifications
+  const fetchNotifs = useCallback(async () => {
+    const now = new Date();
+    const dayAgo = new Date(now.getTime() - 24 * 3600 * 1000).toISOString();
+    const [{ data: recentOrders }, { data: pendingPayments }, { data: openTickets }, { data: lowStock }] = await Promise.all([
+      supabase.from('orders').select('id, order_number, customer_name, total, created_at').gte('created_at', dayAgo).order('created_at', { ascending: false }).limit(5),
+      supabase.from('payment_proofs').select('id, order_id, submitted_at').eq('status', 'pending').order('submitted_at', { ascending: false }).limit(5),
+      supabase.from('support_tickets').select('id, ticket_number, subject, created_at').eq('status', 'open').order('created_at', { ascending: false }).limit(5),
+      supabase.from('products').select('id, name, stock_quantity').eq('status', 'active').lte('stock_quantity', 5).not('stock_quantity', 'is', null).limit(5),
+    ]);
+    const notifs: AdminNotif[] = [];
+    (recentOrders || []).forEach(o => notifs.push({ id: `o-${o.id}`, type: 'order', title: `নতুন অর্ডার #${o.order_number}`, message: `${o.customer_name} — ৳${Number(o.total).toLocaleString()}`, time: new Date(o.created_at).toLocaleTimeString('en-BD', { hour: '2-digit', minute: '2-digit' }), link: '/admin/orders' }));
+    (pendingPayments || []).forEach(p => notifs.push({ id: `p-${p.id}`, type: 'payment', title: 'পেমেন্ট ভেরিফিকেশন বাকি', message: `Order ID: ${p.order_id?.slice(0, 8)}...`, time: new Date(p.submitted_at).toLocaleTimeString('en-BD', { hour: '2-digit', minute: '2-digit' }), link: '/admin/orders?status=payment_pending' }));
+    (openTickets || []).forEach(t => notifs.push({ id: `t-${t.id}`, type: 'ticket', title: `টিকেট #${t.ticket_number}`, message: t.subject, time: new Date(t.created_at).toLocaleTimeString('en-BD', { hour: '2-digit', minute: '2-digit' }), link: '/admin/tickets' }));
+    (lowStock || []).forEach(s => notifs.push({ id: `s-${s.id}`, type: 'stock', title: 'লো স্টক অ্যালার্ট', message: `${s.name} — ${s.stock_quantity} বাকি`, time: 'এখনই', link: '/admin/inventory-alerts' }));
+    setAdminNotifs(notifs);
+    setNotifCount(notifs.length);
+  }, []);
+
+  useEffect(() => { fetchNotifs(); }, [fetchNotifs]);
+  useEffect(() => { const iv = setInterval(fetchNotifs, 60000); return () => clearInterval(iv); }, [fetchNotifs]);
+
+  // Enable Alt+Click and double-click to copy any text in admin panel
+  useAdminCopyAnywhere();
+
+  // Close mobile sidebar on route change
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [location.pathname]);
+
+  if (loading) return (
+    <div className="min-h-screen admin-gradient-bg flex items-center justify-center">
+      <div className="admin-glass-card p-8 flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-[3px] border-primary/30 border-t-primary rounded-full animate-spin" />
+        <p className="text-sm text-muted-foreground font-medium">Loading Dashboard...</p>
+      </div>
+    </div>
+  );
+
+  if (!user || !isAdmin) return <Navigate to="/admin/login" replace />;
+
+  // 2FA verification runs silently in the background so the admin UI loads
+  // instantly. If the check completes and reports 2FA is required (no valid
+  // session), redirect to /admin/login — unless the admin is on the security
+  // enrollment page.
+  if (twoFaChecked && twoFaRequired && location.pathname !== '/admin/security') {
+    setStoredToken(null);
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  const toggleSection = (title: string) => {
+    setCollapsedSections(prev =>
+      prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]
+    );
+  };
+
+  const sidebarContent = (isMobile: boolean) => {
+    const showLabel = isMobile || sidebarOpen;
+    return (
+      <>
+        {/* Logo */}
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-border/50 min-h-[68px] overflow-hidden">
+          {showLabel ? (
+            <div className="flex items-center justify-between w-full">
+              <BrandLogo size="sm" />
+              {isMobile && (
+                <button onClick={() => setMobileSidebarOpen(false)} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                  <X size={20} />
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">
+              <img src={logoIcon} alt="Relaxo Bean Bag" className="w-9 h-9 object-contain" />
+            </div>
+          )}
+        </div>
+
+        {/* Premium global search trigger inside sidebar */}
+        {showLabel && (
+          <div className="px-3 pt-3 pb-1">
+            <button
+              onClick={() => { setCmdOpen(true); if (isMobile) setMobileSidebarOpen(false); }}
+              className="group w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border border-violet-200/60 bg-white/60 hover:bg-white/90 hover:border-violet-300/80 dark:border-violet-800/40 dark:bg-violet-950/20 dark:hover:bg-violet-950/40 transition-all backdrop-blur-md"
+            >
+              <Search size={14} className="text-violet-500 group-hover:text-violet-600 transition-colors flex-shrink-0" strokeWidth={2.5} />
+              <span className="flex-1 text-left text-xs text-muted-foreground/90 group-hover:text-foreground transition-colors truncate">
+                Search anything…
+              </span>
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md border border-violet-200/70 bg-white/80 dark:bg-violet-950/40 dark:border-violet-800/40 font-mono text-[9px] font-bold text-violet-600 dark:text-violet-400 flex-shrink-0">
+                ⌘K
+              </kbd>
+            </button>
+          </div>
+        )}
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+          {visibleSections.map((section) => {
+            const isCollapsed = collapsedSections.includes(section.title);
+            return (
+              <div key={section.title}>
+                {/* Section header */}
+                {showLabel && (
+                  <button
+                    onClick={() => toggleSection(section.title)}
+                    className="w-full flex items-center justify-between px-3 mb-1.5 group"
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-[1.2px] text-muted-foreground/70 group-hover:text-foreground transition-colors">
+                      {section.title}
+                    </span>
+                    <ChevronDown
+                      size={11}
+                      className={`text-muted-foreground/50 transition-transform ${isCollapsed ? '-rotate-90' : ''}`}
+                    />
+                  </button>
+                )}
+                {!showLabel && (
+                  <div className="h-px bg-border/40 mx-2 my-2" />
+                )}
+
+                {/* Section items */}
+                {!isCollapsed && (
+                  <div className="space-y-0.5">
+                    {section.items.map((item) => {
+                      const isActive = location.pathname === item.path ||
+                        (item.path !== '/admin' && location.pathname.startsWith(item.path + '/'));
+                      const accent = getItemAccent(item.path);
+                      return (
+                        <NavLink
+                          key={item.path}
+                          to={item.path}
+                          end={item.path === '/admin'}
+                          title={!showLabel ? item.label : undefined}
+                          onMouseEnter={() => prefetchAdminRoute(item.path)}
+                          onTouchStart={() => prefetchAdminRoute(item.path)}
+                          onFocus={() => prefetchAdminRoute(item.path)}
+                          style={{
+                            ['--item-from' as any]: accent.from,
+                            ['--item-to' as any]: accent.to,
+                          }}
+                          className={`admin-nav-item ${isActive ? 'active' : ''} ${!showLabel ? 'justify-center px-2' : ''}`}
+                        >
+                          <item.icon size={15} className="flex-shrink-0" strokeWidth={2.25} />
+                          {showLabel && (
+                            <>
+                              <span className="flex-1 truncate">{item.label}</span>
+                              {item.badge === 'live' && (
+                                <span className="flex items-center gap-1 text-[9px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-300 px-1.5 py-0.5 rounded-md ring-1 ring-emerald-300/50">
+                                  <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> LIVE
+                                </span>
+                              )}
+                              {item.badge === 'new' && (
+                                <span className="text-[9px] font-bold text-white bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 px-1.5 py-0.5 rounded-md shadow-sm">NEW</span>
+                              )}
+                            </>
+                          )}
+                        </NavLink>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {visibleSections.length === 0 && showLabel && (
+            <div className="px-4 py-6 text-center text-xs text-muted-foreground">
+              কোনো ম্যাচ পাওয়া যায়নি
+            </div>
+          )}
+        </nav>
+
+        {/* User info */}
+        <div className="border-t border-border/50 p-3">
+          {showLabel ? (
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, hsl(258,78%,55%), hsl(258,78%,42%))', boxShadow: '0 4px 14px hsla(258,78%,55%,0.30)' }}>
+                A
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-semibold text-foreground truncate">Admin</div>
+                <div className="text-[10px] text-muted-foreground truncate">{user.email}</div>
+              </div>
+              <button
+                onClick={signOut}
+                className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                title="Sign Out"
+              >
+                <LogOut size={15} />
+              </button>
+            </div>
+          ) : (
+            <button onClick={signOut} className="w-full flex justify-center text-muted-foreground hover:text-destructive transition-colors p-2" title="Sign Out">
+              <LogOut size={18} />
+            </button>
+          )}
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <div className="min-h-screen admin-gradient-bg admin-root">
+      {/* Mobile overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar (overlay drawer) */}
+      <aside className={`fixed left-0 top-0 h-full z-50 w-[280px] flex flex-col admin-glass-sidebar transition-transform duration-300 md:hidden ${
+        mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        {sidebarContent(true)}
+      </aside>
+
+      {/* Desktop Sidebar */}
+      <aside className={`hidden md:flex fixed left-0 top-0 h-full z-40 transition-all duration-300 flex-col ${sidebarOpen ? 'w-64' : 'w-16'} admin-glass-sidebar`}>
+        {sidebarContent(false)}
+      </aside>
+
+      {/* Main content */}
+      <div className={`flex flex-col min-h-screen transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'md:ml-16'}`}>
+        {/* Top bar */}
+        <header className="admin-glass-header px-3 sm:px-6 py-3 flex items-center gap-2 sm:gap-4 sticky top-0 z-30">
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="admin-icon-btn md:hidden flex-shrink-0"
+            aria-label="Open menu"
+          >
+            <Menu size={18} />
+          </button>
+          {/* Desktop sidebar toggle */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="admin-icon-btn hidden md:inline-flex flex-shrink-0"
+            aria-label="Toggle sidebar"
+          >
+            {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+
+          {/* Page title + breadcrumb */}
+          <div className="min-w-0 flex-1">
+            {pageMeta.section && (
+              <div className="hidden sm:flex items-center gap-2 text-[10px] font-semibold text-violet-500/80 uppercase tracking-[1.2px]">
+                <span>{pageMeta.section}</span>
+                <ChevronRight size={10} />
+                <span style={{ background: 'linear-gradient(135deg, hsl(258,78%,55%), hsl(258,78%,42%))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{pageMeta.title}</span>
+              </div>
+            )}
+            <h1 className="text-base sm:text-lg font-bold text-foreground truncate leading-tight" style={{ fontFamily: 'Sora, sans-serif', letterSpacing: '-0.01em' }}>
+              {pageMeta.title}
+              <span className="sr-only">
+                '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
+                                        
+                                            
+                                            আমাদের ওয়েবসাইটটা খুব slow কাজ করছে। কোথায় কি সমস্যার সমাধান করো?
+              </span>
+            </h1>
+          </div>
+
+          <div className="ml-auto flex items-center gap-2 sm:gap-3 flex-shrink-0 relative">
+            {/* Premium Search Trigger (header) */}
+            <button
+              onClick={() => setCmdOpen(true)}
+              className="group hidden sm:inline-flex items-center gap-2.5 h-9 px-3 rounded-xl border border-violet-200/60 bg-white/60 hover:bg-white/90 hover:border-violet-300/80 dark:border-violet-800/40 dark:bg-violet-950/20 dark:hover:bg-violet-950/40 backdrop-blur-md transition-all"
+              aria-label="Search admin"
+            >
+              <Search size={14} className="text-violet-500 group-hover:text-violet-600 transition-colors" strokeWidth={2.5} />
+              <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                Search…
+              </span>
+              <kbd className="inline-flex items-center px-1.5 py-0.5 rounded-md border border-violet-200/70 bg-white/80 dark:bg-violet-950/40 dark:border-violet-800/40 font-mono text-[9px] font-bold text-violet-600 dark:text-violet-400">
+                ⌘K
+              </kbd>
+            </button>
+            {/* Mobile-only icon trigger */}
+            <button
+              onClick={() => setCmdOpen(true)}
+              className="admin-icon-btn sm:hidden"
+              aria-label="Search admin"
+            >
+              <Search size={18} />
+            </button>
+
+            <button onClick={() => setShowNotifPanel(!showNotifPanel)} className="admin-icon-btn relative" aria-label="Notifications">
+              <Bell size={18} />
+              {notifCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold text-white flex items-center justify-center shadow-md ring-2 ring-white"
+                  style={{ background: 'linear-gradient(135deg, hsl(258,78%,55%), hsl(258,78%,42%))' }}>
+                  {notifCount > 9 ? '9+' : notifCount}
+                </span>
+              )}
+            </button>
+
+            {/* Notification Dropdown */}
+            {showNotifPanel && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowNotifPanel(false)} />
+                <div className="absolute right-0 top-12 z-50 w-80 sm:w-96 admin-glass-card rounded-2xl shadow-2xl overflow-hidden">
+                  <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between bg-gradient-to-r from-primary/5 to-accent/5">
+                    <h3 className="font-bold text-foreground text-sm flex items-center gap-2">
+                      <Bell size={14} className="text-primary" />
+                      Notification Center
+                    </h3>
+                    <span className="text-[10px] text-muted-foreground bg-muted/40 px-2 py-0.5 rounded-full">{notifCount} items</span>
+                  </div>
+                  <div className="max-h-80 overflow-y-auto divide-y divide-border/30">
+                    {adminNotifs.length === 0 ? (
+                      <div className="py-10 text-center text-muted-foreground text-sm">No notifications</div>
+                    ) : adminNotifs.map(n => {
+                      const icons: Record<string, { icon: any; cls: string }> = {
+                        order: { icon: ShopIcon, cls: 'text-primary bg-primary/10' },
+                        payment: { icon: CreditIcon, cls: 'text-amber-500 bg-amber-500/10' },
+                        ticket: { icon: Headphones, cls: 'text-blue-500 bg-blue-500/10' },
+                        stock: { icon: AlertTriangle, cls: 'text-destructive bg-destructive/10' },
+                      };
+                      const { icon: NIcon, cls } = icons[n.type] || icons.order;
+                      return (
+                        <a key={n.id} href={n.link || '#'} onClick={() => setShowNotifPanel(false)}
+                          className="flex items-start gap-3 px-4 py-3 hover:bg-primary/5 transition-colors">
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${cls}`}>
+                            <NIcon size={15} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-foreground">{n.title}</p>
+                            <p className="text-[11px] text-muted-foreground truncate">{n.message}</p>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground flex-shrink-0">{n.time}</span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            )}
+
+            <a href="/" target="_blank" className="text-xs font-medium text-primary hover:text-primary/80 admin-icon-btn px-3 hidden sm:inline-flex items-center gap-1.5">
+              <Globe size={13} /> View Store
+            </a>
+          </div>
+        </header>
+
+        {/* Page content */}
+        <main className="flex-1 p-3 sm:p-6 overflow-x-auto">
+          {(() => {
+            const currentItem = ALL_ITEMS_FLAT.find(i =>
+              location.pathname === i.path || (i.path !== '/admin' && location.pathname.startsWith(i.path + '/'))
+            );
+            const HeaderIcon = currentItem?.icon || LayoutDashboard;
+            const decorBySection: Record<string, any[]> = {
+              Sales: [ShoppingCart, CreditCard, TrendingUp],
+              Catalog: [Package, Grid3X3, Star],
+              Customers: [Users, Headphones, MessageCircle],
+              Storefront: [Layout, Sliders, Megaphone],
+              Marketing: [Megaphone, Percent, Gift],
+              'Content & SEO': [BookOpen, Globe, FileText],
+              Reports: [TrendingUp, BarChart2, Activity],
+              Integrations: [Bot, KeyRound, Layers],
+              'AI Tools': [Brain, Sparkles, Bot],
+              System: [Shield, Database, Settings],
+              Overview: [LayoutDashboard, Activity, TrendingUp],
+            };
+            const decorIcons = decorBySection[pageMeta.section] || [HeaderIcon, TrendingUp, Activity];
+            return (
+              <AdminHeroHeader
+                title={pageMeta.title}
+                section={pageMeta.section}
+                Icon={HeaderIcon}
+                decorIcons={decorIcons}
+              />
+            );
+          })()}
+          <Outlet />
+        </main>
+      </div>
+
+      {/* Global Command Palette */}
+      <AdminCommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
+
+      {/* Floating horizontal-scroll controller — helps small screens reach off-screen columns */}
+      <AdminScrollController />
+    </div>
+  );
+};
+
+export default AdminLayout;

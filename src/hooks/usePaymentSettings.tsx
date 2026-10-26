@@ -1,0 +1,208 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+
+export interface PaymentMethodConfig {
+  id: string;
+  label: string;
+  number: string;
+  type: 'Send Money' | 'Merchant Payment' | 'Bank Transfer';
+  logoUrl: string; // URL or empty (falls back to asset)
+  accentColor: string;
+  bgColor: string;
+  steps: string[];
+  warning?: string;
+  isActive: boolean;
+  sortOrder: number;
+  // Bank-specific fields (only for type === 'Bank Transfer')
+  bankName?: string;
+  accountName?: string;
+  branchName?: string;
+  routingNumber?: string;
+}
+
+export const PAYMENT_SETTINGS_KEY = 'payment_methods_config';
+
+// Default configs (fallback when DB has no data)
+export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
+  {
+    id: 'bkash',
+    label: 'BKash',
+    number: '01873990004',
+    type: 'Send Money',
+    logoUrl: '',
+    accentColor: 'hsl(338,90%,48%)',
+    bgColor: 'hsla(338,90%,48%,0.07)',
+    steps: [
+      'আপনার BKash অ্যাপ বা *247# ডায়াল করুন',
+      '"Send Money" অপশনটি সিলেক্ট করুন',
+      'নম্বর বক্সে উপরের নম্বরটি পেস্ট করুন',
+      'পরিমাণ লিখুন ও PIN দিয়ে কনফার্ম করুন',
+      'Transaction ID (TrxID) কপি করুন',
+      'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
+    ],
+    warning: 'বিঃদ্রঃ অবশ্যই "Send Money" করবেন, "Payment" নয়।',
+    isActive: true,
+    sortOrder: 0,
+  },
+  {
+    id: 'nagad',
+    label: 'Nagad',
+    number: '01873990004',
+    type: 'Send Money',
+    logoUrl: '',
+    accentColor: 'hsl(22,100%,48%)',
+    bgColor: 'hsla(22,100%,48%,0.07)',
+    steps: [
+      'আপনার নগদ অ্যাপ বা *167# ডায়াল করুন',
+      '"Send Money" অপশনটি সিলেক্ট করুন',
+      'নম্বর বক্সে উপরের নম্বরটি পেস্ট করুন',
+      'পরিমাণ লিখুন ও PIN দিয়ে কনফার্ম করুন',
+      'Transaction ID কপি করুন',
+      'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
+    ],
+    warning: undefined,
+    isActive: true,
+    sortOrder: 1,
+  },
+  {
+    id: 'rocket',
+    label: 'Rocket',
+    number: '01873990004',
+    type: 'Send Money',
+    logoUrl: '',
+    accentColor: 'hsl(270,80%,48%)',
+    bgColor: 'hsla(270,80%,48%,0.07)',
+    steps: [
+      'আপনার Rocket অ্যাপ বা *322# ডায়াল করুন',
+      '"Send Money" অপশনটি সিলেক্ট করুন',
+      'নম্বর বক্সে উপরের নম্বরটি পেস্ট করুন',
+      'পরিমাণ লিখুন ও PIN দিয়ে কনফার্ম করুন',
+      'Transaction ID কপি করুন',
+      'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
+    ],
+    warning: 'Rocket নম্বরের শেষে একটি অতিরিক্ত ডিজিট থাকতে পারে।',
+    isActive: true,
+    sortOrder: 2,
+  },
+  {
+    id: 'upay',
+    label: 'উপায় (Upay)',
+    number: '01873990004',
+    type: 'Send Money',
+    logoUrl: '',
+    accentColor: 'hsl(142,70%,38%)',
+    bgColor: 'hsla(142,70%,38%,0.07)',
+    steps: [
+      'আপনার Upay অ্যাপ ওপেন করুন',
+      '"Send Money" অপশনটি সিলেক্ট করুন',
+      'নম্বর বক্সে উপরের নম্বরটি পেস্ট করুন',
+      'পরিমাণ লিখুন ও PIN দিয়ে কনফার্ম করুন',
+      'Transaction ID কপি করুন',
+      'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
+    ],
+    warning: undefined,
+    isActive: true,
+    sortOrder: 3,
+  },
+  {
+    id: 'bkash_merchant',
+    label: 'BKash Merchant',
+    number: '01873990004',
+    type: 'Merchant Payment',
+    logoUrl: '',
+    accentColor: 'hsl(338,85%,42%)',
+    bgColor: 'hsla(338,85%,42%,0.07)',
+    steps: [
+      'আপনার BKash অ্যাপ বা *247# ডায়াল করুন',
+      '"Payment" অপশনটি সিলেক্ট করুন',
+      'Merchant নম্বর বক্সে উপরের নম্বরটি পেস্ট করুন',
+      'পরিমাণ লিখুন ও PIN দিয়ে কনফার্ম করুন',
+      'Transaction ID (TrxID) কপি করুন',
+      'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
+    ],
+    warning: 'Merchant Payment-এ কোনো চার্জ নেই — আপনি যা পাঠাবেন তাই পাবেন।',
+    isActive: true,
+    sortOrder: 4,
+  },
+  {
+    id: 'bank_transfer',
+    label: 'Bank Transfer',
+    number: '1351100467666',
+    type: 'Bank Transfer',
+    logoUrl: '',
+    accentColor: 'hsl(214,80%,48%)',
+    bgColor: 'hsla(214,80%,48%,0.07)',
+    bankName: 'Dutch Bangla Bank',
+    accountName: 'Relaxo Bean Bag',
+    branchName: 'Rajshahi',
+    routingNumber: '090811933',
+    steps: [
+      'আপনার ব্যাংক অ্যাপ বা ব্রাঞ্চে যান',
+      'উপরের অ্যাকাউন্ট নম্বরে টাকা ট্রান্সফার করুন',
+      'ট্রান্সফারের রেফারেন্স/TRN নম্বর কপি করুন',
+      'নিচের বক্সে TRN নম্বর দিয়ে অর্ডার সম্পন্ন করুন',
+    ],
+    warning: 'ব্যাংক ট্রান্সফার ভেরিফাই হতে ১-২ কার্যদিবস সময় লাগতে পারে।',
+    isActive: true,
+    sortOrder: 5,
+  },
+];
+
+export const usePaymentSettings = () => {
+  const qc = useQueryClient();
+
+  // BroadcastChannel: অন্য ট্যাব/পেজে admin সেভ করলে এখানেও instant আপডেট হবে
+  useEffect(() => {
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel('payment-settings-update');
+      bc.onmessage = () => {
+        qc.invalidateQueries({ queryKey: ['payment-settings'] });
+      };
+    } catch { /* Safari: no BroadcastChannel support */ }
+    return () => { bc?.close(); };
+  }, [qc]);
+
+  const { data: configs = DEFAULT_PAYMENT_CONFIGS, isLoading } = useQuery<PaymentMethodConfig[]>({
+    queryKey: ['payment-settings'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('site_settings')
+        .select('value')
+        .eq('key', PAYMENT_SETTINGS_KEY)
+        .maybeSingle();
+      if (data?.value) {
+        try {
+          return JSON.parse(data.value) as PaymentMethodConfig[];
+        } catch { /* fall through */ }
+      }
+      return DEFAULT_PAYMENT_CONFIGS;
+    },
+    staleTime: 0,            // সবসময় fresh data fetch করবে
+    gcTime: 1000 * 60 * 2,  // 2 মিনিট cache রাখবে
+    refetchOnWindowFocus: true,   // ট্যাবে ফিরলেই আবার লোড হবে
+    refetchOnMount: 'always',     // যেকোনো কম্পোনেন্ট মাউন্টে রিফেচ
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (newConfigs: PaymentMethodConfig[]) => {
+      const value = JSON.stringify(newConfigs);
+      const { error } = await supabase
+        .from('site_settings')
+        .upsert({ key: PAYMENT_SETTINGS_KEY, value, category: 'store' }, { onConflict: 'key' });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      // সব ট্যাব/পেজে instant আপডেট পাঠাও
+      qc.invalidateQueries({ queryKey: ['payment-settings'] });
+      try {
+        const bc = new BroadcastChannel('payment-settings-update');
+        bc.postMessage('updated');
+        bc.close();
+      } catch { /* Safari fallback */ }
+    },
+  });
+
+  return { configs, isLoading, saveMutation };
+};

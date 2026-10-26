@@ -1,0 +1,386 @@
+import { useEffect, useState } from 'react';
+import { Home, Store, Globe, Package, User, Check } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useWishlist } from '@/hooks/useWishlist';
+import { useAuth } from '@/hooks/useAuth';
+import { useCurrency } from '@/hooks/useCurrency';
+import { supabase } from '@/integrations/supabase/client';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import AuthModal from './AuthModal';
+
+interface NavItem {
+  label: string;
+  icon: typeof Home;
+  path: string;
+  match: (path: string) => boolean;
+  badgeCount?: number;
+  requireAuth?: boolean;
+  gradient: string;
+  srText?: string;
+}
+
+/**
+ * Modern Mobile Bottom Navigation — 2025 trend.
+ * Floating pill, animated active indicator, gradient glow per tab.
+ * Hidden on desktop (md+) and admin (/admin) routes.
+ */
+const MobileBottomNav = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { wishlistCount } = useWishlist();
+  const { user } = useAuth();
+  const { currencies, active: activeCurrency, setActive: setActiveCurrency } = useCurrency();
+  const [authOpen, setAuthOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [orderCount, setOrderCount] = useState(0);
+
+  // Auto-hide when keyboard opens on mobile
+  useEffect(() => {
+    const onFocus = (e: FocusEvent) => {
+      const t = e.target as HTMLElement;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) {
+        setHidden(true);
+      }
+    };
+    const onBlur = () => setHidden(false);
+    document.addEventListener('focusin', onFocus);
+    document.addEventListener('focusout', onBlur);
+    return () => {
+      document.removeEventListener('focusin', onFocus);
+      document.removeEventListener('focusout', onBlur);
+    };
+  }, []);
+
+  // Show on scroll-up, hide on scroll-down. Always show near the top of the page.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+    const SCROLL_THRESHOLD = 8; // ignore tiny wobbles
+    const TOP_ZONE = 80; // always show near the top
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const delta = currentY - lastY;
+
+        if (currentY < TOP_ZONE) {
+          setHidden(false);
+        } else if (Math.abs(delta) > SCROLL_THRESHOLD) {
+          // Scrolling down → hide; scrolling up → show
+          setHidden(delta > 0);
+        }
+
+        lastY = currentY;
+        ticking = false;
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Fetch active orders count for the badge (pending / processing)
+  useEffect(() => {
+    if (!user) {
+      setOrderCount(0);
+      return;
+    }
+
+    const fetchCount = async () => {
+      const { count } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .in('status', ['pending', 'processing']);
+      setOrderCount(count || 0);
+    };
+
+    fetchCount();
+
+    // Realtime updates
+    const channel = supabase
+      .channel('mobile-nav-orders')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders', filter: `user_id=eq.${user.id}` },
+        () => fetchCount()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  if (location.pathname.startsWith('/admin')) return null;
+
+  const navItems: NavItem[] = [
+    {
+      label: 'Home',
+      icon: Home,
+      path: '/',
+      match: (p) => p === '/',
+      gradient: 'linear-gradient(135deg, hsl(258 78% 55%), hsl(280 80% 60%))',
+    },
+    {
+      label: 'Shop',
+      icon: Store,
+      path: '/shop',
+      match: (p) => p.startsWith('/shop') || p.startsWith('/product'),
+      gradient: 'linear-gradient(135deg, hsl(185 90% 52%), hsl(200 92% 55%))',
+    },
+    {
+      label: activeCurrency?.code || 'BDT',
+      icon: Globe, // replaced by custom coin badge in render
+      path: '__currency__',
+      srText: "'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            এখানে মানে current যে system টা কাজ করছে না সমাধান কর\n\nTo make sure this comes out right, here is what I mean in more detail:\n- Think this through deeply and step by step before you answer or edit anything. Do the slow, careful reasoning pass first: restate my goal, list the unknowns, decide what evidence you need, and only then act. Never reply with a short summary paragraph as the whole answer.\n- Work at full depth for as long as the task needs. This is a long-horizon task, not a quick reply: keep investigating, editing and verifying across many steps until everything I asked for is genuinely finished, instead of stopping after the first partial result.\n- Actually use your available tools rather than guessing or describing what could be done: read the real project files, search the codebase, run checks and builds, read logs and runtime errors, query the connected database and backend, pull live data from connected integrations (analytics, search console, search/SEO data, web search) and inspect the rendered page. Base every claim on evidence you actually retrieved, and say clearly when data is unavailable.\n- First, read my original request word by word and restate it internally as a structured brief: goal, target users, pages or screens, features, visual style, assets, data and constraints. Build a short requirement checklist from my exact words before editing, and keep that checklist as the acceptance criteria for the whole task.\n- Detect and honour every explicit noun I used (page names, section names, feature names, colors, style words, asset types). Never drop, merge or generalize them, and never replace a specific request with a generic alternative.\n- Understand the language and intent as written, including natural English, Roman Urdu, spelling mistakes and mixed-language text. Do not translate, rewrite or narrow my meaning unless I ask.\n- If any part of my request is ambiguous, choose the most complete reasonable interpretation and implement it fully instead of skipping it.\n- Inspect the current project, relevant files, existing design system and runtime signals before implementation. Then map every checklist item to a concrete change.\n- Treat this as a complete production build rather than a quick demo. Implement all implied pages, sections, states, navigation and working interactions; do not stop after a partial first screen.\n- Use real feature logic and stable responsive layouts. Do not leave placeholders, TODOs, fake buttons or unimplemented sections.\n- DESIGN FIDELITY IS THE FIRST ACCEPTANCE CRITERION. Before writing code, extract a written design spec from my exact words: layout structure, section order, color palette, typography, spacing/density, corner radius, shadows/depth, imagery style, motion register and overall mood. Restate that spec as a checklist and build strictly to it.\n- Every design word I used is a hard constraint, not a suggestion. Do not substitute a generic template, default AI look (Inter + purple gradient on white), or a different layout than the one I described.\n- Implement the design through real design tokens in the global stylesheet (colors, gradients, shadows, radii, typography scale, spacing scale) and use only those semantic tokens in components, so the whole app looks consistent and theme-correct in light and dark mode.\n- Build a deliberate visual hierarchy: distinct hero treatment, clear section rhythm, intentional whitespace, aligned grid, consistent component sizing, hover/focus/active/disabled states, and polished empty, loading and error states.\n- Match the exact structure I described: same number of sections, same order, same components, same navigation, same content blocks. Do not merge, reorder or drop sections.\n- Make it fully responsive with a real mobile layout (not a squeezed desktop one), and keep contrast and readability accessible.\n- Apply an ultra-modern, premium UI/UX finish (Apple-like precision, refined typography pairing, sophisticated palette, subtle depth and micro-interactions) on top of my spec, never instead of it.\n\n- ACT AS A PROFESSIONAL UI/UX DESIGNER WITH 5 YEARS OF EXPERIENCE for this whole task. Put the designer hat on before touching code: audit the current screen, write a deliberate design spec (layout grid, section order, colour palette, typography pairing and scale, spacing rhythm, corner radius, depth/shadows, imagery, motion register), then implement it with senior-level craft.\n- After rendering, visually review the result against the design spec (hierarchy, spacing, alignment, palette, typography, motion) and refine it until it looks intentionally designed, not auto-generated.\n- After each implementation step, inspect the actual result. If an error appears, diagnose its root cause from logs and the affected code, fix the underlying category (including related paths), rerun the relevant check, and then continue the original task instead of stopping at the error.\n- Before finishing, compare the rendered result and working behavior against every item in the original requirement checklist, including every generated asset and animation. Fix all missing, incorrect or broken items and only then report completion.\n- Finish with a detailed written report of what you actually did: evidence gathered, decisions taken, every file changed, every asset generated, what you verified, and what is still open. Depth and completeness matter more than brevity.\n- Keep existing working behavior intact and follow the project conventions, accessibility basics, responsive behavior, loading states and error states.",
+      match: () => currencyOpen,
+      gradient: 'linear-gradient(135deg, hsl(38 95% 55%), hsl(28 90% 50%))',
+      isCurrency: true,
+      currencySymbol: activeCurrency?.symbol || '৳',
+    } as NavItem & { isCurrency?: boolean; currencySymbol?: string },
+    {
+      label: 'Orders',
+      icon: Package,
+      path: '/dashboard?tab=orders',
+      match: (p) => p.startsWith('/dashboard') && location.search.includes('tab=orders'),
+      badgeCount: orderCount,
+      requireAuth: true,
+      gradient: 'linear-gradient(135deg, hsl(25 95% 55%), hsl(15 90% 55%))',
+    },
+    {
+      label: 'Account',
+      icon: User,
+      path: '/dashboard?tab=profile',
+      match: (p) => p === '/dashboard' && (!location.search || location.search.includes('tab=profile')),
+      requireAuth: true,
+      gradient: 'linear-gradient(135deg, hsl(160 75% 45%), hsl(185 90% 52%))',
+    },
+  ];
+
+  // Find active index for sliding indicator
+  const activeIndex = navItems.findIndex((i) => i.match(location.pathname));
+
+  const handleClick = (item: NavItem) => {
+    if (item.path === '__currency__') {
+      setCurrencyOpen(true);
+      return;
+    }
+    if (item.requireAuth && !user) {
+      setAuthOpen(true);
+      return;
+    }
+    setHidden(false);
+    navigate(item.path, {
+      replace: location.pathname === '/dashboard',
+      state: { mobileNavTap: Date.now() },
+    });
+  };
+
+
+  return (
+    <>
+      <nav
+        aria-label="Bottom navigation"
+        className={`md:hidden fixed left-0 right-0 z-40 transition-all duration-500 ease-out ${
+          hidden ? 'translate-y-[150%] opacity-0' : 'translate-y-0 opacity-100'
+        }`}
+        data-nav-placement="bottom"
+        title="'''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''\n                                        \n                                            \n                                            এটাকে একটু নিচের দিকে নামিয়ে দাও। কিছু দেখা যাচ্ছে না।"
+        style={{
+          bottom: 0,
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        }}
+      >
+        <div className="px-3 pb-2 pt-1">
+          {/* Floating pill container */}
+          <div
+            className="relative rounded-[28px] border overflow-hidden"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.75) 100%)',
+              backdropFilter: 'blur(28px) saturate(200%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+              borderColor: 'rgba(255,255,255,0.6)',
+              boxShadow:
+                '0 12px 40px -8px rgba(88, 28, 200, 0.18), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+            }}
+          >
+            {/* Subtle gradient sheen on top */}
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-px"
+              style={{
+                background:
+                  'linear-gradient(90deg, transparent, rgba(120, 80, 230, 0.4), rgba(80, 200, 230, 0.4), transparent)',
+              }}
+            />
+
+            {/* Sliding active indicator (gradient blob) — purely visual, never blocks taps */}
+            {activeIndex >= 0 && (
+              <div
+                className="absolute top-1.5 bottom-1.5 z-0 pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                style={{
+                  width: `calc((100% - 12px) / ${navItems.length})`,
+                  left: `calc(6px + ${activeIndex} * ((100% - 12px) / ${navItems.length}))`,
+                }}
+              >
+                <div
+                  className="w-full h-full rounded-2xl"
+                  style={{
+                    background: navItems[activeIndex].gradient,
+                    boxShadow: `0 10px 28px -6px ${
+                      navItems[activeIndex].gradient
+                        .match(/hsl\([^)]+\)/)?.[0] || 'hsla(258,78%,55%,0.55)'
+                    }, 0 4px 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.12)`,
+                    opacity: 1,
+                    transform: 'scale(1)',
+                    transition: 'transform 0.2s',
+                    border: '1.5px solid rgba(255,255,255,0.55)',
+                  }}
+                />
+              </div>
+            )}
+
+            <ul
+              className="relative z-10 grid grid-cols-5 px-1.5 py-1.5 touch-pan-y"
+            >
+              {navItems.map((item, idx) => {
+                const isActive = idx === activeIndex;
+                const Icon = item.icon;
+                return (
+                  <li key={item.label} className="flex">
+                    <button
+                      onClick={() => handleClick(item)}
+                      aria-label={item.label}
+                      aria-current={isActive ? 'page' : undefined}
+                      className="relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 py-2 rounded-2xl transition-all duration-300 active:scale-90"
+                    >
+                      {item.srText && <span className="sr-only">{item.srText}</span>}
+                      <span className="relative">
+                        {(item as any).isCurrency ? (
+                          <span
+                            aria-hidden
+                            className={`flex items-center justify-center rounded-full leading-none font-extrabold text-primary-foreground transition-all duration-300 ${
+                              isActive ? 'w-7 h-7 text-[17px] scale-110' : 'w-[22px] h-[22px] text-[14px]'
+                            }`}
+                            style={{
+                              background:
+                                'linear-gradient(135deg, hsl(var(--primary)/0.85) 0%, hsl(var(--primary)) 55%, hsl(var(--primary)/0.75) 100%)',
+                              boxShadow: isActive
+                                ? 'inset 0 1px 0 hsl(var(--primary-foreground)/0.35), 0 0 0 1.5px rgba(255,255,255,0.9), 0 2px 8px hsl(var(--primary)/0.55)'
+                                : 'inset 0 1px 0 hsl(var(--primary-foreground)/0.35), 0 0 10px hsl(var(--primary)/0.35)',
+                              fontFamily:
+                                "'Noto Sans Bengali', 'Hind Siliguri', system-ui, sans-serif",
+                            }}
+                          >
+                            <span className="translate-y-[-1px]">
+                              {(item as any).currencySymbol || '৳'}
+                            </span>
+                          </span>
+                        ) : (
+                          <Icon
+                            size={22}
+                            strokeWidth={isActive ? 2.6 : 2}
+                            className={`transition-all duration-300 ${
+                              isActive ? 'text-white scale-110' : 'text-foreground/60'
+                            }`}
+                            style={
+                              isActive
+                                ? { filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))' }
+                                : undefined
+                            }
+                          />
+                        )}
+                        {item.badgeCount && item.badgeCount > 0 ? (
+                          <span
+                            className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center text-white border-2 border-white/90 animate-scale-in"
+                            style={{
+                              background:
+                                'linear-gradient(135deg, hsl(0 90% 58%), hsl(15 95% 55%))',
+                              boxShadow:
+                                '0 2px 8px hsla(0,84%,60%,0.6), 0 0 0 1px rgba(255,255,255,0.4)',
+                            }}
+                          >
+                            {item.badgeCount > 99 ? '99+' : item.badgeCount}
+                          </span>
+                        ) : null}
+                      </span>
+                      <span
+                        className={`text-[10px] leading-none font-semibold transition-all duration-300 ${
+                          isActive
+                            ? 'text-white opacity-100 scale-100'
+                            : 'text-foreground/55 opacity-90'
+                        }`}
+                        style={
+                          isActive
+                            ? { textShadow: '0 1px 2px rgba(0,0,0,0.2)' }
+                            : undefined
+                        }
+                      >
+                        {item.label}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+
+      <Sheet open={currencyOpen} onOpenChange={setCurrencyOpen}>
+        <SheetContent
+          side="bottom"
+          className="md:hidden rounded-t-3xl border-t p-0 max-h-[75vh] overflow-hidden"
+        >
+          <SheetHeader className="px-5 pt-5 pb-3 text-left">
+            <SheetTitle className="text-base font-bold">Select Currency</SheetTitle>
+            <p className="text-xs text-muted-foreground">
+              Payment is always settled in BDT
+            </p>
+          </SheetHeader>
+          <div className="px-3 pb-6 overflow-y-auto max-h-[60vh]">
+            <ul className="grid gap-1.5">
+              {currencies.map((c) => {
+                const isActive = activeCurrency?.code === c.code;
+                return (
+                  <li key={c.code}>
+                    <button
+                      onClick={() => {
+                        setActiveCurrency(c.code);
+                        setCurrencyOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-2xl transition-all active:scale-[0.98] ${
+                        isActive
+                          ? 'bg-primary/10 border border-primary/30'
+                          : 'hover:bg-muted/60 border border-transparent'
+                      }`}
+                    >
+                      <span className="text-2xl leading-none">{c.flag_emoji || '🌐'}</span>
+                      <span className="flex-1 text-left">
+                        <span className="block text-sm font-semibold">
+                          {c.code} <span className="opacity-60 font-normal">— {c.name}</span>
+                        </span>
+                        <span className="block text-[11px] text-muted-foreground">
+                          {c.symbol} · 1 {c.code} = {c.rate_from_bdt} BDT
+                        </span>
+                      </span>
+                      {isActive && <Check className="w-5 h-5 text-primary" />}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+};
+
+export default MobileBottomNav;

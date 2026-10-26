@@ -1,0 +1,791 @@
+import { useState, useRef, useEffect } from 'react';
+import { RefreshCw, CheckCircle, XCircle, Clock, AlertTriangle, Send, ChevronDown, ChevronUp, Info, ImagePlus, X, Loader2, Calculator, LogIn } from 'lucide-react';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import Navbar from '@/components/store/Navbar';
+import Footer from '@/components/store/Footer';
+import SEOHead from '@/components/seo/SEOHead';
+import { FloatingButtons } from '@/components/store/Extras';
+import { GlassCard, SectionCard, Bullet } from '@/components/store/PolicyLayout';
+import { useAuth } from '@/hooks/useAuth';
+import AuthModal from '@/components/store/AuthModal';
+import PhoneInput from '@/components/store/PhoneInput';
+
+const A = 'hsl(258,78%,55%)';
+const B = 'hsl(200,90%,45%)';
+
+const REFUND_REASONS = [
+  { value: 'not_working', label: 'পণ্য ক্ষতিগ্রস্ত অবস্থায় পৌঁছেছে' },
+  { value: 'wrong_product', label: 'ভুল পণ্য ডেলিভারি হয়েছে' },
+  { value: 'not_received', label: 'পণ্য পাইনি (নির্ধারিত সময় পার হয়ে গেছে)' },
+  { value: 'double_payment', label: 'ডাবল পেমেন্ট হয়ে গেছে' },
+  { value: 'out_of_stock', label: 'স্টক শেষ / সরবরাহ সম্ভব নয়' },
+  { value: 'change_of_mind', label: 'মন পরিবর্তন হয়েছে (Change of Mind)' },
+  { value: 'other', label: 'অন্য কারণ' },
+];
+
+// Period value → total days
+const PERIOD_DAYS: Record<string, number | null> = {
+  '1_month':   30,
+  '3_months':  90,
+  '6_months':  180,
+  '1_year':    365,
+  'lifetime':  null,
+  'na':        null,
+};
+
+const SUBSCRIPTION_PERIODS = [
+  { value: '1_month',   label: '১ মাস (৩০ দিন)' },
+  { value: '3_months',  label: '৩ মাস (৯০ দিন)' },
+  { value: '6_months',  label: '৬ মাস (১৮০ দিন)' },
+  { value: '1_year',    label: '১ বছর ওয়ারেন্টি (৩৬৫ দিন)' },
+  { value: 'lifetime',  label: 'আজীবন' },
+  { value: 'na',        label: 'প্রযোজ্য নয়' },
+];
+
+// Auto-calculation result
+type CalcResult = {
+  totalDays: number | null;
+  daysUsed: number;
+  daysRemaining: number | null;
+  unusedPercent: number | null;
+  proportionalRefund: number | null;
+  refundAfter10: number | null;
+};
+
+function calcRefund(purchaseDate: string, period: string, amount: string): CalcResult | null {
+  if (!purchaseDate || !period || period === 'na') return null;
+  const purchase = new Date(purchaseDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  purchase.setHours(0, 0, 0, 0);
+  const daysUsed = Math.max(0, Math.floor((today.getTime() - purchase.getTime()) / 86400000));
+  const totalDays = PERIOD_DAYS[period];
+
+  if (period === 'lifetime') {
+    return {
+      totalDays: null,
+      daysUsed,
+      daysRemaining: null,
+      unusedPercent: null,
+      proportionalRefund: null,
+      refundAfter10: amount ? parseFloat((parseFloat(amount) * 0.9).toFixed(2)) : null,
+    };
+  }
+
+  if (!totalDays) return null;
+  const daysRemaining = Math.max(0, totalDays - daysUsed);
+  const unusedPercent = parseFloat(((daysRemaining / totalDays) * 100).toFixed(1));
+  const paidAmount = parseFloat(amount || '0');
+  const proportionalRefund = paidAmount > 0
+    ? parseFloat(((paidAmount * daysRemaining) / totalDays).toFixed(2))
+    : null;
+  const refundAfter10 = proportionalRefund !== null
+    ? parseFloat((proportionalRefund * 0.9).toFixed(2))
+    : null;
+
+  return { totalDays, daysUsed, daysRemaining, unusedPercent, proportionalRefund, refundAfter10 };
+}
+
+export default function RefundRequest() {
+  const { user } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [ticketNum, setTicketNum] = useState('');
+  const [screenshots, setScreenshots] = useState<{ file: File; preview: string; url?: string }[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-fill user info when logged in
+  useEffect(() => {
+    if (user) {
+      setForm(p => ({
+        ...p,
+        customer_name: p.customer_name || user.user_metadata?.display_name || user.user_metadata?.full_name || '',
+        customer_email: p.customer_email || user.email || '',
+        customer_phone: p.customer_phone || user.user_metadata?.phone || '',
+      }));
+    }
+  }, [user]);
+
+  const [form, setForm] = useState({
+    customer_name: '',
+    customer_email: '',
+    customer_phone: '',
+    order_number: '',
+    product_name: '',
+    reason: '',
+    reason_detail: '',
+    subscription_period: '',
+    purchase_date: '',
+    payment_amount: '',
+    payment_method: '',
+    refund_account_type: '',
+    refund_account_number: '',
+    additional_info: '',
+  });
+
+  // Auto-calculate whenever period, date, or amount changes
+  const calc = (form.purchase_date && form.subscription_period)
+    ? calcRefund(form.purchase_date, form.subscription_period, form.payment_amount)
+    : null;
+
+  // Sync days_used / days_remaining back as display strings
+  const daysUsedDisplay  = calc ? `${calc.daysUsed} দিন` : '';
+  const daysRemainingDisplay = calc?.daysRemaining != null ? `${calc.daysRemaining} দিন` : (calc ? 'লাইফটাইম' : '');
+
+  const isChangeOfMind = form.reason === 'change_of_mind';
+  const deductedAmount = isChangeOfMind && form.payment_amount
+    ? (parseFloat(form.payment_amount) * 0.9).toFixed(2)
+    : null;
+
+  const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (screenshots.length + files.length > 5) {
+      toast.error('সর্বোচ্চ ৫টি স্ক্রিনশট আপলোড করা যাবে');
+      return;
+    }
+    const newItems = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setScreenshots(p => [...p, ...newItems]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const removeScreenshot = (idx: number) => {
+    setScreenshots(p => {
+      URL.revokeObjectURL(p[idx].preview);
+      return p.filter((_, i) => i !== idx);
+    });
+  };
+
+  const uploadScreenshots = async (): Promise<string[]> => {
+    if (screenshots.length === 0) return [];
+    setUploading(true);
+    const urls: string[] = [];
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('লগইন প্রয়োজন');
+      for (const item of screenshots) {
+        const ext = item.file.name.split('.').pop() || 'jpg';
+        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error } = await supabase.storage
+          .from('refund-screenshots')
+          .upload(path, item.file, { upsert: false });
+        if (error) throw error;
+        // Bucket is private — generate a long-lived signed URL (1 year)
+        const { data: signed, error: signErr } = await supabase.storage
+          .from('refund-screenshots')
+          .createSignedUrl(path, 60 * 60 * 24 * 365);
+        if (signErr || !signed) throw signErr || new Error('Signed URL ব্যর্থ');
+        urls.push(signed.signedUrl);
+      }
+    } finally {
+      setUploading(false);
+    }
+    return urls;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.customer_name || !form.customer_email || !form.order_number || !form.reason || !form.refund_account_type || !form.refund_account_number) {
+      toast.error('অনুগ্রহ করে সকল বাধ্যতামূলক ফিল্ড পূরণ করুন (রিফান্ড নম্বর সহ)');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      // Upload screenshots first
+      const screenshotUrls = await uploadScreenshots();
+
+      const tNum = 'RF-' + Date.now().toString().slice(-8);
+      const screenshotLines = screenshotUrls.length > 0
+        ? `\n🖼️ স্ক্রিনশট (${screenshotUrls.length}টি):\n${screenshotUrls.map((u, i) => `  ${i + 1}. ${u}`).join('\n')}`
+        : '';
+
+      const message = `
+📦 অর্ডার নম্বর: ${form.order_number}
+🛍️ পণ্যের নাম: ${form.product_name || 'উল্লেখ নেই'}
+❓ রিফান্ডের কারণ: ${REFUND_REASONS.find(r => r.value === form.reason)?.label || form.reason}
+📝 বিস্তারিত: ${form.reason_detail || 'উল্লেখ নেই'}
+📅 সাবস্ক্রিপশন মেয়াদ: ${SUBSCRIPTION_PERIODS.find(s => s.value === form.subscription_period)?.label || 'উল্লেখ নেই'}
+🗓️ কেনার তারিখ: ${form.purchase_date || 'উল্লেখ নেই'}
+📆 মোট মেয়াদ: ${calc?.totalDays != null ? calc.totalDays + ' দিন' : 'উল্লেখ নেই'}
+📆 ব্যবহৃত দিন: ${daysUsedDisplay || 'উল্লেখ নেই'}
+📆 বাকি দিন: ${daysRemainingDisplay || 'উল্লেখ নেই'}
+💳 পেমেন্টের পরিমাণ: ${form.payment_amount ? '৳' + form.payment_amount : 'উল্লেখ নেই'}
+💳 পেমেন্ট মাধ্যম: ${form.payment_method || 'উল্লেখ নেই'}
+${calc?.proportionalRefund != null ? `📊 অব্যবহৃত অংশের রিফান্ড (সমানুপাতিক): ৳${calc.proportionalRefund}` : ''}
+${calc?.refundAfter10 != null ? `✅ ১০% কেটে চূড়ান্ত রিফান্ড: ৳${calc.refundAfter10}` : ''}
+${isChangeOfMind ? `⚠️ মন পরিবর্তনের কারণে ১০% কেটে ৳${deductedAmount} রিফান্ড হবে।` : ''}
+💰 রিফান্ড পাঠানোর মাধ্যম: ${form.refund_account_type || 'উল্লেখ নেই'}
+📱 রিফান্ড নম্বর: ${form.refund_account_number || 'উল্লেখ নেই'}
+📌 অতিরিক্ত তথ্য: ${form.additional_info || 'উল্লেখ নেই'}${screenshotLines}
+      `.trim();
+
+      await supabase.from('support_tickets').insert({
+        ticket_number: tNum,
+        customer_name: form.customer_name,
+        customer_email: form.customer_email,
+        customer_phone: form.customer_phone || null,
+        order_number: form.order_number,
+        subject: `রিফান্ড রিকোয়েস্ট — ${form.order_number}`,
+        message,
+        priority: 'high',
+        status: 'open',
+      });
+
+      // Send admin email notification (non-blocking)
+      supabase.functions.invoke('notify-refund-request', {
+        body: {
+          ticketNumber: tNum,
+          customerName: form.customer_name,
+          customerEmail: form.customer_email,
+          customerPhone: form.customer_phone || '',
+          orderNumber: form.order_number,
+          productName: form.product_name || '',
+          reason: REFUND_REASONS.find(r => r.value === form.reason)?.label || form.reason,
+          reasonDetail: form.reason_detail || '',
+          subscriptionPeriod: SUBSCRIPTION_PERIODS.find(s => s.value === form.subscription_period)?.label || form.subscription_period,
+          daysUsed: daysUsedDisplay || '',
+          daysRemaining: daysRemainingDisplay || '',
+          paymentAmount: form.payment_amount || '',
+          paymentMethod: form.payment_method || '',
+          refundAccountType: form.refund_account_type || '',
+          refundAccountNumber: form.refund_account_number || '',
+          additionalInfo: form.additional_info || '',
+          screenshotUrls,
+          isChangeOfMind,
+          refundAmount: deductedAmount,
+        },
+      }).catch(() => { /* silent — ticket already saved */ });
+
+      setTicketNum(tNum);
+      setSubmitted(true);
+      toast.success('রিফান্ড রিকোয়েস্ট সফলভাবে জমা হয়েছে!');
+    } catch {
+      toast.error('কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const inputCls = `w-full rounded-xl px-4 py-3 text-sm outline-none transition-all bg-white/70 border border-white/60 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/15 placeholder:text-slate-400`;
+  const labelCls = `block text-[12.5px] font-semibold mb-1.5`;
+
+  return (
+    <div className="min-h-screen" style={{ background: 'linear-gradient(145deg, hsl(258,55%,97%) 0%, hsl(220,40%,96%) 40%, hsl(200,50%,96%) 100%)' }}>
+      <SEOHead title="Refund Request — Relaxo Bean Bag" description="রিটার্ন ও রিফান্ড রিকোয়েস্ট করুন। Relaxo Bean Bag রিটার্ন পলিসি দেখুন এবং আবেদন ফর্ম পূরণ করুন।" />
+      <Navbar />
+
+      {/* Hero */}
+      <div className="relative overflow-hidden pt-24 pb-12">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px]" style={{ background: `radial-gradient(circle, ${A}18, transparent 65%)` }} />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px]" style={{ background: `radial-gradient(circle, ${B}12, transparent 65%)` }} />
+          <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle, ${A}0f 1px, transparent 1px)`, backgroundSize: '26px 26px' }} />
+        </div>
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-bold mb-5"
+            style={{ background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(16px)', border: `1px solid ${A}35`, color: A, boxShadow: `0 4px 16px ${A}20` }}>
+            <RefreshCw size={13} /> Refund Request
+          </div>
+          <div className="inline-block px-8 py-5 rounded-3xl mb-5"
+            style={{ background: 'linear-gradient(155deg, rgba(255,255,255,0.80), rgba(255,255,255,0.55))', backdropFilter: 'blur(32px)', border: '1.5px solid rgba(255,255,255,0.80)', boxShadow: `0 12px 50px ${A}18, 0 1px 0 rgba(255,255,255,0.9) inset` }}>
+            <h1 className="font-sora font-black text-4xl sm:text-5xl leading-none"
+              style={{ background: `linear-gradient(135deg, ${A}, ${B})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              Refund Request
+            </h1>
+          </div>
+          <p className="text-[14px] max-w-lg mx-auto leading-relaxed" style={{ color: 'hsl(226,25%,42%)' }}>
+            রিফান্ড আবেদনের আগে আমাদের পলিসি মনোযোগ দিয়ে পড়ুন এবং নিচের ফর্মটি পূরণ করুন।
+          </p>
+        </div>
+      </div>
+
+      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 pb-20 space-y-5">
+
+        {/* ── Collapsible Policy Section ── */}
+        <GlassCard>
+          <button
+            onClick={() => setPolicyOpen(p => !p)}
+            className="w-full flex items-center justify-between px-6 py-5 transition-colors hover:bg-white/30"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${A}, ${B})` }}>
+                <RefreshCw size={16} className="text-white" />
+              </div>
+              <div className="text-left">
+                <p className="font-sora font-bold text-[15px]" style={{ color: 'hsl(226,35%,14%)' }}>Refund & Return Policy</p>
+                <p className="text-[11px]" style={{ color: 'hsl(226,25%,52%)' }}>আবেদনের আগে পলিসিটি পড়ুন</p>
+              </div>
+            </div>
+            {policyOpen ? <ChevronUp size={18} style={{ color: A }} /> : <ChevronDown size={18} style={{ color: A }} />}
+          </button>
+
+          {policyOpen && (
+            <div className="px-6 pb-6 space-y-4 border-t border-white/40">
+
+              {/* Quick cards */}
+              <div className="grid sm:grid-cols-2 gap-3 pt-4">
+                <div className="rounded-2xl p-4 flex items-start gap-3" style={{ background: 'hsla(142,72%,50%,0.07)', border: '1px solid hsla(142,72%,50%,0.22)' }}>
+                  <CheckCircle size={20} style={{ color: 'hsl(142,72%,38%)', flexShrink: 0 }} />
+                  <div>
+                    <p className="font-bold text-[13px] mb-1" style={{ color: 'hsl(142,50%,22%)' }}>রিফান্ড পাবেন</p>
+                    <p className="text-[12px] leading-relaxed" style={{ color: 'hsl(142,30%,35%)' }}>পণ্য ক্ষতিগ্রস্ত অবস্থায় পৌঁছালে বা ভুল ডেলিভারি হলে ৭ দিনের মধ্যে রিপোর্ট করুন।</p>
+                  </div>
+                </div>
+                <div className="rounded-2xl p-4 flex items-start gap-3" style={{ background: 'hsla(0,72%,50%,0.07)', border: '1px solid hsla(0,72%,50%,0.22)' }}>
+                  <XCircle size={20} style={{ color: 'hsl(0,72%,43%)', flexShrink: 0 }} />
+                  <div>
+                    <p className="font-bold text-[13px] mb-1" style={{ color: 'hsl(0,50%,28%)' }}>রিফান্ড পাবেন না</p>
+                    <p className="text-[12px] leading-relaxed" style={{ color: 'hsl(0,30%,38%)' }}>পণ্য ব্যবহারের পরে বা ৭ দিনের পরে সাধারণত রিফান্ড প্রযোজ্য নয়।</p>
+                  </div>
+                </div>
+              </div>
+
+              <SectionCard icon={<CheckCircle size={15} />} title="রিফান্ড পাওয়ার যোগ্য পরিস্থিতি" accentFrom={A} accentTo={B}>
+                <ul className="space-y-1.5">
+                  <Bullet color="hsl(142,72%,38%)">ডেলিভার করা পণ্য ক্ষতিগ্রস্ত বা ত্রুটিপূর্ণ অবস্থায় পৌঁছালে</Bullet>
+                  <Bullet color="hsl(142,72%,38%)">অর্ডার করা পণ্যের বদলে ভিন্ন পণ্য ডেলিভার হলে</Bullet>
+                  <Bullet color="hsl(142,72%,38%)">পেমেন্ট সফল হলেও নির্ধারিত সময়ের মধ্যে পণ্য না পেলে</Bullet>
+                  <Bullet color="hsl(142,72%,38%)">একই অর্ডারে ডাবল পেমেন্ট হয়ে গেলে</Bullet>
+                  <Bullet color="hsl(142,72%,38%)">স্টক শেষ হওয়ায় সরবরাহ সম্ভব না হলে</Bullet>
+                </ul>
+              </SectionCard>
+
+              <SectionCard icon={<XCircle size={15} />} title="রিফান্ড প্রযোজ্য নয় যখন" accentFrom={A} accentTo={B}>
+                <ul className="space-y-1.5">
+                  <Bullet color="hsl(0,72%,43%)">পণ্য ব্যবহারের চিহ্ন থাকলে বা ফেব্রিক নোংরা/ধোয়া হলে</Bullet>
+                  <Bullet color="hsl(0,72%,43%)">ডেলিভারির ৭ দিনের পরে অভিযোগ করলে</Bullet>
+                  <Bullet color="hsl(0,72%,43%)">ক্রেতার নিজের অসাবধানতায় ফেব্রিক বা কভার ছিঁড়ে গেলে</Bullet>
+                  <Bullet color="hsl(0,72%,43%)">ভুল সাইজ পছন্দ করার কারণে (এক্ষেত্রে এক্সচেঞ্জ প্রযোজ্য)</Bullet>
+                </ul>
+              </SectionCard>
+
+              <SectionCard icon={<AlertTriangle size={15} />} title="বিশেষ গুরুত্বপূর্ণ নিয়ম" accentFrom={A} accentTo={B}>
+                <ul className="space-y-1.5">
+                  <Bullet>ওয়ারেন্টির মেয়াদ: অব্যবহৃত সময়ের সমানুপাতিক রিফান্ড বিবেচনা করা হয়</Bullet>
+                  <Bullet>কম্বো অফার: শুধু সমস্যাযুক্ত পণ্যের রিফান্ড প্রযোজ্য</Bullet>
+                  <Bullet>ডিসকাউন্ট মূল্যে কেনা পণ্যে ডিসকাউন্ট মূল্যই ফেরত দেওয়া হবে</Bullet>
+                  <Bullet color="hsl(38,92%,38%)">
+                    ⚠️ কাস্টমারের ইচ্ছাশক্তির পরিবর্তন (Change of Mind) সহ যেকোনো রিফান্ডের ক্ষেত্রে গেটওয়ে, সার্ভিস ও ব্যাংক চার্জ বাবদ <strong>১০% কেটে</strong> বাকি টাকা ফেরত দেওয়া হবে।
+                  </Bullet>
+                  <Bullet color="hsl(38,92%,38%)">
+                    ⚠️ রিফান্ডের ক্ষেত্রে ব্যাংক কর্তৃক আরোপিত যেকোনো ফি বা চার্জ ক্রেতাকে বহন করতে হবে।
+                  </Bullet>
+                  <Bullet color="hsl(38,92%,38%)">
+                    ⚠️ প্রোডাক্ট ব্যবহারকালীন সমস্যার সমাধানে সর্বোচ্চ <strong>৩ কর্মদিবস</strong> সময় প্রযোজ্য। গ্রাহক ক্রয়ের মাধ্যমে এই শর্তে সম্মতি প্রদান করছেন।
+                  </Bullet>
+                </ul>
+              </SectionCard>
+
+              <SectionCard icon={<Clock size={15} />} title="রিফান্ড প্রক্রিয়া ও সময়সীমা" accentFrom={A} accentTo={B}>
+                <div className="space-y-3">
+                  {[
+                    { n: '১', t: 'আবেদন জমা (৭ দিনের মধ্যে)', d: 'অর্ডার নম্বর, সমস্যার বিবরণ ও ছবি সহ ফর্ম পূরণ করুন।' },
+                    { n: '২', t: 'যাচাই (১–২ কার্যদিবস)', d: 'আমাদের টিম পণ্যটি যাচাই করে রিটার্ন পিকআপ বা রিফান্ড অনুমোদন করবে।' },
+                    { n: '৩', t: 'রিফান্ড প্রদান', d: 'BKash/Nagad/Rocket: ১–৩ কার্যদিবসের মধ্যে। ব্যাংক রিফান্ড: সাধারণত ৩–৭ কার্যদিবস।' },
+                  ].map(s => (
+                    <div key={s.n} className="flex items-start gap-3">
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-black text-white"
+                        style={{ background: `linear-gradient(135deg, ${A}, ${B})` }}>{s.n}</div>
+                      <div>
+                        <p className="font-semibold text-[13px]" style={{ color: 'hsl(226,35%,18%)' }}>{s.t}</p>
+                        <p className="text-[12px] mt-0.5" style={{ color: 'hsl(226,25%,48%)' }}>{s.d}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </SectionCard>
+            </div>
+          )}
+        </GlassCard>
+
+        {/* ── Refund Request Form ── */}
+        {submitted ? (
+          <GlassCard className="p-8 text-center">
+            <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+              style={{ background: 'hsla(142,72%,50%,0.12)', border: '2px solid hsla(142,72%,50%,0.30)' }}>
+              <CheckCircle size={32} style={{ color: 'hsl(142,72%,38%)' }} />
+            </div>
+            <h2 className="font-sora font-black text-xl mb-2" style={{ color: 'hsl(226,35%,14%)' }}>রিফান্ড রিকোয়েস্ট জমা হয়েছে!</h2>
+            <p className="text-sm mb-4" style={{ color: 'hsl(226,25%,42%)' }}>আমাদের টিম ১–৬ ঘণ্টার মধ্যে আপনার সাথে যোগাযোগ করবে।</p>
+            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold"
+              style={{ background: `linear-gradient(135deg, ${A}15, ${B}10)`, border: `1px solid ${A}30`, color: A }}>
+              🎫 টিকেট নম্বর: <span className="font-black font-fira">{ticketNum}</span>
+            </div>
+            <p className="text-[12px] mt-4" style={{ color: 'hsl(226,25%,52%)' }}>
+              এই নম্বরটি সংরক্ষণ করুন। WhatsApp বা Email-এ যোগাযোগ করার সময় এটি উল্লেখ করুন।
+            </p>
+            <button onClick={() => { setSubmitted(false); setForm({ customer_name:'',customer_email:'',customer_phone:'',order_number:'',product_name:'',reason:'',reason_detail:'',subscription_period:'',purchase_date:'',payment_amount:'',payment_method:'',refund_account_type:'',refund_account_number:'',additional_info:'' }); }}
+              className="mt-6 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+              style={{ background: `linear-gradient(135deg, ${A}, ${B})`, color: '#fff', boxShadow: `0 4px 16px ${A}30` }}>
+              নতুন রিকোয়েস্ট করুন
+            </button>
+          </GlassCard>
+        ) : !user ? (
+          <GlassCard className="p-6 sm:p-8 text-center">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: `linear-gradient(135deg, ${A}20, ${B}20)` }}>
+              <LogIn size={28} style={{ color: A }} />
+            </div>
+            <h2 className="font-sora font-bold text-[18px] mb-2" style={{ color: 'hsl(226,35%,14%)' }}>লগইন আবশ্যক</h2>
+            <p className="text-[13px] mb-5" style={{ color: 'hsl(226,25%,52%)' }}>
+              রিফান্ড রিকোয়েস্ট করতে আপনাকে অবশ্যই লগইন করতে হবে। এটি আপনার অর্ডার যাচাই এবং রিফান্ড প্রক্রিয়া নিরাপদ করতে সাহায্য করে।
+            </p>
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-xl text-[14px] font-bold text-white transition-all hover:scale-105"
+              style={{ background: `linear-gradient(135deg, ${A}, ${B})`, boxShadow: `0 4px 16px ${A}30` }}>
+              <LogIn size={16} /> লগইন করুন
+            </button>
+          </GlassCard>
+        ) : (
+          <GlassCard className="p-6 sm:p-8">
+            <div className="flex items-center gap-3 mb-6 pb-5 border-b border-white/40">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${A}, ${B})` }}>
+                <Send size={16} className="text-white" />
+              </div>
+              <div>
+                <h2 className="font-sora font-bold text-[16px]" style={{ color: 'hsl(226,35%,14%)' }}>রিফান্ড আবেদন ফর্ম</h2>
+                <p className="text-[11px]" style={{ color: 'hsl(226,25%,52%)' }}>সকল * চিহ্নিত ফিল্ড বাধ্যতামূলক</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+              {/* Personal Info */}
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-widest mb-3" style={{ color: A }}>ব্যক্তিগত তথ্য</p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>পূর্ণ নাম *</label>
+                    <input required value={form.customer_name} onChange={e => set('customer_name', e.target.value)}
+                      placeholder="আপনার নাম" className={inputCls} maxLength={100} />
+                  </div>
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>ইমেইল *</label>
+                    <input required type="email" value={form.customer_email} onChange={e => set('customer_email', e.target.value)}
+                      placeholder="example@email.com" className={inputCls} maxLength={200} />
+                  </div>
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>ফোন নম্বর</label>
+                    <PhoneInput value={form.customer_phone} onChange={v => set('customer_phone', v)} placeholder="1XXXXXXXXX" />
+                  </div>
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>অর্ডার নম্বর *</label>
+                    <input required value={form.order_number} onChange={e => set('order_number', e.target.value)}
+                      placeholder="ORD-XXXXXXXX" className={inputCls} maxLength={50} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-widest mb-3" style={{ color: A }}>পণ্যের তথ্য</p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2">
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>পণ্যের নাম</label>
+                    <input value={form.product_name} onChange={e => set('product_name', e.target.value)}
+                      placeholder="যেমন: প্রিমিয়াম XL বিন ব্যাগ সোফা" className={inputCls} maxLength={200} />
+                  </div>
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>ওয়ারেন্টির মেয়াদ</label>
+                    <select value={form.subscription_period} onChange={e => set('subscription_period', e.target.value)} className={inputCls}>
+                      <option value="">-- নির্বাচন করুন --</option>
+                      {SUBSCRIPTION_PERIODS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>পেমেন্টের পরিমাণ (৳)</label>
+                    <input type="number" min="0" value={form.payment_amount} onChange={e => set('payment_amount', e.target.value)}
+                      placeholder="যেমন: 499" className={inputCls} />
+                  </div>
+                  {/* Auto-calc: purchase date */}
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>কেনার তারিখ</label>
+                    <input type="date" value={form.purchase_date} onChange={e => set('purchase_date', e.target.value)}
+                      max={new Date().toISOString().split('T')[0]}
+                      className={inputCls} />
+                    <p className="text-[11px] mt-1" style={{ color: 'hsl(226,25%,58%)' }}>কেনার তারিখ দিলে হিসাব স্বয়ংক্রিয় হবে</p>
+                  </div>
+                  {/* Auto-calculated display */}
+                  {calc && (
+                    <div className="sm:col-span-2 rounded-2xl p-4 space-y-3"
+                      style={{ background: `linear-gradient(135deg, ${A}08, ${B}06)`, border: `1.5px solid ${A}25` }}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Calculator size={14} style={{ color: A }} />
+                        <p className="text-[12px] font-black uppercase tracking-widest" style={{ color: A }}>
+                          স্বয়ংক্রিয় হিসাব
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {calc.totalDays != null && (
+                          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.8)' }}>
+                            <p className="font-black text-lg" style={{ color: A }}>{calc.totalDays}</p>
+                            <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'hsl(226,25%,52%)' }}>মোট মেয়াদ (দিন)</p>
+                          </div>
+                        )}
+                        <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.8)' }}>
+                          <p className="font-black text-lg" style={{ color: 'hsl(0,72%,43%)' }}>{calc.daysUsed}</p>
+                          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'hsl(226,25%,52%)' }}>ব্যবহৃত দিন</p>
+                        </div>
+                        {calc.daysRemaining != null && (
+                          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.8)' }}>
+                            <p className="font-black text-lg" style={{ color: 'hsl(142,72%,38%)' }}>{calc.daysRemaining}</p>
+                            <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'hsl(226,25%,52%)' }}>বাকি দিন</p>
+                          </div>
+                        )}
+                        {calc.unusedPercent != null && (
+                          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.8)' }}>
+                            <p className="font-black text-lg" style={{ color: 'hsl(38,92%,38%)' }}>{calc.unusedPercent}%</p>
+                            <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'hsl(226,25%,52%)' }}>অব্যবহৃত অংশ</p>
+                          </div>
+                        )}
+                      </div>
+                      {/* Refund estimate */}
+                      {form.payment_amount && calc.proportionalRefund != null && (
+                        <div className="mt-2 rounded-xl p-3 flex flex-wrap gap-3 justify-between items-center"
+                          style={{ background: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.9)' }}>
+                          <div>
+                            <p className="text-[11px] font-semibold" style={{ color: 'hsl(226,25%,48%)' }}>সমানুপাতিক রিফান্ড (অব্যবহৃত অংশ)</p>
+                            <p className="font-black text-[17px]" style={{ color: 'hsl(226,35%,18%)' }}>৳{calc.proportionalRefund}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[11px] font-semibold" style={{ color: 'hsl(226,25%,48%)' }}>১০% চার্জ বাদ দিয়ে চূড়ান্ত</p>
+                            <p className="font-black text-[20px]" style={{ color: A }}>৳{calc.refundAfter10}</p>
+                          </div>
+                        </div>
+                      )}
+                      {!form.payment_amount && (
+                        <p className="text-[11px]" style={{ color: 'hsl(226,25%,55%)' }}>💡 পেমেন্টের পরিমাণ দিলে সম্ভাব্য রিফান্ডের হিসাব দেখাবে</p>
+                      )}
+                    </div>
+                  )}
+                  <div>
+                    <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>পেমেন্ট মাধ্যম</label>
+                    <select value={form.payment_method} onChange={e => set('payment_method', e.target.value)} className={inputCls}>
+                      <option value="">-- নির্বাচন করুন --</option>
+                      {['BKash', 'Nagad', 'Rocket', 'Upay', 'Bank Transfer', 'অন্যান্য'].map(m => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Refund Reason */}
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-widest mb-3" style={{ color: A }}>রিফান্ডের কারণ</p>
+                <div className="grid sm:grid-cols-2 gap-2.5 mb-4">
+                  {REFUND_REASONS.map(r => (
+                    <button type="button" key={r.value}
+                      onClick={() => set('reason', r.value)}
+                      className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-left text-[13px] font-medium transition-all"
+                      style={{
+                        background: form.reason === r.value ? `linear-gradient(135deg, ${A}15, ${B}10)` : 'rgba(255,255,255,0.55)',
+                        border: `1.5px solid ${form.reason === r.value ? A : 'rgba(255,255,255,0.60)'}`,
+                        color: form.reason === r.value ? A : 'hsl(226,35%,38%)',
+                        boxShadow: form.reason === r.value ? `0 2px 12px ${A}20` : 'none',
+                      }}>
+                      <span className="w-4 h-4 rounded-full flex-shrink-0 border-2 flex items-center justify-center"
+                        style={{ borderColor: form.reason === r.value ? A : 'hsl(226,20%,70%)' }}>
+                        {form.reason === r.value && <span className="w-2 h-2 rounded-full" style={{ background: A }} />}
+                      </span>
+                      {r.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Change of Mind warning */}
+                {isChangeOfMind && (
+                  <div className="rounded-2xl p-4 flex items-start gap-3 mb-4"
+                    style={{ background: 'hsla(38,92%,50%,0.08)', border: '1.5px solid hsla(38,92%,50%,0.30)' }}>
+                    <AlertTriangle size={18} style={{ color: 'hsl(38,92%,40%)', flexShrink: 0, marginTop: 1 }} />
+                    <div>
+                      <p className="font-bold text-[13px] mb-1" style={{ color: 'hsl(38,60%,25%)' }}>⚠️ মন পরিবর্তন — ১০% চার্জ প্রযোজ্য</p>
+                      <p className="text-[12px] leading-relaxed" style={{ color: 'hsl(38,40%,35%)' }}>
+                        কাস্টমারের ইচ্ছাশক্তির পরিবর্তনের ক্ষেত্রে কুরিয়ার, সার্ভিস ও পেমেন্ট চার্জ বাবদ মোট পেমেন্ট থেকে <strong>১০% কেটে</strong> বাকি টাকা রিফান্ড করা হবে।
+                      </p>
+                      {form.payment_amount && (
+                        <div className="mt-2.5 flex flex-wrap gap-3">
+                          <span className="px-3 py-1.5 rounded-lg text-[12px] font-bold"
+                            style={{ background: 'hsla(0,72%,50%,0.10)', color: 'hsl(0,65%,38%)' }}>
+                            কাটা হবে: ৳{(parseFloat(form.payment_amount) * 0.1).toFixed(2)}
+                          </span>
+                          <span className="px-3 py-1.5 rounded-lg text-[12px] font-bold"
+                            style={{ background: 'hsla(142,72%,50%,0.10)', color: 'hsl(142,65%,30%)' }}>
+                            ফেরত পাবেন: ৳{deductedAmount}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>বিস্তারিত কারণ *</label>
+                  <textarea required value={form.reason_detail} onChange={e => set('reason_detail', e.target.value)}
+                    rows={4} placeholder="সমস্যাটি বিস্তারিত লিখুন। যেমন: কী সমস্যা হচ্ছে, কখন থেকে হচ্ছে, কী করার পরে হচ্ছে ইত্যাদি।"
+                    className={inputCls} maxLength={2000} />
+                  <p className="text-[11px] mt-1" style={{ color: 'hsl(226,25%,58%)' }}>{form.reason_detail.length}/2000</p>
+                </div>
+              </div>
+
+              {/* Screenshot Upload */}
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-widest mb-3" style={{ color: A }}>স্ক্রিনশট আপলোড</p>
+                <div className="rounded-2xl p-4 space-y-3"
+                  style={{ background: 'rgba(255,255,255,0.50)', border: '1.5px dashed rgba(139,92,246,0.35)' }}>
+                  <p className="text-[12px]" style={{ color: 'hsl(226,25%,48%)' }}>
+                    সমস্যার প্রমাণ হিসেবে স্ক্রিনশট যোগ করুন (সর্বোচ্চ ৫টি, প্রতিটি ৫MB পর্যন্ত)
+                  </p>
+
+                  {/* Preview grid */}
+                  {screenshots.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {screenshots.map((item, idx) => (
+                        <div key={idx} className="relative group rounded-xl overflow-hidden border border-white/60"
+                          style={{ aspectRatio: '4/3' }}>
+                          <img src={item.preview} alt={`screenshot-${idx + 1}`}
+                            className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                            <button type="button" onClick={() => removeScreenshot(idx)}
+                              className="opacity-0 group-hover:opacity-100 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center transition-all hover:scale-110 shadow-lg">
+                              <X size={14} />
+                            </button>
+                          </div>
+                          <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[10px] font-bold text-white"
+                            style={{ background: 'rgba(0,0,0,0.55)' }}>
+                            {idx + 1}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {screenshots.length < 5 && (
+                    <>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleFileSelect}
+                      />
+                      <button type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full flex items-center justify-center gap-2.5 py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.01]"
+                        style={{
+                          background: `linear-gradient(135deg, ${A}12, ${B}08)`,
+                          border: `1.5px solid ${A}30`,
+                          color: A,
+                        }}>
+                        <ImagePlus size={17} />
+                        স্ক্রিনশট যোগ করুন {screenshots.length > 0 && `(${screenshots.length}/5)`}
+                      </button>
+                    </>
+                  )}
+
+                  {uploading && (
+                    <div className="flex items-center gap-2 text-[12px]" style={{ color: A }}>
+                      <Loader2 size={14} className="animate-spin" />
+                      স্ক্রিনশট আপলোড হচ্ছে...
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Refund Account Info — REQUIRED */}
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-widest mb-1" style={{ color: A }}>রিফান্ড প্রাপ্তির তথ্য *</p>
+                <p className="text-[12px] mb-3" style={{ color: 'hsl(226,25%,52%)' }}>আপনি কোন নম্বরে রিফান্ডের টাকা পেতে চান তা উল্লেখ করুন</p>
+                <div className="rounded-2xl p-5 space-y-4"
+                  style={{ background: 'hsla(258,78%,55%,0.06)', border: '1.5px solid hsla(258,78%,55%,0.25)' }}>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>
+                        পেমেন্ট মাধ্যম *
+                        <span className="ml-1 text-red-500">●</span>
+                      </label>
+                      <select
+                        required
+                        value={form.refund_account_type}
+                        onChange={e => set('refund_account_type', e.target.value)}
+                        className={inputCls}
+                        style={{ borderColor: !form.refund_account_type ? 'hsla(258,78%,55%,0.45)' : undefined }}
+                      >
+                        <option value="">-- নির্বাচন করুন --</option>
+                        {['BKash', 'Nagad', 'Rocket', 'Upay', 'Dutch Bangla Bank', 'Brac Bank', 'Dutch-Bangla Nexus', 'অন্যান্য ব্যাংক'].map(m => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>
+                        নম্বর / অ্যাকাউন্ট *
+                        <span className="ml-1 text-red-500">●</span>
+                      </label>
+                      <input
+                        required
+                        value={form.refund_account_number}
+                        onChange={e => set('refund_account_number', e.target.value)}
+                        placeholder={form.refund_account_type?.includes('Bank') || form.refund_account_type === 'অন্যান্য ব্যাংক' ? 'ব্যাংক অ্যাকাউন্ট নম্বর' : '01XXXXXXXXX'}
+                        className={inputCls}
+                        maxLength={50}
+                        style={{ borderColor: !form.refund_account_number ? 'hsla(258,78%,55%,0.45)' : undefined }}
+                      />
+                    </div>
+                  </div>
+                  {form.refund_account_type && form.refund_account_number && (
+                    <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl"
+                      style={{ background: 'hsla(142,72%,50%,0.10)', border: '1px solid hsla(142,72%,50%,0.30)' }}>
+                      <span className="text-lg">✅</span>
+                      <p className="text-[13px] font-semibold" style={{ color: 'hsl(142,50%,28%)' }}>
+                        রিফান্ড পাঠানো হবে: <strong>{form.refund_account_type}</strong> → <strong>{form.refund_account_number}</strong>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Additional Info */}
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-widest mb-3" style={{ color: A }}>অতিরিক্ত তথ্য</p>
+                <textarea value={form.additional_info} onChange={e => set('additional_info', e.target.value)}
+                  rows={3} placeholder="ট্রানজেকশন আইডি বা অন্য যেকোনো প্রাসঙ্গিক তথ্য এখানে লিখুন।"
+                  className={inputCls} maxLength={1000} />
+              </div>
+
+              {/* Notice */}
+              <div className="rounded-2xl p-4 flex items-start gap-3"
+                style={{ background: `linear-gradient(135deg, ${A}08, ${B}06)`, border: `1px solid ${A}20` }}>
+                <Info size={16} style={{ color: A, flexShrink: 0, marginTop: 1 }} />
+                <p className="text-[12px] leading-relaxed" style={{ color: 'hsl(226,25%,42%)' }}>
+                  আবেদন জমার পর আমাদের টিম <strong>১–৬ ঘণ্টার মধ্যে</strong> আপনার ইমেইল বা WhatsApp-এ যোগাযোগ করবে। জরুরি প্রয়োজনে সরাসরি <strong>01873-990004</strong> নম্বরে যোগাযোগ করুন।
+                </p>
+              </div>
+
+              <button type="submit" disabled={submitting || uploading || !form.reason}
+                className="w-full py-4 rounded-2xl font-bold text-white text-[15px] transition-all hover:scale-[1.01] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                style={{ background: `linear-gradient(135deg, ${A}, ${B})`, boxShadow: `0 6px 24px ${A}35` }}>
+                {submitting ? (
+                  <><div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" /> জমা হচ্ছে...</>
+                ) : (
+                  <><Send size={16} /> রিফান্ড রিকোয়েস্ট জমা করুন</>
+                )}
+              </button>
+            </form>
+          </GlassCard>
+        )}
+      </div>
+
+      <Footer />
+      <FloatingButtons />
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+    </div>
+  );
+}

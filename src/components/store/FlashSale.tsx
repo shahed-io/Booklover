@@ -1,0 +1,336 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { useReveal } from '@/hooks/useReveal';
+import { useCurrency } from '@/hooks/useCurrency';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { Flame, Timer, ArrowRight, ShoppingCart, Zap, TrendingDown, MessageCircle } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
+import { useQuery } from '@tanstack/react-query';
+
+interface FlashProduct {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  original_price: number | null;
+  discount_percent: number | null;
+  image_url: string | null;
+  delivery_time: string | null;
+  short_description: string | null;
+  status: string | null;
+  stock_quantity: number | null;
+}
+
+const WA_NUMBER = '8801873990004';
+
+const getSaleEndTime = (): number => {
+  const key = 'flash_sale_end';
+  const stored = sessionStorage.getItem(key);
+  if (stored) return Number(stored);
+  const end = Date.now() + 7 * 24 * 60 * 60 * 1000;
+  sessionStorage.setItem(key, String(end));
+  return end;
+};
+
+const useCountdown = (endTime: number) => {
+  const calc = () => {
+    const diff = Math.max(0, endTime - Date.now());
+    return {
+      d: Math.floor(diff / 86400000),
+      h: Math.floor((diff % 86400000) / 3600000),
+      m: Math.floor((diff % 3600000) / 60000),
+      s: Math.floor((diff % 60000) / 1000),
+    };
+  };
+  const [time, setTime] = useState(calc);
+  useEffect(() => {
+    const t = setInterval(() => setTime(calc()), 1000);
+    return () => clearInterval(t);
+  }, [endTime]);
+  return time;
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const FlashSale = () => {
+  const endTimeRef = useRef(getSaleEndTime());
+  const time = useCountdown(endTimeRef.current);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { ref: headerRef, visible: headerVisible } = useReveal({ threshold: 0.1 });
+
+  const { data: products = [], isLoading: loading } = useQuery({
+    queryKey: ['flash-sale-products'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, name, slug, price, original_price, discount_percent, image_url, delivery_time, short_description, status, stock_quantity')
+        .in('status', ['active', 'out_of_stock'])
+        .not('discount_percent', 'is', null)
+        .order('discount_percent', { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return (data as FlashProduct[]) ?? [];
+    },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
+  });
+
+  if (!loading && products.length === 0) return null;
+
+const TIME_UNITS = [
+    { v: pad(time.d), l: 'Days' },
+    { v: pad(time.h), l: 'Hours' },
+    { v: pad(time.m), l: 'Mins' },
+    { v: pad(time.s), l: 'Secs' },
+  ];
+
+
+  return (
+    <section className="py-10 relative overflow-hidden bg-transparent">
+      {/* Background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full"
+          style={{ background: 'radial-gradient(circle, hsla(222,64%,24%,0.07), transparent)', filter: 'blur(80px)' }} />
+        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full"
+          style={{ background: 'radial-gradient(circle, hsla(38,95%,55%,0.06), transparent)', filter: 'blur(80px)' }} />
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, hsla(222,64%,24%,0.22), hsla(38,95%,55%,0.25), transparent)' }} />
+      </div>
+
+
+      <div className="container-fluid relative z-10">
+
+        {/* Header */}
+        <div
+          ref={headerRef as React.RefObject<HTMLDivElement>}
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-14 transition-all duration-700"
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? 'translateY(0)' : 'translateY(32px)',
+          }}
+        >
+          <div>
+            <div className="flex items-center gap-2.5 mb-4">
+              <span className="inline-flex items-center gap-1.5 text-[12px] font-bold px-4 py-1.5 rounded-full"
+                style={{ background: 'linear-gradient(135deg, hsl(222,64%,18%), hsl(222,58%,28%))', color: 'hsl(38,95%,66%)', boxShadow: '0 6px 18px hsla(222,64%,18%,0.28), inset 0 1px 0 hsla(0,0%,100%,0.14)' }}>
+<Flame size={13} fill="hsl(38,95%,62%)" stroke="hsl(38,95%,62%)" /> Special Offer
+              </span>
+              <span className="text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full"
+                style={{ background: 'hsla(38,95%,55%,0.14)', border: '1px solid hsla(38,95%,45%,0.35)', color: 'hsl(222,45%,32%)' }}>
+                Limited Time
+              </span>
+            </div>
+<h2 className="font-sora font-black text-foreground leading-tight" style={{ fontSize: 'clamp(1.9rem, 4vw, 2.75rem)' }}>
+              Today's{' '}
+              <span style={{ background: 'linear-gradient(135deg, hsl(38,95%,52%), hsl(30,90%,46%))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                Best Deals
+              </span>
+            </h2>
+            <p className="text-muted-foreground mt-2 text-[14px]">Bean bags & home furniture at the biggest discounts — order before time runs out.</p>
+          </div>
+
+          {/* Countdown */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 text-[12px] font-semibold" style={{ color: 'hsl(222,45%,32%)' }}>
+              <Timer size={13} style={{ color: 'hsl(30,90%,46%)' }} /> Offer ends in:
+            </div>
+            <div className="flex items-center gap-3">
+              {TIME_UNITS.map((item, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="flex flex-col items-center justify-center w-[68px] h-[68px] rounded-[18px]"
+                    style={{
+                      background: 'linear-gradient(150deg, hsl(222,64%,20%), hsl(222,58%,13%))',
+                      border: '1px solid hsla(38,95%,60%,0.28)',
+                      boxShadow: '0 8px 22px hsla(222,64%,14%,0.35), inset 0 1px 0 hsla(0,0%,100%,0.12)',
+                    }}>
+                    <span className="text-[1.55rem] font-fira font-black leading-none tabular-nums tracking-tight" style={{ color: 'hsl(38,95%,66%)' }}>{item.v}</span>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.12em] mt-1" style={{ color: 'hsla(38,60%,88%,0.75)' }}>{item.l}</span>
+                  </div>
+                  {i < TIME_UNITS.length - 1 && (
+                    <div className="flex flex-col gap-1.5 mb-1">
+                      <span className="w-1.5 h-1.5 rounded-full block" style={{ background: 'hsl(38,95%,55%)' }} />
+                      <span className="w-1.5 h-1.5 rounded-full block" style={{ background: 'hsl(38,95%,55%)' }} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Product Grid */}
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+            {[0,1,2,3,4,5,6,7,8,9].map(i => (
+              <div key={i} className="rounded-2xl bg-muted animate-pulse" style={{ height: '22rem', animationDelay: `${i * 0.07}s` }} />
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 grid-fill-rows">
+              {products.map((p, i) => (
+                <div
+                  key={p.id}
+                  style={{
+                    opacity: 1,
+                    transform: 'none',
+                    animation: `rise-up 0.5s ease ${i * 0.06}s both`,
+                  }}
+                >
+                  <FlashCard product={p} delay={i * 0.06}
+                    onAddToCart={addToCart}
+                    onNavigate={() => navigate(`/product/${p.slug}`)} />
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={() => navigate('/shop')}
+                className="flex items-center gap-2.5 px-8 py-4 rounded-2xl text-[14px] font-bold text-white hover:scale-[1.03] active:scale-[0.97] transition-all"
+                style={{ background: 'linear-gradient(135deg, hsl(15,100%,62%), hsl(38,100%,55%))', boxShadow: '0 8px 28px hsla(20,100%,55%,0.35)' }}>
+                <TrendingDown size={16} /> View All Deals <ArrowRight size={15} />
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+};
+
+interface FlashCardProps {
+  product: FlashProduct;
+  delay: number;
+  onAddToCart: (item: any) => void;
+  onNavigate: () => void;
+}
+
+const FlashCard = ({ product, delay, onAddToCart, onNavigate }: FlashCardProps) => {
+  const { format: fmtPrice } = useCurrency();
+  const [hovered, setHovered] = useState(false);
+  const savings = product.original_price ? Math.round(product.original_price - product.price) : null;
+  const outOfStock = product.status === 'out_of_stock' || (typeof product.stock_quantity === 'number' && product.stock_quantity <= 0);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (outOfStock) return;
+    onAddToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.original_price ?? undefined,
+      image: product.image_url || '',
+      category: 'Flash Sale',
+    });
+  };
+
+  const handlePreOrder = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const msg = encodeURIComponent(`I'd like to pre-order (Stock Out):\n📦 ${product.name}\n💰 ${fmtPrice(product.price)}\n\nPlease let me know when it's back in stock.`);
+    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+  };
+
+  return (
+    <div
+      onClick={onNavigate}
+      className="group rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 flex flex-col h-full"
+      style={{
+        animationDelay: `${delay}s`,
+        background: hovered ? 'hsla(0,0%,100%,0.75)' : 'hsla(0,0%,100%,0.55)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        border: hovered ? '1px solid hsla(15,100%,60%,0.45)' : '1px solid hsla(258,78%,75%,0.18)',
+        transform: hovered ? 'translateY(-5px)' : 'none',
+        boxShadow: hovered
+          ? '0 16px 40px hsla(15,100%,60%,0.18), 0 4px 16px hsla(226,35%,12%,0.08), inset 0 1px 0 hsla(0,0%,100%,0.8)'
+          : '0 4px 20px hsla(226,35%,12%,0.07), inset 0 1px 0 hsla(0,0%,100%,0.6)',
+        transition: 'all 0.35s cubic-bezier(0.23,1,0.32,1)',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Image */}
+      <div className="relative aspect-square overflow-hidden bg-muted">
+        <img
+          src={product.image_url || 'https://placehold.co/300x300/1a1f2e/f97316?text=Sale'}
+          alt={product.name}
+          className="w-full h-full object-cover transition-transform duration-500"
+          style={{ transform: hovered ? 'scale(1.06)' : 'scale(1)' }}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+          style={{ background: 'linear-gradient(to top, hsla(226,35%,8%,0.4), transparent)', opacity: hovered ? 1 : 0 }} />
+        {outOfStock && (
+          <>
+            <div className="absolute inset-0 pointer-events-none"
+              style={{ background: 'linear-gradient(to top, hsla(0,0%,0%,0.35), hsla(0,0%,0%,0.05))' }} />
+            <div className="absolute top-2.5 left-2.5 text-white text-[10px] font-black tracking-wider px-2.5 py-1 rounded-xl"
+              style={{ background: 'linear-gradient(135deg, hsl(0,80%,55%), hsl(15,90%,55%))', boxShadow: '0 2px 10px hsla(0,80%,55%,0.5)' }}>
+              STOCK OUT
+            </div>
+          </>
+        )}
+        {!outOfStock && product.discount_percent && (
+          <div className="absolute top-2.5 left-2.5 text-white text-[11px] font-black px-2.5 py-1 rounded-xl flex items-center gap-1"
+            style={{ background: 'linear-gradient(135deg, hsl(15,100%,62%), hsl(38,100%,55%))', boxShadow: '0 2px 10px hsla(15,100%,60%,0.5)' }}>
+            <Zap size={10} fill="white" />
+            -{product.discount_percent}%
+          </div>
+        )}
+        <button
+          onClick={outOfStock ? handlePreOrder : handleAddToCart}
+          className="absolute bottom-2.5 right-2.5 w-9 h-9 rounded-xl text-white flex items-center justify-center transition-all duration-200 hover:scale-110"
+          style={{
+            background: outOfStock
+              ? 'linear-gradient(135deg, hsl(0,80%,55%), hsl(15,90%,55%))'
+              : 'linear-gradient(135deg, hsl(15,100%,62%), hsl(38,100%,55%))',
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? 'translateY(0)' : 'translateY(4px)',
+            boxShadow: outOfStock
+              ? '0 4px 12px hsla(0,80%,55%,0.5)'
+              : '0 4px 12px hsla(15,100%,60%,0.5)',
+          }}
+          title={outOfStock ? 'Pre-order via WhatsApp' : 'Add to cart'}
+        >
+          {outOfStock ? <MessageCircle size={15} /> : <ShoppingCart size={15} />}
+        </button>
+      </div>
+
+      {/* Info */}
+      <div className="p-3.5 flex flex-col flex-1">
+        <p className="font-semibold text-[13px] line-clamp-2 leading-snug mb-2.5 transition-colors duration-200 min-h-[2.4rem]"
+          style={{ color: hovered ? 'hsl(15,100%,58%)' : 'hsl(var(--foreground))' }}>
+          {product.name}
+        </p>
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <span className="text-[17px] font-sora font-black text-foreground">{fmtPrice(product.price)}</span>
+          {product.original_price && (
+            <span className="text-[12px] text-muted-foreground line-through">{fmtPrice(product.original_price)}</span>
+          )}
+        </div>
+        <div className="mt-2 min-h-[1.75rem]">
+          {savings && (
+            <div className="text-[11px] font-bold rounded-lg px-2.5 py-1 inline-flex items-center gap-1"
+              style={{ color: 'hsl(15,100%,65%)', background: 'hsla(15,100%,60%,0.10)', border: '1px solid hsla(15,100%,60%,0.2)' }}>
+              <TrendingDown size={10} /> Save {fmtPrice(savings)}
+            </div>
+          )}
+        </div>
+        <div className="mt-1.5 min-h-[1rem]">
+          {product.delivery_time && (
+            <p className="text-[10px] text-muted-foreground flex items-center gap-1 font-medium">
+              <Zap size={9} style={{ color: 'hsl(158,64%,48%)' }} />
+              {product.delivery_time}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FlashSale;

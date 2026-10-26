@@ -1,0 +1,2914 @@
+import { useState, useEffect, useRef } from 'react';
+import BrandLoader from '@/components/store/BrandLoader';
+import SEOHead from '@/components/seo/SEOHead';
+import PaymentInstructions from '@/components/store/PaymentInstructions';
+import { usePaymentSettings } from '@/hooks/usePaymentSettings';
+import { useBkashPgwContent } from '@/hooks/useBkashPgwContent';
+import { getPaymentLogo } from '@/lib/paymentLogos';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { useReferralConfig, getReferralTier } from '@/hooks/useReferralConfig';
+import { useWishlist } from '@/hooks/useWishlist';
+import { toast } from 'sonner';
+import {
+  User, Mail, Phone, Edit3, Save, X, LogOut, Package,
+  ChevronRight, ShieldCheck, Home, Camera, Lock, Eye, EyeOff,
+  Star, Clock, TrendingUp, TrendingDown, CheckCircle2, AlertCircle,
+  RefreshCw, Upload, Heart, MapPin, Bell, Gift, Copy, Plus,
+  History, BellRing, BellOff, ExternalLink, Wallet, Globe, Megaphone,
+  ChevronDown, Key, CreditCard, Receipt, Info, Award, Zap, ArrowDownCircle,
+  Download, Share2, PlusSquare, Smartphone, AtSign, Check, Loader2, Sparkles
+} from 'lucide-react';
+import BrandLogo from '@/components/store/BrandLogo';
+import VerifiedBadge from '@/components/store/VerifiedBadge';
+import CustomerNoticesWidget from '@/components/store/CustomerNoticesWidget';
+import { LANGUAGES, LangCode, getStoredLang, setStoredLang, t, translateDbText, getLangLocale } from '@/lib/translations';
+import { downloadInvoicePdf, type InvoiceData } from '@/lib/invoicePdf';
+import PhoneInput from '@/components/store/PhoneInput';
+
+interface Profile {
+  display_name: string | null;
+  username: string | null;
+  email: string | null;
+  phone: string | null;
+  avatar_url: string | null;
+  referral_code: string | null;
+  referral_earnings: number;
+  referral_credit: number;
+  referral_discount: number;
+}
+
+
+
+interface OrderItem {
+  id: string; product_name: string; price: number; quantity: number; total: number; license_key: string | null;
+}
+interface TimelineEvent {
+  id: string; status: string; note: string | null; created_at: string;
+}
+interface Order {
+  id: string; order_number: string; status: string;
+  total: number; subtotal: number; discount_amount: number | null;
+  created_at: string; payment_status: string | null;
+  payment_method: string | null; transaction_id: string | null;
+  notes: string | null; coupon_code: string | null;
+  items?: OrderItem[];
+  timeline?: TimelineEvent[];
+}
+interface Address {
+  id: string; label: string; recipient_name: string; phone: string;
+  address_line: string; city: string; district: string | null;
+  postal_code: string | null; is_default: boolean;
+}
+interface Notification {
+  id: string; title: string; message: string; type: string;
+  is_read: boolean; link: string | null; created_at: string;
+}
+interface Referral {
+  id: string; referral_code: string; status: string;
+  reward_amount: number; created_at: string;
+  referred_id: string | null;
+  referred_name?: string;
+  referred_email?: string;
+}
+
+const STATUS_MAP: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
+  pending:    { label: 'Pending',    color: 'text-amber-500 bg-amber-500/10 border-amber-500/30',    icon: <Clock size={11} /> },
+  processing: { label: 'Processing', color: 'text-blue-500 bg-blue-500/10 border-blue-500/30',       icon: <RefreshCw size={11} /> },
+  completed:  { label: 'Completed',  color: 'text-emerald-600 bg-emerald-500/10 border-emerald-500/30', icon: <CheckCircle2 size={11} /> },
+  cancelled:  { label: 'Cancelled',  color: 'text-destructive bg-destructive/10 border-destructive/30', icon: <X size={11} /> },
+  refunded:   { label: 'Refunded',   color: 'text-primary bg-primary/10 border-primary/30',          icon: <AlertCircle size={11} /> },
+  delivered:  { label: 'Delivered',  color: 'text-emerald-600 bg-emerald-500/10 border-emerald-500/30', icon: <CheckCircle2 size={11} /> },
+  failed:     { label: 'Failed',     color: 'text-destructive bg-destructive/10 border-destructive/30', icon: <X size={11} /> },
+};
+
+type TabId = 'profile' | 'orders' | 'licenses' | 'downloads' | 'subscriptions' | 'wallet' | 'points' | 'wishlist' | 'addresses' | 'notifications' | 'referral' | 'security' | 'language' | 'install';
+
+const TAB_IDS: { id: TabId; key: string; icon: any }[] = [
+  { id: 'profile',       key: 'tab_profile',       icon: User },
+  { id: 'orders',        key: 'tab_orders',        icon: Package },
+  { id: 'wallet',        key: 'tab_wallet',        icon: Wallet },
+  { id: 'points',        key: 'tab_points',        icon: Award },
+  { id: 'wishlist',      key: 'tab_wishlist',      icon: Heart },
+  { id: 'addresses',     key: 'tab_addresses',     icon: MapPin },
+  { id: 'notifications', key: 'tab_notifications', icon: Bell },
+  { id: 'referral',      key: 'tab_referral',      icon: Gift },
+  { id: 'security',      key: 'tab_security',      icon: Lock },
+  { id: 'language',      key: 'tab_language',      icon: Globe },
+  { id: 'install',       key: 'tab_install',       icon: Smartphone },
+];
+
+// Glassmorphism card style helper
+const glassCard = {
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.55) 100%)',
+  backdropFilter: 'blur(24px) saturate(180%)',
+  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+  border: '1px solid hsla(258,78%,75%,0.22)',
+  boxShadow: '0 4px 24px hsla(258,78%,55%,0.08), 0 1px 0 rgba(255,255,255,0.9) inset',
+};
+
+const glassCardStrong = {
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.72) 100%)',
+  backdropFilter: 'blur(32px) saturate(200%)',
+  WebkitBackdropFilter: 'blur(32px) saturate(200%)',
+  border: '1px solid hsla(258,78%,75%,0.28)',
+  boxShadow: '0 8px 32px hsla(258,78%,55%,0.10), 0 1px 0 rgba(255,255,255,0.95) inset',
+};
+interface BIPEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+const InstallAppTab = () => {
+  const [deferredPrompt, setDeferredPrompt] = useState<BIPEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [isIOS] = useState(() => /iPad|iPhone|iPod/.test(navigator.userAgent));
+
+  useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+      return;
+    }
+    const handler = (e: Event) => { e.preventDefault(); setDeferredPrompt(e as BIPEvent); };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    await deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') setIsInstalled(true);
+    setDeferredPrompt(null);
+  };
+
+  if (isInstalled) {
+    return (
+      <div className="text-center py-12 space-y-4">
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+          <CheckCircle2 size={28} className="text-green-600" />
+        </div>
+        <h3 className="text-lg font-bold text-foreground">App is already installed!</h3>
+        <p className="text-sm text-muted-foreground">You are using the Relaxo Bean Bag app</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      {/* Hero */}
+      <div className="rounded-2xl p-6 text-center" style={{
+        background: 'linear-gradient(145deg, hsla(258,78%,55%,0.12), hsla(258,78%,55%,0.04))',
+        border: '1px solid hsla(258,78%,55%,0.2)',
+      }}>
+        <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.80) 0%, rgba(255,255,255,0.55) 100%)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid hsla(258,78%,75%,0.25)',
+            boxShadow: '0 4px 20px hsla(258,78%,55%,0.15)',
+          }}>
+          <img src="/favicon.png" alt="Relaxo Bean Bag" className="w-14 h-14 object-contain" />
+        </div>
+        <h3 className="text-lg font-black text-foreground">Install Relaxo Bean Bag App</h3>
+        <p className="text-sm text-muted-foreground mt-1">Get direct access on your phone</p>
+      </div>
+
+      {/* Benefits */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {[
+          { icon: Zap, title: 'Fast Loading', desc: 'Faster than the website' },
+          { icon: Bell, title: 'Order Notifications', desc: 'Get real-time updates' },
+          { icon: Smartphone, title: 'App-like Experience', desc: 'Fullscreen, no address bar' },
+          { icon: ShieldCheck, title: 'Safe & Trusted', desc: '100% official app' },
+        ].map((b, i) => (
+          <div key={i} className="flex items-start gap-3 p-3.5 rounded-xl" style={{
+            background: 'rgba(255,255,255,0.65)',
+            border: '1px solid hsla(258,78%,75%,0.18)',
+          }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'hsla(258,78%,55%,0.1)' }}>
+              <b.icon size={16} className="text-primary" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">{b.title}</p>
+              <p className="text-xs text-muted-foreground">{b.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Install action */}
+      {deferredPrompt ? (
+        <button onClick={handleInstall}
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-white font-bold text-sm transition-transform active:scale-[0.98]"
+          style={{
+            background: 'linear-gradient(135deg, hsl(258,78%,55%), hsl(258,78%,42%))',
+            boxShadow: '0 4px 16px hsla(258,78%,55%,0.35)',
+          }}>
+          <Download size={16} /> Install Now
+        </button>
+      ) : isIOS ? (
+        <div className="rounded-xl p-4 space-y-2" style={{
+          background: 'rgba(255,255,255,0.7)',
+          border: '1px solid hsla(258,78%,75%,0.2)',
+        }}>
+          <p className="text-sm font-bold text-foreground flex items-center gap-2"><Share2 size={14} className="text-primary" /> Install on iOS:</p>
+          <p className="text-xs text-muted-foreground flex items-center gap-2">1. Tap the <Share2 size={12} className="text-blue-500" /> Share button in Safari</p>
+          <p className="text-xs text-muted-foreground flex items-center gap-2">2. Select <PlusSquare size={12} className="text-blue-500" /> "Add to Home Screen"</p>
+        </div>
+      ) : (
+        <div className="rounded-xl p-4 text-center" style={{
+          background: 'rgba(255,255,255,0.7)',
+          border: '1px solid hsla(258,78%,75%,0.2)',
+        }}>
+          <p className="text-sm text-muted-foreground">Open in Chrome/Edge browser to install</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const UserDashboard = () => {
+  const { user, signOut, loading, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const dashboardLocation = useLocation();
+  const [searchParams] = useSearchParams();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { wishlistItems } = useWishlist();
+  const { configs: paymentConfigs } = usePaymentSettings();
+  const bkashContent = useBkashPgwContent();
+  const bkashLogoSrc = getPaymentLogo('bkash_online', '', bkashContent.logo_url);
+
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const tab = searchParams.get('tab') as TabId;
+    return TAB_IDS.some(t => t.id === tab) ? tab : 'profile';
+  });
+  // On mobile: if a tab param is provided via URL, go directly to content view
+  const [mobileShowContent, setMobileShowContent] = useState(() => !!searchParams.get('tab'));
+  const [profile, setProfile] = useState<Profile>({ display_name: '', username: null, email: '', phone: '', avatar_url: null, referral_code: null, referral_earnings: 0, referral_credit: 0, referral_discount: 0 });
+  const [usernameInput, setUsernameInput] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle');
+  const [usernameError, setUsernameError] = useState<string>('');
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPass, setShowNewPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
+  const [passLoading, setPassLoading] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [addressLoading, setAddressLoading] = useState(false);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+  const [addressForm, setAddressForm] = useState({ label: 'Home', recipient_name: '', phone: '', address_line: '', city: '', district: '', postal_code: '', is_default: false });
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notiLoading, setNotiLoading] = useState(false);
+  const { config: referralConfig } = useReferralConfig();
+  const [referrals, setReferrals] = useState<Referral[]>([]);
+
+  const [referralLoading, setReferralLoading] = useState(false);
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [walletTx, setWalletTx] = useState<any[]>([]);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [topupRequests, setTopupRequests] = useState<any[]>([]);
+  const [topupStep, setTopupStep] = useState(0);
+  const [topupAmount, setTopupAmount] = useState('');
+  const [topupPaymentMethod, setTopupPaymentMethod] = useState<string>('bkash_online');
+  const [topupTxId, setTopupTxId] = useState('');
+  const [topupScreenshot, setTopupScreenshot] = useState<File | null>(null);
+  const [topupScreenshotPreview, setTopupScreenshotPreview] = useState<string | null>(null);
+  const topupScreenshotInputRef = useRef<HTMLInputElement>(null);
+  const [topupProcessing, setTopupProcessing] = useState(false);
+  const [selectedLang, setSelectedLang] = useState<LangCode>(getStoredLang());
+  // Points state
+  const [pointsBalance, setPointsBalance] = useState(0);
+  const [totalPointsEarned, setTotalPointsEarned] = useState(0);
+  const [totalPointsRedeemed, setTotalPointsRedeemed] = useState(0);
+  const [pointsTx, setPointsTx] = useState<any[]>([]);
+  const [pointsLoading, setPointsLoading] = useState(false);
+  const [redeemPoints, setRedeemPoints] = useState('');
+  const [redeemProcessing, setRedeemProcessing] = useState(false);
+  // Licenses state
+  const [myLicenses, setMyLicenses] = useState<any[]>([]);
+  const [licensesLoading, setLicensesLoading] = useState(false);
+  const [licenseVisibility, setLicenseVisibility] = useState<Record<string, boolean>>({});
+  // Subscriptions state
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
+  const [subsLoading, setSubsLoading] = useState(false);
+  // Downloads state
+  const [myDownloads, setMyDownloads] = useState<any[]>([]);
+  const [downloadsLoading, setDownloadsLoading] = useState(false);
+
+  // Mobile-friendly tab switch: also show content panel
+  const handleTabSwitch = (tab: TabId) => {
+    setActiveTab(tab);
+    setMobileShowContent(true);
+    window.scrollTo({ top: 0 });
+  };
+
+  useEffect(() => {
+    const tab = searchParams.get('tab') as TabId;
+    const nextTab = TAB_IDS.some(t => t.id === tab) ? tab : 'profile';
+    setActiveTab(nextTab);
+    setMobileShowContent(!!searchParams.get('tab'));
+    window.scrollTo({ top: 0 });
+  }, [searchParams, dashboardLocation.state]);
+
+  useEffect(() => { if (!loading && !user) navigate('/'); }, [user, loading, navigate]);
+
+  const refetchActiveTab = () => {
+    if (!user) return;
+    fetchProfile();
+    if (activeTab === 'orders') fetchOrders();
+    if (activeTab === 'addresses') fetchAddresses();
+    if (activeTab === 'notifications') fetchNotifications();
+    if (activeTab === 'referral') fetchReferrals();
+    if (activeTab === 'wallet') fetchWallet();
+    if (activeTab === 'points') fetchPoints();
+    if (activeTab === 'licenses') fetchLicenses();
+    if (activeTab === 'subscriptions') fetchSubscriptions();
+    if (activeTab === 'downloads') fetchDownloads();
+  };
+
+  useEffect(() => { if (user) fetchProfile(); }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    if (activeTab === 'orders') fetchOrders();
+    if (activeTab === 'addresses') fetchAddresses();
+    if (activeTab === 'notifications') fetchNotifications();
+    if (activeTab === 'referral') fetchReferrals();
+    if (activeTab === 'wallet') fetchWallet();
+    if (activeTab === 'points') fetchPoints();
+    if (activeTab === 'licenses') fetchLicenses();
+    if (activeTab === 'subscriptions') fetchSubscriptions();
+    if (activeTab === 'downloads') fetchDownloads();
+  }, [activeTab, user]);
+
+  // Refetch when tab/window regains focus or comes back online — fixes "data missing after sleep/switch"
+  useEffect(() => {
+    if (!user) return;
+    const onVisible = () => { if (document.visibilityState === 'visible') refetchActiveTab(); };
+    const onFocus = () => refetchActiveTab();
+    const onOnline = () => refetchActiveTab();
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', onFocus);
+    window.addEventListener('online', onOnline);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('online', onOnline);
+    };
+  }, [user, activeTab]);
+
+  // Realtime order updates - live preview
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel('user-orders-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders', filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            const newOrder = payload.new as any;
+            setOrders(prev => [{ ...newOrder, items: undefined } as Order, ...prev]);
+            toast.success('🛒 নতুন অর্ডার তৈরি হয়েছে!', { description: `#${newOrder.order_number}` });
+          } else if (payload.eventType === 'UPDATE') {
+            const updated = payload.new as any;
+            setOrders(prev => prev.map(o => o.id === updated.id ? { ...o, ...updated } : o));
+            const statusLabel = STATUS_MAP[updated.status]?.label || updated.status;
+            toast.info(`📦 অর্ডার #${updated.order_number} আপডেট হয়েছে`, { description: `Status: ${statusLabel}` });
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'order_items' },
+        (payload) => {
+          const updated = payload.new as any;
+          setOrders(prev => prev.map(o => {
+            if (!o.items) return o;
+            return { ...o, items: o.items.map(item => item.id === updated.id ? { ...item, ...updated } : item) };
+          }));
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
+
+  const fetchLicenses = async () => {
+    if (!user) return;
+    setLicensesLoading(true);
+    const { data } = await supabase
+      .from('order_items')
+      .select('id, product_name, license_key, orders!inner(user_id, order_number, status, created_at)')
+      .eq('orders.user_id', user.id)
+      .eq('orders.status', 'completed')
+      .not('license_key', 'is', null);
+    setMyLicenses(data || []);
+    setLicensesLoading(false);
+  };
+
+  const fetchSubscriptions = async () => {
+    if (!user) return;
+    setSubsLoading(true);
+    const { data } = await supabase
+      .from('order_items')
+      .select('id, product_name, expires_at, last_reminder_sent_at, created_at, orders!inner(user_id, order_number, status, created_at)')
+      .eq('orders.user_id', user.id)
+      .eq('orders.status', 'completed')
+      .not('expires_at', 'is', null)
+      .order('expires_at', { ascending: true });
+    setSubscriptions(data || []);
+    setSubsLoading(false);
+  };
+
+  const fetchDownloads = async () => {
+    if (!user) return;
+    setDownloadsLoading(true);
+    const { data } = await supabase
+      .from('order_items')
+      .select('id, product_name, product_id, created_at, orders!inner(user_id, order_number, status, created_at), products!inner(id, name, image_url, download_link)')
+      .eq('orders.user_id', user.id)
+      .eq('orders.status', 'completed')
+      .not('products.download_link', 'is', null)
+      .order('created_at', { ascending: false });
+    // dedupe by product_id keeping latest order
+    const seen = new Set<string>();
+    const unique = (data || []).filter((it: any) => {
+      const pid = it.products?.id || it.product_id;
+      if (!pid || seen.has(pid)) return false;
+      seen.add(pid);
+      return !!it.products?.download_link;
+    });
+    setMyDownloads(unique);
+    setDownloadsLoading(false);
+  };
+
+  const fetchProfile = async () => {
+    if (!user) return;
+    let data: any = null;
+    let lastErr: any = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) await new Promise(r => setTimeout(r, 400 * attempt));
+      const res = await supabase.from('profiles').select('display_name, username, email, phone, avatar_url, referral_code, referral_earnings, referral_credit, referral_discount, points_balance, total_points_earned, total_points_redeemed').eq('user_id', user.id).maybeSingle();
+      if (!res.error && res.data) { data = res.data; break; }
+      lastErr = res.error;
+      if (!res.error) break; // no row but no error — stop retrying
+    }
+    if (data) {
+      setProfile({ display_name: data.display_name, username: (data as any).username || null, email: data.email, phone: data.phone, avatar_url: data.avatar_url, referral_code: (data as any).referral_code || null, referral_earnings: (data as any).referral_earnings || 0, referral_credit: (data as any).referral_credit || 0, referral_discount: (data as any).referral_discount || 0 });
+      setUsernameInput((data as any).username || '');
+      setPointsBalance((data as any).points_balance || 0);
+      setTotalPointsEarned((data as any).total_points_earned || 0);
+      setTotalPointsRedeemed((data as any).total_points_redeemed || 0);
+    } else {
+      if (lastErr) console.warn('fetchProfile failed after retries:', lastErr.message);
+      setProfile({ display_name: user.user_metadata?.display_name || '', username: null, email: user.email || '', phone: '', avatar_url: null, referral_code: null, referral_earnings: 0, referral_credit: 0, referral_discount: 0 });
+    }
+  };
+
+  const fetchPoints = async () => {
+    if (!user) return; setPointsLoading(true);
+    const [profileRes, txRes] = await Promise.all([
+      supabase.from('profiles').select('points_balance, total_points_earned, total_points_redeemed').eq('user_id', user.id).single(),
+      supabase.from('point_transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(100),
+    ]);
+    setPointsBalance((profileRes.data as any)?.points_balance || 0);
+    setTotalPointsEarned((profileRes.data as any)?.total_points_earned || 0);
+    setTotalPointsRedeemed((profileRes.data as any)?.total_points_redeemed || 0);
+    setPointsTx(txRes.data || []);
+    setPointsLoading(false);
+  };
+
+  const handleRedeemPoints = async () => {
+    if (!user) return;
+    const pts = parseInt(redeemPoints);
+    if (!pts || pts < 20) { toast.error(t(selectedLang, 'points_min_redeem')); return; }
+    if (pts % 2 !== 0) { toast.error('Points must be a multiple of 2'); return; }
+    if (pts > pointsBalance) { toast.error('Insufficient points'); return; }
+    setRedeemProcessing(true);
+    try {
+      const { data } = await (supabase as any).rpc('redeem_points', { p_user_id: user.id, p_points: pts });
+      if (data?.success) {
+        toast.success(`✅ ${pts} pts redeemed — ৳${data.taka_credited} ${t(selectedLang, 'points_will_add')}!`);
+        setRedeemPoints('');
+        fetchPoints();
+        fetchProfile();
+      } else {
+        toast.error(data?.error || 'Could not redeem');
+      }
+    } catch { toast.error('Something went wrong, please try again'); }
+    setRedeemProcessing(false);
+  };
+
+  const fetchOrders = async () => {
+    if (!user) return; setOrdersLoading(true);
+    const { data } = await supabase.from('orders').select('id, order_number, status, total, subtotal, discount_amount, created_at, payment_status, payment_method, transaction_id, notes, coupon_code').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50);
+    setOrders((data || []) as Order[]); setOrdersLoading(false);
+  };
+
+  const fetchOrderItems = async (orderId: string) => {
+    const [itemsRes, timelineRes] = await Promise.all([
+      supabase.from('order_items').select('id, product_name, price, quantity, total, license_key').eq('order_id', orderId),
+      supabase.from('order_timeline').select('id, status, note, created_at').eq('order_id', orderId).order('created_at', { ascending: true }),
+    ]);
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, items: (itemsRes.data || []) as OrderItem[], timeline: (timelineRes.data || []) as TimelineEvent[] } : o));
+  };
+
+  const [downloadingInvoice, setDownloadingInvoice] = useState<string | null>(null);
+  const handleDownloadInvoice = async (order: Order) => {
+    try {
+      setDownloadingInvoice(order.id);
+      let items = order.items;
+      if (!items) {
+        const { data } = await supabase
+          .from('order_items')
+          .select('id, product_name, price, quantity, total, license_key')
+          .eq('order_id', order.id);
+        items = (data || []) as OrderItem[];
+      }
+      const invoiceData: InvoiceData = {
+        invoiceNumber: order.order_number,
+        date: order.created_at,
+        customer: {
+          name: profile?.display_name || user?.email?.split('@')[0] || 'Customer',
+          email: profile?.email || user?.email || undefined,
+          phone: profile?.phone || undefined,
+        },
+        items: (items || []).map(i => ({
+          name: i.product_name,
+          quantity: i.quantity,
+          price: i.price,
+          total: i.total,
+          license_key: i.license_key,
+        })),
+        subtotal: order.subtotal,
+        discount: order.discount_amount || 0,
+        total: order.total,
+        paymentMethod: order.payment_method || undefined,
+        transactionId: order.transaction_id || undefined,
+        status: order.status,
+        notes: order.notes || undefined,
+      };
+      await downloadInvoicePdf(invoiceData);
+      toast.success('✅ Invoice ডাউনলোড হয়েছে');
+    } catch (e) {
+      console.error(e);
+      toast.error('Invoice ডাউনলোড করতে সমস্যা হয়েছে');
+    } finally {
+      setDownloadingInvoice(null);
+    }
+  };
+
+  const fetchAddresses = async () => {
+    if (!user) return; setAddressLoading(true);
+    const { data } = await supabase.from('addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false });
+    setAddresses((data || []) as Address[]); setAddressLoading(false);
+  };
+
+  const READ_NOTICES_KEY = 'dashboard_read_notices_v1';
+  const getReadNoticeIds = (): Set<string> => {
+    try { return new Set(JSON.parse(localStorage.getItem(READ_NOTICES_KEY) || '[]')); }
+    catch { return new Set(); }
+  };
+  const saveReadNoticeIds = (ids: Set<string>) => {
+    try { localStorage.setItem(READ_NOTICES_KEY, JSON.stringify(Array.from(ids))); } catch { /* ignore */ }
+  };
+
+  const fetchNotifications = async () => {
+    if (!user) return; setNotiLoading(true);
+    const [notiRes, noticeRes] = await Promise.all([
+      supabase.from('notifications').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(30),
+      supabase.from('notices')
+        .select('id, slug, title, summary, published_at, pinned')
+        .eq('status', 'published')
+        .in('audience', ['public', 'customers', 'both'])
+        .order('pinned', { ascending: false })
+        .order('published_at', { ascending: false })
+        .limit(10),
+    ]);
+    const readIds = getReadNoticeIds();
+    const noticeAsNoti: Notification[] = ((noticeRes.data as any[]) || []).map((n) => ({
+      id: `notice:${n.id}`,
+      title: (n.pinned ? '📌 ' : '📢 ') + n.title,
+      message: n.summary || '',
+      type: 'notice',
+      is_read: readIds.has(n.id),
+      link: `/notices/${n.slug}`,
+      created_at: n.published_at || new Date().toISOString(),
+    }));
+    const merged = [...((notiRes.data as Notification[]) || []), ...noticeAsNoti]
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    setNotifications(merged); setNotiLoading(false);
+  };
+
+
+  const fetchReferrals = async () => {
+    if (!user) return; setReferralLoading(true);
+    const { data } = await supabase.from('referrals').select('*').eq('referrer_id', user.id).order('created_at', { ascending: false });
+    const refs = (data || []) as Referral[];
+
+    // Fetch referred user profiles to show names
+    const referredIds = refs.map(r => r.referred_id).filter(Boolean) as string[];
+    if (referredIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, display_name, email')
+        .in('user_id', referredIds);
+      const profileMap = new Map((profiles || []).map(p => [p.user_id, p]));
+      refs.forEach(r => {
+        if (r.referred_id) {
+          const p = profileMap.get(r.referred_id);
+          if (p) {
+            r.referred_name = p.display_name || p.email?.split('@')[0] || 'User';
+            r.referred_email = p.email || '';
+          }
+        }
+      });
+    }
+
+    setReferrals(refs); setReferralLoading(false);
+
+    // Helper: get IP (cached for this session)
+    const getClientIp = async (): Promise<string | null> => {
+      const cached = sessionStorage.getItem('client_ip');
+      if (cached) return cached;
+      try {
+        const r = await fetch('https://api.ipify.org?format=json');
+        const j = await r.json();
+        if (j?.ip) { sessionStorage.setItem('client_ip', j.ip); return j.ip; }
+      } catch { /* ignore */ }
+      return null;
+    };
+
+    // Retry pending referral (email signup) from localStorage if any
+    const pendingRef = localStorage.getItem('pending_referral');
+    if (pendingRef && user) {
+      const ip = localStorage.getItem('pending_referral_ip') || (await getClientIp());
+      const { data: refResult } = await (supabase.rpc as any)('process_referral', {
+        p_referral_code: pendingRef,
+        p_referred_user_id: user.id,
+        p_ip: ip,
+      });
+      if ((refResult as any)?.success) {
+        localStorage.removeItem('pending_referral');
+        localStorage.removeItem('pending_referral_ip');
+        toast.success('🎁 রেফারেল কোড প্রয়োগ হয়েছে! ৫% স্থায়ী ছাড় সক্রিয়।');
+        fetchProfile();
+      }
+    }
+
+    // Process Google OAuth referral — referrer gets ৳20
+    const pendingGoogleRef = localStorage.getItem('pending_google_referral');
+    if (pendingGoogleRef && user) {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const provider = sessionData?.session?.user?.app_metadata?.provider;
+      if (provider === 'google') {
+        const ip = await getClientIp();
+        let processed = false;
+        for (let attempt = 0; attempt < 5; attempt++) {
+          await new Promise(res => setTimeout(res, 800 * (attempt + 1)));
+          try {
+            const { data: refResult } = await (supabase.rpc as any)('process_google_referral', {
+              p_referral_code: pendingGoogleRef,
+              p_referred_user_id: user.id,
+              p_ip: ip,
+            });
+            if ((refResult as any)?.success) {
+              localStorage.removeItem('pending_google_referral');
+              toast.success('🎉 Google রেফারেল সফল! ৫% ছাড় ও ৳২০ ক্রেডিট সক্রিয় হয়েছে।');
+              processed = true;
+              fetchProfile();
+              break;
+            } else if ((refResult as any)?.error && (refResult as any)?.error !== 'User not found') {
+              localStorage.removeItem('pending_google_referral');
+              if ((refResult as any)?.error?.includes('Same IP')) {
+                toast.warning('একই IP থেকে রেফারেল ব্যবহার সম্ভব নয়। ৫% ছাড় সক্রিয় হয়েছে কিন্তু রেফারার বোনাস পাবেন না।');
+              }
+              break;
+            }
+          } catch { /* retry */ }
+        }
+        if (!processed) localStorage.removeItem('pending_google_referral');
+      }
+    }
+  };
+
+  const fetchWallet = async () => {
+    if (!user) return; setWalletLoading(true);
+    const [profileRes, txRes, reqRes] = await Promise.all([
+      supabase.from('profiles').select('wallet_balance').eq('user_id', user.id).single(),
+      supabase.from('wallet_transactions').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(30),
+      supabase.from('wallet_topup_requests' as any).select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
+    ]);
+    setWalletBalance((profileRes.data as any)?.wallet_balance || 0);
+    setWalletTx(txRes.data || []);
+    setTopupRequests(reqRes.data || []);
+    setWalletLoading(false);
+  };
+
+  const TOPUP_PAYMENT_METHODS = [
+    { id: 'bkash_online', label: 'bKash (Online)', number: '', type: 'bKash PGW', logo: bkashLogoSrc, color: 'from-pink-600 to-rose-700' },
+    ...paymentConfigs
+      .filter(c => c.isActive)
+      .sort((a, b) => a.sortOrder - b.sortOrder)
+      .map(c => ({
+        id: c.id,
+        label: c.label,
+        number: c.number,
+        type: c.type,
+        logo: getPaymentLogo(c.id, c.logoUrl, bkashContent.logo_url) || undefined,
+        color: 'from-gray-600 to-gray-700',
+      })),
+  ];
+
+  const handleTopupScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast.error('শুধুমাত্র ছবি আপলোড করুন'); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error('ছবির সাইজ ৫MB এর কম হতে হবে'); return; }
+    setTopupScreenshot(file);
+    const reader = new FileReader();
+    reader.onload = ev => setTopupScreenshotPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const removeTopupScreenshot = () => {
+    setTopupScreenshot(null);
+    setTopupScreenshotPreview(null);
+    if (topupScreenshotInputRef.current) topupScreenshotInputRef.current.value = '';
+  };
+
+  const handleTopupSubmit = async () => {
+    if (!user) return;
+    const amt = parseFloat(topupAmount);
+    if (!amt || amt < 10) { toast.error('Minimum ৳10 required'); return; }
+    setTopupProcessing(true);
+    try {
+      // bKash Online: redirect to PGW and let callback credit wallet automatically
+      if (topupPaymentMethod === 'bkash_online') {
+        const { data, error } = await supabase.functions.invoke('bkash-create-payment', {
+          body: {
+            purpose: 'wallet_topup',
+            userId: user.id,
+            amount: amt,
+            payerReference: profile.phone || user.email,
+            customerPhone: profile.phone || '',
+          },
+        });
+        if (error || !data?.bkashURL) {
+          throw new Error(data?.error || error?.message || 'bKash payment initiation failed');
+        }
+        window.location.href = data.bkashURL;
+        return;
+      }
+      // Manual methods: require TrxID
+      if (!topupTxId.trim()) { toast.error('Please enter transaction ID'); setTopupProcessing(false); return; }
+      // Optional: upload screenshot
+      let screenshotUrl: string | null = null;
+      if (topupScreenshot) {
+        try {
+          const ext = topupScreenshot.name.split('.').pop()?.toLowerCase() || 'jpg';
+          const path = `topup/${user.id}/${Date.now()}.${ext}`;
+          const { error: upErr } = await supabase.storage.from('payment-proofs').upload(path, topupScreenshot, { upsert: false, contentType: topupScreenshot.type });
+          if (!upErr) {
+            const { data: signed } = await supabase.storage.from('payment-proofs').createSignedUrl(path, 60 * 60 * 24 * 365);
+            screenshotUrl = signed?.signedUrl || path;
+          }
+        } catch (e) { console.error('[Topup] screenshot upload failed', e); }
+      }
+      const { error } = await (supabase.from('wallet_topup_requests' as any) as any).insert({
+        user_id: user.id,
+        amount: amt,
+        payment_method: topupPaymentMethod,
+        transaction_id: topupTxId.trim(),
+        screenshot_url: screenshotUrl,
+        status: 'pending',
+      });
+      if (error) throw error;
+      supabase.functions.invoke('notify-telegram-event', {
+        body: {
+          title: '💰 নতুন Wallet Top-up Request',
+          lines: [
+            `👤 গ্রাহক: ${profile.display_name || user.email}`,
+            `📧 ${user.email}`,
+            `💵 পরিমাণ: ৳${amt.toLocaleString()}`,
+            `💳 পেমেন্ট: ${topupPaymentMethod.toUpperCase()}`,
+            `🔖 TrxID: ${topupTxId.trim()}`,
+          ],
+          footer: '⏳ Admin verification পেন্ডিং',
+        },
+      }).catch(() => {});
+      toast.success('✅ Top-up request submitted! Admin will verify and credit your wallet.');
+      setTopupStep(2); setTopupTxId(''); removeTopupScreenshot();
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to submit request. Please try again.');
+    }
+    setTopupProcessing(false);
+  };
+
+  // Live username availability check (debounced)
+  useEffect(() => {
+    if (!editing) return;
+    const trimmed = usernameInput.trim();
+    // No change → idle
+    if (trimmed === (profile.username || '')) { setUsernameStatus('idle'); setUsernameError(''); return; }
+    if (!trimmed) { setUsernameStatus('idle'); setUsernameError(''); return; }
+    // Format check
+    if (trimmed.length < 3 || trimmed.length > 20) {
+      setUsernameStatus('invalid'); setUsernameError('৩-২০ অক্ষরের মধ্যে হতে হবে'); return;
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(trimmed)) {
+      setUsernameStatus('invalid'); setUsernameError('শুধু a-z, 0-9 এবং _ ব্যবহার করুন'); return;
+    }
+    setUsernameStatus('checking'); setUsernameError('');
+    const timer = setTimeout(async () => {
+      const { data, error } = await supabase.rpc('is_username_available', { p_username: trimmed, p_user_id: user?.id || null });
+      if (error) { setUsernameStatus('invalid'); setUsernameError('চেক করতে সমস্যা হয়েছে'); return; }
+      setUsernameStatus(data ? 'available' : 'taken');
+      setUsernameError(data ? '' : 'এই ইউজারনেমটি ইতিমধ্যে নেওয়া হয়েছে');
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [usernameInput, editing, profile.username, user?.id]);
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    const trimmedUsername = usernameInput.trim();
+    // Block save if username invalid/taken
+    if (trimmedUsername && trimmedUsername !== (profile.username || '') && (usernameStatus === 'taken' || usernameStatus === 'invalid' || usernameStatus === 'checking')) {
+      toast.error(usernameError || 'ইউজারনেম সঠিক নয়');
+      return;
+    }
+    setSaving(true);
+    const payload: any = {
+      display_name: profile.display_name,
+      phone: profile.phone,
+      email: user.email,
+      updated_at: new Date().toISOString(),
+    };
+    // Only include username if changed and valid
+    if (trimmedUsername !== (profile.username || '')) {
+      payload.username = trimmedUsername || null;
+    }
+    // Use UPDATE (profile already exists via handle_new_user trigger)
+    const { data: updated, error } = await supabase
+      .from('profiles')
+      .update(payload)
+      .eq('user_id', user.id)
+      .select('user_id')
+      .maybeSingle();
+
+    if (error) {
+      const msg = (error.message || '').toLowerCase();
+      if (msg.includes('username') && msg.includes('reserved')) {
+        toast.error('এই ইউজারনেমটি সংরক্ষিত — অন্য একটি বেছে নিন');
+      } else if (msg.includes('username') && (msg.includes('character') || msg.includes('between'))) {
+        toast.error('ইউজারনেম ৩-২০ অক্ষরের মধ্যে এবং শুধু a-z, 0-9, _ ব্যবহার করুন');
+      } else if (msg.includes('duplicate') || msg.includes('unique')) {
+        toast.error('এই ইউজারনেমটি ইতিমধ্যে নেওয়া হয়েছে');
+      } else {
+        toast.error(error.message || t(selectedLang, 'profile_save_error'));
+      }
+      setSaving(false);
+      return;
+    }
+
+    // Safety: if profile row didn't exist, insert one
+    if (!updated) {
+      const { error: insertError } = await supabase.from('profiles').insert({
+        user_id: user.id,
+        ...payload,
+      });
+      if (insertError) {
+        toast.error(insertError.message || t(selectedLang, 'profile_save_error'));
+        setSaving(false);
+        return;
+      }
+    }
+
+    setProfile(p => ({ ...p, username: trimmedUsername || null }));
+    setEditing(false);
+    setUsernameStatus('idle');
+    toast.success(t(selectedLang, 'profile_saved'));
+    setSaving(false);
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 2 * 1024 * 1024) { toast.error(t(selectedLang, 'avatar_size_error')); return; }
+    setAvatarUploading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `avatars/${user.id}.${ext}`;
+      const { error: uploadError } = await supabase.storage.from('product-images').upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path);
+      await supabase.from('profiles').upsert({ user_id: user.id, avatar_url: publicUrl, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+      setProfile(p => ({ ...p, avatar_url: publicUrl })); toast.success(t(selectedLang, 'avatar_updated'));
+    } catch { toast.error(t(selectedLang, 'avatar_upload_error')); }
+    setAvatarUploading(false);
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) { toast.error(t(selectedLang, 'password_short')); return; }
+    if (newPassword !== confirmPassword) { toast.error(t(selectedLang, 'password_mismatch')); return; }
+    setPassLoading(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) toast.error(t(selectedLang, 'password_error'));
+    else { toast.success(t(selectedLang, 'password_success')); setNewPassword(''); setConfirmPassword(''); }
+    setPassLoading(false);
+  };
+
+  const handleSaveAddress = async () => {
+    if (!user) return;
+    if (!addressForm.recipient_name || !addressForm.phone || !addressForm.address_line || !addressForm.city) { toast.error(t(selectedLang, 'address_required_fields')); return; }
+    const payload = { ...addressForm, user_id: user.id };
+    if (editingAddress) { await supabase.from('addresses').update(payload).eq('id', editingAddress.id); toast.success(t(selectedLang, 'address_saved')); }
+    else { await supabase.from('addresses').insert(payload); toast.success(t(selectedLang, 'address_saved')); }
+    setShowAddressForm(false); setEditingAddress(null);
+    setAddressForm({ label: 'Home', recipient_name: '', phone: '', address_line: '', city: '', district: '', postal_code: '', is_default: false });
+    fetchAddresses();
+  };
+
+  const handleDeleteAddress = async (id: string) => {
+    await supabase.from('addresses').delete().eq('id', id);
+    toast.success(t(selectedLang, 'address_deleted')); fetchAddresses();
+  };
+
+  const handleMarkAllRead = async () => {
+    if (!user) return;
+    await supabase.from('notifications').update({ is_read: true }).eq('user_id', user.id);
+    // Persist all currently-shown notice ids as read locally.
+    const readIds = getReadNoticeIds();
+    notifications.forEach(n => {
+      if (n.id.startsWith('notice:')) readIds.add(n.id.slice('notice:'.length));
+    });
+    saveReadNoticeIds(readIds);
+    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+  };
+
+  const handleMarkRead = async (id: string) => {
+    if (id.startsWith('notice:')) {
+      const readIds = getReadNoticeIds();
+      readIds.add(id.slice('notice:'.length));
+      saveReadNoticeIds(readIds);
+    } else {
+      await supabase.from('notifications').update({ is_read: true }).eq('id', id);
+    }
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
+  };
+
+
+  const copyReferralCode = () => {
+    const code = profile.referral_code;
+    if (!code) return; navigator.clipboard.writeText(code); toast.success(t(selectedLang, 'copied'));
+  };
+
+  const shareReferralLink = () => {
+    const code = profile.referral_code;
+    if (!code) return;
+    const msg = `${referralConfig.share_message}\n${window.location.origin}?ref=${code}`;
+    navigator.clipboard.writeText(msg); toast.success(t(selectedLang, 'link_copied'));
+  };
+
+  const handleLogout = async () => { await signOut(); navigate('/'); };
+
+  const displayName = profile.display_name || user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
+  const initials = displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+  const completedOrders = orders.filter(o => o.status === 'completed').length;
+  const totalSpent = orders.filter(o => o.status === 'completed').reduce((s, o) => s + o.total, 0);
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  const tabsWithBadges = TAB_IDS.map(tab => ({
+    ...tab, label: t(selectedLang, tab.key),
+    badge: tab.id === 'wishlist' ? wishlistItems.length : tab.id === 'notifications' ? unreadCount : undefined,
+  }));
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <BrandLoader size="md" />
+    </div>
+  );
+
+  const inputCls = "w-full rounded-xl pl-10 pr-4 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80 placeholder:text-muted-foreground";
+  const labelCls = "block text-xs font-semibold uppercase tracking-wide mb-2 text-muted-foreground";
+  const gradBtn = "text-white font-semibold rounded-xl transition-all hover:opacity-90 active:scale-[0.98]";
+  const gradBtnStyle = { background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' };
+
+  return (
+    <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(240,30%,96%) 0%, hsl(260,25%,94%) 50%, hsl(280,20%,95%) 100%)' }}>
+      <SEOHead title="My Dashboard" description="Manage your orders, wallet, and account at Relaxo Bean Bag." noIndex />
+
+      {/* Ambient gradient blobs - desktop only for visual richness */}
+      <div className="hidden md:block pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-40 -left-32 w-[520px] h-[520px] rounded-full opacity-50"
+          style={{ background: 'radial-gradient(circle, hsla(258,85%,70%,0.35) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div className="absolute top-1/3 -right-40 w-[600px] h-[600px] rounded-full opacity-40"
+          style={{ background: 'radial-gradient(circle, hsla(190,90%,65%,0.3) 0%, transparent 70%)', filter: 'blur(80px)' }} />
+        <div className="absolute -bottom-40 left-1/3 w-[500px] h-[500px] rounded-full opacity-30"
+          style={{ background: 'radial-gradient(circle, hsla(280,80%,70%,0.25) 0%, transparent 70%)', filter: 'blur(70px)' }} />
+      </div>
+
+      <div className="relative z-10">
+      {/* Header */}
+      <header className="sticky top-0 z-50" style={{ ...glassCard, borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <a href="/" className="flex items-center group"><BrandLogo size="sm" /></a>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="/"
+              aria-label="Home"
+              className="group relative flex items-center gap-2 h-9 px-3 rounded-full transition-all duration-300 active:scale-[0.97]"
+              style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid hsla(258,78%,75%,0.25)', boxShadow: '0 2px 8px hsla(243,75%,59%,0.08)' }}
+            >
+              <span className="flex items-center justify-center w-6 h-6 rounded-full text-white shadow-[0_0_10px_hsla(243,75%,59%,0.35)] group-hover:shadow-[0_0_14px_hsla(243,75%,59%,0.55)] transition-shadow"
+                style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>
+                <Home size={13} strokeWidth={2.5} />
+              </span>
+              <span className="hidden sm:inline text-[13px] font-semibold tracking-wide text-foreground/80 group-hover:text-foreground transition-colors">Home</span>
+            </a>
+
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid hsla(258,78%,75%,0.25)' }}>
+              <div className="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>
+                {profile.avatar_url ? <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" /> : initials}
+              </div>
+              <span className="text-sm font-semibold max-w-[120px] truncate hidden sm:flex items-center gap-1 text-foreground">
+                <span className="truncate">{displayName}</span>
+                <VerifiedBadge size={13} />
+              </span>
+              {unreadCount > 0 && <span className="w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center" style={{ background: 'hsl(var(--destructive))' }}>{unreadCount}</span>}
+            </div>
+            {isAdmin && (
+              <button onClick={() => navigate('/admin')} className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-xl transition-all" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(263,70%,58%))', color: 'white', boxShadow: '0 2px 8px hsla(243,75%,59%,0.4)' }}>
+                <ShieldCheck size={14} /><span className="hidden sm:inline">Admin Panel</span>
+              </button>
+            )}
+            <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-xl transition-all hover:bg-destructive/10 text-muted-foreground">
+              <LogOut size={14} /><span className="hidden sm:inline">{t(selectedLang, 'tab_logout')}</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+        {/* Hero Profile Card — fully redesigned premium glassmorphism */}
+        <div className="hidden md:block relative mb-8">
+          {/* Floating ambient halo behind hero */}
+          <div className="absolute -inset-x-6 -top-6 h-[260px] pointer-events-none opacity-70" aria-hidden="true"
+            style={{ background: 'radial-gradient(60% 100% at 20% 0%, hsla(258,85%,70%,0.30) 0%, transparent 60%), radial-gradient(60% 100% at 90% 30%, hsla(190,90%,65%,0.25) 0%, transparent 60%)', filter: 'blur(40px)' }} />
+
+          <div className="relative rounded-[28px] overflow-hidden" style={glassCardStrong}>
+            {/* Gradient top accent bar */}
+            <div className="h-1.5 w-full" style={{ background: 'linear-gradient(90deg, hsl(243,75%,59%), hsl(263,70%,58%) 35%, hsl(190,90%,60%) 70%, hsl(330,82%,60%))' }} />
+
+            {/* Inner content */}
+            <div className="relative p-6 lg:p-8">
+              {/* Decorative inner glow */}
+              <div className="absolute -top-16 right-10 w-64 h-64 rounded-full opacity-50 pointer-events-none"
+                style={{ background: 'radial-gradient(circle, hsla(258,85%,75%,0.35) 0%, transparent 70%)', filter: 'blur(40px)' }} aria-hidden="true" />
+
+              <div className="relative flex items-start justify-between gap-8 flex-wrap">
+                {/* Identity block */}
+                <div className="flex items-center gap-6 min-w-0 flex-1">
+                  <div className="relative flex-shrink-0">
+                    {/* Animated gradient ring */}
+                    <div className="absolute inset-0 rounded-3xl opacity-70 blur-md"
+                      style={{ background: 'conic-gradient(from 180deg, hsl(243,75%,59%), hsl(263,70%,58%), hsl(190,90%,60%), hsl(330,82%,60%), hsl(243,75%,59%))' }} aria-hidden="true" />
+                    <div className="relative p-[2.5px] rounded-3xl"
+                      style={{ background: 'conic-gradient(from 180deg, hsl(243,75%,59%), hsl(263,70%,58%), hsl(190,90%,60%), hsl(330,82%,60%), hsl(243,75%,59%))' }}>
+                      <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-[22px] overflow-hidden flex items-center justify-center text-3xl font-black text-white ring-4 ring-white/80"
+                        style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>
+                        {profile.avatar_url ? <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" /> : initials}
+                      </div>
+                    </div>
+                    <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+                    <button onClick={() => fileInputRef.current?.click()} disabled={avatarUploading}
+                      title="Change photo"
+                      className="absolute -bottom-2 -right-2 w-9 h-9 rounded-2xl flex items-center justify-center shadow-lg ring-2 ring-white transition-all hover:scale-110 active:scale-95"
+                      style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))', boxShadow: '0 6px 16px hsla(258,78%,55%,0.45)' }}>
+                      {avatarUploading ? <RefreshCw size={14} className="text-white animate-spin" /> : <Camera size={14} className="text-white" />}
+                    </button>
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary/70 mb-1">Welcome back</p>
+                    <h1 className="text-3xl lg:text-[34px] font-black leading-tight truncate flex items-center gap-2.5"
+                      style={{ background: 'linear-gradient(135deg, hsl(230,30%,15%), hsl(258,40%,30%))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      <span className="truncate">{displayName}</span>
+                      <VerifiedBadge size={24} />
+                    </h1>
+                    <p className="text-sm font-medium text-foreground/65 break-all flex items-center gap-1.5 mt-1.5">
+                      <Mail size={13} className="text-primary/70 flex-shrink-0" />
+                      {user?.email}
+                    </p>
+                    <div className="flex items-center gap-2 mt-3.5 flex-wrap">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full text-white"
+                        style={{ background: 'linear-gradient(135deg, hsl(158,64%,42%), hsl(168,76%,38%))', boxShadow: '0 4px 12px hsla(158,64%,42%,0.35)' }}>
+                        <ShieldCheck size={11} /> Verified
+                      </span>
+                      {completedOrders > 0 && (
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full"
+                          style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(10px)', border: '1px solid hsla(258,78%,65%,0.35)', color: 'hsl(var(--primary))' }}>
+                          <Star size={10} fill="currentColor" /> {completedOrders} Completed
+                        </span>
+                      )}
+                      {profile.username && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-3 py-1.5 rounded-full text-foreground/70"
+                          style={{ background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', border: '1px solid hsla(258,78%,75%,0.25)' }}>
+                          <AtSign size={10} />{profile.username}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Stat cards — premium floating tiles */}
+                <div className="grid grid-cols-3 gap-3 lg:gap-4">
+                  {[
+                    { icon: Package, label: t(selectedLang, 'order'), value: orders.length.toString(), accent: 'hsl(243,75%,59%)', glow: 'hsla(243,75%,59%,0.35)' },
+                    { icon: TrendingUp, label: t(selectedLang, 'total'), value: `৳${totalSpent.toLocaleString()}`, accent: 'hsl(263,70%,58%)', glow: 'hsla(263,70%,58%,0.35)' },
+                    { icon: Heart, label: t(selectedLang, 'tab_wishlist'), value: wishlistItems.length.toString(), accent: 'hsl(340,82%,55%)', glow: 'hsla(340,82%,55%,0.35)' },
+                  ].map((stat, i) => (
+                    <div key={i} className="group relative px-4 lg:px-5 py-3.5 lg:py-4 rounded-2xl min-w-[120px] lg:min-w-[140px] transition-all duration-300 hover:-translate-y-1 cursor-default overflow-hidden"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.75) 100%)',
+                        backdropFilter: 'blur(20px) saturate(180%)',
+                        border: '1px solid hsla(258,78%,75%,0.30)',
+                        boxShadow: `0 6px 20px ${stat.glow}, 0 1px 0 rgba(255,255,255,0.95) inset`,
+                      }}>
+                      <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-60 transition-opacity"
+                        style={{ background: `radial-gradient(circle, ${stat.glow} 0%, transparent 70%)`, filter: 'blur(20px)' }} aria-hidden="true" />
+                      <div className="relative flex items-center gap-2 mb-1.5">
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-6"
+                          style={{
+                            background: `linear-gradient(135deg, ${stat.accent} 0%, ${stat.accent} 60%, color-mix(in hsl, ${stat.accent} 75%, white) 100%)`,
+                            boxShadow: `0 4px 14px ${stat.glow}, inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -2px 4px rgba(0,0,0,0.12)`,
+                            border: `1px solid color-mix(in hsl, ${stat.accent} 70%, white)`,
+                          }}>
+                          <stat.icon size={15} strokeWidth={2.5} color="#ffffff" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.25))' }} />
+                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">{stat.label}</div>
+                      </div>
+                      <div className="relative text-2xl lg:text-[26px] font-black leading-tight tracking-tight" style={{ color: stat.accent }}>{stat.value}</div>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Notices are now merged into the Notifications tab */}
+
+
+        {/* Body */}
+        <div className="grid md:grid-cols-[280px_1fr] gap-6 lg:gap-7">
+
+          {/* Sidebar — premium redesign with floating glow active state */}
+          <aside className={`rounded-[26px] p-3.5 h-fit md:sticky md:top-24 ${mobileShowContent ? 'hidden md:block' : ''}`} style={glassCard}>
+            {(() => {
+              const SECTIONS: { title: string; ids: TabId[] }[] = [
+                { title: 'Account', ids: ['profile', 'security', 'addresses'] },
+                { title: 'Activity', ids: ['orders', 'wishlist', 'notifications'] },
+                { title: 'Rewards', ids: ['wallet', 'points', 'referral'] },
+                { title: 'Preferences', ids: ['language', 'install'] },
+              ];
+              const renderItem = ({ id, label, icon: Icon, badge }: typeof tabsWithBadges[number]) => {
+                const isActive = activeTab === id;
+                return (
+                  <button key={id} onClick={() => handleTabSwitch(id)}
+                    className={`group relative w-full flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl text-[13px] font-semibold transition-all duration-300 mb-1 overflow-hidden active:scale-[0.97] ${
+                      isActive ? 'text-foreground' : 'text-foreground/75 hover:text-foreground'
+                    }`}
+                    style={isActive ? {
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.78) 100%)',
+                      backdropFilter: 'blur(28px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+                      border: '1px solid rgba(255,255,255,0.9)',
+                      boxShadow: '0 10px 28px hsla(258,40%,40%,0.12), 0 1px 0 rgba(255,255,255,1) inset, 0 0 0 1px hsla(258,78%,75%,0.18)',
+                    } : { background: 'transparent' }}
+                    onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.6)'; }}
+                    onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}>
+                    {/* Hover shimmer */}
+                    {!isActive && (
+                      <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)' }} aria-hidden="true" />
+                    )}
+                    {/* Click ripple pulse on active */}
+                    {isActive && (
+                      <span key={`ripple-${id}`} className="absolute inset-0 rounded-2xl pointer-events-none animate-[tabRipple_0.6s_ease-out]"
+                        style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,0.7) 0%, transparent 60%)' }} aria-hidden="true" />
+                    )}
+                    <span className={`relative w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                      isActive ? 'scale-105' : 'group-hover:scale-110 group-hover:rotate-3'
+                    }`}
+                      style={isActive
+                        ? { background: 'linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.85))', border: '1px solid rgba(255,255,255,1)', boxShadow: '0 4px 12px hsla(258,78%,55%,0.18), 0 1px 0 rgba(255,255,255,1) inset' }
+                        : { background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.7))', border: '1px solid hsla(258,78%,75%,0.30)', boxShadow: '0 2px 6px hsla(258,78%,55%,0.08)' }
+                      }>
+                      <Icon size={15} className="text-primary" />
+                    </span>
+                    <span className="relative flex-1 text-left truncate">{label}</span>
+                    {badge !== undefined && badge > 0 && (
+                      <span className="relative text-[10px] font-black px-2 min-w-[20px] h-[20px] rounded-full flex items-center justify-center text-white shadow-sm"
+                        style={{ background: id === 'notifications' ? 'linear-gradient(135deg, hsl(0,84%,60%), hsl(355,80%,55%))' : 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>{badge}</span>
+                    )}
+                  </button>
+                );
+              };
+              return (
+                <>
+                  {SECTIONS.map((section, sIdx) => {
+                    const items = tabsWithBadges.filter(t => section.ids.includes(t.id));
+                    if (!items.length) return null;
+                    return (
+                      <div key={section.title} className={sIdx > 0 ? 'mt-4' : ''}>
+                        <div className="flex items-center gap-2 px-2.5 mb-1.5">
+                          <p className="text-[9px] font-black uppercase tracking-[0.18em] text-primary/60">{section.title}</p>
+                          <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, hsla(258,78%,65%,0.25), transparent)' }} />
+                        </div>
+                        {items.map(renderItem)}
+                      </div>
+                    );
+                  })}
+                  <div className="h-px my-4 mx-2" style={{ background: 'linear-gradient(90deg, transparent, hsla(258,78%,65%,0.30), transparent)' }} />
+                  <button onClick={() => navigate('/affiliate')} className="group relative w-full flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl text-[13px] font-bold transition-all duration-300 mb-1 overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, hsla(258,78%,65%,0.18), hsla(280,70%,60%,0.12))', border: '1px solid hsla(258,78%,55%,0.30)', color: 'hsl(258,78%,40%)' }}>
+                    <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-12"
+                      style={{ background: 'linear-gradient(135deg, hsl(258,78%,55%), hsl(280,70%,52%))', boxShadow: '0 4px 12px hsla(258,78%,55%,0.40)' }}>
+                      <Gift size={15} className="text-white" />
+                    </span>
+                    <span className="flex-1 text-left">Affiliate Program</span>
+                    <ChevronRight size={14} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                  </button>
+                  <button onClick={() => navigate('/shop')} className="group relative w-full flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl text-[13px] font-bold transition-all duration-300 mb-1 overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, hsla(45,95%,55%,0.18), hsla(35,90%,60%,0.12))', border: '1px solid hsla(45,90%,52%,0.30)', color: 'hsl(35,85%,38%)' }}>
+                    <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-12"
+                      style={{ background: 'linear-gradient(135deg, hsl(45,95%,55%), hsl(35,90%,52%))', boxShadow: '0 4px 12px hsla(38,92%,50%,0.40)' }}>
+                      <Zap size={15} className="text-white" />
+                    </span>
+                    <span className="flex-1 text-left">Shop Bean Bags</span>
+                    <ChevronRight size={14} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                  </button>
+                  {isAdmin && (
+                    <button onClick={() => navigate('/admin')} className="group w-full flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl text-[13px] font-bold transition-all mb-1 text-white" style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))', boxShadow: '0 8px 20px hsla(243,75%,59%,0.42), 0 1px 0 rgba(255,255,255,0.4) inset' }}>
+                      <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)' }}>
+                        <ShieldCheck size={15} className="text-white" />
+                      </span>
+                      <span className="flex-1 text-left">Admin Panel</span>
+                      <ChevronRight size={14} className="text-white/80" />
+                    </button>
+                  )}
+                  <button onClick={handleLogout} className="group w-full flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl text-[13px] font-semibold transition-all hover:bg-destructive/10 text-destructive">
+                    <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
+                      style={{ background: 'linear-gradient(135deg, hsla(0,84%,60%,0.15), hsla(355,80%,55%,0.10))', border: '1px solid hsla(0,84%,60%,0.25)' }}>
+                      <LogOut size={15} className="text-destructive" />
+                    </span>
+                    {t(selectedLang, 'tab_logout')}
+                  </button>
+                </>
+              );
+            })()}
+          </aside>
+
+          {/* Content Panel */}
+          <div className={`rounded-3xl overflow-hidden ${!mobileShowContent ? 'hidden md:block' : ''}`} style={glassCardStrong}>
+
+            {/* Mobile Back Button */}
+            <button
+              onClick={() => { navigate('/?openMenu=1'); }}
+              className="md:hidden flex items-center gap-2 px-4 py-3 text-sm font-semibold text-primary w-full"
+              style={{ borderBottom: '1px solid hsla(258,78%,75%,0.15)', background: 'rgba(255,255,255,0.5)' }}>
+              <ChevronRight size={16} className="rotate-180" /> Back to Menu
+            </button>
+
+            {/* Tab Header */}
+            <div className="relative px-5 sm:px-7 py-5 sm:py-6 flex items-center justify-between gap-3 overflow-hidden"
+              style={{ borderBottom: '1px solid hsla(258,78%,75%,0.18)', background: 'linear-gradient(135deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.35) 100%)' }}>
+              <div className="absolute -top-12 -left-8 w-40 h-40 rounded-full opacity-50 pointer-events-none"
+                style={{ background: 'radial-gradient(circle, hsla(258,85%,70%,0.18) 0%, transparent 70%)', filter: 'blur(30px)' }} aria-hidden="true" />
+              <div className="relative flex items-center gap-3 min-w-0">
+                <div className="hidden sm:flex w-11 h-11 rounded-2xl items-center justify-center flex-shrink-0 shadow-md"
+                  style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))', boxShadow: '0 6px 16px hsla(243,75%,59%,0.35)' }}>
+                  {(() => {
+                    const ActiveIcon = tabsWithBadges.find(t => t.id === activeTab)?.icon;
+                    return ActiveIcon ? <ActiveIcon size={20} className="text-white" /> : null;
+                  })()}
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-xl sm:text-2xl font-black truncate"
+                    style={{ background: 'linear-gradient(135deg, hsl(243,75%,45%), hsl(263,70%,48%))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                    {t(selectedLang, `tab_${activeTab}`)}
+                  </h2>
+                  <p className="text-xs mt-0.5 text-muted-foreground truncate">
+                    {activeTab === 'orders' ? `${orders.length} ${t(selectedLang, 'order')}` : activeTab === 'wishlist' ? `${wishlistItems.length} items` : activeTab === 'notifications' ? `${unreadCount} ${t(selectedLang, 'unread')}` : activeTab === 'points' ? `${t(selectedLang, 'points_balance_label')} ${pointsBalance} pts` : activeTab === 'profile' ? 'Manage your personal information' : activeTab === 'wallet' ? 'Top-up & transactions' : activeTab === 'addresses' ? 'Saved delivery locations' : activeTab === 'security' ? 'Password & account safety' : activeTab === 'referral' ? 'Earn rewards by inviting friends' : activeTab === 'licenses' ? 'Your purchased licenses' : activeTab === 'downloads' ? 'Download links for your purchases' : activeTab === 'subscriptions' ? 'Track expiry & renewal reminders' : ''}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                {activeTab === 'profile' && !editing && (
+                  <button onClick={() => setEditing(true)} className={`flex items-center gap-2 px-4 py-2 text-sm ${gradBtn}`} style={gradBtnStyle}>
+                    <Edit3 size={14} /> {t(selectedLang, 'edit')}
+                  </button>
+                )}
+                {activeTab === 'profile' && editing && (
+                  <div className="flex gap-2">
+                    <button onClick={() => setEditing(false)} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:bg-white/60 transition-colors" style={{ border: '1px solid hsla(258,78%,75%,0.3)' }}>
+                      <X size={13} /> {t(selectedLang, 'cancel')}
+                    </button>
+                    <button onClick={handleSaveProfile} disabled={saving} className={`flex items-center gap-1.5 px-4 py-2 text-sm disabled:opacity-60 ${gradBtn}`} style={gradBtnStyle}>
+                      <Save size={13} /> {saving ? t(selectedLang, 'loading') : t(selectedLang, 'save')}
+                    </button>
+                  </div>
+                )}
+                {activeTab === 'addresses' && (
+                  <button onClick={() => { setShowAddressForm(true); setEditingAddress(null); setAddressForm({ label: 'Home', recipient_name: '', phone: '', address_line: '', city: '', district: '', postal_code: '', is_default: false }); }}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm ${gradBtn}`} style={gradBtnStyle}>
+                    <Plus size={14} /> {t(selectedLang, 'add_address')}
+                  </button>
+                )}
+                {activeTab === 'notifications' && unreadCount > 0 && (
+                  <button onClick={handleMarkAllRead} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:bg-white/60 transition-colors" style={{ border: '1px solid hsla(258,78%,75%,0.3)' }}>
+                    <BellOff size={13} /> {t(selectedLang, 'mark_all_read')}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="p-5 sm:p-6">
+
+              {/* ── Profile Tab ── */}
+              {activeTab === 'profile' && (
+                <div className="space-y-4 max-w-lg">
+                  {/* Avatar section - always visible on mobile, only in edit mode on desktop */}
+                  <div className={`flex items-center gap-4 p-4 rounded-2xl ${!editing ? 'md:hidden' : ''}`} style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                    <div className="relative flex-shrink-0">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center text-lg font-black text-white" style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>
+                        {profile.avatar_url ? <img src={profile.avatar_url} alt="av" className="w-full h-full object-cover" /> : initials}
+                      </div>
+                      <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+                      <button onClick={() => fileInputRef.current?.click()} disabled={avatarUploading}
+                        className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg flex items-center justify-center shadow-md border-2 transition-transform hover:scale-110"
+                        style={{ background: 'hsl(var(--primary))', borderColor: 'white' }}>
+                        {avatarUploading ? <RefreshCw size={11} className="text-white animate-spin" /> : <Camera size={11} className="text-white" />}
+                      </button>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{t(selectedLang, 'avatar_change')}</p>
+                      <p className="text-xs mb-2 text-muted-foreground">JPG, PNG — Max 2MB</p>
+                      <button onClick={() => fileInputRef.current?.click()} disabled={avatarUploading} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                        {avatarUploading ? <RefreshCw size={12} className="animate-spin" /> : <Upload size={12} />} {t(selectedLang, 'avatar_change')}
+                      </button>
+                    </div>
+                  </div>
+                  {[
+                    { label: t(selectedLang, 'full_name'), icon: User, field: 'display_name', editable: true, value: profile.display_name || '', type: 'text', placeholder: t(selectedLang, 'enter_name'), extra: null },
+                  ].map(item => (
+                    <div key={item.field}>
+                      <label className={labelCls}>{item.label}</label>
+                      {editing ? (
+                        <div className="relative">
+                          <item.icon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                          <input type={item.type} value={item.value} onChange={e => setProfile(p => ({ ...p, [item.field]: e.target.value }))} className={inputCls} placeholder={item.placeholder} />
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                          <item.icon size={15} className="text-muted-foreground" />
+                          <span className="text-sm font-medium text-foreground">{item.value || '—'}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* ── Username Field (custom @handle) ── */}
+                  <div>
+                    <label className={labelCls}>Username</label>
+                    {editing ? (
+                      <>
+                        <div className="relative">
+                          <AtSign size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                          <input
+                            type="text"
+                            value={usernameInput}
+                            onChange={e => setUsernameInput(e.target.value.replace(/\s/g, '').toLowerCase())}
+                            className={inputCls}
+                            placeholder="your_username"
+                            maxLength={20}
+                            autoCapitalize="none"
+                            autoCorrect="off"
+                            spellCheck={false}
+                          />
+                          <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
+                            {usernameStatus === 'checking' && <Loader2 size={15} className="animate-spin text-muted-foreground" />}
+                            {usernameStatus === 'available' && <Check size={16} className="text-emerald-500" />}
+                            {(usernameStatus === 'taken' || usernameStatus === 'invalid') && <X size={16} className="text-rose-500" />}
+                          </div>
+                        </div>
+                        <p className="mt-1.5 text-[11px]"
+                          style={{ color: usernameStatus === 'available' ? 'hsl(160,70%,40%)' : (usernameStatus === 'taken' || usernameStatus === 'invalid') ? 'hsl(350,75%,55%)' : 'hsl(var(--muted-foreground))' }}>
+                          {usernameStatus === 'available' && '✓ এই ইউজারনেমটি ব্যবহারের জন্য উপলব্ধ'}
+                          {(usernameStatus === 'taken' || usernameStatus === 'invalid') && usernameError}
+                          {(usernameStatus === 'idle' || usernameStatus === 'checking') && '৩-২০ অক্ষর • শুধু a-z, 0-9, _ • যতবার ইচ্ছা পরিবর্তন করুন'}
+                        </p>
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                        <AtSign size={15} className="text-muted-foreground" />
+                        <span className="text-sm font-medium text-foreground">
+                          {profile.username ? `@${profile.username}` : <span className="text-muted-foreground italic">এডিট চাপুন এবং কাস্টম ইউজারনেম সেট করুন</span>}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className={labelCls}>{t(selectedLang, 'email')}</label>
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                      <Mail size={15} className="text-muted-foreground" />
+                      <span className="text-sm font-medium flex-1 text-foreground">{user?.email}</span>
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">✓ Verified</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelCls}>{t(selectedLang, 'phone')}</label>
+                    {editing ? (
+                      <div className="relative">
+                        <Phone size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <PhoneInput value={profile.phone || ''} onChange={v => setProfile(p => ({ ...p, phone: v }))} placeholder="1XXXXXXXXX" />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                        <Phone size={15} className="text-muted-foreground" />
+                        <span className="text-sm font-medium" style={{ color: profile.phone ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))' }}>{profile.phone || t(selectedLang, 'phone_not_added')}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Orders Tab ── */}
+              {activeTab === 'orders' && (
+                <div>
+                  {ordersLoading ? (
+                    <div className="flex flex-col items-center justify-center py-16 gap-3">
+                      <BrandLoader size="sm" />
+                      <p className="text-sm text-muted-foreground">{t(selectedLang, 'loading_text')}</p>
+                    </div>
+                  ) : orders.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(243,75%,97%)' }}>
+                        <Package size={28} style={{ color: 'hsl(var(--primary))' }} />
+                      </div>
+                      <p className="font-bold text-base mb-1 text-foreground">{t(selectedLang, 'no_orders')}</p>
+                      <p className="text-sm mb-4 text-muted-foreground">{t(selectedLang, 'no_orders_sub')}</p>
+                      <a href="/shop" className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm ${gradBtn}`} style={gradBtnStyle}>{t(selectedLang, 'shop_now')}</a>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {orders.map(order => {
+                        const s = STATUS_MAP[order.status] || { label: order.status, color: 'text-muted-foreground bg-muted border-border', icon: null };
+                        const isExpanded = expandedOrder === order.id;
+                        const isWallet = order.payment_method === 'wallet';
+                        const pmLabel: Record<string, string> = { bkash: 'BKash', nagad: 'Nagad', rocket: 'Rocket', upay: 'উপায়', bkash_merchant: 'BKash Merchant', wallet: '💜 Wallet' };
+                        return (
+                          <div key={order.id} className="rounded-2xl overflow-hidden transition-all"
+                            style={{ background: 'rgba(255,255,255,0.72)', border: isExpanded ? '1.5px solid hsla(258,78%,65%,0.4)' : '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(12px)', boxShadow: isExpanded ? '0 4px 20px hsla(258,78%,55%,0.10)' : 'none' }}>
+                            {/* Order Header Row */}
+                            <button
+                              className="w-full flex items-center justify-between px-4 sm:px-5 py-4 hover:bg-white/40 transition-colors text-left"
+                              onClick={() => {
+                                if (!isExpanded) { setExpandedOrder(order.id); if (!order.items) fetchOrderItems(order.id); }
+                                else setExpandedOrder(null);
+                              }}
+                            >
+                              <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'hsl(243,75%,97%)' }}>
+                                  <Package size={18} style={{ color: 'hsl(var(--primary))' }} />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-sm font-bold text-foreground">#{order.order_number}</span>
+                                    {isWallet && (
+                                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-600 border border-violet-400/30">
+                                        <Wallet size={9} /> Wallet
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-xs mt-0.5 text-muted-foreground">{new Date(order.created_at).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                                <div className="text-right hidden sm:block">
+                                  <div className="text-sm font-black text-primary">৳{order.total.toLocaleString()}</div>
+                                  {order.payment_status && (
+                                    <div className={`text-[10px] font-semibold ${order.payment_status === 'paid' ? 'text-emerald-600' : 'text-amber-500'}`}>
+                                      {order.payment_status === 'paid' ? '✓ Paid' : '⏳ Pending'}
+                                    </div>
+                                  )}
+                                </div>
+                                <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full border ${s.color}`}>{s.icon} {s.label}</span>
+                                <ChevronDown size={14} className={`text-muted-foreground transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
+                              </div>
+                            </button>
+
+                            {/* Expanded Detail */}
+                            {isExpanded && (
+                              <div className="border-t px-4 sm:px-5 py-4 space-y-4" style={{ borderColor: 'hsla(258,78%,75%,0.2)', background: 'rgba(255,255,255,0.45)' }}>
+                                {/* Payment Info */}
+                                <div className="flex flex-wrap gap-3">
+                                  <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                                    <CreditCard size={13} className="text-primary" />
+                                    <span className="text-muted-foreground">{t(selectedLang, 'payment_status')}:</span>
+                                    <span className="font-semibold text-foreground">{pmLabel[order.payment_method || ''] || order.payment_method || '—'}</span>
+                                  </div>
+                                  {order.transaction_id && !order.transaction_id.startsWith('WALLET-') && (
+                                    <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                                      <Receipt size={13} className="text-primary" />
+                                      <span className="text-muted-foreground">TrxID:</span>
+                                      <span className="font-mono font-semibold text-foreground">{order.transaction_id}</span>
+                                    </div>
+                                  )}
+                                  {order.coupon_code && (
+                                    <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
+                                      <span className="text-emerald-600 font-semibold">🏷️ {order.coupon_code} — ৳{(order.discount_amount || 0).toLocaleString()} {t(selectedLang, 'discount_off')}</span>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Order Items */}
+                                <div>
+                                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">{t(selectedLang, 'order_items_label')}</p>
+                                  {!order.items ? (
+                                    <div className="flex items-center gap-2 py-3 text-sm text-muted-foreground">
+                                      <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin border-primary" />
+                                      {t(selectedLang, 'loading_text')}
+                                    </div>
+                                  ) : order.items.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">{t(selectedLang, 'no_items_found')}</p>
+                                  ) : (
+                                    <div className="space-y-2">
+                                      {order.items.map(item => (
+                                        <div key={item.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid hsla(258,78%,75%,0.15)' }}>
+                                          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-primary/10">
+                                              <Package size={13} className="text-primary" />
+                                            </div>
+                                            <div className="min-w-0">
+                                              <p className="text-sm font-semibold text-foreground truncate">{item.product_name}</p>
+                                              <p className="text-xs text-muted-foreground">×{item.quantity} × ৳{item.price.toLocaleString()}</p>
+                                            </div>
+                                          </div>
+                                          <div className="text-sm font-bold text-primary flex-shrink-0 ml-2">৳{item.total.toLocaleString()}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Price Breakdown */}
+                                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm pt-2 border-t" style={{ borderColor: 'hsla(258,78%,75%,0.15)' }}>
+                                  <span className="text-muted-foreground">Subtotal: <span className="font-semibold text-foreground">৳{(order.subtotal || 0).toLocaleString()}</span></span>
+                                  {(order.discount_amount || 0) > 0 && <span className="text-emerald-600 font-semibold">{t(selectedLang, 'discount_off')}: -৳{(order.discount_amount || 0).toLocaleString()}</span>}
+                                  <span className="font-bold text-primary">{t(selectedLang, 'total')}: ৳{order.total.toLocaleString()}</span>
+                                  <button
+                                    onClick={() => handleDownloadInvoice(order)}
+                                    disabled={downloadingInvoice === order.id}
+                                    className="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
+                                    style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsla(258,78%,65%,0.85))', boxShadow: '0 4px 14px hsla(258,78%,55%,0.25)' }}
+                                  >
+                                    {downloadingInvoice === order.id ? (
+                                      <><Loader2 size={13} className="animate-spin" /> তৈরি হচ্ছে…</>
+                                    ) : (
+                                      <><Download size={13} /> Invoice PDF</>
+                                    )}
+                                  </button>
+                                </div>
+
+                                {/* Notes */}
+                                {order.notes && (
+                                  <div className="flex items-start gap-2 text-xs px-3 py-2 rounded-xl bg-muted/30 border border-border">
+                                    <Info size={12} className="text-muted-foreground mt-0.5 flex-shrink-0" />
+                                    <span className="text-muted-foreground">{order.notes}</span>
+                                  </div>
+                                )}
+
+                                {/* Order Timeline */}
+                                {order.timeline && order.timeline.length > 0 && (
+                                  <div>
+                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">📋 অর্ডার ট্র্যাকিং</p>
+                                    <div className="relative pl-5">
+                                      <div className="absolute left-[7px] top-1 bottom-1 w-0.5 rounded-full" style={{ background: 'linear-gradient(to bottom, hsl(var(--primary)), hsla(258,78%,75%,0.3))' }} />
+                                      {order.timeline.map((event, idx) => {
+                                        const evStatus = STATUS_MAP[event.status] || { label: event.status, color: 'text-muted-foreground bg-muted border-border', icon: <Clock size={11} /> };
+                                        const isLast = idx === order.timeline!.length - 1;
+                                        return (
+                                          <div key={event.id} className="relative flex items-start gap-3 pb-3 last:pb-0">
+                                            <div className={`absolute -left-5 top-0.5 w-4 h-4 rounded-full flex items-center justify-center border-2 ${isLast ? 'border-primary bg-primary text-white' : 'border-muted-foreground/30 bg-background text-muted-foreground'}`}>
+                                              <div className={`${isLast ? 'w-1.5 h-1.5 rounded-full bg-white' : 'w-1 h-1 rounded-full bg-muted-foreground/50'}`} />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                              <div className="flex items-center gap-2 flex-wrap">
+                                                <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${evStatus.color}`}>
+                                                  {evStatus.icon} {evStatus.label}
+                                                </span>
+                                                <span className="text-[10px] text-muted-foreground">
+                                                  {new Date(event.created_at).toLocaleDateString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric' })} — {new Date(event.created_at).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                              </div>
+                                              {event.note && <p className="text-xs text-muted-foreground mt-0.5">{event.note}</p>}
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Wishlist Tab ── */}
+              {activeTab === 'wishlist' && (
+                <div>
+                  {wishlistItems.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(15,100%,97%)' }}>
+                        <Heart size={28} style={{ color: 'hsl(15,100%,60%)' }} />
+                      </div>
+                      <p className="font-bold text-base mb-1 text-foreground">{t(selectedLang, 'no_wishlist')}</p>
+                      <p className="text-sm mb-4 text-muted-foreground">{t(selectedLang, 'no_wishlist_sub')}</p>
+                      <a href="/" className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm ${gradBtn}`} style={gradBtnStyle}>{t(selectedLang, 'browse_products')}</a>
+                    </div>
+                  ) : (
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {wishlistItems.map(item => (
+                        <div key={item.product_id} className="flex items-center gap-3 p-3 rounded-2xl transition-all hover:shadow-sm"
+                          style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
+                          <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0" style={{ background: 'hsl(240,20%,96%)' }}>
+                            {item.product_image ? <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Heart size={16} className="text-muted-foreground" /></div>}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-foreground line-clamp-1">{item.product_name}</p>
+                            <p className="text-sm font-black mt-0.5" style={{ color: 'hsl(var(--primary))' }}>৳{item.product_price.toLocaleString()}</p>
+                          </div>
+                          <a href="/" className="p-2 rounded-xl hover:bg-white/60 transition-colors text-muted-foreground">
+                            <ExternalLink size={14} />
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Addresses Tab ── */}
+              {activeTab === 'addresses' && (
+                <div>
+                  {showAddressForm ? (
+                    <div className="max-w-lg space-y-4">
+                      <h3 className="font-bold text-foreground">{editingAddress ? t(selectedLang, 'edit_address') : t(selectedLang, 'add_address')}</h3>
+                      <div className="grid grid-cols-3 gap-2">
+                        {['Home', 'Office', 'Other'].map(l => (
+                          <button key={l} onClick={() => setAddressForm(f => ({ ...f, label: l }))}
+                            className={`py-2 rounded-xl text-sm font-semibold transition-all border ${addressForm.label === l ? 'border-primary text-primary bg-primary/10' : 'border-border text-muted-foreground hover:bg-white/60'}`}>
+                            {l}
+                          </button>
+                        ))}
+                      </div>
+                      {[
+                        { field: 'recipient_name', label: `${t(selectedLang, 'recipient_name')} *`, placeholder: t(selectedLang, 'enter_name') },
+                        { field: 'phone', label: `${t(selectedLang, 'phone')} *`, placeholder: '01XXXXXXXXX' },
+                        { field: 'address_line', label: `${t(selectedLang, 'address_line')} *`, placeholder: t(selectedLang, 'address_placeholder') },
+                        { field: 'city', label: `${t(selectedLang, 'city')} *`, placeholder: t(selectedLang, 'city_placeholder') },
+                        { field: 'district', label: t(selectedLang, 'district'), placeholder: t(selectedLang, 'district') },
+                        { field: 'postal_code', label: t(selectedLang, 'postal_code'), placeholder: '1000' },
+                      ].map(({ field, label, placeholder }) => (
+                        <div key={field}>
+                          <label className={labelCls}>{label}</label>
+                          <input type="text" value={(addressForm as any)[field]} onChange={e => setAddressForm(f => ({ ...f, [field]: e.target.value }))} placeholder={placeholder}
+                            className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80" />
+                        </div>
+                      ))}
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={addressForm.is_default} onChange={e => setAddressForm(f => ({ ...f, is_default: e.target.checked }))} className="rounded" />
+                        <span className="text-sm text-foreground">{t(selectedLang, 'set_default')}</span>
+                      </label>
+                      <div className="flex gap-3">
+                        <button onClick={() => setShowAddressForm(false)} className="flex-1 py-3 rounded-xl text-sm font-semibold text-muted-foreground hover:bg-white/60 transition-colors" style={{ border: '1px solid hsla(258,78%,75%,0.3)' }}>{t(selectedLang, 'cancel')}</button>
+                        <button onClick={handleSaveAddress} className={`flex-1 py-3 text-sm ${gradBtn}`} style={gradBtnStyle}>{t(selectedLang, 'save')}</button>
+                      </div>
+                    </div>
+                  ) : addressLoading ? (
+                    <div className="flex justify-center py-12"><BrandLoader size="sm" /></div>
+                  ) : addresses.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(243,75%,97%)' }}><MapPin size={28} style={{ color: 'hsl(var(--primary))' }} /></div>
+                      <p className="font-bold text-base mb-1 text-foreground">{t(selectedLang, 'no_addresses')}</p>
+                      <p className="text-sm mb-4 text-muted-foreground">{t(selectedLang, 'no_addresses_sub')}</p>
+                      <button onClick={() => setShowAddressForm(true)} className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm ${gradBtn}`} style={gradBtnStyle}>
+                        <Plus size={16} /> {t(selectedLang, 'add_address')}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {addresses.map(addr => (
+                        <div key={addr.id} className="p-4 rounded-2xl transition-all hover:shadow-sm"
+                          style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold px-2.5 py-1 rounded-full border" style={addr.is_default ? { background: 'hsl(243,75%,97%)', color: 'hsl(var(--primary))', borderColor: 'hsl(243,75%,88%)' } : { background: 'rgba(255,255,255,0.6)', color: 'hsl(var(--muted-foreground))', borderColor: 'hsl(var(--border))' }}>
+                                {addr.label} {addr.is_default && `✓ ${t(selectedLang, 'default_label')}`}
+                              </span>
+                            </div>
+                            <div className="flex gap-1">
+                              <button onClick={() => { setEditingAddress(addr); setAddressForm({ label: addr.label, recipient_name: addr.recipient_name, phone: addr.phone, address_line: addr.address_line, city: addr.city, district: addr.district || '', postal_code: addr.postal_code || '', is_default: addr.is_default }); setShowAddressForm(true); }}
+                                className="p-2 rounded-xl hover:bg-white/60 text-muted-foreground"><Edit3 size={14} /></button>
+                              <button onClick={() => handleDeleteAddress(addr.id)} className="p-2 rounded-xl hover:bg-destructive/10 text-destructive"><X size={14} /></button>
+                            </div>
+                          </div>
+                          <p className="text-sm font-semibold text-foreground">{addr.recipient_name}</p>
+                          <p className="text-sm text-muted-foreground">{addr.phone}</p>
+                          <p className="text-sm text-muted-foreground">{addr.address_line}, {addr.city}{addr.district ? `, ${addr.district}` : ''}{addr.postal_code ? ` - ${addr.postal_code}` : ''}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Notifications Tab ── */}
+              {activeTab === 'notifications' && (
+                <div>
+                  {notiLoading ? (
+                    <div className="flex justify-center py-12"><BrandLoader size="sm" /></div>
+                  ) : notifications.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(243,75%,97%)' }}><Bell size={28} style={{ color: 'hsl(var(--primary))' }} /></div>
+                      <p className="font-bold text-base mb-1 text-foreground">{t(selectedLang, 'no_notifications')}</p>
+                      <p className="text-sm text-muted-foreground">{t(selectedLang, 'no_notifications_sub')}</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {notifications.map(n => (
+                        <div key={n.id} onClick={() => {
+                            if (!n.is_read) handleMarkRead(n.id);
+                            if (n.link) navigate(n.link);
+                          }}
+                          className="p-4 rounded-2xl transition-all cursor-pointer"
+                          style={!n.is_read
+                            ? { background: 'rgba(99,82,234,0.07)', border: '1px solid hsla(258,78%,65%,0.28)', backdropFilter: 'blur(8px)' }
+                            : { background: 'rgba(255,255,255,0.55)', border: '1px solid hsla(258,78%,75%,0.18)', backdropFilter: 'blur(8px)' }}>
+                          <div className="flex items-start gap-3">
+                            <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${!n.is_read ? '' : 'opacity-50'}`} style={{ background: n.type === 'order' ? 'hsl(243,75%,97%)' : n.type === 'promo' ? 'hsl(38,100%,95%)' : n.type === 'notice' ? 'hsl(258,78%,96%)' : 'rgba(255,255,255,0.7)' }}>
+                              {n.type === 'order' ? <Package size={14} style={{ color: 'hsl(var(--primary))' }} /> : n.type === 'promo' ? <Gift size={14} style={{ color: 'hsl(38,80%,50%)' }} /> : n.type === 'notice' ? <Megaphone size={14} style={{ color: 'hsl(258,78%,55%)' }} /> : <BellRing size={14} className="text-muted-foreground" />}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between">
+                              <p className={`text-sm font-semibold ${!n.is_read ? 'text-foreground' : 'text-muted-foreground'}`}>{translateDbText(n.title, selectedLang)}</p>
+                                {!n.is_read && <span className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />}
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-0.5">{translateDbText(n.message, selectedLang)}</p>
+                              <p className="text-[10px] text-muted-foreground mt-1">{new Date(n.created_at).toLocaleDateString(getLangLocale(selectedLang))}</p>
+                            </div>
+                          </div>
+                         </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Points Tab ── */}
+              {activeTab === 'points' && (
+                <div className="space-y-5">
+                  {pointsLoading ? (
+                    <div className="flex flex-col items-center justify-center py-16 gap-3">
+                      <BrandLoader size="sm" />
+                      <p className="text-sm text-muted-foreground">{t(selectedLang, 'loading_text')}</p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Hero Points Card */}
+                      <div className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
+                        style={{ background: 'linear-gradient(135deg, hsl(43,95%,48%) 0%, hsl(36,100%,44%) 100%)', boxShadow: '0 8px 32px hsla(43,95%,48%,0.35), 0 1px 0 rgba(255,255,255,0.15) inset' }}>
+                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+                        <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(20%, -20%)' }} />
+                        <div className="relative flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.22)' }}>
+                              <Award size={20} className="text-white" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-white/80 font-medium">{t(selectedLang, 'points_reward_points')}</p>
+                              <p className="text-xs text-white/55">{t(selectedLang, 'points_available_balance')}</p>
+                            </div>
+                          </div>
+                          <button onClick={fetchPoints} className="text-white/60 hover:text-white transition-colors">
+                            <RefreshCw size={14} className={pointsLoading ? 'animate-spin' : ''} />
+                          </button>
+                        </div>
+                        <p className="relative text-4xl font-black tracking-tight text-white">{pointsBalance.toLocaleString()}</p>
+                        <p className="relative text-sm text-white/65 mt-1">= ৳{Math.floor(pointsBalance / 2).toLocaleString()} {t(selectedLang, 'points_wallet_value')}</p>
+                      </div>
+
+                      {/* Stats Grid */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {[
+                          { label: t(selectedLang, 'points_available'), value: pointsBalance.toLocaleString(), sub: `= ৳${Math.floor(pointsBalance/2)}`, color: 'hsl(43,95%,48%)', bg: 'hsla(43,95%,55%,0.08)', border: 'hsla(43,95%,55%,0.25)', icon: <Award size={16} /> },
+                          { label: t(selectedLang, 'points_total_earned'), value: totalPointsEarned.toLocaleString(), sub: t(selectedLang, 'points_from_orders'), color: 'hsl(271,91%,65%)', bg: 'hsla(271,91%,65%,0.08)', border: 'hsla(271,91%,65%,0.25)', icon: <TrendingUp size={16} /> },
+                          { label: t(selectedLang, 'points_total_redeemed'), value: totalPointsRedeemed.toLocaleString(), sub: `= ৳${Math.floor(totalPointsRedeemed/2)} ${t(selectedLang, 'points_credited')}`, color: 'hsl(158,64%,42%)', bg: 'hsla(158,64%,42%,0.08)', border: 'hsla(158,64%,42%,0.25)', icon: <Wallet size={16} /> },
+                          { label: t(selectedLang, 'points_value'), value: `৳${Math.floor(pointsBalance / 2)}`, sub: t(selectedLang, 'points_rate'), color: 'hsl(243,75%,59%)', bg: 'hsla(243,75%,59%,0.08)', border: 'hsla(243,75%,59%,0.25)', icon: <Zap size={16} /> },
+                        ].map(stat => (
+                          <div key={stat.label} className="rounded-2xl p-4" style={{ background: stat.bg, border: `1px solid ${stat.border}`, backdropFilter: 'blur(8px)' }}>
+                            <div className="flex items-center gap-2 mb-2" style={{ color: stat.color }}>{stat.icon}<span className="text-xs font-semibold text-muted-foreground">{stat.label}</span></div>
+                            <div className="text-xl font-black text-foreground">{stat.value}</div>
+                            <div className="text-[10px] text-muted-foreground mt-0.5">{stat.sub}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Earning & Conversion Rules */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="rounded-2xl p-4 space-y-2" style={{ background: 'hsla(43,95%,55%,0.07)', border: '1px solid hsla(43,95%,55%,0.25)' }}>
+                          <p className="text-xs font-bold uppercase tracking-wide text-amber-600 flex items-center gap-1.5"><Zap size={13} /> {t(selectedLang, 'points_earning_rules')}</p>
+                          {[['100', '10'], ['500', '50'], ['1000', '100']].map(([spend, earn]) => (
+                            <div key={spend} className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">৳{spend} {t(selectedLang, 'points_spend')}</span>
+                              <span className="font-bold text-amber-600">= {earn} pts</span>
+                            </div>
+                          ))}
+                          <p className="text-[10px] text-muted-foreground pt-1 border-t border-amber-200/50">{t(selectedLang, 'points_only_completed')}</p>
+                        </div>
+                        <div className="rounded-2xl p-4 space-y-2" style={{ background: 'hsla(158,64%,42%,0.07)', border: '1px solid hsla(158,64%,42%,0.25)' }}>
+                          <p className="text-xs font-bold uppercase tracking-wide flex items-center gap-1.5" style={{ color: 'hsl(158,64%,42%)' }}><Wallet size={13} /> {t(selectedLang, 'points_redemption_rules')}</p>
+                          {[['20', '৳10'], ['100', '৳50'], ['200', '৳100']].map(([pts, taka]) => (
+                            <div key={pts} className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">{pts} pts {t(selectedLang, 'points_redeem_label')}</span>
+                              <span className="font-bold" style={{ color: 'hsl(158,64%,42%)' }}>= {taka} Wallet</span>
+                            </div>
+                          ))}
+                          <p className="text-[10px] text-muted-foreground pt-1 border-t" style={{ borderColor: 'hsla(158,64%,42%,0.2)' }}>{t(selectedLang, 'points_min_redeem')}</p>
+                        </div>
+                      </div>
+
+                      {/* Redeem Section */}
+                      {pointsBalance >= 20 ? (
+                        <div className="rounded-2xl p-5 space-y-4" style={{ background: 'rgba(255,255,255,0.75)', border: '1px solid hsla(258,78%,75%,0.25)' }}>
+                          <div>
+                            <h3 className="font-bold text-foreground flex items-center gap-2">
+                              <ArrowDownCircle size={16} style={{ color: 'hsl(158,64%,42%)' }} /> {t(selectedLang, 'points_redeem_title')}
+                            </h3>
+                            <p className="text-xs text-muted-foreground mt-0.5">{t(selectedLang, 'points_redeem_subtitle')}</p>
+                          </div>
+                          {/* Quick select */}
+                          <div>
+                            <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">{t(selectedLang, 'points_quick_select')}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {[20, 50, 100, 200, 500].filter(v => v <= pointsBalance).map(v => (
+                                <button key={v} onClick={() => setRedeemPoints(String(v))}
+                                  className="px-3 py-1.5 rounded-lg text-xs font-bold border transition-all"
+                                  style={redeemPoints === String(v)
+                                    ? { background: 'hsl(var(--primary))', color: 'white', borderColor: 'hsl(var(--primary))' }
+                                    : { background: 'rgba(255,255,255,0.8)', borderColor: 'hsla(258,78%,75%,0.3)', color: 'hsl(var(--foreground))' }}>
+                                  {v} pts → ৳{v/2}
+                                </button>
+                              ))}
+                              {pointsBalance >= 20 && (
+                                <button onClick={() => setRedeemPoints(String(Math.floor(pointsBalance / 2) * 2))}
+                                  className="px-3 py-1.5 rounded-lg text-xs font-bold border transition-all"
+                                  style={{ background: 'hsla(43,95%,55%,0.12)', borderColor: 'hsla(43,95%,55%,0.3)', color: 'hsl(43,95%,38%)' }}>
+                                  {t(selectedLang, 'points_max')} ({Math.floor(pointsBalance / 2) * 2} pts)
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          {/* Custom input */}
+                          <div>
+                            <label className="text-xs font-semibold text-muted-foreground uppercase mb-1.5 block">{t(selectedLang, 'points_custom_label')}</label>
+                            <div className="flex gap-3 items-end">
+                              <div className="flex-1">
+                                <input
+                                  type="number"
+                                  min="20"
+                                  step="2"
+                                  max={pointsBalance}
+                                  value={redeemPoints}
+                                  onChange={e => setRedeemPoints(e.target.value)}
+                                  className="w-full rounded-xl px-4 py-2.5 text-sm border bg-white/60 text-foreground border-border focus:border-primary outline-none"
+                                  placeholder={t(selectedLang, 'points_min_placeholder')}
+                                />
+                                {redeemPoints && parseInt(redeemPoints) >= 20 && parseInt(redeemPoints) % 2 === 0 && parseInt(redeemPoints) <= pointsBalance && (
+                                  <p className="text-xs mt-1" style={{ color: 'hsl(158,64%,42%)' }}>✅ {parseInt(redeemPoints)} pts = ৳{Math.floor(parseInt(redeemPoints) / 2)} {t(selectedLang, 'points_will_add')}</p>
+                                )}
+                                {redeemPoints && parseInt(redeemPoints) > 0 && parseInt(redeemPoints) < 20 && (
+                                  <p className="text-xs mt-1 text-destructive">{t(selectedLang, 'points_min_warning')}</p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <button
+                            onClick={handleRedeemPoints}
+                            disabled={redeemProcessing || !redeemPoints || parseInt(redeemPoints) < 20 || parseInt(redeemPoints) > pointsBalance || parseInt(redeemPoints) % 2 !== 0}
+                            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-all"
+                            style={{ background: 'linear-gradient(135deg, hsl(158,64%,42%), hsl(170,70%,38%))' }}>
+                            {redeemProcessing ? <><RefreshCw size={14} className="animate-spin" /> {t(selectedLang, 'points_processing')}</> : <><Wallet size={14} /> {t(selectedLang, 'points_redeem_btn')}</>}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="rounded-2xl p-6 text-center" style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid hsla(258,78%,75%,0.2)' }}>
+                          <div className="text-4xl mb-3">⭐</div>
+                          <p className="font-bold text-foreground text-sm mb-1">
+                            {pointsBalance > 0 ? `${t(selectedLang, 'points_need_more')} (${20 - pointsBalance} pts)` : t(selectedLang, 'points_none_yet')}
+                          </p>
+                          <p className="text-xs text-muted-foreground mb-3">{t(selectedLang, 'points_need_20')}</p>
+                          {pointsBalance > 0 && (
+                            <div className="w-full bg-border rounded-full h-2 mb-3">
+                              <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(100, (pointsBalance/20)*100)}%`, background: 'linear-gradient(90deg, hsl(43,95%,55%), hsl(36,100%,52%))' }} />
+                            </div>
+                          )}
+                          <a href="/shop" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
+                            style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>
+                            <Zap size={13} /> {t(selectedLang, 'points_shop_btn')}
+                          </a>
+                        </div>
+                      )}
+
+                      {/* Transactions History */}
+                      <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.72)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(16px)' }}>
+                        <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid hsla(258,78%,75%,0.16)', background: 'rgba(255,255,255,0.4)' }}>
+                          <h3 className="font-bold text-foreground flex items-center gap-2"><History size={14} className="text-primary" /> {t(selectedLang, 'points_history')}</h3>
+                          <button onClick={fetchPoints} className="text-muted-foreground hover:text-primary transition-colors"><RefreshCw size={13} /></button>
+                        </div>
+                        {pointsTx.length === 0 ? (
+                          <div className="text-center py-8 text-sm text-muted-foreground">{t(selectedLang, 'points_no_tx')}</div>
+                        ) : (
+                          <div className="divide-y max-h-[320px] overflow-y-auto" style={{ divideColor: 'hsla(258,78%,75%,0.12)' } as any}>
+                            {pointsTx.map((tx: any) => {
+                              const isEarn = tx.type === 'earn';
+                              const isDeduct = tx.type === 'deduct';
+                              const isRedeem = tx.type === 'redeem';
+                              return (
+                                <div key={tx.id} className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid hsla(258,78%,75%,0.10)' }}>
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                                      style={{ background: isEarn ? 'hsla(43,95%,55%,0.15)' : isRedeem ? 'hsla(158,64%,42%,0.12)' : 'hsla(0,80%,60%,0.10)' }}>
+                                      {isEarn ? <TrendingUp size={15} className="text-amber-500" /> 
+                                       : isRedeem ? <Wallet size={15} style={{ color: 'hsl(158,64%,42%)' }} />
+                                       : <TrendingDown size={15} className="text-destructive" />}
+                                    </div>
+                                    <div>
+                                       <div className="text-xs font-semibold text-foreground">{translateDbText(tx.note || '', selectedLang)}</div>
+                                       <div className="text-[10px] text-muted-foreground">{new Date(tx.created_at).toLocaleDateString(getLangLocale(selectedLang), { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-sm font-black"
+                                      style={{ color: isEarn ? 'hsl(43,95%,42%)' : isRedeem ? 'hsl(158,64%,42%)' : 'hsl(var(--destructive))' }}>
+                                      {isEarn ? '+' : '-'}{tx.points} pts
+                                    </div>
+                                    <div className="text-[10px] text-muted-foreground">{t(selectedLang, 'points_balance_label')} {tx.balance_after} pts</div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* ── Referral Tab ── */}
+              {activeTab === 'referral' && (() => {
+                const totalRefs = referrals.length;
+                const completedRefs = referrals.filter(r => r.status === 'completed').length;
+                return (
+                  <div className="space-y-4">
+                    {/* Summary Card */}
+                    <div className="relative overflow-hidden rounded-2xl p-5 sm:p-6"
+                      style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65))', backdropFilter: 'blur(20px)', border: '1.5px solid hsla(258,78%,65%,0.35)', boxShadow: '0 0 30px hsla(258,78%,55%,0.12), 0 4px 16px hsla(258,78%,55%,0.08)' }}>
+                      <div className="flex items-center justify-between flex-wrap gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" style={{ background: 'linear-gradient(135deg, hsla(258,78%,65%,0.15), hsla(258,78%,65%,0.30))', border: '1px solid hsla(258,78%,65%,0.4)' }}>🎁</div>
+                          <div>
+                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-0.5">{referralConfig.program_title}</p>
+                            <p className="text-2xl font-black" style={{ color: 'hsl(var(--primary))' }}>৳{referralConfig.google_signup_reward} / রেফার</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{referralConfig.program_subtitle}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-muted-foreground mb-0.5">{t(selectedLang, 'referral_credit')}</p>
+                          <p className="text-3xl font-black text-foreground">৳{profile.referral_credit}</p>
+                          {profile.referral_discount > 0 && (
+                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full mt-1 inline-block" style={{ background: 'hsla(158,80%,48%,0.15)', color: 'hsl(158,80%,48%)', border: '1px solid hsla(158,80%,48%,0.3)' }}>
+                              {profile.referral_discount}% {t(selectedLang, 'referral_discount')}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-4 grid grid-cols-2 gap-3 text-center">
+                        <div className="rounded-xl p-3" style={{ background: 'hsla(258,78%,65%,0.08)' }}>
+                          <p className="text-xl font-black text-foreground">{completedRefs}</p>
+                          <p className="text-[10px] text-muted-foreground">{t(selectedLang, 'referral_count_success')} {t(selectedLang, 'tab_referral')}</p>
+                        </div>
+                        <div className="rounded-xl p-3" style={{ background: 'hsla(158,80%,48%,0.08)' }}>
+                          <p className="text-xl font-black" style={{ color: 'hsl(158,80%,48%)' }}>{totalRefs - completedRefs}</p>
+                          <p className="text-[10px] text-muted-foreground">{t(selectedLang, 'referral_count_pending')}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Referral Code Card */}
+                    <div className="p-5 rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(99,82,234,0.07), rgba(99,82,234,0.04))', border: '1px solid hsla(258,78%,65%,0.25)', backdropFilter: 'blur(12px)' }}>
+                      <p className="text-xs font-bold uppercase tracking-wide mb-3 text-muted-foreground">{t(selectedLang, 'your_code')}</p>
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-2xl font-black tracking-widest flex-1" style={{ fontFamily: 'Orbitron, monospace', color: 'hsl(var(--primary))' }}>{profile.referral_code || '—'}</span>
+                        <button onClick={copyReferralCode} className="p-2.5 rounded-xl transition-all hover:scale-110" style={{ background: 'hsl(var(--primary))', color: 'white' }}><Copy size={14} /></button>
+                      </div>
+                      <button onClick={shareReferralLink} className="flex items-center gap-2 text-xs font-semibold text-primary hover:underline"><ExternalLink size={12} /> {t(selectedLang, 'share_link')}</button>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { label: t(selectedLang, 'referral_count'), value: totalRefs, color: 'hsl(var(--foreground))' },
+                        { label: t(selectedLang, 'referral_count_success'), value: completedRefs, color: 'hsl(158,64%,42%)' },
+                        { label: t(selectedLang, 'referral_earnings'), value: `৳${profile.referral_earnings}`, color: 'hsl(var(--primary))' },
+                      ].map(s => (
+                        <div key={s.label} className="p-4 rounded-2xl text-center" style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
+                          <div className="text-xl font-black" style={{ color: s.color }}>{s.value}</div>
+                          <div className="text-xs text-muted-foreground">{s.label}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Benefit Box */}
+                    <div className="p-4 rounded-2xl" style={{ background: 'hsla(158,80%,48%,0.06)', border: '1px solid hsla(158,80%,48%,0.22)', backdropFilter: 'blur(8px)' }}>
+                      <p className="text-sm font-bold mb-3 text-foreground flex items-center gap-2"><Gift size={15} style={{ color: 'hsl(158,80%,48%)' }} /> {t(selectedLang, 'referral_benefit_title')}</p>
+                      <div className="grid grid-cols-1 gap-3">
+                        {[
+                          { emoji: '🏷️', title: t(selectedLang, 'referral_benefit1_title'), sub: t(selectedLang, 'referral_benefit1_sub') },
+                          { emoji: '🤝', title: t(selectedLang, 'referral_benefit2_title'), sub: t(selectedLang, 'referral_benefit2_sub') },
+                        ].map(b => (
+                          <div key={b.title} className="flex items-center gap-2 p-2.5 rounded-xl" style={{ background: 'hsla(258,78%,65%,0.08)' }}>
+                            <span className="text-lg">{b.emoji}</span>
+                            <div><p className="text-sm font-black" style={{ color: 'hsl(var(--primary))' }}>{b.title}</p><p className="text-[10px] text-muted-foreground">{b.sub}</p></div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* How it works */}
+                    <div className="p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
+                      <p className="text-sm font-bold mb-3 text-foreground">{t(selectedLang, 'referral_how')}</p>
+                      {referralConfig.how_it_works.map((text, si) => ({ n: String(si + 1), text })).map(({ n, text }) => (
+                        <div key={n} className="flex items-start gap-3 mb-2 last:mb-0">
+                          <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black text-white flex-shrink-0" style={{ background: 'hsl(var(--primary))' }}>{n}</span>
+                          <span className="text-sm text-muted-foreground">{text}</span>
+                        </div>
+                      ))}
+                      {referralConfig.terms && (
+                        <p className="text-[11px] text-muted-foreground mt-3 pt-3 border-t border-border/40">{referralConfig.terms}</p>
+                      )}
+                    </div>
+
+
+                    {/* Referral History */}
+                    {referralLoading ? (
+                      <div className="flex justify-center py-4"><BrandLoader size="sm" /></div>
+                    ) : referrals.length > 0 ? (
+                      <div>
+                        <p className="text-sm font-bold mb-3 text-foreground flex items-center gap-2">
+                          <History size={14} style={{ color: 'hsl(var(--primary))' }} /> {t(selectedLang, 'referral_history')} ({referrals.length})
+                        </p>
+                        <div className="space-y-2">
+                          {referrals.map((r, i) => {
+                            const refTier = getReferralTier(referralConfig, i + 1);
+                            return (
+                              <div key={r.id} className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.18)', backdropFilter: 'blur(8px)' }}>
+                                <div className="flex items-center gap-2.5">
+                                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0" style={{ background: `${refTier.color}18`, border: `1px solid ${refTier.color}30` }}>
+                                    {refTier.emoji}
+                                  </div>
+                                  <div>
+                                    <p className="text-xs font-bold text-foreground">
+                                      {r.referred_name ? r.referred_name : `#${i + 1} ${t(selectedLang, 'referral_referred')}`}
+                                    </p>
+                                    {r.referred_email && (
+                                      <p className="text-[10px] text-muted-foreground">{r.referred_email}</p>
+                                    )}
+                                    <p className="text-[10px] text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</p>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-1">
+                                  <span className="text-sm font-black" style={{ color: refTier.color }}>+৳{r.reward_amount}</span>
+                                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                                    style={r.status === 'completed' ? { background: 'hsla(158,80%,48%,0.15)', color: 'hsl(158,80%,48%)' } : { background: 'hsla(40,100%,58%,0.15)', color: 'hsl(40,100%,58%)' }}>
+                                    {r.status === 'completed' ? t(selectedLang, 'referral_success_badge') : t(selectedLang, 'referral_pending_badge')}
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid hsla(258,78%,75%,0.18)' }}>
+                        <div className="text-3xl mb-2">👥</div>
+                        <p className="text-sm font-semibold text-foreground mb-1">{t(selectedLang, 'no_referrals')}</p>
+                        <p className="text-xs text-muted-foreground">{t(selectedLang, 'no_referrals_sub')}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* ── Security Tab ── */}
+              {activeTab === 'security' && (
+                <div className="max-w-lg space-y-5">
+                  <div className="p-4 rounded-2xl flex items-start gap-3" style={{ background: 'linear-gradient(135deg, rgba(99,82,234,0.08), rgba(99,82,234,0.04))', border: '1px solid hsla(258,78%,65%,0.22)', backdropFilter: 'blur(8px)' }}>
+                    <ShieldCheck size={18} style={{ color: 'hsl(var(--primary))' }} className="mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: 'hsl(var(--primary))' }}>{t(selectedLang, 'security_title')}</p>
+                      <p className="text-xs mt-0.5 text-muted-foreground">{t(selectedLang, 'security_subtitle')}</p>
+                    </div>
+                  </div>
+                  {[
+                    { label: t(selectedLang, 'new_password'), value: newPassword, set: setNewPassword, show: showNewPass, toggle: () => setShowNewPass(!showNewPass), placeholder: t(selectedLang, 'enter_new_password') },
+                    { label: t(selectedLang, 'confirm_password'), value: confirmPassword, set: setConfirmPassword, show: showConfirmPass, toggle: () => setShowConfirmPass(!showConfirmPass), placeholder: t(selectedLang, 'enter_confirm_password') },
+                  ].map((f, idx) => (
+                    <div key={idx}>
+                      <label className={labelCls}>{f.label}</label>
+                      <div className="relative">
+                        <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <input type={f.show ? 'text' : 'password'} value={f.value} onChange={e => f.set(e.target.value)}
+                          className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80"
+                          placeholder={f.placeholder} />
+                        <button type="button" onClick={f.toggle} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                          {f.show ? <EyeOff size={15} /> : <Eye size={15} />}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {confirmPassword && newPassword !== confirmPassword && <p className="text-xs flex items-center gap-1 text-destructive"><AlertCircle size={11} /> {t(selectedLang, 'password_mismatch')}</p>}
+                  {confirmPassword && newPassword === confirmPassword && newPassword.length >= 6 && <p className="text-xs flex items-center gap-1" style={{ color: 'hsl(158,64%,42%)' }}><CheckCircle2 size={11} /> {t(selectedLang, 'password_match')}</p>}
+                  <button onClick={handleChangePassword} disabled={passLoading || !newPassword || !confirmPassword}
+                    className={`flex items-center justify-center gap-2 w-full py-3 text-sm disabled:opacity-50 ${gradBtn}`} style={gradBtnStyle}>
+                    {passLoading ? <><RefreshCw size={15} className="animate-spin" /> {t(selectedLang, 'loading_text')}</> : <><ShieldCheck size={15} /> {t(selectedLang, 'change_password')}</>}
+                  </button>
+                </div>
+              )}
+
+              {/* ── Licenses Tab ── */}
+              {activeTab === 'licenses' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-foreground flex items-center gap-2">
+                      <Key size={16} className="text-primary" />
+                      My Licenses & Credentials
+                    </h3>
+                    <button onClick={fetchLicenses} className="p-2 rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-all">
+                      <RefreshCw size={14} />
+                    </button>
+                  </div>
+
+                  {licensesLoading ? (
+                    <div className="flex items-center justify-center py-16">
+                      <RefreshCw size={20} className="animate-spin text-primary" />
+                    </div>
+                  ) : myLicenses.length === 0 ? (
+                    <div className="text-center py-16 text-muted-foreground rounded-2xl border border-dashed border-border">
+                      <Key size={40} className="mx-auto mb-3 opacity-20" />
+                       <p className="font-medium text-sm">No License Found</p>
+                      <p className="text-xs mt-1">Licenses will appear here after your order is completed</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {myLicenses.map((item: any) => {
+                        const isVisible = licenseVisibility[item.id];
+                        const parts = (item.license_key || '').split('|');
+                        const keyValue = parts[0];
+                        const extraInfo = parts[1] || null;
+                        const order = item.orders;
+                        return (
+                          <div key={item.id} className="rounded-2xl border overflow-hidden"
+                            style={{ background: 'hsl(var(--card))', borderColor: 'hsla(162,72%,46%,0.25)' }}>
+                            {/* Header */}
+                            <div className="flex items-center gap-3 px-4 py-3"
+                              style={{ background: 'hsla(162,72%,46%,0.06)', borderBottom: '1px solid hsla(162,72%,46%,0.15)' }}>
+                              <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                                style={{ background: 'hsla(162,72%,46%,0.15)' }}>
+                                <Key size={14} style={{ color: 'hsl(162,72%,46%)' }} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-bold text-sm text-foreground truncate">{item.product_name}</p>
+                                <p className="text-[10px] text-muted-foreground">
+                                  অর্ডার #{order?.order_number} · {order?.created_at ? new Date(order.created_at).toLocaleDateString('bn-BD') : ''}
+                                </p>
+                              </div>
+                              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full flex-shrink-0"
+                                style={{ background: 'hsla(162,72%,46%,0.15)', color: 'hsl(162,72%,46%)' }}>
+                                ✅ Delivered
+                              </span>
+                            </div>
+
+                            {/* Key Content */}
+                            <div className="p-4 space-y-2.5">
+                              {/* Main key */}
+                              <div>
+                                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">
+                                  {extraInfo ? 'Reference' : 'Order Note'}
+                                </p>
+                                <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
+                                  style={{ background: 'hsl(var(--muted))', border: '1px solid hsl(var(--border))' }}>
+                                  <code className="flex-1 text-sm font-mono text-foreground break-all">
+                                    {isVisible ? keyValue : keyValue.slice(0, 4) + '•'.repeat(Math.min(keyValue.length - 8, 16)) + keyValue.slice(-4)}
+                                  </code>
+                                  <button onClick={() => setLicenseVisibility(p => ({ ...p, [item.id]: !p[item.id] }))}
+                                    className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+                                    {isVisible ? <EyeOff size={13} /> : <Eye size={13} />}
+                                  </button>
+                                  <button onClick={() => { navigator.clipboard.writeText(keyValue); toast.success('Copied!'); }}
+                                    className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+                                    <Copy size={13} />
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Extra (Password) */}
+                              {extraInfo && (
+                                <div>
+                                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Password</p>
+                                  <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl"
+                                    style={{ background: 'hsl(var(--muted))', border: '1px solid hsl(var(--border))' }}>
+                                    <code className="flex-1 text-sm font-mono text-foreground break-all">
+                                      {isVisible ? extraInfo : '•'.repeat(Math.min(extraInfo.length, 20))}
+                                    </code>
+                                    <button onClick={() => { navigator.clipboard.writeText(extraInfo); toast.success('Password copied!'); }}
+                                      className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+                                      <Copy size={13} />
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Subscriptions Tab ── */}
+              {activeTab === 'subscriptions' && (() => {
+                const now = Date.now();
+                const dayMs = 86400000;
+                const enriched = subscriptions.map((s: any) => {
+                  const exp = s.expires_at ? new Date(s.expires_at).getTime() : null;
+                  const days = exp != null ? Math.ceil((exp - now) / dayMs) : null;
+                  let bucket: 'expired' | 'critical' | 'warning' | 'safe' = 'safe';
+                  if (days == null) bucket = 'safe';
+                  else if (days < 0) bucket = 'expired';
+                  else if (days <= 7) bucket = 'critical';
+                  else if (days <= 30) bucket = 'warning';
+                  return { ...s, _days: days, _bucket: bucket };
+                });
+                const stats = {
+                  total: enriched.length,
+                  expired: enriched.filter(e => e._bucket === 'expired').length,
+                  critical: enriched.filter(e => e._bucket === 'critical').length,
+                  warning: enriched.filter(e => e._bucket === 'warning').length,
+                };
+                const colorOf = (b: string) =>
+                  b === 'expired' ? { bg: 'hsla(0,84%,55%,0.10)', fg: 'hsl(0,75%,45%)', border: 'hsla(0,84%,55%,0.28)' } :
+                  b === 'critical' ? { bg: 'hsla(25,95%,55%,0.10)', fg: 'hsl(20,90%,45%)', border: 'hsla(25,95%,55%,0.28)' } :
+                  b === 'warning' ? { bg: 'hsla(45,95%,55%,0.10)', fg: 'hsl(35,85%,40%)', border: 'hsla(45,95%,55%,0.28)' } :
+                  { bg: 'hsla(162,72%,46%,0.10)', fg: 'hsl(162,72%,38%)', border: 'hsla(162,72%,46%,0.25)' };
+                const labelOf = (b: string, d: number | null) =>
+                  d == null ? 'Active' :
+                  b === 'expired' ? `Expired ${Math.abs(d)} day${Math.abs(d) === 1 ? '' : 's'} ago` :
+                  d === 0 ? 'Expires today' :
+                  b === 'critical' ? `${d} day${d === 1 ? '' : 's'} left` :
+                  b === 'warning' ? `${d} days left` :
+                  `${d} days left`;
+
+                return (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-bold text-foreground flex items-center gap-2">
+                        <Clock size={16} className="text-primary" />
+                        My Subscriptions
+                      </h3>
+                      <button onClick={fetchSubscriptions} className="p-2 rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-all">
+                        <RefreshCw size={14} className={subsLoading ? 'animate-spin' : ''} />
+                      </button>
+                    </div>
+
+                    {/* Stat tiles */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                      {[
+                        { k: 'Total', v: stats.total, c: { bg: 'hsla(258,78%,55%,0.08)', fg: 'hsl(258,78%,50%)', border: 'hsla(258,78%,55%,0.22)' } },
+                        { k: 'Expired', v: stats.expired, c: colorOf('expired') },
+                        { k: '≤ 7 days', v: stats.critical, c: colorOf('critical') },
+                        { k: '≤ 30 days', v: stats.warning, c: colorOf('warning') },
+                      ].map(s => (
+                        <div key={s.k} className="rounded-2xl p-3" style={{ background: s.c.bg, border: `1px solid ${s.c.border}` }}>
+                          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: s.c.fg, opacity: 0.85 }}>{s.k}</p>
+                          <p className="text-xl font-black mt-1" style={{ color: s.c.fg }}>{s.v}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Auto-reminder hint */}
+                    <div className="flex items-start gap-2.5 rounded-2xl p-3 text-xs"
+                      style={{ background: 'hsla(258,78%,55%,0.06)', border: '1px solid hsla(258,78%,55%,0.18)' }}>
+                      <Bell size={14} className="text-primary mt-0.5 flex-shrink-0" />
+                      <div className="text-foreground/80">
+                        We will automatically email and notify you <strong>7 days before</strong> any subscription expires.
+                        You can also see real-time status here anytime.
+                      </div>
+                    </div>
+
+                    {subsLoading ? (
+                      <div className="flex items-center justify-center py-16">
+                        <RefreshCw size={20} className="animate-spin text-primary" />
+                      </div>
+                    ) : enriched.length === 0 ? (
+                      <div className="text-center py-16 text-muted-foreground rounded-2xl border border-dashed border-border">
+                        <Clock size={40} className="mx-auto mb-3 opacity-20" />
+                        <p className="font-medium text-sm">No subscriptions found</p>
+                        <p className="text-xs mt-1">Subscription products with an expiry date will appear here</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {enriched.map((s: any) => {
+                          const c = colorOf(s._bucket);
+                          const total = s.expires_at && s.created_at
+                            ? Math.max(1, Math.ceil((new Date(s.expires_at).getTime() - new Date(s.created_at).getTime()) / dayMs))
+                            : null;
+                          const elapsed = s.created_at
+                            ? Math.max(0, Math.ceil((now - new Date(s.created_at).getTime()) / dayMs))
+                            : null;
+                          const pct = total && elapsed != null ? Math.min(100, Math.max(0, (elapsed / total) * 100)) : 0;
+                          return (
+                            <div key={s.id} className="rounded-2xl border overflow-hidden"
+                              style={{ background: 'hsl(var(--card))', borderColor: c.border }}>
+                              <div className="flex items-center gap-3 px-4 py-3"
+                                style={{ background: c.bg, borderBottom: `1px solid ${c.border}` }}>
+                                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                                  style={{ background: c.bg, border: `1px solid ${c.border}` }}>
+                                  <Clock size={14} style={{ color: c.fg }} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-bold text-sm text-foreground truncate">{s.product_name}</p>
+                                  <p className="text-[10px] text-muted-foreground">
+                                    Order #{s.orders?.order_number}
+                                    {s.created_at ? ` · Started ${new Date(s.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}` : ''}
+                                  </p>
+                                </div>
+                                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full flex-shrink-0"
+                                  style={{ background: c.bg, color: c.fg, border: `1px solid ${c.border}` }}>
+                                  {labelOf(s._bucket, s._days)}
+                                </span>
+                              </div>
+
+                              <div className="p-4 space-y-3">
+                                <div className="grid grid-cols-2 gap-3 text-xs">
+                                  <div>
+                                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Expires on</p>
+                                    <p className="font-bold text-foreground text-sm">
+                                      {s.expires_at ? new Date(s.expires_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">Reminder sent</p>
+                                    <p className="font-medium text-foreground/80 text-xs">
+                                      {s.last_reminder_sent_at
+                                        ? new Date(s.last_reminder_sent_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                                        : 'Not yet'}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {total != null && (
+                                  <div>
+                                    <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wide mb-1.5"
+                                      style={{ color: c.fg }}>
+                                      <span>Lifetime</span>
+                                      <span>{Math.min(elapsed!, total)} / {total} days</span>
+                                    </div>
+                                    <div className="h-2 rounded-full overflow-hidden" style={{ background: 'hsl(var(--muted))' }}>
+                                      <div className="h-full rounded-full transition-all"
+                                        style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${c.fg}, ${c.fg})`, opacity: s._bucket === 'expired' ? 0.5 : 1 }} />
+                                    </div>
+                                  </div>
+                                )}
+
+                                <div className="flex flex-wrap gap-2 pt-1">
+                                  <button
+                                    onClick={() => navigate('/shop')}
+                                    className={`px-3 py-2 text-xs rounded-xl flex items-center gap-1.5 ${gradBtn}`}
+                                    style={gradBtnStyle}>
+                                    <RefreshCw size={12} /> Renew Now
+                                  </button>
+                                  <button
+                                    onClick={() => handleTabSwitch('orders')}
+                                    className="px-3 py-2 text-xs rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-all flex items-center gap-1.5">
+                                    <Package size={12} /> View Order
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+
+              {activeTab === 'wallet' && (
+                <div className="space-y-5">
+                  {/* Balance Card */}
+                  <div className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, hsl(243,75%,52%) 0%, hsl(263,70%,50%) 100%)', boxShadow: '0 8px 32px hsla(258,78%,55%,0.30), 0 1px 0 rgba(255,255,255,0.15) inset' }}>
+                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+                    <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style={{ background: 'white', transform: 'translate(20%, -20%)' }} />
+                    <div className="relative flex items-center justify-between mb-5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.22)' }}>
+                          <Wallet size={20} className="text-white" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-white/80 font-medium">My Wallet</p>
+                          <p className="text-xs text-white/55">Store Balance</p>
+                        </div>
+                      </div>
+                      <button onClick={fetchWallet} className="text-white/60 hover:text-white transition-colors">
+                        <RefreshCw size={14} className={walletLoading ? 'animate-spin' : ''} />
+                      </button>
+                    </div>
+                    <p className="relative text-4xl font-black tracking-tight text-white">৳{walletBalance.toLocaleString()}</p>
+                    <p className="relative text-sm text-white/65 mt-1">Available Balance</p>
+                  </div>
+
+                  {/* Top-up Wizard */}
+                  <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.72)', border: '1px solid hsla(258,78%,75%,0.22)', backdropFilter: 'blur(20px)' }}>
+                    {/* Step indicators */}
+                    <div className="flex" style={{ borderBottom: '1px solid hsla(258,78%,75%,0.18)' }}>
+                      {['Select Amount', 'Payment', 'Confirm'].map((s, i) => (
+                        <div key={i} className={`flex-1 py-3 text-center text-xs font-semibold transition-colors ${
+                          topupStep === i ? 'text-primary border-b-2 border-primary' :
+                          topupStep > i ? 'text-muted-foreground' : 'text-muted-foreground/50'
+                        }`} style={topupStep === i ? { background: 'rgba(99,82,234,0.06)' } : {}}>{i + 1}. {s}</div>
+                      ))}
+                    </div>
+
+                    <div className="p-5">
+                      {/* STEP 0: Select Amount */}
+                      {topupStep === 0 && (
+                        <div className="space-y-4">
+                          <p className="text-sm font-semibold text-foreground">How much do you want to add?</p>
+                          <div className="flex flex-wrap gap-2">
+                            {[100, 200, 500, 1000, 2000, 5000].map(v => (
+                              <button key={v} onClick={() => setTopupAmount(String(v))}
+                                className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
+                                  topupAmount === String(v)
+                                    ? 'border-primary bg-primary/10 text-primary'
+                                    : 'border-border text-muted-foreground hover:border-primary/50 hover:text-primary bg-white/60'
+                                }`}>৳{v}</button>
+                            ))}
+                          </div>
+                          <div>
+                            <label className={labelCls}>Or enter custom amount</label>
+                            <input type="number" min="10" value={topupAmount} onChange={e => setTopupAmount(e.target.value)} placeholder="Min ৳10"
+                              className="w-full rounded-xl px-4 py-3 text-sm outline-none border border-border bg-white/60 text-foreground focus:border-primary focus:bg-white/80" />
+                          </div>
+                          <button onClick={() => { if (!topupAmount || parseFloat(topupAmount) < 10) { toast.error('Minimum ৳10'); return; } setTopupStep(1); }}
+                            className={`w-full py-3 text-sm flex items-center justify-center gap-2 ${gradBtn}`} style={gradBtnStyle}>
+                            Continue →
+                          </button>
+                        </div>
+                      )}
+
+                      {/* STEP 1: Payment */}
+                      {topupStep === 1 && (() => {
+                        const amt = parseFloat(topupAmount) || 0;
+                        const isBkashOnline = topupPaymentMethod === 'bkash_online';
+                        return (
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-semibold text-foreground">Top-up: <span className="text-primary font-black">৳{topupAmount}</span></p>
+                              <button onClick={() => setTopupStep(0)} className="text-xs text-muted-foreground hover:text-primary underline">Change</button>
+                            </div>
+
+                            {/* Checkout-style method picker (logo cards) */}
+                            <div>
+                              <label className={labelCls}>Select Payment Method</label>
+                              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                                {TOPUP_PAYMENT_METHODS.map(p => (
+                                  <button
+                                    key={p.id}
+                                    type="button"
+                                    onClick={() => setTopupPaymentMethod(p.id)}
+                                    className={`flex flex-col items-center gap-1.5 py-2.5 px-1 rounded-xl text-xs font-semibold transition-all border-2 ${
+                                      topupPaymentMethod === p.id
+                                        ? 'border-primary bg-primary/8 scale-105 shadow-md text-foreground'
+                                        : 'border-border bg-background/60 hover:border-primary/40 text-muted-foreground'
+                                    }`}
+                                  >
+                                    {p.logo ? (
+                                      <img src={p.logo} alt={p.label} className="h-8 w-auto object-contain rounded-md" />
+                                    ) : (
+                                      <div className={`h-8 w-10 rounded-md flex items-center justify-center bg-gradient-to-br ${p.color}`}>
+                                        <Wallet size={16} className="text-white" />
+                                      </div>
+                                    )}
+                                    <span>{p.label}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* bKash Online (PGW) info block */}
+                            {isBkashOnline && (
+                              <div className="rounded-xl p-4 space-y-2 border bg-pink-500/10 border-pink-500/30">
+                                <div className="flex items-center gap-2 text-sm font-bold text-foreground">
+                                  <img src={bkashLogoSrc} alt="bKash" className="h-6 w-auto" />
+                                  <span>{bkashContent.title}</span>
+                                </div>
+                                <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-line">
+                                  {bkashContent.description}
+                                </p>
+                                {bkashContent.bullets.length > 0 && (
+                                  <ul className="text-[11px] text-muted-foreground space-y-1 pl-4 list-disc">
+                                    {bkashContent.bullets.map((b, i) => <li key={i}>{b}</li>)}
+                                  </ul>
+                                )}
+                                <p className="text-xs text-pink-600 dark:text-pink-300 font-medium">
+                                  {bkashContent.amount_prefix} ৳{amt.toLocaleString()}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Manual: instructions + TrxID + screenshot */}
+                            {!isBkashOnline && (
+                              <>
+                                <PaymentInstructions
+                                  paymentMethodId={topupPaymentMethod as import('@/components/store/PaymentInstructions').PMId}
+                                  amount={amt}
+                                  amountLabel="টপ-আপ পরিমাণ"
+                                />
+                                <div>
+                                  <label className="text-sm text-muted-foreground mb-1 block font-semibold">Transaction ID (TrxID) *</label>
+                                  <input
+                                    value={topupTxId}
+                                    onChange={e => setTopupTxId(e.target.value)}
+                                    placeholder="যেমন: 8F3K2P9X"
+                                    maxLength={50}
+                                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-mono text-sm"
+                                  />
+                                </div>
+                                {/* Optional screenshot */}
+                                <div>
+                                  <label className="text-sm text-muted-foreground mb-1 block font-semibold flex items-center gap-2">
+                                    <Upload size={14} className="text-muted-foreground" />
+                                    Payment Screenshot
+                                    <span className="text-xs text-muted-foreground font-normal">(optional)</span>
+                                  </label>
+                                  {!topupScreenshotPreview ? (
+                                    <label
+                                      htmlFor="topup-screenshot-input"
+                                      className="flex flex-col items-center justify-center w-full p-5 bg-muted/20 border-2 border-dashed border-border rounded-xl cursor-pointer hover:bg-muted/30 hover:border-primary/40 transition-all"
+                                    >
+                                      <Upload size={20} className="text-muted-foreground mb-1.5" />
+                                      <span className="text-sm text-foreground font-medium">স্ক্রিনশট সিলেক্ট করুন</span>
+                                      <span className="text-xs text-muted-foreground mt-0.5">JPG, PNG • সর্বোচ্চ ৫MB</span>
+                                      <input
+                                        id="topup-screenshot-input"
+                                        ref={topupScreenshotInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleTopupScreenshotChange}
+                                        className="hidden"
+                                      />
+                                    </label>
+                                  ) : (
+                                    <div className="relative rounded-xl overflow-hidden border border-border bg-muted/20">
+                                      <img src={topupScreenshotPreview} alt="Payment screenshot preview" className="w-full max-h-64 object-contain" />
+                                      <button type="button" onClick={removeTopupScreenshot} className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5 transition-colors" aria-label="Remove screenshot">
+                                        <X size={14} />
+                                      </button>
+                                      <div className="px-3 py-2 text-xs text-muted-foreground flex items-center justify-between bg-muted/30">
+                                        <span className="truncate">{topupScreenshot?.name}</span>
+                                        <span className="flex-shrink-0 ml-2">{topupScreenshot && (topupScreenshot.size / 1024).toFixed(0)} KB</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            )}
+
+                            {/* Submit row: back + premium gradient pill (Checkout-style) */}
+                            <div className="flex gap-3 pt-1">
+                              <button
+                                onClick={() => setTopupStep(0)}
+                                className="px-5 py-3 rounded-2xl text-sm font-semibold text-muted-foreground hover:bg-white/60 transition-colors"
+                                style={{ border: '1px solid hsla(258,78%,75%,0.3)' }}
+                              >
+                                Back
+                              </button>
+                              {isBkashOnline ? (
+                                <button
+                                  type="button"
+                                  onClick={handleTopupSubmit}
+                                  disabled={topupProcessing}
+                                  className="group relative flex-1 overflow-hidden rounded-2xl py-3.5 px-5 font-bold text-base text-white shadow-[0_12px_40px_-8px_rgba(226,0,116,0.55)] transition-all duration-300 hover:shadow-[0_18px_55px_-8px_rgba(226,0,116,0.75)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                                  style={{ background: 'linear-gradient(135deg, #ff2e87 0%, #e2007a 45%, #b8005f 100%)' }}
+                                >
+                                  <span aria-hidden className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                                  <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-2xl bg-gradient-to-b from-white/25 to-transparent" />
+                                  <span className="relative flex items-center justify-center gap-3">
+                                    {topupProcessing ? (
+                                      <><Loader2 size={18} className="animate-spin" /> Processing…</>
+                                    ) : (
+                                      <>
+                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-white/40">
+                                          <img src={bkashLogoSrc} alt="bKash" className="h-5 w-5 object-contain" />
+                                        </span>
+                                        <span className="tracking-wide">bKash দিয়ে টপ-আপ করুন</span>
+                                        <span className="ml-1 rounded-full bg-white/20 px-3 py-1 text-sm font-extrabold backdrop-blur-sm">৳{amt.toLocaleString()}</span>
+                                      </>
+                                    )}
+                                  </span>
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={handleTopupSubmit}
+                                  disabled={topupProcessing || !topupTxId.trim()}
+                                  className="group relative flex-1 overflow-hidden rounded-2xl py-3.5 px-5 font-bold text-base text-white shadow-[0_12px_40px_-8px_rgba(79,70,229,0.55)] transition-all duration-300 hover:shadow-[0_18px_55px_-8px_rgba(79,70,229,0.75)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                                  style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 45%, #1e3a8a 100%)' }}
+                                >
+                                  <span aria-hidden className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                                  <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-2xl bg-gradient-to-b from-white/25 to-transparent" />
+                                  <span className="relative flex items-center justify-center gap-3">
+                                    {topupProcessing ? (
+                                      <><Loader2 size={18} className="animate-spin" /> Submitting…</>
+                                    ) : (
+                                      <>
+                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-white/40">
+                                          <CreditCard size={16} className="text-indigo-700" />
+                                        </span>
+                                        <span className="tracking-wide">Submit Top-up Request</span>
+                                        <span className="ml-1 rounded-full bg-white/20 px-3 py-1 text-sm font-extrabold backdrop-blur-sm">৳{amt.toLocaleString()}</span>
+                                      </>
+                                    )}
+                                  </span>
+                                </button>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-center text-muted-foreground">🔒 নিরাপদ পেমেন্ট — আপনার তথ্য সুরক্ষিত</p>
+                          </div>
+                        );
+                      })()}
+
+                      {/* STEP 2: Success */}
+                      {topupStep === 2 && (
+                        <div className="text-center py-6 space-y-4">
+                          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto" style={{ background: 'hsla(158,80%,48%,0.12)', border: '1px solid hsla(158,80%,48%,0.3)' }}>
+                            <CheckCircle2 size={32} style={{ color: 'hsl(158,80%,48%)' }} />
+                          </div>
+                          <div>
+                            <p className="text-base font-black text-foreground">Request Submitted!</p>
+                            <p className="text-sm text-muted-foreground mt-1">Admin will verify your payment and credit <span className="font-bold text-primary">৳{topupAmount}</span> to your wallet.</p>
+                          </div>
+                          <button onClick={() => { setTopupStep(0); setTopupAmount(''); fetchWallet(); }}
+                            className={`px-6 py-2.5 text-sm ${gradBtn}`} style={gradBtnStyle}>Done</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Pending Requests */}
+                  {topupRequests.filter((r: any) => r.status === 'pending').length > 0 && (
+                    <div className="rounded-2xl p-4" style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid hsla(45,93%,58%,0.28)', backdropFilter: 'blur(8px)' }}>
+                      <p className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+                        <Clock size={14} className="text-amber-500" /> Pending Top-up Requests
+                      </p>
+                      {topupRequests.filter((r: any) => r.status === 'pending').map((r: any) => (
+                        <div key={r.id} className="flex items-center justify-between py-2">
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">৳{r.amount} via {r.payment_method}</p>
+                            <p className="text-xs text-muted-foreground">TrxID: {r.transaction_id} · {new Date(r.created_at).toLocaleDateString()}</p>
+                          </div>
+                          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-600 border border-amber-500/30">Pending</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Transaction History */}
+                  <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.72)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(16px)' }}>
+                    <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid hsla(258,78%,75%,0.16)', background: 'rgba(255,255,255,0.4)' }}>
+                      <h3 className="font-bold text-foreground flex items-center gap-2"><History size={14} className="text-primary" /> Transaction History</h3>
+                      <button onClick={fetchWallet} className="text-muted-foreground hover:text-primary transition-colors"><RefreshCw size={13} /></button>
+                    </div>
+                    <div className="divide-y max-h-[280px] overflow-y-auto" style={{ divideColor: 'hsla(258,78%,75%,0.12)' } as any}>
+                      {walletLoading ? (
+                        <div className="p-6 text-center text-muted-foreground text-sm">Loading...</div>
+                      ) : walletTx.length === 0 ? (
+                        <div className="p-6 text-center text-muted-foreground text-sm">No transactions yet</div>
+                      ) : walletTx.map((tx: any) => (
+                        <div key={tx.id} className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid hsla(258,78%,75%,0.10)' }}>
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center`} style={{ background: tx.type === 'credit' ? 'hsla(158,80%,48%,0.12)' : 'hsla(0,80%,60%,0.10)' }}>
+                              {tx.type === 'credit' ? <TrendingUp size={12} style={{ color: 'hsl(158,80%,42%)' }} /> : <TrendingDown size={12} className="text-destructive" />}
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium text-foreground">{translateDbText(tx.note || (tx.type === 'credit' ? 'Credit' : 'Debit'), selectedLang)}</p>
+                              <p className="text-[10px] text-muted-foreground">{new Date(tx.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className={`text-sm font-bold`} style={{ color: tx.type === 'credit' ? 'hsl(158,80%,42%)' : 'hsl(var(--destructive))' }}>
+                              {tx.type === 'credit' ? '+' : '-'}৳{tx.amount}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">Balance: ৳{tx.balance_after}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* How to use wallet */}
+                  <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
+                    <p className="text-sm font-bold mb-3 text-foreground">How to use your wallet?</p>
+                    {[
+                      { n: '1', text: 'Top-up: Choose amount → Pay via BKash/Nagad → Enter TrxID' },
+                      { n: '2', text: 'Admin verifies payment and credits your wallet balance' },
+                      { n: '3', text: 'At checkout, select "Wallet" as payment method to pay instantly' },
+                    ].map(({ n, text }) => (
+                      <div key={n} className="flex items-start gap-3 mb-2 last:mb-0">
+                        <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black text-white flex-shrink-0" style={{ background: 'hsl(var(--primary))' }}>{n}</span>
+                        <span className="text-sm text-muted-foreground">{text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Language Tab ── */}
+              {activeTab === 'language' && (
+                <div className="space-y-5">
+                  <div>
+                    <h2 className="text-lg font-bold text-foreground mb-1 flex items-center gap-2"><Globe size={18} className="text-primary" /> {t(selectedLang, 'language_title')}</h2>
+                    <p className="text-sm text-muted-foreground">{t(selectedLang, 'language_subtitle')}</p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {LANGUAGES.map(lang => {
+                      const isActive = selectedLang === lang.code;
+                      return (
+                        <button key={lang.code} onClick={() => {
+                          const code = lang.code as LangCode;
+                          setSelectedLang(code); setStoredLang(code);
+                          toast.success(`${t(code, 'language_changed')}: ${lang.native}`);
+                        }}
+                          className="flex items-center gap-4 p-4 rounded-2xl text-left transition-all duration-200"
+                          style={isActive ? {
+                            background: 'linear-gradient(135deg, rgba(99,82,234,0.10), rgba(99,82,234,0.06))',
+                            border: '1.5px solid hsla(258,78%,65%,0.35)',
+                            boxShadow: '0 4px 16px hsla(258,78%,55%,0.10)',
+                            backdropFilter: 'blur(12px)',
+                          } : {
+                            background: 'rgba(255,255,255,0.65)',
+                            border: '1px solid hsla(258,78%,75%,0.18)',
+                            backdropFilter: 'blur(8px)',
+                          }}>
+                          <span className="text-3xl leading-none">{lang.flag}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className={`font-bold text-sm ${isActive ? 'text-primary' : 'text-foreground'}`}>{lang.native}</p>
+                            <p className="text-xs text-muted-foreground">{lang.name} · {lang.region}</p>
+                          </div>
+                          {isActive && (
+                            <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'hsl(var(--primary))' }}>
+                              <CheckCircle2 size={12} className="text-white" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.18)', backdropFilter: 'blur(8px)' }}>
+                    <p className="text-xs text-muted-foreground flex items-start gap-2">
+                      <Globe size={13} className="text-primary mt-0.5 flex-shrink-0" />
+                      {t(selectedLang, 'language_note')}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Downloads Tab ── */}
+              {activeTab === 'downloads' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-foreground flex items-center gap-2">
+                      <Download size={16} className="text-primary" />
+                      My Downloads
+                    </h3>
+                    <button onClick={fetchDownloads} className="p-2 rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-all">
+                      <RefreshCw size={14} />
+                    </button>
+                  </div>
+
+                  {downloadsLoading ? (
+                    <div className="flex items-center justify-center py-16">
+                      <RefreshCw size={20} className="animate-spin text-primary" />
+                    </div>
+                  ) : myDownloads.length === 0 ? (
+                    <div className="text-center py-16 text-muted-foreground rounded-2xl border border-dashed border-border">
+                      <Download size={40} className="mx-auto mb-3 opacity-20" />
+                      <p className="font-medium text-sm">কোনো ডাউনলোড পাওয়া যায়নি</p>
+                      <p className="text-xs mt-1">আপনার কেনা প্রোডাক্টের ডাউনলোড লিংক এখানে অটোমেটিক যোগ হবে</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {myDownloads.map((item: any) => {
+                        const product = item.products;
+                        const order = item.orders;
+                        const url = product?.download_link;
+                        return (
+                          <div key={item.id} className="rounded-2xl border overflow-hidden transition-all hover:border-primary/40"
+                            style={{ background: 'hsl(var(--card))', borderColor: 'hsla(258,78%,55%,0.20)' }}>
+                            <div className="flex items-center gap-3 p-3">
+                              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+                                style={{ background: 'hsla(258,78%,55%,0.08)' }}>
+                                {product?.image_url ? (
+                                  <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  <Download size={20} className="text-primary" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-bold text-sm text-foreground truncate">{product?.name || item.product_name}</p>
+                                <p className="text-[10px] text-muted-foreground truncate">
+                                  অর্ডার #{order?.order_number}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="px-3 pb-3 flex items-center gap-2">
+                              <a href={url} target="_blank" rel="noopener noreferrer"
+                                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold text-white transition-all hover:opacity-90"
+                                style={{ background: 'linear-gradient(135deg, hsl(258,78%,55%), hsl(200,90%,45%))', boxShadow: '0 4px 14px hsla(258,78%,55%,0.30)' }}>
+                                <Download size={13} /> ডাউনলোড করুন
+                              </a>
+                              <button
+                                onClick={() => { navigator.clipboard.writeText(url); toast.success('Link copied!'); }}
+                                className="p-2 rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-all"
+                                title="Copy link"
+                              >
+                                <Copy size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Install App Tab ── */}
+              {activeTab === 'install' && (
+                <InstallAppTab />
+              )}
+
+            </div>
+          </div>{/* end Content Panel */}
+        </div>
+      </main>
+      </div>{/* end relative z-10 wrapper */}
+    </div>
+  );
+};
+
+export default UserDashboard;

@@ -1,0 +1,941 @@
+import { useState, useEffect, useRef } from 'react';
+import { X, MessageCircle, CreditCard, CheckCircle, Tag, ChevronDown, Wallet, Loader2, Shield, Package, LogIn, Upload, Camera } from 'lucide-react';
+import { toast } from 'sonner';
+import AuthModal from '@/components/store/AuthModal';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import PaymentInstructions from '@/components/store/PaymentInstructions';
+import type { PMId } from '@/components/store/PaymentInstructions';
+import { usePaymentSettings } from '@/hooks/usePaymentSettings';
+import type { CustomField } from '@/pages/admin/AdminProducts';
+import { useBkashPgwContent } from '@/hooks/useBkashPgwContent';
+import { getPaymentLogo } from '@/lib/paymentLogos';
+import { useCheckoutConfig } from '@/hooks/useCheckoutConfig';
+import PhoneInput from '@/components/store/PhoneInput';
+
+interface Product {
+  id: string | number;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  category: string;
+  customFields?: CustomField[];
+}
+
+interface QuickOrderModalProps {
+  product: Product;
+  onClose: () => void;
+  quantity?: number;
+}
+
+const schema = z.object({
+  name: z.string().trim().min(2, 'নাম কমপক্ষে ২ অক্ষর'),
+  email: z.string().trim().email('সঠিক ইমেইল দিন'),
+  phone: z.string().trim().regex(/^\+[1-9][0-9]{6,17}$/, 'Country code সহ সঠিক নম্বর দিন (যেমন +8801XXXXXXXXX)'),
+});
+
+type PaymentMethod = PMId | 'wallet';
+
+interface PaymentOption {
+  id: PaymentMethod;
+  label: string;
+  color: string;
+  logo?: string;
+  isWallet?: boolean;
+}
+
+const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all";
+
+const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOrderModalProps) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { configs: paymentConfigs } = usePaymentSettings();
+  const { config: checkoutCfg } = useCheckoutConfig();
+  const bkashContent = useBkashPgwContent();
+  const bkashLogoSrc = getPaymentLogo('bkash_online', '', bkashContent.logo_url);
+
+  const [step, setStep] = useState<'info' | 'payment' | 'success'>('info');
+  const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
+  const [transactionId, setTransactionId] = useState('');
+  const [couponCode, setCouponCode] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [orderNumber, setOrderNumber] = useState('');
+  const [submitError, setSubmitError] = useState('');
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const pendingSubmitRef = useRef(false);
+  // Custom field values: { fieldId: value }
+  const [customFieldValues, setCustomFieldValues] = useState<Record<string, string>>({});
+  const [customFieldErrors, setCustomFieldErrors] = useState<Record<string, string>>({});
+
+  // Optional payment proof screenshot
+  const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
+  const screenshotInputRef = useRef<HTMLInputElement>(null);
+
+  const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast.error('শুধুমাত্র ছবি আপলোড করুন'); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error('ছবির সাইজ ৫MB এর কম হতে হবে'); return; }
+    setPaymentScreenshot(file);
+    const reader = new FileReader();
+    reader.onload = ev => setScreenshotPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const removeScreenshot = () => {
+    setPaymentScreenshot(null);
+    setScreenshotPreview(null);
+    if (screenshotInputRef.current) screenshotInputRef.current.value = '';
+  };
+
+  const customFields: CustomField[] = product.customFields || [];
+  const itemTotal = product.price * initialQty;
+  const finalTotal = Math.max(0, itemTotal - couponDiscount);
+
+  // Persistent session token for abandoned-checkout tracking (Quick Order)
+  const sessionTokenRef = useRef<string>('');
+  const abandonedTimer = useRef<ReturnType<typeof setTimeout>>();
+  const orderPlacedRef = useRef(false);
+  if (!sessionTokenRef.current) {
+    let tok = '';
+    try { tok = localStorage.getItem('quickorder_session_token') || ''; } catch {}
+    if (!tok) {
+      tok = 'qo_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+      try { localStorage.setItem('quickorder_session_token', tok); } catch {}
+    }
+    sessionTokenRef.current = tok;
+  }
+
+  // ── Save abandoned checkout (debounced) when user fills info but doesn't complete ──
+  useEffect(() => {
+    if (orderPlacedRef.current) return;
+    const hasContact = !!(form.email || form.phone || form.name);
+    if (!hasContact) return;
+    clearTimeout(abandonedTimer.current);
+    abandonedTimer.current = setTimeout(async () => {
+      try {
+        const payload = {
+          customer_name: form.name || null,
+          customer_email: form.email || null,
+          customer_phone: form.phone || null,
+          cart_items: [{
+            id: product.id,
+            name: product.name,
+            category: product.category,
+            price: product.price,
+            quantity: initialQty,
+            image: product.image,
+          }],
+          item_count: initialQty,
+          subtotal: itemTotal,
+          discount_amount: couponDiscount,
+          total: finalTotal,
+          coupon_code: couponCode.trim().toUpperCase() || null,
+          payment_method: paymentMethod,
+          notes: customFields.length > 0
+            ? customFields.map(f => `${f.label}: ${customFieldValues[f.id] || '-'}`).join('\n')
+            : null,
+          page_url: typeof window !== 'undefined' ? window.location.href : null,
+          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 500) : null,
+        };
+        const { error } = await supabase.rpc('upsert_abandoned_checkout', {
+          p_session_token: sessionTokenRef.current,
+          p_payload: payload as any,
+        });
+        if (error) console.warn('[quickorder abandoned] upsert error:', error.message);
+      } catch (e) { console.warn('[quickorder abandoned] save failed:', e); }
+    }, 1500);
+    return () => clearTimeout(abandonedTimer.current);
+  }, [form.name, form.email, form.phone, couponCode, couponDiscount, paymentMethod, customFieldValues, user?.id, initialQty]);
+
+  // Auto-fill user info and fetch wallet balance
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from('profiles')
+      .select('display_name, email, phone, wallet_balance')
+      .eq('user_id', user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) {
+          setForm(prev => ({
+            name: prev.name || (data as any).display_name || '',
+            email: prev.email || (data as any).email || user.email || '',
+            phone: prev.phone || (data as any).phone || '',
+          }));
+          setWalletBalance((data as any).wallet_balance || 0);
+        }
+      });
+  }, [user?.id]);
+
+  // Auto-submit after login if there was a pending submit
+  useEffect(() => {
+    if (user && pendingSubmitRef.current) {
+      pendingSubmitRef.current = false;
+      const timer = setTimeout(() => {
+        handlePlaceOrder();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [user]);
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    setCouponError('');
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-coupon', {
+        body: {
+          code: couponCode.trim().toUpperCase(),
+          orderTotal: itemTotal,
+          customerEmail: form.email || user?.email || '',
+          productIds: [product.id].filter(Boolean),
+        },
+      });
+      if (error || !data?.valid) {
+        setCouponError(data?.message || 'কুপন কোড সঠিক নয়');
+        setCouponDiscount(0);
+      } else {
+        setCouponDiscount(data.discount);
+        toast.success(data.message || `✅ কুপন approved! ৳${data.discount} ছাড়`);
+      }
+    } catch {
+      setCouponError('কুপন চেক করতে সমস্যা হয়েছে');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleInfoNext = () => {
+    const parsed = schema.safeParse(form);
+    if (!parsed.success) {
+      const errs: Record<string, string> = {};
+      parsed.error.errors.forEach(e => { errs[String(e.path[0])] = e.message; });
+      setErrors(errs);
+      return;
+    }
+    // Validate custom fields
+    const cfErrors: Record<string, string> = {};
+    customFields.forEach(f => {
+      if (f.required && !customFieldValues[f.id]?.trim()) {
+        cfErrors[f.id] = `${f.label} আবশ্যিক`;
+      }
+    });
+    if (Object.keys(cfErrors).length > 0) {
+      setCustomFieldErrors(cfErrors);
+      setErrors({});
+      return;
+    }
+    setErrors({});
+    setCustomFieldErrors({});
+    setStep('payment');
+  };
+
+  const handlePlaceOrder = async () => {
+    setSubmitError('');
+
+    // Guest ordering allowed for every method except wallet (needs a balance).
+    if (!user && paymentMethod === 'wallet') {
+      pendingSubmitRef.current = true;
+      setSubmitError('Wallet পেমেন্টের জন্য লগইন করুন');
+      setShowAuthModal(true);
+      return;
+    }
+
+    // Wallet checks
+    if (paymentMethod === 'wallet') {
+      if (!user) { setSubmitError('Wallet পেমেন্টের জন্য লগইন করতে হবে'); return; }
+      if (walletBalance < finalTotal) {
+        setSubmitError(`ব্যালেন্স অপর্যাপ্ত। বর্তমান: ৳${walletBalance.toLocaleString()}, দরকার: ৳${finalTotal.toLocaleString()}`);
+        return;
+      }
+    } else if (paymentMethod !== 'cod' && paymentMethod !== 'bkash_online') {
+      if (!transactionId.trim()) { setSubmitError('Transaction ID দিন'); return; }
+    }
+
+    setLoading(true);
+    try {
+      const orderNum = 'ORD-' + Array.from(crypto.getRandomValues(new Uint8Array(5)))
+        .map(b => b.toString(36)).join('').toUpperCase().slice(0, 8);
+
+      // Build notes with custom field values
+      const customFieldNotes = customFields.length > 0
+        ? customFields.map(f => `${f.label}: ${customFieldValues[f.id] || '-'}`).join('\n')
+        : '';
+
+      const newOrderId = crypto.randomUUID();
+      const isGuest = !user;
+
+      const orderPayload = {
+        id: newOrderId,
+        order_number: orderNum,
+        customer_name: form.name,
+        customer_email: form.email.trim() || `no-email-${orderNum.toLowerCase()}@guest.relaxobeanbag.com`,
+        customer_phone: form.phone,
+        subtotal: itemTotal,
+        discount_amount: couponDiscount,
+        total: finalTotal,
+        payment_method: paymentMethod,
+        transaction_id:
+          paymentMethod === 'wallet' ? `WALLET-${orderNum}` :
+          paymentMethod === 'cod' ? `COD-${orderNum}` :
+          paymentMethod === 'bkash_online' ? `BKASH-PENDING-${orderNum}` :
+          transactionId.trim(),
+        coupon_code: couponCode.trim().toUpperCase() || null,
+        status: paymentMethod === 'wallet' ? 'processing' : 'pending',
+        payment_status: paymentMethod === 'wallet' ? 'paid' : 'pending',
+        notes: customFieldNotes || null,
+      };
+
+      const orderItems = [{
+        order_id: newOrderId,
+        product_name: product.name,
+        product_id: typeof product.id === 'string' ? product.id : null,
+        price: product.price,
+        quantity: initialQty,
+        total: itemTotal,
+        custom_field_values: customFields.length > 0 ? customFieldValues : {},
+      }];
+
+      if (isGuest) {
+        // Guests (Cash on Delivery) create order + items through the secure RPC.
+        const { error: rpcErr } = await (supabase as any).rpc('place_guest_order', {
+          p_order: orderPayload,
+          p_items: orderItems,
+          p_proof: null,
+        });
+        if (rpcErr) throw rpcErr;
+      } else {
+        const { error: orderError } = await supabase
+          .from('orders')
+          .insert({ ...orderPayload, user_id: user!.id } as any);
+        if (orderError) throw orderError;
+
+        // Debit wallet if wallet payment
+        if (paymentMethod === 'wallet') {
+          const { data: walletResult } = await supabase.rpc('wallet_debit' as any, {
+            p_user_id: user!.id,
+            p_amount: finalTotal,
+            p_note: `অর্ডার পেমেন্ট - ${orderNum}`,
+            p_reference_id: newOrderId,
+            p_created_by: 'user',
+          });
+          if (!(walletResult as any)?.success) throw new Error('Wallet debit failed');
+          setWalletBalance(prev => prev - finalTotal);
+        }
+
+        await supabase.from('order_items').insert(orderItems as any);
+
+        // Optional payment screenshot upload (non-blocking)
+        let screenshotUrl: string | null = null;
+        if (paymentMethod !== 'wallet' && paymentMethod !== 'cod' && paymentScreenshot) {
+          try {
+            const ext = paymentScreenshot.name.split('.').pop()?.toLowerCase() || 'jpg';
+            const path = `${user!.id}/${newOrderId}-${Date.now()}.${ext}`;
+            const { error: uploadErr } = await supabase.storage
+              .from('payment-proofs')
+              .upload(path, paymentScreenshot, { contentType: paymentScreenshot.type, upsert: false });
+            if (!uploadErr) {
+              const { data: signed } = await supabase.storage
+                .from('payment-proofs')
+                .createSignedUrl(path, 60 * 60 * 24 * 365);
+              screenshotUrl = signed?.signedUrl || path;
+            } else {
+              console.error('[QuickOrder] screenshot upload error:', uploadErr);
+            }
+          } catch (e) { console.error('[QuickOrder] screenshot upload failed:', e); }
+        }
+
+        // Insert payment proof for manual payments so admin sees it in /admin/payments
+        if (paymentMethod !== 'wallet' && paymentMethod !== 'cod' && paymentMethod !== 'bkash_online') {
+          const { error: proofError } = await supabase.from('payment_proofs').insert({
+            order_id: newOrderId,
+            user_id: user!.id,
+            transaction_id: transactionId.trim(),
+            payment_method: paymentMethod,
+            amount: finalTotal,
+            screenshot_url: screenshotUrl,
+            status: 'pending',
+          });
+          if (proofError) console.error('[QuickOrder] payment_proof insert error:', proofError);
+        }
+      }
+
+      // ── bKash Online (PGW) — redirect to bKash hosted checkout ──
+      if (paymentMethod === 'bkash_online') {
+        try {
+          const { data: bkData, error: bkErr } = await supabase.functions.invoke('bkash-create-payment', {
+            body: {
+              orderId: newOrderId,
+              orderNumber: orderNum,
+              amount: finalTotal,
+              customerPhone: form.phone,
+            },
+          });
+          if (bkErr || !bkData?.bkashURL) {
+            console.error('[QuickOrder] bKash create payment error:', bkErr, bkData);
+            setSubmitError('bKash পেমেন্ট শুরু করা যায়নি। আবার চেষ্টা করুন।');
+            setLoading(false);
+            return;
+          }
+          window.location.href = bkData.bkashURL;
+          return;
+        } catch (e) {
+          console.error('[QuickOrder] bKash invoke failed:', e);
+          setSubmitError('bKash পেমেন্ট গেটওয়ে কানেক্ট হয়নি। আবার চেষ্টা করুন।');
+          setLoading(false);
+          return;
+        }
+      }
+
+      setOrderNumber(orderNum);
+      orderPlacedRef.current = true;
+      // Mark abandoned row as converted (best-effort)
+      try {
+        await supabase.rpc('mark_abandoned_checkout_converted', {
+          p_session_token: sessionTokenRef.current,
+          p_order_id: null as any,
+        });
+      } catch {}
+      // Rotate token so next quick order starts fresh
+      try {
+        const newTok = 'qo_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('quickorder_session_token', newTok);
+        sessionTokenRef.current = newTok;
+      } catch {}
+      setStep('success');
+    } catch (err) {
+      console.error(err);
+      setSubmitError('অর্ডার দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+    } finally {
+      setLoading(false);
+    }
+  };
+  const dynamicMethods: PaymentOption[] = paymentConfigs
+    .filter(c => c.isActive)
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map(c => ({
+      id: c.id as PaymentMethod,
+      label: c.label,
+      color: 'from-gray-600 to-gray-700',
+      logo: getPaymentLogo(c.id, c.logoUrl, bkashContent.logo_url) || undefined,
+      isWallet: false,
+    }));
+
+  const codOption: PaymentOption = {
+    id: 'cod' as PaymentMethod,
+    label: 'ক্যাশ অন ডেলিভারি',
+    color: 'from-emerald-600 to-green-700',
+    logo: getPaymentLogo('cod'),
+    isWallet: false,
+  };
+
+  const allMethods: PaymentOption[] = user
+    ? [codOption, ...dynamicMethods, { id: 'wallet' as PaymentMethod, label: 'Wallet', color: 'from-violet-600 to-purple-700', isWallet: true }]
+    : [codOption, ...dynamicMethods];
+
+  // Auto-correct payment method if current one is disabled/unavailable in admin config
+  useEffect(() => {
+    if (allMethods.length === 0) return;
+    const isValid = allMethods.some(pm => pm.id === paymentMethod);
+    if (!isValid) {
+      const preferred =
+        allMethods.find(pm => pm.id === 'cod') ||
+        allMethods.find(pm => pm.id !== 'wallet') ||
+        allMethods[0];
+      setPaymentMethod(preferred.id);
+      setTransactionId('');
+      setSubmitError('');
+    }
+  }, [allMethods.map(m => m.id).join(','), paymentMethod]);
+
+
+  return (
+    <>
+    <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="bg-card border border-border rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md max-h-[92vh] overflow-y-auto shadow-2xl">
+
+        {/* ── Header ── */}
+        <div className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-border px-5 py-4 flex items-center justify-between rounded-t-3xl sm:rounded-t-2xl z-10">
+          <div className="flex items-center gap-3">
+            <img src={product.image} alt={product.name} className="w-10 h-10 rounded-lg object-cover"
+              onError={e => { (e.target as HTMLImageElement).src = 'https://placehold.co/40x40/0a1628/00b4d8?text=P'; }} />
+            <div>
+              <p className="text-xs text-muted-foreground">{product.category}</p>
+              <p className="text-sm font-bold text-foreground line-clamp-1">{product.name}</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors">
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="p-5 space-y-5">
+
+          {/* ══ SUCCESS ══ */}
+          {step === 'success' && (
+            <div className="text-center space-y-4 py-6">
+              <div className="w-16 h-16 rounded-full bg-green-500/20 border-2 border-green-500/40 flex items-center justify-center mx-auto">
+                <CheckCircle size={32} className="text-green-400" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-foreground">অর্ডার করার জন্য ধন্যবাদ! 🎉</h3>
+                <p className="text-muted-foreground text-sm mt-1">
+                  অর্ডার নম্বর: <span className="text-primary font-mono font-bold">{orderNumber}</span>
+                </p>
+                {paymentMethod === 'wallet' ? (
+                  <div className="mt-3 p-3 rounded-xl bg-violet-500/10 border border-violet-400/30 text-left space-y-1">
+                    <p className="text-sm font-bold text-violet-600 flex items-center gap-2"><Wallet size={14}/> ওয়ালেট পেমেন্ট সম্পন্ন</p>
+                    <p className="text-xs text-muted-foreground">আপনার ওয়ালেট থেকে ৳{finalTotal.toLocaleString()} কেটে নেওয়া হয়েছে।</p>
+                    <p className="text-xs text-muted-foreground">অর্ডারের আপডেট শীঘ্রই আপনার ড্যাশবোর্ডে দেখা যাবে।</p>
+                  </div>
+                ) : paymentMethod === 'cod' ? (
+                  <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+                    আপনার অর্ডার ক্যাশ অন ডেলিভারিতে গৃহীত হয়েছে। পণ্য হাতে পেয়ে টাকা পরিশোধ করতে পারবেন। আমরা শীঘ্রই ফোনে কনফার্ম করে ডেলিভারির ব্যবস্থা করব।
+                  </p>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+                    পেমেন্ট যাচাইয়ের পর আমরা ফোনে কনফার্ম করে ডেলিভারির ব্যবস্থা করব। সাধারণত ১–২ ঘন্টার মধ্যে।
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-border text-muted-foreground hover:text-foreground text-sm transition-colors">
+                  ঠিক আছে
+                </button>
+                {user && (
+                  <button
+                    onClick={() => { onClose(); navigate('/dashboard'); }}
+                    className="flex-1 btn-glow py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-1.5"
+                  >
+                    <Package size={14}/> আমার অর্ডার
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ══ STEP 1: Customer Info ══ */}
+          {step === 'info' && (
+            <>
+              {/* Optional login banner for guests */}
+              {!user && (
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/10 border border-primary/30 mb-2">
+                  <LogIn size={16} className="text-primary shrink-0" />
+                  <p className="text-xs text-foreground flex-1">লগইন ছাড়াই অর্ডার করতে পারবেন (ঐচ্ছিক)</p>
+                  <button type="button" onClick={() => setShowAuthModal(true)} className="btn-glow px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap">
+                    লগইন
+                  </button>
+                </div>
+              )}
+              {/* Step indicator */}
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">1</span>
+                <span className="text-sm font-semibold text-foreground">আপনার তথ্য দিন</span>
+                {user && (
+                  <span className="ml-auto text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full">লগইন আছে ✓</span>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  { field: 'name', label: 'পুরো নাম', type: 'text', placeholder: 'আপনার নাম' },
+                  { field: 'email', label: 'ইমেইল', type: 'email', placeholder: 'example@email.com' },
+                ].map(({ field, label, type, placeholder }) => (
+                  <div key={field}>
+                    <label className="text-xs text-muted-foreground mb-1 block">{label}</label>
+                    <input
+                      type={type}
+                      value={form[field as keyof typeof form]}
+                      onChange={e => setForm(p => ({ ...p, [field]: e.target.value }))}
+                      placeholder={placeholder}
+                      className={inputClass}
+                    />
+                    {errors[field] && <p className="text-destructive text-xs mt-1">{errors[field]}</p>}
+                  </div>
+                ))}
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">ফোন নম্বর (Country code সহ)</label>
+                  <PhoneInput
+                    value={form.phone}
+                    onChange={v => setForm(p => ({ ...p, phone: v }))}
+                    placeholder="1XXXXXXXXX"
+                  />
+                  {errors.phone && <p className="text-destructive text-xs mt-1">{errors.phone}</p>}
+                </div>
+              </div>
+
+              {/* ── Custom Fields ── */}
+              {customFields.length > 0 && (
+                <div className="space-y-3 rounded-xl border border-primary/20 bg-primary/5 p-3">
+                  <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                    <span>📋</span> প্রোডাক্ট সম্পর্কিত তথ্য দিন
+                  </p>
+                  {customFields.map(field => (
+                    <div key={field.id}>
+                      <label className="text-xs text-muted-foreground mb-1 block">
+                        {field.label} {field.required && <span className="text-destructive">*</span>}
+                      </label>
+                      {field.type === 'textarea' ? (
+                        <textarea
+                          rows={3}
+                          value={customFieldValues[field.id] || ''}
+                          onChange={e => setCustomFieldValues(p => ({ ...p, [field.id]: e.target.value }))}
+                          placeholder={field.placeholder}
+                          className={`${inputClass} resize-none`}
+                        />
+                      ) : (
+                        <input
+                          type={field.type}
+                          value={customFieldValues[field.id] || ''}
+                          onChange={e => setCustomFieldValues(p => ({ ...p, [field.id]: e.target.value }))}
+                          placeholder={field.placeholder}
+                          className={inputClass}
+                        />
+                      )}
+                      {field.hint && <p className="text-[10px] text-muted-foreground mt-1">{field.hint}</p>}
+                      {customFieldErrors[field.id] && <p className="text-destructive text-xs mt-1">{customFieldErrors[field.id]}</p>}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Coupon */}
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">কুপন কোড (ঐচ্ছিক)</label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Tag size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      value={couponCode}
+                      onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCouponDiscount(0); setCouponError(''); }}
+                      placeholder="SAVE20"
+                      maxLength={30}
+                      className={`${inputClass} pl-9`}
+                    />
+                  </div>
+                  <button type="button" onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}
+                    className="px-4 py-2.5 rounded-xl border border-primary/40 text-primary text-xs font-medium hover:bg-primary/10 transition-colors disabled:opacity-50">
+                    {couponLoading ? <Loader2 size={13} className="animate-spin" /> : 'Apply'}
+                  </button>
+                </div>
+                {couponError && <p className="text-destructive text-xs mt-1">{couponError}</p>}
+                {couponDiscount > 0 && (
+                  <div className="mt-2 relative overflow-hidden rounded-xl border border-emerald-400/40 bg-gradient-to-r from-emerald-500/15 via-green-500/10 to-emerald-500/15 px-3 py-2 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)]">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.25),transparent_60%)] pointer-events-none" />
+                    <div className="relative flex items-center gap-2">
+                      <div className="relative">
+                        <CheckCircle size={15} className="text-emerald-400" />
+                        <span className="absolute inset-0 rounded-full bg-emerald-400/40 blur-md animate-pulse" />
+                      </div>
+                      <div className="flex flex-col leading-tight">
+                        <span className="text-[10px] uppercase tracking-wider text-emerald-300/80 font-bold">Approved ✨</span>
+                        <span className="text-xs font-bold text-emerald-300">৳{couponDiscount.toLocaleString()} ছাড় পেয়েছেন!</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Price Summary */}
+              <div className="glass-card rounded-xl p-3 space-y-1.5">
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>মূল্য {initialQty > 1 ? `(${initialQty}×৳${product.price.toLocaleString()})` : ''}</span><span>৳{itemTotal.toLocaleString()}</span>
+                </div>
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-sm text-green-500">
+                    <span>ছাড়</span><span>-৳{couponDiscount.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-bold text-foreground border-t border-border pt-1.5 mt-1.5">
+                  <span>মোট</span><span className="text-primary text-lg">৳{finalTotal.toLocaleString()}</span>
+                </div>
+              </div>
+
+              <button onClick={handleInfoNext} className="w-full btn-glow py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                পেমেন্টে যান <ChevronDown size={16} className="-rotate-90" />
+              </button>
+            </>
+          )}
+
+          {/* ══ STEP 2: Payment ══ */}
+          {step === 'payment' && (
+            <>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
+                <span className="text-sm font-semibold text-foreground">পেমেন্ট করুন</span>
+                <button onClick={() => setStep('info')} className="ml-auto text-xs text-muted-foreground hover:text-foreground">← পিছনে</button>
+              </div>
+
+              {/* Payment method buttons */}
+              <div className="grid grid-cols-3 gap-2" style={{ gridTemplateColumns: `repeat(${Math.min(allMethods.length, 3)}, 1fr)` }}>
+                {allMethods.map(pm => (
+                  <button
+                    key={pm.id}
+                    type="button"
+                    onClick={() => { setPaymentMethod(pm.id); setTransactionId(''); setSubmitError(''); }}
+                    className={`flex flex-col items-center gap-1.5 py-2.5 px-1 rounded-xl text-xs font-semibold transition-all border-2 ${
+                      paymentMethod === pm.id
+                        ? 'border-primary bg-primary/8 scale-105 shadow-md text-foreground'
+                        : 'border-border bg-background/60 hover:border-primary/40 text-muted-foreground'
+                    }`}
+                  >
+                    {pm.isWallet ? (
+                      <div className="h-8 w-10 rounded-md flex items-center justify-center bg-gradient-to-br from-violet-600 to-purple-700">
+                        <Wallet size={16} className="text-white" />
+                      </div>
+                    ) : (
+                      <img src={pm.logo} alt={pm.label} className="h-8 w-auto object-contain rounded-md" />
+                    )}
+                    <span className="text-[10px] leading-tight text-center">{pm.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Wallet payment UI */}
+              {paymentMethod === 'wallet' && (
+                <div className={`rounded-2xl p-4 space-y-3 border ${walletBalance >= finalTotal ? 'bg-violet-500/8 border-violet-400/30' : 'bg-destructive/8 border-destructive/30'}`}>
+                  {/* Balance row */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center">
+                        <Wallet size={16} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">আপনার ওয়ালেট</p>
+                        <p className={`text-lg font-black ${walletBalance >= finalTotal ? 'text-violet-600' : 'text-destructive'}`}>
+                          ৳{walletBalance.toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">অর্ডার মোট</p>
+                      <p className="text-lg font-black text-primary">৳{finalTotal.toLocaleString()}</p>
+                    </div>
+                  </div>
+
+                  {/* Status */}
+                  {walletBalance >= finalTotal ? (
+                    <div className="flex items-center gap-2 bg-violet-500/10 border border-violet-400/20 rounded-xl px-3 py-2.5">
+                      <CheckCircle size={14} className="text-violet-500 flex-shrink-0" />
+                      <div>
+                        <p className="text-xs font-bold text-violet-700">পর্যাপ্ত ব্যালেন্স আছে ✓</p>
+                        <p className="text-[11px] text-muted-foreground">অর্ডার কনফার্ম করলেই তাৎক্ষণিক পেমেন্ট হবে — কোনো TrxID লাগবে না</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex items-start gap-2 bg-destructive/10 border border-destructive/20 rounded-xl px-3 py-2.5">
+                        <p className="text-xs text-destructive font-medium">
+                          ❌ ব্যালেন্স কম — আরও ৳{(finalTotal - walletBalance).toLocaleString()} দরকার
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => { onClose(); navigate('/dashboard?tab=wallet'); }}
+                        className="w-full py-2.5 rounded-xl border border-violet-400/50 text-violet-600 text-xs font-bold hover:bg-violet-500/10 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Wallet size={13}/> Dashboard থেকে Wallet টপ-আপ করুন
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Cash on Delivery info block */}
+              {paymentMethod === 'cod' && (
+                <div className="relative overflow-hidden rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-4 space-y-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-emerald-400/20">
+                      <img src={getPaymentLogo('cod')} alt="Cash on Delivery" className="h-7 w-7 object-contain" loading="lazy" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-bold text-foreground">{checkoutCfg.codTitle}</p>
+                      <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">
+                        ডেলিভারিতে পরিশোধ: ৳{finalTotal.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  {checkoutCfg.codNotice.trim() && (
+                    <p className="text-xs font-semibold text-primary">{checkoutCfg.codNotice}</p>
+                  )}
+                  <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-line">
+                    {checkoutCfg.codNote}
+                  </p>
+                  <ul className="text-[11px] text-muted-foreground space-y-1 pl-4 list-disc">
+                    {checkoutCfg.codBullets.map(b => <li key={b}>{b}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {/* MFS payment instructions */}
+              {paymentMethod !== 'wallet' && paymentMethod !== 'cod' && paymentMethod !== 'bkash_online' && (
+                <>
+                  <PaymentInstructions
+                    paymentMethodId={paymentMethod as PMId}
+                    amount={finalTotal}
+                    amountLabel="মোট পাঠান"
+                  />
+
+                  {/* Transaction ID */}
+                  <div>
+                    <label className="text-xs text-muted-foreground mb-1 block font-semibold">
+                      Transaction ID (TrxID) *
+                    </label>
+                    <input
+                      value={transactionId}
+                      onChange={e => setTransactionId(e.target.value)}
+                      placeholder="যেমন: 8F3K2P9X"
+                      maxLength={50}
+                      className={`${inputClass} font-mono tracking-wider`}
+                    />
+                  </div>
+
+                  {/* Optional payment screenshot */}
+                  <div>
+                    <label className="text-xs text-muted-foreground mb-1 flex items-center gap-1.5 font-semibold">
+                      <Camera size={12}/> পেমেন্ট স্ক্রিনশট
+                      <span className="text-[10px] text-muted-foreground/70 font-normal">(ঐচ্ছিক)</span>
+                    </label>
+                    <p className="text-[11px] text-muted-foreground mb-2">
+                      পেমেন্ট প্রমাণ হিসেবে স্ক্রিনশট দিলে দ্রুত ভেরিফাই হবে
+                    </p>
+                    {!screenshotPreview ? (
+                      <label
+                        htmlFor="quickorder-screenshot-input"
+                        className="flex flex-col items-center justify-center w-full p-4 bg-muted/20 border-2 border-dashed border-border rounded-xl cursor-pointer hover:bg-muted/30 hover:border-primary/40 transition-all"
+                      >
+                        <Upload size={18} className="text-muted-foreground mb-1" />
+                        <span className="text-xs text-foreground font-medium">স্ক্রিনশট সিলেক্ট করুন</span>
+                        <span className="text-[10px] text-muted-foreground mt-0.5">JPG, PNG • সর্বোচ্চ ৫MB</span>
+                        <input
+                          id="quickorder-screenshot-input"
+                          ref={screenshotInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleScreenshotChange}
+                          className="hidden"
+                        />
+                      </label>
+                    ) : (
+                      <div className="relative rounded-xl overflow-hidden border border-border bg-muted/20">
+                        <img src={screenshotPreview} alt="Payment screenshot preview" className="w-full max-h-48 object-contain" />
+                        <button
+                          type="button"
+                          onClick={removeScreenshot}
+                          className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5 transition-colors"
+                          aria-label="Remove screenshot"
+                        >
+                          <X size={12} />
+                        </button>
+                        <div className="px-3 py-1.5 text-[11px] text-muted-foreground flex items-center justify-between bg-muted/30">
+                          <span className="truncate">{paymentScreenshot?.name}</span>
+                          <span className="flex-shrink-0 ml-2">
+                            {paymentScreenshot && (paymentScreenshot.size / 1024).toFixed(0)} KB
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* Total reminder */}
+              <div className="flex justify-between items-center glass-card rounded-xl p-3">
+                <span className="text-sm text-muted-foreground">পেমেন্ট মোট</span>
+                <span className="text-xl font-bold text-primary">৳{finalTotal.toLocaleString()}</span>
+              </div>
+
+              {submitError && (
+                <div className="bg-destructive/10 border border-destructive/30 text-destructive text-sm px-4 py-3 rounded-xl">
+                  {submitError}
+                </div>
+              )}
+
+              {paymentMethod === 'bkash_online' ? (
+                <button
+                  onClick={handlePlaceOrder}
+                  disabled={loading}
+                  className="group relative w-full overflow-hidden rounded-2xl py-3.5 px-5 font-bold text-sm text-white shadow-[0_12px_40px_-8px_rgba(226,0,116,0.55)] transition-all duration-300 hover:shadow-[0_18px_55px_-8px_rgba(226,0,116,0.75)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  style={{ background: 'linear-gradient(135deg, #ff2e87 0%, #e2007a 45%, #b8005f 100%)' }}
+                >
+                  <span aria-hidden className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                  <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-2xl bg-gradient-to-b from-white/25 to-transparent" />
+                  <span className="relative flex items-center justify-center gap-3">
+                    {loading ? (
+                      <><Loader2 size={16} className="animate-spin" /> Processing…</>
+                    ) : (
+                      <>
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-white/40">
+                          <img src={bkashLogoSrc} alt="bKash" className="h-4 w-4 object-contain" />
+                        </span>
+                        <span className="tracking-wide">bKash দিয়ে পরিশোধ করুন</span>
+                        <span className="ml-1 rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-extrabold backdrop-blur-sm">
+                          ৳{finalTotal.toLocaleString()}
+                        </span>
+                      </>
+                    )}
+                  </span>
+                </button>
+              ) : (() => {
+                const isWallet = paymentMethod === 'wallet';
+                const gradient = isWallet
+                  ? 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 45%, #4c1d95 100%)'
+                  : 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 45%, #1e3a8a 100%)';
+                const shadow = isWallet
+                  ? 'shadow-[0_12px_40px_-8px_rgba(139,92,246,0.55)] hover:shadow-[0_18px_55px_-8px_rgba(139,92,246,0.75)]'
+                  : 'shadow-[0_12px_40px_-8px_rgba(79,70,229,0.55)] hover:shadow-[0_18px_55px_-8px_rgba(79,70,229,0.75)]';
+                return (
+                  <button
+                    onClick={handlePlaceOrder}
+                    disabled={loading || (isWallet && walletBalance < finalTotal)}
+                    className={`group relative w-full overflow-hidden rounded-2xl py-3.5 px-5 font-bold text-sm text-white ${shadow} transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0`}
+                    style={{ background: gradient }}
+                  >
+                    <span aria-hidden className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                    <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-2xl bg-gradient-to-b from-white/25 to-transparent" />
+                    <span className="relative flex items-center justify-center gap-3">
+                      {loading ? (
+                        <><Loader2 size={16} className="animate-spin" /> Processing…</>
+                      ) : (
+                        <>
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-white/40">
+                            {isWallet ? <Wallet size={14} className="text-violet-700" /> : <CreditCard size={14} className="text-indigo-700" />}
+                          </span>
+                          <span className="tracking-wide">
+                            {isWallet ? 'ওয়ালেট দিয়ে পরিশোধ করুন' : 'অর্ডার কনফার্ম করুন'}
+                          </span>
+                          <span className="ml-1 rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-extrabold backdrop-blur-sm">
+                            ৳{finalTotal.toLocaleString()}
+                          </span>
+                        </>
+                      )}
+                    </span>
+                  </button>
+                );
+              })()}
+
+              <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1.5">
+                <Shield size={11}/> নিরাপদ পেমেন্ট — আপনার তথ্য সুরক্ষিত
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+    </>
+  );
+};
+
+export default QuickOrderModal;

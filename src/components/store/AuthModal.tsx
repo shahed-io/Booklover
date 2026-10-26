@@ -1,0 +1,824 @@
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { X, Mail, Lock, User, Eye, EyeOff, LogIn, KeyRound, ArrowLeft, Gift, Sparkles, ShieldCheck, CheckCircle2, AlertCircle, Zap, Lock as LockIcon, Award, Headphones } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
+import { toast } from 'sonner';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import BrandLogo from '@/components/store/BrandLogo';
+import { sendWelcomeEmail } from '@/lib/loginNotifier';
+import TurnstileWidget, { useTurnstileSiteKey } from '@/components/store/TurnstileWidget';
+
+
+interface AuthModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  redirectAfterLogin?: boolean;
+  oauthRedirectTo?: string;
+}
+
+type Mode = 'login' | 'signup' | 'forgot';
+
+const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo }: AuthModalProps) => {
+  const [mode, setMode] = useState<Mode>('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [referralCode, setReferralCode] = useState('');
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
+  const [touched, setTouched] = useState<{ email?: boolean; password?: boolean; name?: boolean }>({});
+  const [rememberMe, setRememberMe] = useState(true);
+  const [capsLockOn, setCapsLockOn] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  // --- Bot protection ---
+  const [honeypot, setHoneypot] = useState('');            // hidden field, humans never fill it
+  const [captchaToken, setCaptchaToken] = useState('');
+  const formOpenedAt = useRef<number>(Date.now());
+  const turnstileSiteKey = useTurnstileSiteKey();
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Validations
+  const emailValid = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()), [email]);
+  const nameValid = name.trim().length >= 2;
+  const pwLen = password.length;
+  const pwHasLetter = /[A-Za-z]/.test(password);
+  const pwHasNumber = /\d/.test(password);
+  const pwScore = (pwLen >= 8 ? 1 : 0) + (pwHasLetter ? 1 : 0) + (pwHasNumber ? 1 : 0) + (/[^A-Za-z0-9]/.test(password) ? 1 : 0);
+  const passwordValid = pwLen >= 8 && pwHasLetter && pwHasNumber;
+
+  const canSubmit = !loading && (
+    mode === 'forgot' ? emailValid :
+    mode === 'login' ? emailValid && pwLen >= 1 :
+    emailValid && passwordValid && nameValid && agreeTerms && (!turnstileSiteKey || !!captchaToken)
+  );
+
+  // Auto-fill referral code from URL (?ref=CODE) and switch to signup
+  useEffect(() => {
+    if (!isOpen) return;
+    const refFromUrl = searchParams.get('ref');
+    if (refFromUrl) {
+      setMode('signup');
+      setReferralCode(refFromUrl.toUpperCase());
+    }
+    // As soon as the modal opens on any non-home page, persist the current
+    // location so post-login (email OR OAuth) can restore it. Prevents the
+    // "logged-in-and-dumped-on-home" bug on checkout, product, dashboard, etc.
+    try {
+      const cur = window.location.pathname + window.location.search;
+      if (cur && cur !== '/' && !cur.startsWith('/reset-password') && !cur.startsWith('/admin')) {
+        sessionStorage.setItem('post_login_redirect', cur);
+        localStorage.setItem('post_login_redirect', cur);
+      }
+    } catch { /* ignore */ }
+  }, [isOpen, searchParams]);
+
+  // Reset bot-protection timers/state whenever the modal opens or the mode changes
+  useEffect(() => {
+    formOpenedAt.current = Date.now();
+    setHoneypot('');
+    setCaptchaToken('');
+  }, [isOpen, mode]);
+
+  if (!isOpen) return null;
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTouched({ email: true, password: true, name: true });
+    if (!canSubmit) return;
+    setLoading(true);
+    try {
+      if (mode === 'forgot') {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        setForgotSent(true);
+        toast.success('পাসওয়ার্ড রিসেট ইমেইল পাঠানো হয়েছে!');
+      } else if (mode === 'login') {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success('সফলভাবে লগইন হয়েছে!');
+        onClose();
+        // Prefer explicit post-login redirect (set by caller / modal-open effect).
+        let target = '';
+        try { target = sessionStorage.getItem('post_login_redirect') || localStorage.getItem('post_login_redirect') || ''; } catch {}
+        if (target && target.startsWith('/')) {
+          const current = window.location.pathname + window.location.search;
+          if (target !== current) {
+            try { sessionStorage.removeItem('post_login_redirect'); localStorage.removeItem('post_login_redirect'); } catch {}
+            navigate(target, { replace: true });
+          }
+        } else if (redirectAfterLogin) {
+          navigate('/dashboard');
+        }
+      } else {
+        // Bot-protected signup: honeypot + timing + captcha + IP rate limit (server-side)
+        const { data: guard, error: guardErr } = await supabase.functions.invoke('secure-signup', {
+          body: {
+            email: email.trim(),
+            password,
+            name: name.trim(),
+            company: honeypot,                    // hidden field — bots fill it
+            elapsedMs: Date.now() - formOpenedAt.current,
+            captchaToken,
+          },
+        });
+        const guardError = (guard as any)?.error;
+        if (guardErr || guardError) {
+          setCaptchaToken('');
+          try { (window as any).turnstile?.reset?.(); } catch { /* ignore */ }
+          throw new Error(guardError || 'অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।');
+        }
+
+        const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInErr) throw signInErr;
+        const data = { user: { id: (guard as any)?.user_id as string | null } };
+
+
+        toast.success('অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
+
+        // Fire-and-forget welcome email (login-notification fires automatically via useAuth)
+        sendWelcomeEmail(email, name);
+
+        // Email signup referral: referred user gets 5% discount only (no wallet credit)
+        // Referrer gets ৳20 ONLY when referred user signs up via Google OAuth
+        if (referralCode.trim() && data.user) {
+          const code = referralCode.trim().toUpperCase();
+          const userId = data.user.id;
+          // Capture client IP for same-IP abuse detection
+          let clientIp: string | null = null;
+          try {
+            const ipRes = await fetch('https://api.ipify.org?format=json');
+            const ipJson = await ipRes.json();
+            clientIp = ipJson?.ip || null;
+          } catch { /* ignore */ }
+          let processed = false;
+          for (let attempt = 0; attempt < 5; attempt++) {
+            await new Promise(res => setTimeout(res, 1200 * (attempt + 1)));
+            try {
+              const { data: refResult } = await supabase.rpc('process_referral' as any, {
+                p_referral_code: code,
+                p_referred_user_id: userId,
+                p_ip: clientIp,
+              });
+              if ((refResult as any)?.success) {
+                toast.success(`🎁 রেফারেল কোড প্রয়োগ হয়েছে! ৫% স্থায়ী ছাড় সক্রিয় হয়েছে।`);
+                processed = true;
+                break;
+              } else if ((refResult as any)?.error) {
+                const err = (refResult as any).error;
+                if (err === 'User not found' && attempt < 4) continue;
+                if (err === 'Same IP detected, referral blocked') {
+                  toast.warning('একই IP থেকে রেফারেল ব্যবহার করা যাবে না।');
+                  break;
+                }
+                if (err !== 'User not found') {
+                  toast.warning('রেফারেল কোড সঠিক নয় অথবা আগেই ব্যবহার করা হয়েছে।');
+                  break;
+                }
+              }
+            } catch { /* retry */ }
+          }
+          if (!processed) {
+            localStorage.setItem('pending_referral', code);
+            if (clientIp) localStorage.setItem('pending_referral_ip', clientIp);
+          }
+        }
+        onClose();
+      }
+    } catch (err: any) {
+      const msg = err?.message || '';
+      let friendlyMsg = 'কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।';
+      if (msg.includes('Invalid login credentials')) friendlyMsg = 'ইমেইল বা পাসওয়ার্ড ভুল';
+      else if (msg.includes('already registered') || msg.includes('already been registered')) friendlyMsg = 'এই ইমেইল দিয়ে আগেই একাউন্ট তৈরি করা হয়েছে';
+      else if (msg.includes('Email not confirmed')) friendlyMsg = 'অনুগ্রহ করে আপনার ইমেইল ভেরিফাই করুন';
+      else if (msg.includes('Password should be')) friendlyMsg = 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে';
+      else if (msg.toLowerCase().includes('weak') || msg.toLowerCase().includes('pwned') || msg.toLowerCase().includes('compromised') || msg.toLowerCase().includes('leak')) friendlyMsg = 'এই পাসওয়ার্ডটি অনিরাপদ (অনলাইনে ফাঁস হওয়া পাসওয়ার্ড)। অনুগ্রহ করে একটি শক্তিশালী ও ভিন্ন পাসওয়ার্ড ব্যবহার করুন — যেমন বড়/ছোট হাতের অক্ষর, সংখ্যা ও বিশেষ চিহ্ন মিলিয়ে।';
+      else if (msg.toLowerCase().includes('invalid email') || msg.toLowerCase().includes('email address') && msg.toLowerCase().includes('invalid')) friendlyMsg = 'ইমেইল ঠিকানাটি সঠিক নয়। সঠিক ইমেইল দিন।';
+      else if (msg.toLowerCase().includes('signup') && msg.toLowerCase().includes('disabled')) friendlyMsg = 'নতুন অ্যাকাউন্ট তৈরি বর্তমানে বন্ধ রয়েছে।';
+      else if (msg.toLowerCase().includes('sending') && msg.toLowerCase().includes('email')) friendlyMsg = 'ভেরিফিকেশন ইমেইল পাঠানো যায়নি। কিছুক্ষণ পর আবার চেষ্টা করুন।';
+      else if (msg.includes('rate limit') || msg.includes('too many') || msg.toLowerCase().includes('over_email_send_rate_limit')) friendlyMsg = 'অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।';
+      else if (msg) friendlyMsg = msg;
+      toast.error(friendlyMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveIntendedPath = () => {
+    // Persist the current path so PostLoginRedirect can restore it after OAuth.
+    // Prefer explicit oauthRedirectTo (a full URL) → extract its pathname+search.
+    try {
+      let target = '';
+      if (oauthRedirectTo) {
+        try {
+          const u = new URL(oauthRedirectTo, window.location.origin);
+          if (u.origin === window.location.origin) target = u.pathname + u.search;
+        } catch { /* ignore */ }
+      }
+      if (!target) target = window.location.pathname + window.location.search;
+      if (target && target !== '/' && !target.startsWith('/reset-password')) {
+        sessionStorage.setItem('post_login_redirect', target);
+        localStorage.setItem('post_login_redirect', target);
+      }
+    } catch { /* ignore */ }
+  };
+
+  const handleGoogle = async () => {
+    setLoading(true);
+    if (referralCode.trim()) {
+      localStorage.setItem('pending_google_referral', referralCode.trim().toUpperCase());
+    }
+    saveIntendedPath();
+    // IMPORTANT: use window.location.origin (public URL) as the OAuth broker
+    // rejects arbitrary same-origin paths and silently falls back to origin.
+    // The intended path is restored by PostLoginRedirect after the session lands.
+    const { error } = await lovable.auth.signInWithOAuth('google', {
+      redirect_uri: window.location.origin,
+    });
+    if (error) {
+      toast.error('Google লগইন ব্যর্থ হয়েছে');
+      setLoading(false);
+    }
+  };
+
+  const handleApple = async () => {
+    setLoading(true);
+    if (referralCode.trim()) {
+      localStorage.setItem('pending_google_referral', referralCode.trim().toUpperCase());
+    }
+    saveIntendedPath();
+    const { error } = await lovable.auth.signInWithOAuth('apple', {
+      redirect_uri: window.location.origin,
+    });
+    if (error) {
+      toast.error('Apple লগইন ব্যর্থ হয়েছে');
+      setLoading(false);
+    }
+  };
+
+  const resetAndSwitch = (m: Mode) => {
+    setMode(m);
+    setForgotSent(false);
+    setPassword('');
+    setReferralCode('');
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {/* Premium dark backdrop with aurora */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 50% at 20% 10%, hsla(258,85%,55%,0.45), transparent 60%), radial-gradient(ellipse 60% 50% at 85% 90%, hsla(190,80%,55%,0.40), transparent 60%), radial-gradient(ellipse 40% 30% at 50% 50%, hsla(290,75%,55%,0.18), transparent 70%), hsla(226,55%,6%,0.78)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+        }}
+        onClick={onClose}
+      />
+
+      {/* Premium glassmorphism card with double-layer gradient border */}
+      <div
+        className="relative w-full max-w-md animate-scale-in rounded-[28px] p-[1.5px]"
+        style={{
+          background:
+            'linear-gradient(160deg, hsla(258,85%,75%,0.55) 0%, hsla(290,70%,75%,0.30) 30%, hsla(0,0%,100%,0.10) 50%, hsla(190,80%,70%,0.30) 75%, hsla(258,85%,75%,0.55) 100%)',
+          boxShadow:
+            '0 50px 100px -30px hsla(258,80%,30%,0.55), 0 20px 50px -20px hsla(190,80%,40%,0.35), 0 0 0 1px hsla(0,0%,100%,0.08)',
+        }}
+      >
+        <div
+          className="relative rounded-[26px] overflow-hidden"
+          style={{
+            background:
+              'linear-gradient(160deg, hsla(0,0%,100%,0.94) 0%, hsla(258,60%,98%,0.92) 50%, hsla(190,60%,98%,0.90) 100%)',
+            backdropFilter: 'blur(28px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+          }}
+        >
+        {/* Soft decorative blobs */}
+        <div
+          className="pointer-events-none absolute -top-24 -right-20 w-64 h-64 rounded-full opacity-40 blur-3xl"
+          style={{ background: 'radial-gradient(circle, hsl(258,90%,72%) 0%, transparent 70%)' }}
+        />
+        <div
+          className="pointer-events-none absolute -bottom-28 -left-16 w-72 h-72 rounded-full opacity-35 blur-3xl"
+          style={{ background: 'radial-gradient(circle, hsl(190,85%,65%) 0%, transparent 70%)' }}
+        />
+
+        {/* Refined header band */}
+        <div
+          className="relative px-8 pt-9 pb-6"
+          style={{
+            background:
+              'linear-gradient(180deg, hsla(258,78%,55%,0.10) 0%, hsla(290,70%,60%,0.06) 50%, transparent 100%)',
+          }}
+        >
+          {/* Top accent line */}
+          <div
+            className="absolute top-0 left-8 right-8 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent, hsla(258,78%,55%,0.5), hsla(290,70%,60%,0.6), hsla(190,75%,55%,0.5), transparent)',
+            }}
+          />
+
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 hover:rotate-90 z-10"
+            style={{
+              background: 'hsla(0,0%,100%,0.7)',
+              border: '1px solid hsla(258,78%,75%,0.30)',
+              color: 'hsl(258,78%,40%)',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 12px -2px hsla(258,78%,40%,0.15)',
+            }}
+          >
+            <X size={18} />
+          </button>
+
+          {mode === 'forgot' && (
+            <button
+              onClick={() => resetAndSwitch('login')}
+              className="absolute top-5 left-5 flex items-center gap-1.5 text-xs font-semibold transition-colors z-10"
+              style={{ color: 'hsl(258,78%,45%)' }}
+            >
+              <ArrowLeft size={14} /> ফিরুন
+            </button>
+          )}
+
+          {/* Premium logo container */}
+          <div className="flex justify-center mb-5 mt-1 relative">
+            <div
+              className="relative p-3.5 rounded-2xl transition-transform hover:scale-105"
+              style={{
+                background:
+                  'linear-gradient(160deg, hsla(0,0%,100%,0.95) 0%, hsla(258,40%,97%,0.85) 100%)',
+                border: '1px solid hsla(258,78%,75%,0.45)',
+                boxShadow:
+                  '0 14px 40px -10px hsla(258,78%,45%,0.45), 0 4px 12px -4px hsla(190,75%,45%,0.30), inset 0 1px 0 hsla(0,0%,100%,0.95), inset 0 -1px 0 hsla(258,78%,80%,0.20)',
+              }}
+            >
+              <div
+                className="absolute -inset-2 rounded-3xl opacity-60 blur-xl -z-10"
+                style={{
+                  background:
+                    'conic-gradient(from 180deg at 50% 50%, hsl(258,85%,70%), hsl(290,75%,68%), hsl(190,80%,65%), hsl(258,85%,70%))',
+                  animation: 'pulseGlow 4s ease-in-out infinite',
+                }}
+              />
+              <BrandLogo size="md" />
+            </div>
+          </div>
+
+          <div className="text-center relative">
+            <h2
+              className="text-[28px] font-bold leading-tight tracking-tight"
+              style={{
+                fontFamily: 'Rajdhani, sans-serif',
+                background:
+                  'linear-gradient(135deg, hsl(258,78%,38%) 0%, hsl(290,70%,42%) 50%, hsl(190,75%,38%) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {mode === 'login' ? 'লগইন করুন' : mode === 'signup' ? 'অ্যাকাউন্ট তৈরি করুন' : 'পাসওয়ার্ড ভুলে গেছেন?'}
+            </h2>
+            <p className="text-[12.5px] mt-2 font-medium" style={{ color: 'hsl(226,25%,42%)' }}>
+              {mode === 'login' ? 'আপনার অ্যাকাউন্টে প্রবেশ করুন'
+               : mode === 'signup' ? 'নতুন অ্যাকাউন্ট খুলুন'
+               : 'ইমেইলে রিসেট লিংক পাঠানো হবে'}
+            </p>
+          </div>
+        </div>
+
+        {/* Signup benefits strip */}
+        {mode === 'signup' && (
+          <div
+            className="relative px-8 py-3.5 grid grid-cols-3 gap-2 text-center"
+            style={{
+              background:
+                'linear-gradient(90deg, hsla(258,78%,98%,0.7) 0%, hsla(290,70%,98%,0.5) 50%, hsla(190,75%,97%,0.7) 100%)',
+              borderTop: '1px solid hsla(258,78%,75%,0.18)',
+              borderBottom: '1px solid hsla(258,78%,75%,0.18)',
+            }}
+          >
+            {[
+              { icon: <Gift size={14} />, label: '৫% ছাড়' },
+              { icon: <Award size={14} />, label: 'লয়ালটি পয়েন্ট' },
+              { icon: <Headphones size={14} />, label: '২৪/৭ সাপোর্ট' },
+            ].map((b, i) => (
+              <div key={i} className="flex flex-col items-center gap-1">
+                <span style={{ color: 'hsl(258,78%,50%)' }}>{b.icon}</span>
+                <span className="text-[10px] font-semibold" style={{ color: 'hsl(258,78%,35%)' }}>{b.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Body */}
+        <div className="relative px-8 py-6">
+
+        {/* Forgot password sent state */}
+        {mode === 'forgot' && forgotSent ? (
+          <div className="text-center py-4">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'hsl(243,75%,97%)' }}>
+              <Mail size={28} style={{ color: 'hsl(var(--primary))' }} />
+            </div>
+            <p className="text-sm font-semibold mb-1" style={{ color: 'hsl(var(--foreground))' }}>ইমেইল পাঠানো হয়েছে!</p>
+            <p className="text-xs mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              <strong>{email}</strong> এ পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে। ইনবক্স চেক করুন।
+            </p>
+            <button onClick={() => resetAndSwitch('login')} className="text-primary text-sm font-medium hover:underline">
+              লগইন পেজে ফিরুন
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* Google Button — only for login/signup */}
+            {mode !== 'forgot' && (
+              <>
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  <button
+                    onClick={handleGoogle}
+                    disabled={loading}
+                    className="group relative rounded-xl py-3 px-3 flex items-center justify-center gap-2 text-[13px] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                    style={{
+                      background:
+                        'linear-gradient(160deg, hsla(0,0%,100%,0.95) 0%, hsla(258,40%,97%,0.85) 100%)',
+                      border: '1px solid hsla(258,78%,75%,0.35)',
+                      color: 'hsl(226,40%,18%)',
+                      boxShadow:
+                        '0 6px 18px -6px hsla(258,78%,45%,0.20), inset 0 1px 0 hsla(0,0%,100%,0.95)',
+                      backdropFilter: 'blur(10px)',
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google
+                  </button>
+                  <button
+                    onClick={handleApple}
+                    disabled={loading}
+                    className="group relative rounded-xl py-3 px-3 flex items-center justify-center gap-2 text-[13px] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                    style={{
+                      background:
+                        'linear-gradient(160deg, hsl(226,40%,12%) 0%, hsl(226,40%,18%) 100%)',
+                      border: '1px solid hsla(0,0%,100%,0.10)',
+                      color: 'hsl(0,0%,100%)',
+                      boxShadow:
+                        '0 6px 18px -6px hsla(226,40%,8%,0.50), inset 0 1px 0 hsla(0,0%,100%,0.15)',
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    Apple
+                  </button>
+                </div>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, transparent, hsla(258,40%,75%,0.40), transparent)' }} />
+                  <span className="text-[11px] uppercase tracking-[0.18em] font-bold" style={{ color: 'hsl(226,30%,55%)' }}>অথবা ইমেইল দিয়ে</span>
+                  <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, transparent, hsla(258,40%,75%,0.40), transparent)' }} />
+                </div>
+              </>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {mode === 'signup' && (
+                <GlassField
+                  icon={<User size={16} />}
+                  type="text"
+                  placeholder="আপনার নাম"
+                  value={name}
+                  onChange={(v) => setName(v)}
+                  onBlur={() => setTouched(t => ({ ...t, name: true }))}
+                  valid={nameValid}
+                  invalid={touched.name && !nameValid && name.length > 0}
+                  errorMsg="নাম কমপক্ষে ২ অক্ষরের হতে হবে"
+                  required
+                />
+              )}
+
+              <GlassField
+                icon={<Mail size={16} />}
+                type="email"
+                placeholder="ইমেইল অ্যাড্রেস"
+                value={email}
+                onChange={(v) => setEmail(v)}
+                onBlur={() => setTouched(t => ({ ...t, email: true }))}
+                valid={emailValid}
+                invalid={touched.email && !emailValid && email.length > 0}
+                errorMsg="সঠিক ইমেইল অ্যাড্রেস দিন"
+                required
+              />
+
+              {mode !== 'forgot' && (
+                <div>
+                  <GlassField
+                    icon={<Lock size={16} />}
+                    type={showPass ? 'text' : 'password'}
+                    placeholder="পাসওয়ার্ড"
+                    value={password}
+                    onChange={(v) => setPassword(v)}
+                    onBlur={() => setTouched(t => ({ ...t, password: true }))}
+                    onKeyDown={(e) => setCapsLockOn(e.getModifierState && e.getModifierState('CapsLock'))}
+                    onKeyUp={(e) => setCapsLockOn(e.getModifierState && e.getModifierState('CapsLock'))}
+                    valid={mode === 'signup' ? passwordValid : pwLen >= 1}
+                    invalid={mode === 'signup' && touched.password && !passwordValid && pwLen > 0}
+                    errorMsg="পাসওয়ার্ড কমপক্ষে ৮ অক্ষর, অক্ষর ও সংখ্যা থাকতে হবে"
+                    required
+                    rightSlot={
+                      <button type="button" onClick={() => setShowPass(!showPass)} className="text-muted-foreground hover:text-primary transition-colors">
+                        {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    }
+                  />
+                  {capsLockOn && (
+                    <div className="mt-1.5 flex items-center gap-1.5 text-[11px] font-semibold animate-fade-in" style={{ color: 'hsl(30,90%,45%)' }}>
+                      <AlertCircle size={12} /> Caps Lock চালু আছে
+                    </div>
+                  )}
+                  {mode === 'signup' && password.length > 0 && (
+                    <div className="mt-2 flex items-center gap-1.5">
+                      {[0,1,2,3].map(i => (
+                        <div
+                          key={i}
+                          className="h-1 flex-1 rounded-full transition-all duration-300"
+                          style={{
+                            background: i < pwScore
+                              ? `linear-gradient(90deg, hsl(${pwScore <= 1 ? 0 : pwScore === 2 ? 30 : pwScore === 3 ? 45 : 158}, 80%, 55%), hsl(${pwScore <= 1 ? 0 : pwScore === 2 ? 30 : pwScore === 3 ? 45 : 158}, 80%, 65%))`
+                              : 'hsla(258,30%,85%,0.5)',
+                          }}
+                        />
+                      ))}
+                      <span className="text-[10px] font-semibold ml-1" style={{
+                        color: pwScore <= 1 ? 'hsl(0,70%,50%)' : pwScore === 2 ? 'hsl(30,80%,45%)' : pwScore === 3 ? 'hsl(45,85%,40%)' : 'hsl(158,75%,40%)'
+                      }}>
+                        {pwScore <= 1 ? 'দুর্বল' : pwScore === 2 ? 'মাঝারি' : pwScore === 3 ? 'ভালো' : 'শক্তিশালী'}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Referral code field — signup only */}
+              {mode === 'signup' && (
+                <div>
+                  <GlassField
+                    icon={<Gift size={16} />}
+                    type="text"
+                    placeholder="রেফারেল কোড (ঐচ্ছিক)"
+                    value={referralCode}
+                    onChange={(v) => setReferralCode(v.toUpperCase())}
+                    valid={referralCode.length > 0}
+                    uppercase
+                  />
+                  {referralCode && (
+                    <div className="mt-1.5 flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: 'hsl(158,80%,42%)' }}>
+                      <CheckCircle2 size={12} /> কোড প্রয়োগ হলে ৫% স্থায়ী ছাড় পাবেন! Google দিয়ে সাইনআপ করলে রেফারারও ৳২০ পাবে।
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Forgot password link */}
+              {mode === 'login' && (
+                <div className="text-right -mt-1">
+                  <button type="button" onClick={() => resetAndSwitch('forgot')} className="text-xs font-semibold hover:underline" style={{ color: 'hsl(258,78%,45%)' }}>
+                    পাসওয়ার্ড ভুলে গেছেন?
+                  </button>
+                </div>
+              )}
+
+              {/* Honeypot — hidden from humans, bots fill it and get rejected */}
+              {mode === 'signup' && (
+                <div aria-hidden="true" className="absolute opacity-0 pointer-events-none -z-10 h-0 overflow-hidden">
+                  <input
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+              )}
+
+              {/* Cloudflare human verification — renders only when a site key is configured */}
+              {mode === 'signup' && turnstileSiteKey && (
+                <TurnstileWidget
+                  siteKey={turnstileSiteKey}
+                  onVerify={(t) => setCaptchaToken(t)}
+                  onExpire={() => setCaptchaToken('')}
+                />
+              )}
+
+              {/* Terms checkbox - signup only */}
+              {mode === 'signup' && (
+
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <span className="relative inline-flex mt-0.5">
+                    <input
+                      type="checkbox"
+                      checked={agreeTerms}
+                      onChange={(e) => setAgreeTerms(e.target.checked)}
+                      className="peer sr-only"
+                    />
+                    <span
+                      className="w-4 h-4 rounded-md border flex items-center justify-center transition-all"
+                      style={{
+                        background: agreeTerms
+                          ? 'linear-gradient(135deg, hsl(258,78%,55%), hsl(190,75%,50%))'
+                          : 'hsla(0,0%,100%,0.7)',
+                        borderColor: agreeTerms ? 'hsl(258,78%,55%)' : 'hsla(258,40%,75%,0.5)',
+                        boxShadow: agreeTerms ? '0 0 0 3px hsla(258,78%,60%,0.18)' : 'none',
+                      }}
+                    >
+                      {agreeTerms && <CheckCircle2 size={10} className="text-white" />}
+                    </span>
+                  </span>
+                  <span className="text-[11px] leading-relaxed" style={{ color: 'hsl(226,30%,40%)' }}>
+                    আমি{' '}
+                    <a href="/terms-conditions" target="_blank" className="font-semibold hover:underline" style={{ color: 'hsl(258,78%,45%)' }}>শর্তাবলী</a>
+                    {' '}এবং{' '}
+                    <a href="/privacy-policy" target="_blank" className="font-semibold hover:underline" style={{ color: 'hsl(258,78%,45%)' }}>প্রাইভেসি পলিসি</a>
+                    {' '}মেনে নিচ্ছি
+                  </span>
+                </label>
+              )}
+
+              <button type="submit" disabled={!canSubmit}
+                className="relative w-full py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group"
+                style={{
+                  background: 'linear-gradient(135deg, hsl(258,78%,55%) 0%, hsl(290,70%,55%) 50%, hsl(190,75%,50%) 100%)',
+                  color: 'white',
+                  boxShadow: '0 10px 30px -8px hsla(258,78%,50%,0.55), inset 0 1px 0 hsla(0,0%,100%,0.35)',
+                }}
+              >
+                {/* Shimmer effect on hover */}
+                <span
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(110deg, transparent 30%, hsla(0,0%,100%,0.35) 50%, transparent 70%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 1.5s linear infinite',
+                  }}
+                />
+                {loading ? (
+                  <span className="inline-block w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                ) : (
+                  mode === 'forgot' ? <KeyRound size={16} /> : <LogIn size={16} />
+                )}
+                <span className="relative">
+                  {loading ? 'অপেক্ষা করুন...'
+                    : mode === 'login' ? 'লগইন করুন'
+                    : mode === 'signup' ? 'অ্যাকাউন্ট তৈরি করুন'
+                    : 'রিসেট লিংক পাঠান'}
+                </span>
+              </button>
+            </form>
+
+            {/* Toggle mode */}
+            {mode !== 'forgot' && (
+              <p className="text-center text-sm text-muted-foreground mt-4">
+                {mode === 'login' ? 'অ্যাকাউন্ট নেই?' : 'ইতিমধ্যে অ্যাকাউন্ট আছে?'}{' '}
+                <button onClick={() => resetAndSwitch(mode === 'login' ? 'signup' : 'login')} className="text-primary hover:underline font-semibold story-link">
+                  {mode === 'login' ? 'সাইনআপ করুন' : 'লগইন করুন'}
+                </button>
+              </p>
+            )}
+
+            {/* Trust badges footer */}
+            <div className="mt-5 pt-4 border-t flex items-center justify-around" style={{ borderColor: 'hsla(258,78%,75%,0.15)' }}>
+              {[
+                { icon: <ShieldCheck size={12} />, label: 'SSL সুরক্ষিত' },
+                { icon: <LockIcon size={12} />, label: 'এনক্রিপ্টেড' },
+                { icon: <Zap size={12} />, label: 'দ্রুত লগইন' },
+              ].map((t, i) => (
+                <div key={i} className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: 'hsl(226,30%,45%)' }}>
+                  <span style={{ color: 'hsl(158,70%,42%)' }}>{t.icon}</span>
+                  {t.label}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface GlassFieldProps {
+  icon: React.ReactNode;
+  type: string;
+  placeholder: string;
+  value: string;
+  onChange: (v: string) => void;
+  onBlur?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  valid?: boolean;
+  invalid?: boolean;
+  errorMsg?: string;
+  required?: boolean;
+  uppercase?: boolean;
+  rightSlot?: React.ReactNode;
+}
+
+const GlassField = ({ icon, type, placeholder, value, onChange, onBlur, onKeyDown, onKeyUp, valid, invalid, errorMsg, required, uppercase, rightSlot }: GlassFieldProps) => {
+  const [focused, setFocused] = useState(false);
+  const showCheck = valid && value.length > 0 && !invalid;
+  const borderColor = invalid
+    ? 'hsl(0,75%,60%)'
+    : focused
+    ? 'hsl(258,78%,60%)'
+    : showCheck
+    ? 'hsla(158,75%,55%,0.55)'
+    : 'hsla(258,40%,80%,0.45)';
+  const glow = invalid
+    ? '0 0 0 4px hsla(0,75%,60%,0.12)'
+    : focused
+    ? '0 0 0 4px hsla(258,78%,60%,0.18), 0 8px 22px -8px hsla(258,78%,55%,0.35)'
+    : 'inset 0 1px 0 hsla(0,0%,100%,0.7)';
+  return (
+    <div>
+      <div
+        className="relative flex items-center rounded-xl transition-all duration-300"
+        style={{
+          background: 'linear-gradient(135deg, hsla(0,0%,100%,0.85) 0%, hsla(258,78%,98%,0.75) 100%)',
+          border: `1px solid ${borderColor}`,
+          boxShadow: glow,
+          backdropFilter: 'blur(12px)',
+          transform: focused ? 'translateY(-1px)' : 'translateY(0)',
+        }}
+      >
+        <span
+          className="pl-3.5 transition-all duration-300"
+          style={{
+            color: invalid ? 'hsl(0,75%,55%)' : focused ? 'hsl(258,78%,55%)' : 'hsl(226,30%,55%)',
+            transform: focused ? 'scale(1.1)' : 'scale(1)',
+          }}
+        >
+          {icon}
+        </span>
+        <input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          required={required}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => { setFocused(false); onBlur?.(); }}
+          onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
+          className={`flex-1 bg-transparent border-0 outline-none px-3 py-3 text-sm placeholder:text-muted-foreground ${uppercase ? 'uppercase tracking-wider' : ''}`}
+          style={{ color: 'hsl(226,40%,18%)' }}
+        />
+        <span className="pr-3.5 flex items-center gap-2">
+          {showCheck && (
+            <CheckCircle2 size={16} className="animate-scale-in" style={{ color: 'hsl(158,75%,45%)' }} />
+          )}
+          {invalid && !rightSlot && (
+            <AlertCircle size={16} className="animate-scale-in" style={{ color: 'hsl(0,75%,55%)' }} />
+          )}
+          {rightSlot}
+        </span>
+        {/* Animated bottom underline */}
+        <span
+          className="absolute left-3 right-3 bottom-0 h-[2px] rounded-full pointer-events-none transition-all duration-300"
+          style={{
+            background: invalid
+              ? 'linear-gradient(90deg, hsl(0,75%,60%), hsl(20,80%,60%))'
+              : 'linear-gradient(90deg, hsl(258,78%,60%), hsl(290,70%,60%), hsl(190,75%,55%))',
+            transform: focused ? 'scaleX(1)' : 'scaleX(0)',
+            transformOrigin: 'left',
+            opacity: focused ? 1 : 0,
+          }}
+        />
+      </div>
+      {invalid && errorMsg && (
+        <div className="mt-1.5 flex items-center gap-1.5 text-[11px] font-semibold animate-fade-in" style={{ color: 'hsl(0,75%,50%)' }}>
+          <AlertCircle size={12} /> {errorMsg}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AuthModal;
