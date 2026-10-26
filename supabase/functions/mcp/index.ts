@@ -157,7 +157,7 @@ var list_my_wallet_transactions_default = defineTool5({
 });
 
 // src/lib/mcp/index.ts
-var projectRef = "auzvkkczlflxibfdwqiy";
+var projectRef = "tzkmjdcpgkbztxlchdpu";
 var mcp_default = defineMcp({
   name: "relaxo-bean-bag-mcp",
   title: "Relaxo Bean Bag",
