@@ -11,15 +11,15 @@
   },
   "mcp": {
     "server": {
-      "name": "relaxo-bean-bag-mcp",
+      "name": "booklover-mcp",
       "version": "0.1.0",
-      "title": "Relaxo Bean Bag"
+      "title": "Booklover"
     },
     "tools": [
       {
         "name": "get_my_profile",
         "title": "Get my profile",
-        "description": "Return the signed-in user's Relaxo Bean Bag profile (name, email, phone, wallet balance, points).",
+        "description": "Return the signed-in user's Booklover profile (name, email, phone, wallet balance, points).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -35,7 +35,7 @@
       {
         "name": "list_my_orders",
         "title": "List my orders",
-        "description": "List the signed-in user's recent Relaxo Bean Bag orders with status, total and item summary.",
+        "description": "List the signed-in user's recent Booklover orders with status, total and item summary.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -97,7 +97,7 @@
       {
         "name": "search_products",
         "title": "Search products",
-        "description": "Search Relaxo Bean Bag's public product catalog by keyword. Returns name, price and slug.",
+        "description": "Search Booklover's public product catalog by keyword. Returns name, price and slug.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
