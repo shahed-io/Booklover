@@ -1,7 +1,6 @@
-/// <reference types="npm:@types/react@18.3.1" />
 
 export interface TemplateEntry {
-  component: React.ComponentType<any>;
+  component: (props: any) => unknown;
   subject: string | ((data: any) => string);
   displayName?: string;
   previewData?: Record<string, any>;
