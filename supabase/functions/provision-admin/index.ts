@@ -15,20 +15,24 @@ Deno.serve(async (req) => {
     })
 
   try {
-    const provided = req.headers.get('x-provision-secret') ?? ''
-    const expected = Deno.env.get('ADMIN_PROVISION_TOKEN') ?? ''
-    if (!expected || provided !== expected) return json({ error: 'Unauthorized' }, 401)
-
-    const email = (Deno.env.get('ADMIN_EMAIL') ?? '').trim().toLowerCase()
-    const password = Deno.env.get('ADMIN_PASSWORD') ?? ''
-    if (!email || !password) return json({ error: 'ADMIN_EMAIL / ADMIN_PASSWORD not set' }, 400)
-    if (password.length < 8) return json({ error: 'ADMIN_PASSWORD must be at least 8 characters' }, 400)
-
     const admin = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
       { auth: { persistSession: false } },
     )
+
+    // Bootstrap: allowed without token only while no admin exists yet.
+    const { count: adminCount } = await admin
+      .from('user_roles').select('user_id', { count: 'exact', head: true }).eq('role', 'admin')
+    const provided = req.headers.get('x-provision-secret') ?? ''
+    const expected = Deno.env.get('ADMIN_PROVISION_TOKEN') ?? ''
+    const tokenOk = !!expected && provided === expected
+    if ((adminCount ?? 0) > 0 && !tokenOk) return json({ error: 'Unauthorized' }, 401)
+
+    const email = (Deno.env.get('ADMIN_EMAIL') ?? '').trim().toLowerCase()
+    const password = Deno.env.get('ADMIN_PASSWORD') ?? ''
+    if (!email || !password) return json({ error: 'ADMIN_EMAIL / ADMIN_PASSWORD not set' }, 400)
+    if (password.length < 8) return json({ error: 'ADMIN_PASSWORD must be at least 8 characters' }, 400)
 
     // Find existing user by email (paginate defensively)
     let userId: string | null = null
