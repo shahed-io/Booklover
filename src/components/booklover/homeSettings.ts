@@ -1,0 +1,60 @@
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+
+export const BOOKLOVER_HOME_KEY = 'booklover_home';
+
+export type HomeBanner = { title: string; subtitle: string; image: string };
+export type MenuGroup = { label: string; collections: string[] };
+export type HomeSettings = {
+  eyebrow: string;
+  banners: HomeBanner[];
+  collectionsTitle: string;
+  featuredCollections: string[];
+  bestsellerTitle: string;
+  bestsellerCount: number;
+  spotlightTitle: string;
+  spotlightCollection: string;
+  spotlightImage: string;
+  menuGroups: MenuGroup[];
+  seoTitle: string;
+  seoDescription: string;
+};
+
+export const HOME_DEFAULTS: HomeSettings = {
+  eyebrow: 'BOOKLOVER',
+  banners: [
+    { title: 'Happiness\nis a good\nbook.', subtitle: 'Find your next favourite\nat Booklover.', image: '' },
+    { title: 'A world\nbetween\nthe pages.', subtitle: 'Explore our book collections.', image: '' },
+    { title: 'Your next\nchapter\nstarts here.', subtitle: 'Discover books at Booklover.', image: '' },
+  ],
+  collectionsTitle: 'Explore Our Book Collections',
+  featuredCollections: ['All Books', 'Crime Fiction', 'Biography & Memoir', 'Romance Books', 'Self-Help & Psychology', 'Fantasy', 'Timeless Classics', 'Young Adult (YA)'],
+  bestsellerTitle: 'Bestselling Books',
+  bestsellerCount: 16,
+  spotlightTitle: 'Timeless Classics',
+  spotlightCollection: 'timeless-classics',
+  spotlightImage: '',
+  menuGroups: [
+    { label: 'Fiction', collections: ['Fiction', 'Romance Books', 'Mystery & Thriller', 'Fantasy', 'Crime Fiction', 'Science Fiction', 'Horror', 'Historical Fiction', 'Dark Romance', 'Young Adult (YA)'] },
+    { label: 'Non-Fiction', collections: ['Autobiography', 'Biography & Memoir', 'Business, Finance & Economics', 'History & War', 'Philosophy & Religion', 'Self-Help & Psychology'] },
+  ],
+  seoTitle: 'Booklover | Online Bookshop Bangladesh',
+  seoDescription: 'Browse books, explore collections and find your next favourite read at Booklover Bangladesh.',
+};
+
+export function mergeHome(raw: unknown): HomeSettings {
+  if (!raw || typeof raw !== 'object') return HOME_DEFAULTS;
+  const r = raw as Partial<HomeSettings>;
+  return { ...HOME_DEFAULTS, ...r, banners: r.banners?.length ? r.banners : HOME_DEFAULTS.banners };
+}
+
+export function useHomeSettings() {
+  return useQuery({
+    queryKey: ['site_settings', BOOKLOVER_HOME_KEY],
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data } = await supabase.from('site_settings').select('value').eq('key', BOOKLOVER_HOME_KEY).maybeSingle();
+      try { return mergeHome(data?.value ? JSON.parse(data.value) : null); } catch { return HOME_DEFAULTS; }
+    },
+  });
+}
