@@ -487,8 +487,8 @@ Deno.serve(async (req) => {
           idempotency_key: `order-confirm-${order.id}`,
           unsubscribe_token: crypto.randomUUID(),
           to: order.customer_email,
-              from: `${SITE_NAME} <>`,
-              sender_domain: '',
+              from: `${SITE_NAME} <noreply@${Deno.env.get("EMAIL_SENDER_DOMAIN") || ""}>`,
+              sender_domain: Deno.env.get('EMAIL_SENDER_DOMAIN') || '',
           subject: `✅ অর্ডার কনফার্ম হয়েছে — #${order.order_number}`,
           html,
           text: `অর্ডার কনফার্ম হয়েছে — #${order.order_number}\nমোট: ৳${order.total}\nধন্যবাদ ${order.customer_name}!`,
@@ -522,8 +522,8 @@ Deno.serve(async (req) => {
             idempotency_key: `order-status-${order.id}-${newStatus}`,
             unsubscribe_token: crypto.randomUUID(),
             to: order.customer_email,
-              from: `${SITE_NAME} <>`,
-              sender_domain: '',
+              from: `${SITE_NAME} <noreply@${Deno.env.get("EMAIL_SENDER_DOMAIN") || ""}>`,
+              sender_domain: Deno.env.get('EMAIL_SENDER_DOMAIN') || '',
             subject: `${statusInfo.emoji} অর্ডার স্ট্যাটাস আপডেট: ${statusInfo.bn} — #${order.order_number}`,
             html,
             text: `অর্ডার #${order.order_number} এর স্ট্যাটাস "${statusInfo.bn}" হয়েছে। ${SITE_URL}/dashboard`,
@@ -595,7 +595,7 @@ Deno.serve(async (req) => {
       }
 
       // Hardcoded admin notification emails
-      const hardcodedAdminEmails = ['', '']
+      const hardcodedAdminEmails: string[] = []
       for (const hEmail of hardcodedAdminEmails) {
         if (!adminEmails.includes(hEmail)) {
           adminEmails.push(hEmail)
@@ -623,8 +623,8 @@ Deno.serve(async (req) => {
               idempotency_key: `admin-notify-${order.id}-${idx}-${Date.now()}`,
               unsubscribe_token: crypto.randomUUID(),
               to: email,
-              from: `${SITE_NAME} <>`,
-              sender_domain: '',
+              from: `${SITE_NAME} <noreply@${Deno.env.get("EMAIL_SENDER_DOMAIN") || ""}>`,
+              sender_domain: Deno.env.get('EMAIL_SENDER_DOMAIN') || '',
               subject,
               html,
               text: `নতুন অর্ডার #${order.order_number} — ${order.customer_name} — ৳${order.total}\n${SITE_URL}/admin/orders`,
@@ -675,8 +675,8 @@ Deno.serve(async (req) => {
               idempotency_key: `promo-${Date.now()}-${i + idx}`,
               unsubscribe_token: crypto.randomUUID(),
               to: email,
-              from: `${SITE_NAME} <>`,
-              sender_domain: '',
+              from: `${SITE_NAME} <noreply@${Deno.env.get("EMAIL_SENDER_DOMAIN") || ""}>`,
+              sender_domain: Deno.env.get('EMAIL_SENDER_DOMAIN') || '',
               subject: promoSubject,
               html,
               text: promoBody || promoSubject,
@@ -774,8 +774,8 @@ Deno.serve(async (req) => {
         {
           idempotency_key: `license-resend-${licenseData.key_value.slice(0, 10)}-${Date.now()}`,
           to: recipientEmail,
-          from: `${SITE_NAME} <>`,
-          sender_domain: '',
+          from: `${SITE_NAME} <noreply@${Deno.env.get("EMAIL_SENDER_DOMAIN") || ""}>`,
+          sender_domain: Deno.env.get('EMAIL_SENDER_DOMAIN') || '',
           subject: `🔑 আপনার লাইসেন্স কী — ${licenseData.product_name}`,
           html: licenseHtml,
           text: `আপনার ${licenseData.product_name} এর লাইসেন্স: ${licenseData.key_value}`,

@@ -46,23 +46,9 @@ type TrustItem = { text: string; icon: string };
 
 /* ═══════════════════ DEFAULTS ═══════════════════ */
 const DEFAULT_BG: BgSettings = { bgType: 'default', bgColor: '#f8f9ff', bgGradientFrom: '#e8ecff', bgGradientTo: '#f0f4ff' };
-const DEFAULT_STATS: StatCard[] = [
-  { label: 'Products', value: '500+', icon: '🛍️' },
-  { label: 'Orders Delivered', value: '25K+', icon: '✅' },
-  { label: 'Happy Customers', value: '12K+', icon: '😊' },
-  { label: 'Support Rating', value: '4.9★', icon: '⭐' },
-];
-const DEFAULT_FLOATING: FloatCard[] = [
-  { label: 'Orders Today', value: '248+', icon: '📦' },
-  { label: 'Happy Users', value: '12K+', icon: '😊' },
-  { label: 'Avg Rating', value: '4.9★', icon: '⭐' },
-];
-const DEFAULT_TRUST: TrustItem[] = [
-  { text: 'Instant Delivery', icon: '⚡' },
-  { text: '100% Genuine', icon: '🛡️' },
-  { text: '24/7 Support', icon: '🕐' },
-  { text: '4.9★ Rating', icon: '⭐' },
-];
+const DEFAULT_STATS: StatCard[] = [];
+const DEFAULT_FLOATING: FloatCard[] = [];
+const DEFAULT_TRUST: TrustItem[] = [];
 
 const EMPTY_SLIDE = (): Slide => ({
   id: crypto.randomUUID(),

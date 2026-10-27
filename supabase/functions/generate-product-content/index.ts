@@ -75,48 +75,13 @@ serve(async (req) => {
 
     const bdCities = "ঢাকা, চট্টগ্রাম, সিলেট, রাজশাহী, খুলনা, বরিশাল, ময়মনসিংহ, কুমিল্লা";
 
-    // ── House style: physical home & lifestyle furniture (bean bags, sofas, cushions)
-    const houseStyle = `
-BUSINESS: Booklover (Booklover) — Bangladesh-এর প্রিমিয়াম হোম ও লাইফস্টাইল ফার্নিচার ব্র্যান্ড (বিন ব্যাগ, ফুটরেস্ট, কুশন, সোফা)।
-PRODUCTS ARE PHYSICAL. কখনোই সফটওয়্যার, লাইসেন্স কী, অ্যাকাউন্ট, সাবস্ক্রিপশন, ডিজিটাল ডেলিভারি, অ্যাক্টিভেশন — এসব উল্লেখ করবে না।
-LANGUAGE: প্রধানত সহজ বাংলা, প্রয়োজনে ইংরেজি শব্দ (Bean Bag, Cord Fabric, EPS Beans) মিশিয়ে।
-FACTS TO USE (Booklover standard):
-- কাপড়: উন্নতমানের কর্ড ফ্যাব্রিক / ফক্স লেদার (প্রোডাক্ট অনুযায়ী)
-- সেলাই: ৩ স্তরের মজবুত সেলাই (Triple Stitching)
-- ফিলার: প্রিমিয়াম কোয়ালিটি তাইওয়ানিজ EPS Beans; কুশনে কোরিয়ান পলি ফাইবার তুলা
-- ফ্রি হোম ডেলিভারি সারা বাংলাদেশে
-- ক্যাশ অন ডেলিভারি — পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধ
-- ১৮ মাসের অফিসিয়াল ওয়ারেন্টি (স্টিচিং ও ওপরের ম্যাটেরিয়ালের ওপর)
-- ডেলিভারি: ঢাকায় ২৪–৪৮ ঘণ্টা, ঢাকার বাইরে ২–৪ দিন
-SEO: বাংলাদেশ টার্গেট। স্বাভাবিকভাবে যুক্ত করবে — "[product] দাম বাংলাদেশ", "[product] price in bd", "বিন ব্যাগ কিনুন", শহরের নাম (${bdCities}) থেকে ১–২টি।
-PRICE FORMAT: ৳[amount]
-PUNCTUATION RULE: ইংরেজি শব্দ/সংখ্যার পরে English period (.) ব্যবহার করবে, Bengali danda (।) নয়। শুধু পুরোপুরি বাংলা বাক্যের শেষে । ব্যবহার করবে।
-BRAND SPELLING: ইংরেজিতে "Booklover", বাংলায় "Booklover"।`;
-
-    // Reference markdown skeleton used by every existing product (must be matched)
-    const descSkeleton = `## [প্রোডাক্টের নাম]
-
-### প্যাকেজে যা যা পাবেন
-- (প্রতিটি আইটেম আলাদা বুলেটে, সংক্ষেপে কাজ সহ)
-
-### এটি কিসের তৈরি?
-- কাপড়: ...
-- সেলাই: ৩ স্তরের মজবুত সেলাই (Triple Stitching), যা সহজে ছিঁড়বে না।
-- ফিলার: ...
-
-### সাইজ ও জায়গা
-(কত জায়গা লাগবে + প্রতিটি আইটেমের মাপ ইঞ্চিতে বুলেট আকারে)
-
-### ধারণক্ষমতা
-- (কার জন্য / কত ওজনের জন্য উপযুক্ত)
-
-### যত্ন ও পরিষ্কার
-- (সহজ ২–৩টি টিপস)
-
-### কেন রিলাক্সো (Booklover) বিন ব্যাগ বেছে নেবেন?
-- ফ্রি হোম ডেলিভারি – সারা বাংলাদেশে পাচ্ছেন একদম ফ্রি হোম ডেলিভারি সুবিধা।
-- ক্যাশ অন ডেলিভারি – পণ্য হাতে পেয়ে দেখে তারপর মূল্য পরিশোধ করার নিশ্চয়তা।
-- ১৮ মাসের অফিসিয়াল ওয়ারেন্টি – স্টিচিং এবং ওপরের ম্যাটেরিয়ালের ওপর থাকছে দীর্ঘ ১৮ মাসের ওয়ারেন্টি।`;
+    const houseStyle = `BUSINESS: Booklover — online bookshop in Bangladesh.
+Use only supplied product data. Never invent prices, reviews, contacts, warranty, delivery times or policies. Omit unknown facts. Use the requested language and spell the brand Booklover.`;
+    const descSkeleton = `## [Book title]
+### Description
+### Author and publisher
+### Book details
+Include only known information from the supplied catalog.`;
 
     if (type === "short_description") {
       const numOptions = count && count > 1 ? count : 1;
@@ -128,9 +93,9 @@ TASK: short description লিখবে ঠিক এই ফরম্যাট�
 
 ### প্যাকেজে যা যা পাবেন
 
-(প্যাকেজের প্রতিটি আইটেম আলাদা লাইনে, ব্র্যাকেটে তার কাজ — যেমন: জায়ান্ট বিন ব্যাগ (আরাম করে বসার জন্য)।)
+(প্যাকেজের প্রতিটি আইটেম আলাদা লাইনে, ব্র্যাকেটে তার কাজ — যেমন: বইয়ের নাম।)
 
-শেষে ১–২ লাইনে জায়গার প্রয়োজন ও উপযুক্ততা।
+শেষে ১–২ লাইনে বইয়ের বিষয়বস্তু ও পাঠক।
 
 শুধু টেক্সট রিটার্ন করবে, কোনো JSON বা অতিরিক্ত কথা নয়।${numOptions > 1 ? ` ঠিক ${numOptions}টি ভিন্ন অপশন দাও, প্রতিটি "---" দিয়ে আলাদা করে।` : ""}`;
       userPrompt = `প্রোডাক্ট: ${productName}${specHint ? `\n${specHint}` : ""}`;
