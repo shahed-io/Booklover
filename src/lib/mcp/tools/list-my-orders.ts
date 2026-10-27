@@ -13,7 +13,7 @@ function supabaseForUser(ctx: ToolContext) {
 export default defineTool({
   name: "list_my_orders",
   title: "List my orders",
-  description: "List the signed-in user's recent Relaxo Bean Bag orders with status, total and item summary.",
+  description: "List the signed-in user's recent Booklover orders with status, total and item summary.",
   inputSchema: {
     limit: z.number().int().min(1).max(50).default(10).describe("Max orders to return (1-50)."),
     status: z.enum(["pending", "processing", "delivered", "completed", "cancelled", "refunded", "failed"]).optional().describe("Optional order status filter."),

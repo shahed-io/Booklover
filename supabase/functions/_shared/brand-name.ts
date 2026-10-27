@@ -1,9 +1,9 @@
 // Brand name normalization (edge-function copy)
-//   • English contexts  → "Relaxo Bean Bag"
-//   • Bengali contexts  → "রিলাক্সো বিন ব্যাগ"
+//   • English contexts  → "Booklover"
+//   • Bengali contexts  → "Booklover"
 
-const EN_NAME = "Relaxo Bean Bag";
-const BN_NAME = "রিলাক্সো বিন ব্যাগ";
+const EN_NAME = "Booklover";
+const BN_NAME = "Booklover";
 
 const BN_RE = /[\u0980-\u09FF]/;
 
@@ -17,11 +17,11 @@ export function normalizeBrandNameText(value: string): string {
   let out = value || "";
 
   out = out
-    .replace(/RelaxoBeanBag/gi, EN_NAME)
+    .replace(/booklover/gi, EN_NAME)
     .replace(/\bRelaxo\s+Bean\s+Bags?\b/gi, EN_NAME);
 
   out = out.replace(
-    /Relaxo Bean Bag(?:\s*-\s*|\s*)?(এর|কে|তে|এ|ের|য়|ে)?/g,
+    /Booklover(?:\s*-\s*|\s*)?(এর|কে|তে|এ|ের|য়|ে)?/g,
     (match, suffix, offset, full) => {
       if (isBengaliContext(full, offset, match.length)) {
         return BN_NAME + (suffix || "");
@@ -31,9 +31,9 @@ export function normalizeBrandNameText(value: string): string {
   );
 
   out = out
-    .replace(/Relaxo Bean Bag\s*বাংলাদেশ/g, `${BN_NAME} বাংলাদেশ`)
-    .replace(/Relaxo Bean Bag\s*Bangladesh/gi, `${EN_NAME} Bangladesh`)
-    .replace(/Relaxo Bean Bag\s*BD/gi, `${EN_NAME} BD`);
+    .replace(/Booklover\s*বাংলাদেশ/g, `${BN_NAME} বাংলাদেশ`)
+    .replace(/Booklover\s*Bangladesh/gi, `${EN_NAME} Bangladesh`)
+    .replace(/Booklover\s*BD/gi, `${EN_NAME} BD`);
 
   return out
     .replace(/\s+([।.,!?…])/g, "$1")

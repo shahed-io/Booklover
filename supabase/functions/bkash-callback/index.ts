@@ -3,7 +3,7 @@
 // Executes the payment, updates the order, then redirects user back to the site.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const SITE_URL = Deno.env.get('SITE_URL') || 'https://relaxobeanbag.com';
+const SITE_URL = Deno.env.get('SITE_URL') || 'https://booklover.com.bd';
 
 interface BkashCfg {
   mode: string;

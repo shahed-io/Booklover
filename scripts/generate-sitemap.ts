@@ -14,10 +14,10 @@ import { config } from "dotenv";
 
 config();
 
-const BASE_URL = "https://relaxobeanbag.com";
+const BASE_URL = "https://booklover.com.bd";
 const SUPABASE_URL =
   process.env.VITE_SUPABASE_URL ||
-  "https://dpvdavjwqyviredzoorj.supabase.co";
+  "https://tzkmjdcpgkbztxlchdpu.supabase.co";
 const SUPABASE_STORAGE_PUBLIC_PATH = "/storage/v1/object/public/";
 const SUPABASE_KEY =
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
@@ -182,7 +182,7 @@ async function main() {
   for (const p of products) {
     if (!p.slug) continue;
     const images = uniqueImages(p.image_url, p.images);
-    const caption = cleanText(p.short_description) || `${p.name} - genuine digital product from Relaxo Bean Bag Bangladesh`;
+    const caption = cleanText(p.short_description) || `${p.name} - genuine digital product from Booklover Bangladesh`;
     entries.push({
       loc: `/product/${p.slug}`,
       lastmod: p.updated_at?.slice(0, 10),

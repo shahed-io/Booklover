@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
 
     const redirectTo = `${new URL(req.url).origin.replace(/^https?:\/\/[^.]+\.functions\./, 'https://')}`;
     // Better: use SITE_URL env if set
-    const siteUrl = Deno.env.get('SITE_URL') || 'https://relaxobeanbag.com';
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://booklover.com.bd';
     const inviteRedirect = `${siteUrl}/reset-password`;
 
     const results = {

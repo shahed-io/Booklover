@@ -71,16 +71,16 @@ interface LiveChatConfig {
 const DEFAULTS: LiveChatConfig = {
   chat_enabled: true,
   whatsapp_enabled: true,
-  whatsapp_number: '8801873990004',
+  whatsapp_number: '88',
   whatsapp_label: 'WhatsApp',
   whatsapp_subtitle: 'সরাসরি কথা বলুন',
   phone_enabled: true,
-  phone_number: '01873-990004',
+  phone_number: '',
   phone_label: 'ফোন করুন',
   phone_subtitle: 'সরাসরি কল করুন',
   ai_label: 'AI Support',
   ai_subtitle: 'তাৎক্ষণিক উত্তর পান',
-  ai_welcome_message: 'হ্যালো! 👋 আমি Relaxo Bean Bag AI সহকারী। বিন ব্যাগ, বিন ব্যাগ সোফা, লাউঞ্জ চেয়ার, কুশন সহ যেকোনো প্রোডাক্ট সম্পর্কে প্রশ্ন করুন!',
+  ai_welcome_message: 'হ্যালো! 👋 আমি Booklover AI সহকারী। বিন ব্যাগ, বিন ব্যাগ সোফা, লাউঞ্জ চেয়ার, কুশন সহ যেকোনো প্রোডাক্ট সম্পর্কে প্রশ্ন করুন!',
   ai_placeholder: 'আপনার প্রশ্ন লিখুন...',
   quick_suggestions: [
     '🔥 আজকের সেরা অফার দেখাও',
@@ -130,7 +130,7 @@ const FloatingSupport = () => {
   const configLoaded = useRef(false);
   const sessionIdRef = useRef(crypto.randomUUID());
 
-  const WELCOME_EN = "Hi! 👋 I'm the Relaxo Bean Bag AI assistant. Ask me anything about bean bags, bean bag sofas, lounge chairs, cushions or any other product!";
+  const WELCOME_EN = "Hi! 👋 I'm the Booklover AI assistant. Ask me anything about bean bags, bean bag sofas, lounge chairs, cushions or any other product!";
   const PLACEHOLDER_EN = 'Type your question...';
 
   const switchLanguage = (lang: 'bn' | 'en') => {
@@ -261,11 +261,11 @@ const FloatingSupport = () => {
         // Handle specific status codes with friendly Bengali messages — no throw
         let friendlyMsg = errData.error || 'দুঃখিত, সমস্যা হয়েছে।';
         if (resp.status === 402) {
-          friendlyMsg = '🔧 AI সহায়তা সাময়িকভাবে অনুপলব্ধ। সরাসরি WhatsApp-এ যোগাযোগ করুন: 01873990004';
+          friendlyMsg = '🔧 AI সহায়তা সাময়িকভাবে অনুপলব্ধ। সরাসরি WhatsApp-এ যোগাযোগ করুন: ';
         } else if (resp.status === 429) {
           friendlyMsg = '⏳ অনেক বেশি রিকোয়েস্ট। ১ মিনিট পরে আবার চেষ্টা করুন।';
         } else if (resp.status >= 500) {
-          friendlyMsg = '⚠️ সার্ভার সমস্যা। WhatsApp-এ যোগাযোগ করুন: 01873990004';
+          friendlyMsg = '⚠️ সার্ভার সমস্যা। WhatsApp-এ যোগাযোগ করুন: ';
         }
         setMessages(prev => {
           const updated = [...prev];
@@ -279,7 +279,7 @@ const FloatingSupport = () => {
       if (!resp.body) {
         setMessages(prev => {
           const updated = [...prev];
-          updated[updated.length - 1] = { role: 'assistant', content: 'দুঃখিত, রেসপন্স পাওয়া যায়নি। WhatsApp: 01873990004' };
+          updated[updated.length - 1] = { role: 'assistant', content: 'দুঃখিত, রেসপন্স পাওয়া যায়নি। WhatsApp: ' };
           return updated;
         });
         setLoading(false);
@@ -337,7 +337,7 @@ const FloatingSupport = () => {
       setMessages(prev => {
         const updated = [...prev];
         const last = updated[updated.length - 1];
-        const errMsg = { role: 'assistant' as const, content: '⚠️ সংযোগে সমস্যা হয়েছে। WhatsApp-এ যোগাযোগ করুন: 01873990004' };
+        const errMsg = { role: 'assistant' as const, content: '⚠️ সংযোগে সমস্যা হয়েছে। WhatsApp-এ যোগাযোগ করুন: ' };
         if (last && last.role === 'assistant' && !last.content) {
           updated[updated.length - 1] = errMsg;
         } else {

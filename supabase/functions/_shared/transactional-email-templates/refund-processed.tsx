@@ -29,7 +29,7 @@ const Email = ({
   refundedAt,
   expectedArrival = '3-7 business days',
   note,
-  dashboardUrl = 'https://relaxobeanbag.com/dashboard',
+  dashboardUrl = 'https://booklover.com.bd/dashboard',
 }: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
@@ -37,7 +37,7 @@ const Email = ({
       <Container style={wrapper}>
         <Section style={headerStyle}>
           <div style={logoCardStyle}>
-            <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+            <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
           </div>
         </Section>
         <Section style={contentStyle}>
@@ -60,7 +60,7 @@ const Email = ({
           <Text style={footerStyle}>Questions about your refund? Reply to this email and we'll help right away.</Text>
         </Section>
         <Section style={footerSection}>
-          <Text style={copyrightStyle}>&copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.</Text>
+          <Text style={copyrightStyle}>&copy; {new Date().getFullYear()} Booklover. All rights reserved.</Text>
         </Section>
       </Container>
     </Body>

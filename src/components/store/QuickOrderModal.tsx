@@ -281,7 +281,7 @@ const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOr
         id: newOrderId,
         order_number: orderNum,
         customer_name: form.name,
-        customer_email: form.email.trim() || `no-email-${orderNum.toLowerCase()}@guest.relaxobeanbag.com`,
+        customer_email: form.email.trim() || `no-email-${orderNum.toLowerCase()}@guest.booklover.com.bd`,
         customer_phone: form.phone,
         subtotal: itemTotal,
         discount_amount: couponDiscount,

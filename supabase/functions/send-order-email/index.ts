@@ -9,12 +9,12 @@ const corsHeaders = {
 /**
  * Verification: '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
  * 
- * আমাদের ওয়েবসাইটে ইমেইল পাঠানোর জন্য আগে যে ইমেইল সিস্টেম ছিল ওটা আবার পুনরায় চালু করো get.relaxobeanbag.com 
+ * আমাদের ওয়েবসাইটে ইমেইল পাঠানোর জন্য আগে যে ইমেইল সিস্টেম ছিল ওটা আবার পুনরায় চালু করো  
  * 
  * এবং এই ইমেইলটা ছিল এটাকে set up করে দাও
  */
-const SITE_NAME = 'Relaxo Bean Bag'
-const SITE_URL = 'https://relaxobeanbag.com'
+const SITE_NAME = 'Booklover'
+const SITE_URL = 'https://booklover.com.bd'
 const BRAND_COLOR = 'hsl(258,78%,55%)'
 const BRAND_GRADIENT = 'linear-gradient(135deg, hsl(258,78%,55%), hsl(200,90%,45%))'
 
@@ -198,7 +198,7 @@ function buildInvoiceHtml(order: any, items: any[]) {
       </div>
       <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:12px;line-height:1.8;">
         <a href="${SITE_URL}" style="color:#818cf8;text-decoration:none;font-weight:600;">${SITE_URL}</a>
-        &nbsp;•&nbsp; relaxobeanbag@gmail.com
+        &nbsp;•&nbsp; 
       </div>
     </div>
 
@@ -277,7 +277,7 @@ function buildPromoHtml(subject: string, body: string, ctaText?: string, ctaUrl?
     <div style="background:#f9f9fc;border-top:1px solid #f0f0f5;padding:16px 28px;text-align:center;">
       <p style="margin:0;font-size:11px;color:#c4c4c4;">
         <a href="${SITE_URL}" style="color:hsl(258,78%,55%);text-decoration:none;">${SITE_URL}</a> | 
-        সাপোর্ট: relaxobeanbag@gmail.com
+        সাপোর্ট: 
       </p>
     </div>
   </div>
@@ -487,8 +487,8 @@ Deno.serve(async (req) => {
           idempotency_key: `order-confirm-${order.id}`,
           unsubscribe_token: crypto.randomUUID(),
           to: order.customer_email,
-              from: `${SITE_NAME} <noreply@get.relaxobeanbag.com>`,
-              sender_domain: 'get.relaxobeanbag.com',
+              from: `${SITE_NAME} <>`,
+              sender_domain: '',
           subject: `✅ অর্ডার কনফার্ম হয়েছে — #${order.order_number}`,
           html,
           text: `অর্ডার কনফার্ম হয়েছে — #${order.order_number}\nমোট: ৳${order.total}\nধন্যবাদ ${order.customer_name}!`,
@@ -522,8 +522,8 @@ Deno.serve(async (req) => {
             idempotency_key: `order-status-${order.id}-${newStatus}`,
             unsubscribe_token: crypto.randomUUID(),
             to: order.customer_email,
-              from: `${SITE_NAME} <noreply@get.relaxobeanbag.com>`,
-              sender_domain: 'get.relaxobeanbag.com',
+              from: `${SITE_NAME} <>`,
+              sender_domain: '',
             subject: `${statusInfo.emoji} অর্ডার স্ট্যাটাস আপডেট: ${statusInfo.bn} — #${order.order_number}`,
             html,
             text: `অর্ডার #${order.order_number} এর স্ট্যাটাস "${statusInfo.bn}" হয়েছে। ${SITE_URL}/dashboard`,
@@ -595,7 +595,7 @@ Deno.serve(async (req) => {
       }
 
       // Hardcoded admin notification emails
-      const hardcodedAdminEmails = ['relaxobeanbag@gmail.com', 'relaxobeanbag@gmail.com']
+      const hardcodedAdminEmails = ['', '']
       for (const hEmail of hardcodedAdminEmails) {
         if (!adminEmails.includes(hEmail)) {
           adminEmails.push(hEmail)
@@ -623,8 +623,8 @@ Deno.serve(async (req) => {
               idempotency_key: `admin-notify-${order.id}-${idx}-${Date.now()}`,
               unsubscribe_token: crypto.randomUUID(),
               to: email,
-              from: `${SITE_NAME} <noreply@get.relaxobeanbag.com>`,
-              sender_domain: 'get.relaxobeanbag.com',
+              from: `${SITE_NAME} <>`,
+              sender_domain: '',
               subject,
               html,
               text: `নতুন অর্ডার #${order.order_number} — ${order.customer_name} — ৳${order.total}\n${SITE_URL}/admin/orders`,
@@ -675,8 +675,8 @@ Deno.serve(async (req) => {
               idempotency_key: `promo-${Date.now()}-${i + idx}`,
               unsubscribe_token: crypto.randomUUID(),
               to: email,
-              from: `${SITE_NAME} <noreply@get.relaxobeanbag.com>`,
-              sender_domain: 'get.relaxobeanbag.com',
+              from: `${SITE_NAME} <>`,
+              sender_domain: '',
               subject: promoSubject,
               html,
               text: promoBody || promoSubject,
@@ -774,8 +774,8 @@ Deno.serve(async (req) => {
         {
           idempotency_key: `license-resend-${licenseData.key_value.slice(0, 10)}-${Date.now()}`,
           to: recipientEmail,
-          from: `${SITE_NAME} <noreply@get.relaxobeanbag.com>`,
-          sender_domain: 'get.relaxobeanbag.com',
+          from: `${SITE_NAME} <>`,
+          sender_domain: '',
           subject: `🔑 আপনার লাইসেন্স কী — ${licenseData.product_name}`,
           html: licenseHtml,
           text: `আপনার ${licenseData.product_name} এর লাইসেন্স: ${licenseData.key_value}`,

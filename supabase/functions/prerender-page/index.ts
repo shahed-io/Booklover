@@ -4,8 +4,8 @@
 // internal links, and product list — so Google indexes everything fast.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const SITE_URL = 'https://relaxobeanbag.com';
-const SITE_NAME = 'Relaxo Bean Bag';
+const SITE_URL = 'https://booklover.com.bd';
+const SITE_NAME = 'Booklover';
 
 const escape = (s: string) =>
   (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -107,16 +107,16 @@ const orgSchema = {
   '@context': 'https://schema.org',
   '@type': ['Organization', 'OnlineStore'],
   name: SITE_NAME,
-  alternateName: ['Relaxo Bean Bag BD', 'Relaxo Bean Bag'],
+  alternateName: ['Booklover BD', 'Booklover'],
   url: SITE_URL,
   logo: `${SITE_URL}/favicon.png`,
   sameAs: [
-    'https://www.facebook.com/share/1EU8koottB/',
-    'https://wa.me/8801873990004',
+    '',
+    'https://wa.me/88',
   ],
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+8801873990004',
+    telephone: '+88',
     contactType: 'customer service',
     areaServed: 'BD',
     availableLanguage: ['Bengali', 'English'],

@@ -12,54 +12,7 @@ import { toast } from 'sonner';
 type Topic = { title: string; intent: string; pillar?: boolean };
 type Cluster = { id: string; niche: string; icon: any; color: string; topics: Topic[] };
 
-const CLUSTERS: Cluster[] = [
-  {
-    id: 'beanbag', niche: 'Bean Bag', icon: Sofa, color: 'from-amber-500 to-orange-500',
-    topics: [
-      { title: 'Bean Bag Bangladesh — Complete Buyer\'s Guide 2026', intent: 'pillar', pillar: true },
-      { title: 'বিন ব্যাগ কেনার আগে যে ৭টি বিষয় জানা জরুরি', intent: 'guide' },
-      { title: 'Bean Bag Price in Bangladesh 2026 — Size Wise Full List', intent: 'pricing' },
-      { title: 'Bean Bag vs Sofa — ছোট রুমের জন্য কোনটি ভালো?', intent: 'comparison' },
-      { title: 'Best Bean Bag Size Chart — Kids, Teen ও Adult', intent: 'guide' },
-      { title: 'Bean Bag Fabric Guide — Leather, Cotton নাকি Velvet?', intent: 'comparison' },
-      { title: 'Bean Bag Refill (Beans) কতদিন পর পর দিতে হয়?', intent: 'how-to' },
-      { title: 'বিন ব্যাগ পরিষ্কার ও যত্নের সম্পূর্ণ গাইড', intent: 'how-to' },
-      { title: 'Gaming Bean Bag Chair Bangladesh — Best Picks', intent: 'best-of' },
-      { title: 'Kids Bean Bag Safety — বাবা-মায়ের জন্য গাইড', intent: 'guide' },
-    ],
-  },
-  {
-    id: 'living', niche: 'Living Room', icon: Home, color: 'from-blue-500 to-cyan-500',
-    topics: [
-      { title: 'Living Room Furniture Ideas for Bangladeshi Homes 2026', intent: 'pillar', pillar: true },
-      { title: 'ছোট ফ্ল্যাটে Space Saving Furniture আইডিয়া', intent: 'guide' },
-      { title: 'Lounge Chair vs Recliner — কোনটি নেবেন?', intent: 'comparison' },
-      { title: 'Best Floor Cushion & Pouf for Bangladeshi Living Rooms', intent: 'best-of' },
-      { title: 'Living Room Color ও Furniture Matching Guide', intent: 'guide' },
-      { title: 'Budget Home Makeover — ১০ হাজার টাকায় রুম সাজান', intent: 'how-to' },
-    ],
-  },
-  {
-    id: 'care', niche: 'Care & Warranty', icon: ShieldCheck, color: 'from-emerald-500 to-teal-500',
-    topics: [
-      { title: 'Furniture Care & Warranty Guide Bangladesh', intent: 'pillar', pillar: true },
-      { title: 'Stitching Warranty কী কী কভার করে?', intent: 'guide' },
-      { title: 'Fabric Stain Removal — ঘরোয়া সহজ পদ্ধতি', intent: 'how-to' },
-      { title: 'বর্ষাকালে ফার্নিচার ভালো রাখার উপায়', intent: 'how-to' },
-      { title: 'Bean Bag Cover Replacement — কখন দরকার?', intent: 'guide' },
-    ],
-  },
-  {
-    id: 'buying', niche: 'Buying & Delivery', icon: Layers, color: 'from-indigo-500 to-violet-500',
-    topics: [
-      { title: 'Online Furniture কেনার সম্পূর্ণ গাইড (Bangladesh)', intent: 'pillar', pillar: true },
-      { title: 'Cash on Delivery-তে ফার্নিচার অর্ডার — কীভাবে নিরাপদে?', intent: 'how-to' },
-      { title: 'ঢাকা ও ঢাকার বাইরে ডেলিভারি চার্জ ও সময়', intent: 'guide' },
-      { title: 'Return & Refund Policy — অনলাইন ফার্নিচার কেনার আগে জানুন', intent: 'guide' },
-      { title: 'Gift হিসেবে Bean Bag — কেন Best Choice?', intent: 'guide' },
-    ],
-  },
-];
+const CLUSTERS: Cluster[] = [];
 
 const TOTAL = CLUSTERS.reduce((a, c) => a + c.topics.length, 0);
 

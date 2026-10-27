@@ -28,7 +28,7 @@ interface CurrencyContextValue {
   refresh: () => Promise<void>;
 }
 
-const STORAGE_KEY = "relaxobeanbag_currency_code";
+const STORAGE_KEY = "booklover_currency_code";
 
 const CurrencyContext = createContext<CurrencyContextValue | undefined>(undefined);
 

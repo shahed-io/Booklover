@@ -343,7 +343,7 @@ const Navbar = () => {
           {/* Left — contact */}
           <div className="flex items-center gap-2 flex-shrink-0 relative z-10">
             <a
-              href="tel:01873990004"
+              href="tel:"
               aria-label="Call us"
               className="group flex items-center gap-1.5 transition-colors"
               style={{ color: 'hsla(0,0%,100%,0.92)' }}
@@ -351,11 +351,11 @@ const Navbar = () => {
               onMouseLeave={e => { e.currentTarget.style.color = 'hsla(0,0%,100%,0.92)'; }}
             >
               <Phone size={11} style={{ color: 'hsl(35,92%,62%)' }} strokeWidth={2.5} />
-              <span className="font-semibold tracking-wide tabular-nums">01873-990004</span>
+              <span className="font-semibold tracking-wide tabular-nums"></span>
             </a>
             <span className="hidden md:inline-block w-px h-3" style={{ background: 'hsla(0,0%,100%,0.20)' }} />
             <a
-              href="mailto:relaxobeanbag@gmail.com"
+              href="mailto:"
               aria-label="Email us"
               className="hidden md:flex items-center gap-1.5 transition-colors"
               style={{ color: 'hsla(0,0%,100%,0.88)' }}
@@ -363,7 +363,7 @@ const Navbar = () => {
               onMouseLeave={e => { e.currentTarget.style.color = 'hsla(0,0%,100%,0.88)'; }}
             >
               <Mail size={11} style={{ color: 'hsl(35,92%,62%)' }} strokeWidth={2.5} />
-              <span className="font-semibold tracking-wide">relaxobeanbag@gmail.com</span>
+              <span className="font-semibold tracking-wide"></span>
             </a>
           </div>
 

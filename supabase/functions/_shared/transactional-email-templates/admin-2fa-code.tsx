@@ -41,7 +41,7 @@ const warnBox = {
 
 const Admin2FACodeEmail = ({
   code = '000000',
-  requestedByEmail = 'relaxobeanbag@gmail.com',
+  requestedByEmail = '',
   ip = '',
   expiresInMinutes = 10,
 }: Admin2FACodeProps) => (
@@ -51,13 +51,13 @@ const Admin2FACodeEmail = ({
       <Container style={wrapper}>
         <Section style={headerStyle}>
           <div style={logoCardStyle}>
-            <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+            <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
           </div>
         </Section>
         <Section style={contentStyle}>
           <Text style={h1Style}>Admin Login Verification Code</Text>
           <Text style={subtitleStyle}>
-            A login attempt to the <strong>Relaxo Bean Bag Admin Panel</strong> requires verification.
+            A login attempt to the <strong>Booklover Admin Panel</strong> requires verification.
             Use the code below to continue. This code expires in {expiresInMinutes} minutes.
           </Text>
           <div style={codeBox}>{code}</div>
@@ -73,7 +73,7 @@ const Admin2FACodeEmail = ({
         </Section>
         <Section style={footerSection}>
           <Text style={copyrightStyle}>
-            &copy; {new Date().getFullYear()} Relaxo Bean Bag — Admin Security Notification
+            &copy; {new Date().getFullYear()} Booklover — Admin Security Notification
           </Text>
         </Section>
       </Container>
@@ -87,7 +87,7 @@ export const template = {
   displayName: 'Admin 2FA Code',
   previewData: {
     code: '482915',
-    requestedByEmail: 'relaxobeanbag@gmail.com',
+    requestedByEmail: '',
     ip: '203.0.113.42',
     expiresInMinutes: 10,
   },

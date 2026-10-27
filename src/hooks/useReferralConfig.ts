@@ -32,7 +32,7 @@ export const REFERRAL_CONFIG_DEFAULT: ReferralConfig = {
   redeem_ratio: 2,
   program_title: 'রেফারেল প্রোগ্রাম',
   program_subtitle: 'বন্ধুকে আমন্ত্রণ জানিয়ে ক্রেডিট জিতুন',
-  share_message: 'Relaxo Bean Bag থেকে কিনুন — আমার রেফারেল কোড ব্যবহার করে ছাড় পান!',
+  share_message: 'Booklover থেকে কিনুন — আমার রেফারেল কোড ব্যবহার করে ছাড় পান!',
   how_it_works: [
     'আপনার রেফারেল কোড বা লিংক বন্ধুকে শেয়ার করুন',
     'বন্ধু সাইনআপ করলে সে স্থায়ী ছাড় পাবে',

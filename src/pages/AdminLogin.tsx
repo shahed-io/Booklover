@@ -187,7 +187,7 @@ const AdminLogin = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="relaxobeanbag@gmail.com"
+                  placeholder=""
                   required
                   className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-primary"
                 />

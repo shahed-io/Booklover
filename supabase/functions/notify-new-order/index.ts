@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
           status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      const testMsg = `✅ Telegram নোটিফিকেশন সফলভাবে কাজ করছে!\n\n🛒 Relaxo Bean Bag নতুন অর্ডার আসলে এখানে তাৎক্ষণিক নোটিফিকেশন পাবেন। 🎉\n\n👤 কাস্টমার: Test User\n💵 মোট: ৳৫০০\n⏰ এইমাত্র`;
+      const testMsg = `✅ Telegram নোটিফিকেশন সফলভাবে কাজ করছে!\n\n🛒 Booklover নতুন অর্ডার আসলে এখানে তাৎক্ষণিক নোটিফিকেশন পাবেন। 🎉\n\n👤 কাস্টমার: Test User\n💵 মোট: ৳৫০০\n⏰ এইমাত্র`;
       const { ok, data } = await sendTelegramMessage(BOT_TOKEN, _chatId, testMsg);
       if (!ok) {
         return new Response(JSON.stringify({ error: 'Telegram failed', detail: data }), {

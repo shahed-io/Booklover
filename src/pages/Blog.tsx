@@ -68,14 +68,14 @@ const Blog = () => {
     <div className="min-h-screen bg-background text-foreground">
       <SEOHead
         title="Home Decor Tips, Bean Bag Care & Styling Guides – Blog"
-        description="Relaxo Bean Bag Blog – Read guides, tips and news about home decor, bean bag care, living room styling and lifestyle furniture in Bangladesh."
+        description="Booklover Blog – Read guides, tips and news about home decor, bean bag care, living room styling and lifestyle furniture in Bangladesh."
         ogType="website"
-        canonical="https://relaxobeanbag.com/blog"
+        canonical="https://booklover.com.bd/blog"
         keywords="home decor tips bangladesh, bean bag care guide, living room styling, furniture blog bd"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'Blog',
-          name: 'Relaxo Bean Bag Blog',
+          name: 'Booklover Blog',
           description: 'Tips, guides and news about home decor and lifestyle furniture',
           url: `${SITE_URL}/blog`,
         }}
@@ -194,7 +194,7 @@ const Blog = () => {
                   {/* Image */}
                   {post.featured_image ? (
                     <div className={`overflow-hidden ${i === 0 ? 'h-56' : 'h-40'}`}>
-                      <img src={post.featured_image} alt={`${post.title} — Relaxo Bean Bag Blog Bangladesh`} title={post.title} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={i === 0 ? 'high' : 'auto'}
+                      <img src={post.featured_image} alt={`${post.title} — Booklover Blog Bangladesh`} title={post.title} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={i === 0 ? 'high' : 'auto'}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     </div>
                   ) : (
@@ -322,7 +322,7 @@ const Blog = () => {
                     {/* Image */}
                     {post.featured_image ? (
                       <div className="h-44 overflow-hidden">
-                        <img src={post.featured_image} alt={`${post.title} — Relaxo Bean Bag Blog Bangladesh`} title={post.title} loading="lazy" decoding="async"
+                        <img src={post.featured_image} alt={`${post.title} — Booklover Blog Bangladesh`} title={post.title} loading="lazy" decoding="async"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                       </div>
                     ) : (

@@ -49,7 +49,7 @@ const SubscriptionRenewalReminder = ({
   productName = 'your subscription',
   expiryDate = '',
   daysLeft,
-  renewUrl = 'https://relaxobeanbag.com/shop',
+  renewUrl = 'https://booklover.com.bd/shop',
   customMessage,
   orderNumber,
   couponCode,
@@ -73,7 +73,7 @@ const SubscriptionRenewalReminder = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
 
@@ -81,7 +81,7 @@ const SubscriptionRenewalReminder = ({
             <Text style={badge}>{expired ? 'Subscription Expired' : 'Renewal Reminder'}</Text>
             <Text style={h1Style}>Hello {customerName},</Text>
             <Text style={subtitleStyle}>
-              This is a friendly reminder about your <strong>{productName}</strong> subscription with Relaxo Bean Bag.
+              This is a friendly reminder about your <strong>{productName}</strong> subscription with Booklover.
             </Text>
 
             <Section style={expiryBox}>
@@ -175,7 +175,7 @@ const SubscriptionRenewalReminder = ({
 
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>
@@ -196,7 +196,7 @@ export const template = {
     productName: 'Microsoft 365 Family (1 Year)',
     expiryDate: '20 May 2026',
     daysLeft: 5,
-    renewUrl: 'https://relaxobeanbag.com/shop',
+    renewUrl: 'https://booklover.com.bd/shop',
     orderNumber: 'SS-1042',
   },
 } satisfies TemplateEntry

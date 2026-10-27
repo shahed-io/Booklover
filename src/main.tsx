@@ -49,9 +49,9 @@ class RootErrorBoundary extends React.Component<
         // Serve brand-aligned static content to crawlers so search snippets stay clean
         return (
           <div style={{ maxWidth: 900, margin: "40px auto", padding: 24, fontFamily: "system-ui, sans-serif", lineHeight: 1.6, color: "#111" }}>
-            <h1 style={{ fontSize: "2rem", marginBottom: 8 }}>Relaxo Bean Bag – Premium Bean Bags & Lifestyle Furniture in Bangladesh</h1>
-            <p><strong>বাংলাদেশের প্রিমিয়াম বিন ব্যাগ ও লাইফস্টাইল ফার্নিচার শপ।</strong> Bean Bag, Sofa, Lounge Chair, Floor Cushion, Kids Bean Bag ও Bean Refill — সেরা কোয়ালিটি, সাশ্রয়ী দামে। ক্যাশ অন ডেলিভারি ও সারা দেশে হোম ডেলিভারি।</p>
-            <p>Buy premium bean bags, sofas, lounge chairs, poufs, floor cushions and bean refills at the best price in Bangladesh — home delivery nationwide, cash on delivery, bKash / Nagad / Bank payment supported.</p>
+            <h1 style={{ fontSize: "2rem", marginBottom: 8 }}>Booklover</h1>
+            <p>Browse books and collections at Booklover.</p>
+            
 
           </div>
         );

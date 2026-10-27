@@ -107,7 +107,7 @@ const AdminAiReviewGenerator = () => {
         language,
         ratingMin,
         ratingMax,
-        storeName: 'Relaxo Bean Bag',
+        storeName: 'Booklover',
       },
     });
     if (error) throw new Error(error.message);

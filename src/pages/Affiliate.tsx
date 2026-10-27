@@ -261,7 +261,7 @@ const Affiliate = () => {
   const shareLink = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'Earn with Relaxo Bean Bag', text: `Use my code ${account?.referral_code} and shop`, url: referralLink });
+        await navigator.share({ title: 'Earn with Booklover', text: `Use my code ${account?.referral_code} and shop`, url: referralLink });
       } catch { }
     } else {
       copyLink();
@@ -457,8 +457,8 @@ const Affiliate = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title="Affiliate Program — Earn Commission"
-        description="Join the Relaxo Bean Bag Affiliate Program. Share your referral link, earn commission on every sale, and withdraw via bKash/Nagad. Best digital affiliate program in Bangladesh."
-        keywords="affiliate program bangladesh, earn online bangladesh, referral program, Relaxo Bean Bag affiliate, digital affiliate"
+        description="Join the Booklover Affiliate Program. Share your referral link, earn commission on every sale, and withdraw via bKash/Nagad. Best digital affiliate program in Bangladesh."
+        keywords="affiliate program bangladesh, earn online bangladesh, referral program, Booklover affiliate, digital affiliate"
       />
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">

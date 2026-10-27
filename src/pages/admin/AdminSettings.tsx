@@ -85,7 +85,7 @@ const AdminSettings = () => {
     setTestingWA(true);
     const cleaned = phone.replace(/\D/g, '').replace(/^0/, '880');
     const msg = encodeURIComponent(
-      `✅ টেস্ট নোটিফিকেশন!\n\nRelaxo Bean Bag Admin WhatsApp সফলভাবে কনফিগার হয়েছে। নতুন অর্ডার আসলে এখানে নোটিফিকেশন আসবে। 🎉`
+      `✅ টেস্ট নোটিফিকেশন!\n\nBooklover Admin WhatsApp সফলভাবে কনফিগার হয়েছে। নতুন অর্ডার আসলে এখানে নোটিফিকেশন আসবে। 🎉`
     );
     window.open(`https://wa.me/${cleaned}?text=${msg}`, '_blank');
     setTestingWA(false);
@@ -96,7 +96,7 @@ const AdminSettings = () => {
       title: 'General Information',
       icon: Globe,
       fields: [
-        { key: 'site_name', label: 'Store Name', placeholder: 'Relaxo Bean Bag' },
+        { key: 'site_name', label: 'Store Name', placeholder: 'Booklover' },
         { key: 'site_email', label: 'Support Email', placeholder: 'support@example.com' },
         { key: 'site_phone', label: 'Phone Number', placeholder: '01XXXXXXXXX' },
         { key: 'site_address', label: 'Address', placeholder: 'Dhaka, Bangladesh' },

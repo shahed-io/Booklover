@@ -151,7 +151,7 @@ Deno.serve(async (req) => {
               email,
               password,
               initialCredit,
-              loginUrl: 'https://relaxobeanbag.com/get-cid',
+              loginUrl: 'https://booklover.com.bd/get-cid',
             },
           },
         });

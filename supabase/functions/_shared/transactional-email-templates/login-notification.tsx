@@ -69,7 +69,7 @@ const LoginNotificationEmail = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
 
@@ -78,7 +78,7 @@ const LoginNotificationEmail = ({
               {isAdmin ? '🛡️ Admin Sign-in Alert' : '🔐 New Sign-in to Your Account'}
             </Text>
             <Text style={subtitleStyle}>
-              Hi {customerName}, we noticed a sign-in to your <strong>Relaxo Bean Bag</strong> account.
+              Hi {customerName}, we noticed a sign-in to your <strong>Booklover</strong> account.
               If this was you, no action is needed. If you don't recognize this activity, please reset your password immediately.
             </Text>
 
@@ -124,7 +124,7 @@ const LoginNotificationEmail = ({
               </Text>
             </Section>
 
-            <Button style={{ ...buttonStyle, marginTop: '22px' }} href="https://relaxobeanbag.com/dashboard">
+            <Button style={{ ...buttonStyle, marginTop: '22px' }} href="https://booklover.com.bd/dashboard">
               Review Account Activity
             </Button>
 
@@ -137,7 +137,7 @@ const LoginNotificationEmail = ({
 
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>
@@ -150,8 +150,8 @@ export const template = {
   component: LoginNotificationEmail,
   subject: (data: LoginNotificationProps) =>
     data?.isAdmin
-      ? '🛡️ Admin sign-in alert — Relaxo Bean Bag'
-      : '🔐 New sign-in to your Relaxo Bean Bag account',
+      ? '🛡️ Admin sign-in alert — Booklover'
+      : '🔐 New sign-in to your Booklover account',
   displayName: 'Login Notification',
   previewData: {
     customerName: 'Rahul Ahmed',

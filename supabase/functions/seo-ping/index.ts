@@ -3,7 +3,7 @@
 //  • Submits sitemap to the same network
 // Called by DB trigger when products / blog posts publish.
 const INDEXNOW_KEY = 'f457da4fc7d6a59544e71cf9e5ce3245';
-const SITE_HOST = 'relaxobeanbag.com';
+const SITE_HOST = 'booklover.com.bd';
 const SITE_URL = `https://${SITE_HOST}`;
 
 const corsHeaders = {
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
 
     if (urls.length === 0) urls = [SITE_URL];
 
-    // Normalize all URLs to https://relaxobeanbag.com and only allow our own host
+    // Normalize all URLs to https://booklover.com.bd and only allow our own host
     const ALLOWED_HOSTS = new Set([SITE_HOST, `www.${SITE_HOST}`]);
     urls = urls
       .filter((u): u is string => typeof u === 'string')

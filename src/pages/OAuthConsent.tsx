@@ -142,7 +142,7 @@ export default function OAuthConsent() {
               <LogIn className="w-6 h-6 text-violet-600" />
             </div>
             <CardTitle>Sign in to continue</CardTitle>
-            <CardDescription>An external app wants to connect to your Relaxo Bean Bag account. Sign in to review the request.</CardDescription>
+            <CardDescription>An external app wants to connect to your Booklover account. Sign in to review the request.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button type="button" variant="outline" className="w-full" onClick={signInGoogle}>
@@ -191,8 +191,8 @@ export default function OAuthConsent() {
           <div className="mx-auto w-12 h-12 rounded-full bg-violet-500/10 flex items-center justify-center mb-2">
             <ShieldCheck className="w-6 h-6 text-violet-600" />
           </div>
-          <CardTitle>Connect {clientName} to Relaxo Bean Bag</CardTitle>
-          <CardDescription>This lets {clientName} use Relaxo Bean Bag as you.</CardDescription>
+          <CardTitle>Connect {clientName} to Booklover</CardTitle>
+          <CardDescription>This lets {clientName} use Booklover as you.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg border p-3 text-sm space-y-1.5 bg-muted/40">

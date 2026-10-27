@@ -346,7 +346,7 @@ const AdminQuickSale = () => {
 
       if ((deliveryMethod === 'whatsapp' || deliveryMethod === 'both') && customerPhone.trim()) {
         const phone = customerPhone.replace(/\D/g, '').replace(/^0/, '880');
-        let msg = `RELAXO BEAN BAG\n`;
+        let msg = `Booklover\n`;
         msg += `________________________\n\n`;
         msg += `Order Confirmation\n\n`;
         msg += `Order: #${orderNumber}\n`;
@@ -367,8 +367,8 @@ const AdminQuickSale = () => {
         msg += `________________________\n\n`;
         msg += `Total: ${subtotal} BDT\n`;
         msg += `Payment: ${paymentStatus === 'paid' ? 'Paid' : 'Pending'}\n\n`;
-        msg += `Thank you for choosing Relaxo Bean Bag\n`;
-        msg += `www.relaxobeanbag.com`;
+        msg += `Thank you for choosing Booklover\n`;
+        msg += `booklover.com.bd`;
 
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
       }

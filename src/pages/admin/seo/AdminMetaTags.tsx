@@ -5,15 +5,15 @@ import { Tag, Save, Check, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 
 const FIELDS = [
-  { key: 'meta_title_template', label: 'Title Template', placeholder: '%s | Relaxo Bean Bag', hint: 'Use %s for the page title. Max 60 chars.' },
+  { key: 'meta_title_template', label: 'Title Template', placeholder: '%s | Booklover', hint: 'Use %s for the page title. Max 60 chars.' },
   { key: 'meta_title_separator', label: 'Title Separator', placeholder: '|', hint: 'Character between page title and site name.' },
-  { key: 'site_name', label: 'Site Name', placeholder: 'Relaxo Bean Bag', hint: 'Used in OG and Twitter meta tags.' },
-  { key: 'og_image', label: 'Default OG Image URL', placeholder: 'https://relaxobeanbag.com/og-image.png', hint: 'Recommended: 1200×630px. Shown on social shares.' },
-  { key: 'twitter_site', label: 'Twitter / X Handle', placeholder: '@relaxobeanbag', hint: 'Your Twitter handle for Twitter Cards.' },
+  { key: 'site_name', label: 'Site Name', placeholder: 'Booklover', hint: 'Used in OG and Twitter meta tags.' },
+  { key: 'og_image', label: 'Default OG Image URL', placeholder: 'https://booklover.com.bd/og-image.png', hint: 'Recommended: 1200×630px. Shown on social shares.' },
+  { key: 'twitter_site', label: 'Twitter / X Handle', placeholder: '@booklover', hint: 'Your Twitter handle for Twitter Cards.' },
   { key: 'twitter_card_type', label: 'Twitter Card Type', placeholder: 'summary_large_image', hint: 'summary | summary_large_image | app' },
-  { key: 'meta_author', label: 'Meta Author', placeholder: 'Relaxo Bean Bag', hint: 'Default author meta tag value.' },
+  { key: 'meta_author', label: 'Meta Author', placeholder: 'Booklover', hint: 'Default author meta tag value.' },
   { key: 'meta_robots_default', label: 'Default Robots Directive', placeholder: 'index, follow', hint: 'Applied to all pages without custom robots settings.' },
-  { key: 'canonical_base_url', label: 'Canonical Base URL', placeholder: 'https://relaxobeanbag.com', hint: 'Your primary domain for canonical URLs.' },
+  { key: 'canonical_base_url', label: 'Canonical Base URL', placeholder: 'https://booklover.com.bd', hint: 'Your primary domain for canonical URLs.' },
 ];
 
 const AdminMetaTags = () => {
@@ -81,7 +81,7 @@ const AdminMetaTags = () => {
           <div className="bg-muted/20 border border-border rounded-xl p-4 mt-2">
             <p className="text-[10px] text-muted-foreground mb-2 font-medium uppercase tracking-wider">Generated Title Preview</p>
             <p className="text-sm font-semibold text-foreground">
-              {settings['meta_title_template']?.replace('%s', 'Windows 11 Pro') || 'Windows 11 Pro | Relaxo Bean Bag'}
+              {settings['meta_title_template']?.replace('%s', 'Windows 11 Pro') || 'Windows 11 Pro | Booklover'}
             </p>
           </div>
         </div>

@@ -61,7 +61,7 @@ const OrderConfirmation = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
 
@@ -87,7 +87,7 @@ const OrderConfirmation = ({
               Your product will be delivered after payment verification. Delivery is usually completed within 1-24 hours.
             </Text>
 
-            <Button style={buttonStyle} href="https://relaxobeanbag.lovable.app/dashboard">
+            <Button style={buttonStyle} href="https://booklover.com.bd/dashboard">
               View My Orders
             </Button>
 
@@ -98,7 +98,7 @@ const OrderConfirmation = ({
 
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>
@@ -109,7 +109,7 @@ const OrderConfirmation = ({
 
 export const template = {
   component: OrderConfirmation,
-  subject: (data: OrderConfirmationProps) => `Order Confirmed - ${data.orderNumber || 'Relaxo Bean Bag'}`,
+  subject: (data: OrderConfirmationProps) => `Order Confirmed - ${data.orderNumber || 'Booklover'}`,
   displayName: 'Order Confirmation',
   previewData: {
     customerName: 'Rahul Ahmed',

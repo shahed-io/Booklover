@@ -23,7 +23,7 @@ interface OverviewData {
 const DATABASES = ['us', 'uk', 'in', 'au', 'ca', 'de', 'fr'];
 
 export default function AdminSemrush() {
-  const [domain, setDomain] = useState('relaxobeanbag.com');
+  const [domain, setDomain] = useState('booklover.com.bd');
   const [database, setDatabase] = useState('us');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<OverviewData | null>(null);

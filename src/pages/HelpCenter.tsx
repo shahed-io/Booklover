@@ -114,9 +114,9 @@ const HelpCenter = () => {
       <div className="min-h-screen bg-background text-foreground">
         <SEOHead
           title={`${currentArticle.seo_title || currentArticle.title} – Help Center`}
-          description={currentArticle.seo_description || currentArticle.excerpt || `${currentArticle.title} — Relaxo Bean Bag হেল্প সেন্টার`}
-          canonical={`https://relaxobeanbag.com/link/${currentArticle.slug}`}
-          keywords={`Relaxo Bean Bag help, ${currentArticle.title}, ${(currentArticle.tags || []).join(', ')}`}
+          description={currentArticle.seo_description || currentArticle.excerpt || `${currentArticle.title} — Booklover হেল্প সেন্টার`}
+          canonical={`https://booklover.com.bd/link/${currentArticle.slug}`}
+          keywords={`Booklover help, ${currentArticle.title}, ${(currentArticle.tags || []).join(', ')}`}
           schema={schema}
         />
         <Navbar />
@@ -243,9 +243,9 @@ const HelpCenter = () => {
     <div className="min-h-screen bg-background text-foreground">
       <SEOHead
         title="Help Center – Size Guide, Delivery & Support"
-        description="Relaxo Bean Bag হেল্প সেন্টার — সাইজ গাইড, ফেব্রিক কেয়ার, ডেলিভারি, ওয়ারেন্টি, বিন রিফিল ও অর্ডার ট্র্যাকিং সংক্রান্ত সকল সমাধান পান।"
-        canonical="https://relaxobeanbag.com/link"
-        keywords="Relaxo Bean Bag help center, bean bag size guide bangladesh, fabric care, delivery, warranty, bean refill, order tracking"
+        description="Booklover হেল্প সেন্টার — সাইজ গাইড, ফেব্রিক কেয়ার, ডেলিভারি, ওয়ারেন্টি, বিন রিফিল ও অর্ডার ট্র্যাকিং সংক্রান্ত সকল সমাধান পান।"
+        canonical="https://booklover.com.bd/link"
+        keywords="Booklover help center, bean bag size guide bangladesh, fabric care, delivery, warranty, bean refill, order tracking"
       />
       <Navbar />
 
@@ -405,7 +405,7 @@ const HelpCenter = () => {
             <Link to="/dashboard" className="px-5 py-2.5 rounded-xl btn-glow text-sm font-semibold">
               সাপোর্ট টিকেট খুলুন
             </Link>
-            <a href="https://wa.me/8801873990004" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/88" target="_blank" rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-xl glass-card border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366]/10 transition-colors text-sm font-semibold flex items-center gap-2">
               💬 WhatsApp
             </a>

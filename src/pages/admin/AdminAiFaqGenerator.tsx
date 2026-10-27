@@ -85,7 +85,7 @@ const AdminAiFaqGenerator = () => {
         },
         count,
         language,
-        storeName: language === 'bn' ? 'Relaxo Bean Bag' : 'Relaxo Bean Bag',
+        storeName: language === 'bn' ? 'Booklover' : 'Booklover',
       },
     });
     if (error) throw new Error(error.message);

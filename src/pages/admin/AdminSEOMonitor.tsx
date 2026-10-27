@@ -24,7 +24,7 @@ interface SitemapStat {
 interface PingLog { id: string; entity: 'product' | 'blog'; title: string; slug: string; updated_at: string; }
 interface SchemaCheck { type: string; present: boolean; valid: boolean; note?: string; }
 
-const SITE = 'https://relaxobeanbag.com';
+const SITE = 'https://booklover.com.bd';
 
 const Card = ({ children, className = '' }: any) => (
   <div className={`rounded-2xl border border-border bg-card/80 backdrop-blur-md p-5 shadow-sm ${className}`}>
@@ -128,7 +128,7 @@ const AdminSEOMonitor = () => {
 
   const validateSchema = useCallback(async () => {
     try {
-      const r = await fetch(`https://dpvdavjwqyviredzoorj.supabase.co/functions/v1/prerender-page?path=/`, { cache: 'no-store' });
+      const r = await fetch(`https://tzkmjdcpgkbztxlchdpu.supabase.co/functions/v1/prerender-page?path=/`, { cache: 'no-store' });
       const html = await r.text();
       const scripts = Array.from(html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map(m => m[1].trim());
       const types = new Set<string>();
@@ -171,7 +171,7 @@ const AdminSEOMonitor = () => {
   const triggerPing = async (url: string) => {
     setPinging(true);
     try {
-      const r = await fetch(`https://dpvdavjwqyviredzoorj.supabase.co/functions/v1/seo-ping`, {
+      const r = await fetch(`https://tzkmjdcpgkbztxlchdpu.supabase.co/functions/v1/seo-ping`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ urls: [url] }),
@@ -361,7 +361,7 @@ const AdminSEOMonitor = () => {
             { label: 'Bing Webmaster Tools', desc: 'Bing crawl reports', url: 'https://www.bing.com/webmasters', icon: Globe },
             { label: 'Rich Results Test', desc: 'Schema.org validator', url: `https://search.google.com/test/rich-results?url=${encodeURIComponent(SITE)}`, icon: Code2 },
             { label: 'PageSpeed Insights', desc: 'Core Web Vitals', url: `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(SITE)}`, icon: Activity },
-            { label: 'Google site: search', desc: 'See indexed pages', url: `https://www.google.com/search?q=site%3Arelaxobeanbag.com`, icon: Search },
+            { label: 'Google site: search', desc: 'See indexed pages', url: `https://www.google.com/search?q=site%3Abooklover.com.bd`, icon: Search },
             { label: 'Schema.org Validator', desc: 'Markup validation', url: `https://validator.schema.org/#url=${encodeURIComponent(SITE)}`, icon: Database },
           ].map(t => (
             <a

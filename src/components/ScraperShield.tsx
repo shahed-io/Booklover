@@ -111,7 +111,7 @@ export const ScraperShield = ({ children }: { children: React.ReactNode }) => {
 
     if (cp.cp_scraper_block && decision.shouldBlock) {
       setBlocked(true);
-      try { document.title = 'Protected Content – Relaxo Bean Bag'; } catch { /* ignore */ }
+      try { document.title = 'Protected Content – Booklover'; } catch { /* ignore */ }
       return;
     }
 
@@ -250,7 +250,7 @@ export const ScraperShield = ({ children }: { children: React.ReactNode }) => {
               width: 6, height: 6, borderRadius: '50%', background: '#a78bfa',
               boxShadow: '0 0 10px #a78bfa',
             }} />
-            Relaxo Bean Bag · Secure Zone
+            Booklover · Secure Zone
           </div>
 
           <h1 style={{
@@ -293,7 +293,7 @@ export const ScraperShield = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <a
-            href="https://relaxobeanbag.com"
+            href="https://booklover.com.bd"
             style={{
               position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '14px 32px', borderRadius: 999,
@@ -308,7 +308,7 @@ export const ScraperShield = ({ children }: { children: React.ReactNode }) => {
             onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-2px)')}
             onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
           >
-            Visit Relaxo Bean Bag
+            Visit Booklover
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round" />
@@ -319,7 +319,7 @@ export const ScraperShield = ({ children }: { children: React.ReactNode }) => {
             marginTop: 28, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
             color: 'hsla(0,0%,100%,0.35)',
           }}>
-            © Relaxo Bean Bag · All Rights Reserved
+            © Booklover · All Rights Reserved
           </p>
         </div>
 

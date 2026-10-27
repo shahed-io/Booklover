@@ -111,7 +111,7 @@ serve(async (req) => {
 
     const bdCities = "ঢাকা, চট্টগ্রাম, সিলেট, রাজশাহী, খুলনা, বরিশাল, ময়মনসিংহ, কুমিল্লা";
 
-    const systemPrompt = `You are a senior SEO content strategist for Relaxo Bean Bag (DBID: 586772174) — Bangladesh's #1 digital software & subscription store (relaxobeanbag.com).
+    const systemPrompt = `You are a senior SEO content strategist for Booklover (DBID: 586772174) — Bangladesh's #1 digital software & subscription store (booklover.com.bd).
 
 GOAL: Write a comprehensive, deeply informational blog post in Bangla-English mix that ranks #1 on Google Bangladesh AND gets cited by ChatGPT, Perplexity, and Google AI Overview.
 
@@ -120,7 +120,7 @@ CITIES: ${bdCities}
 INTENT: ${["informational", "commercial", "transactional", "navigational"].includes(String(intent)) ? intent : "informational"}
 LANGUAGE: Bangla + English mix — exactly how Bangladeshi users search Google.
 PRICE FORMAT: ৳[amount] (Taka symbol)
-STORE NAME RULE: Use the correct spelling based on language. In English text write exactly "Relaxo Bean Bag". In Bengali text write exactly "রিলাক্সো বিন ব্যাগ". Always write the brand name exactly as "Relaxo Bean Bag" in English and "রিলাক্সো বিন ব্যাগ" in Bengali.
+STORE NAME RULE: Use the correct spelling based on language. In English text write exactly "Booklover". In Bengali text write exactly "Booklover". Always write the brand name exactly as "Booklover" in English and "Booklover" in Bengali.
 
 Return ONLY valid JSON in this EXACT shape:
 {
@@ -128,7 +128,7 @@ Return ONLY valid JSON in this EXACT shape:
   "slug": "kebab-case-english-slug",
   "excerpt": "2-3 sentence summary that hooks the reader (160-220 chars)",
   "content": "FULL MARKDOWN BLOG BODY — 1500 to 2500 words — see structure below",
-  "seo_title": "max 60 chars — primary keyword + Bangladesh signal + Relaxo Bean Bag",
+  "seo_title": "max 60 chars — primary keyword + Bangladesh signal + Booklover",
   "seo_description": "max 160 chars — Bangla-English, includes 'bangladesh' or 'BD', a buying intent word, and a unique angle",
   "tags": ["8-12 relevant tags"],
   "reading_time": 8,
@@ -157,23 +157,23 @@ For "price" topics: pricing table with BDT + USD + payment methods.
 Cover: how to buy in BD, bKash/Nagad/Rocket payment, instant delivery, common scams to avoid, support availability.
 
 ## [Topic-specific H2 #4 — recommendations / verdict / next steps]
-Clear recommendation with reasoning. Mention Relaxo Bean Bag products naturally where relevant — link as [product name](https://relaxobeanbag.com/shop).
+Clear recommendation with reasoning. Mention Booklover products naturally where relevant — link as [product name](https://booklover.com.bd/shop).
 
 ## সাধারণ ভুল (Common Mistakes to Avoid)
 4-6 bullet points of pitfalls.
 
-## কেন Relaxo Bean Bag থেকে কিনবেন? (Why Buy From Relaxo Bean Bag)
+## কেন Booklover থেকে কিনবেন? (Why Buy From Booklover)
 3-5 bullets: genuine license, instant delivery, bKash/Nagad/Rocket, 24/7 support, DBID 586772174 official registration.
 
 ## উপসংহার (Conclusion)
-2-3 paragraph wrap-up + a clear call to action linking to https://relaxobeanbag.com/shop.
+2-3 paragraph wrap-up + a clear call to action linking to https://booklover.com.bd/shop.
 
 === HARD RULES ===
 - Word count of "content": 1500–2500 words. NEVER less than 1500.
 - Use primary keyword 8-15 times naturally — never stuffed.
 - Include at least 2 BD city names from: ${bdCities}.
 - Include real product/service names, version numbers, and current prices where applicable.
-- All external links use real, working URLs (relaxobeanbag.com, official vendor sites).
+- All external links use real, working URLs (booklover.com.bd, official vendor sites).
 - After any English word/number, use English period (.) — never Bengali danda (।). Only use । at the end of purely Bengali sentences.
 - "slug" must be lowercase ASCII kebab-case (a-z, 0-9, hyphens only).
 - FAQ items must directly answer questions Bangladeshi readers would ask about this exact topic.
@@ -185,7 +185,7 @@ Return ONLY the JSON object.`;
 
 TOPIC: "${cleanTopic}"
 
-Make it the BEST result on Google Bangladesh for anyone searching this topic. Include real Bangladesh prices in ৳, real product names, and link relevant items to https://relaxobeanbag.com/shop.
+Make it the BEST result on Google Bangladesh for anyone searching this topic. Include real Bangladesh prices in ৳, real product names, and link relevant items to https://booklover.com.bd/shop.
 
 Return ONLY the JSON object specified.`;
 
@@ -218,7 +218,7 @@ Return ONLY the JSON object specified.`;
         content: blog.content,
         status: auto_publish ? "published" : "draft",
         published_at: auto_publish ? new Date().toISOString() : null,
-        author_name: "Relaxo Bean Bag",
+        author_name: "Booklover",
         featured_image: featured_image || null,
         category_id: category_id || null,
         tags,

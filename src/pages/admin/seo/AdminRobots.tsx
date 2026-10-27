@@ -17,7 +17,7 @@ Allow: /*.css$
 Allow: /*.js$
 
 # Sitemap
-Sitemap: https://relaxobeanbag.com/sitemap.xml`;
+Sitemap: https://booklover.com.bd/sitemap.xml`;
 
 const AdminRobots = () => {
   const [content, setContent] = useState('');

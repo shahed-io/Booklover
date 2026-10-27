@@ -1,5 +1,5 @@
 # ════════════════════════════════════════════════════════
-#  Relaxo Bean Bag — robots.txt
+#  Booklover — robots.txt
 #  Validated against Google Search Console robots.txt Tester
 #  Last updated: 2026-05
 # ════════════════════════════════════════════════════════
@@ -217,6 +217,6 @@ Crawl-delay: 1
 Allow: /
 
 # ───────── Sitemaps ─────────
-Sitemap: https://relaxobeanbag.com/sitemap.xml
-Sitemap: https://relaxobeanbag.com/image-sitemap.xml
-Sitemap: https://relaxobeanbag.com/sitemap_index.xml
+Sitemap: https://booklover.com.bd/sitemap.xml
+Sitemap: https://booklover.com.bd/image-sitemap.xml
+Sitemap: https://booklover.com.bd/sitemap_index.xml

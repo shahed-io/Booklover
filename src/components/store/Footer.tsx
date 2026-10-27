@@ -207,7 +207,7 @@ const Footer = () => {
           <div className="flex gap-2.5 justify-center lg:justify-start">
             {socials.map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
-                aria-label={`Visit Relaxo Bean Bag on ${s.label}`}
+                aria-label={`Visit Booklover on ${s.label}`}
                 title={s.label}
                 className="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:-translate-y-0.5"
                 style={{

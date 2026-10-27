@@ -46,7 +46,7 @@ const OrderStatusUpdate = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
           <Section style={contentStyle}>
@@ -63,7 +63,7 @@ const OrderStatusUpdate = ({
               {orderTotal && <Text style={textStyle}><strong>Order Total:</strong> {orderTotal}</Text>}
               {note && <><Hr style={{ borderColor: '#e0d4f5', margin: '12px 0' }} /><Text style={textStyle}><strong>Note:</strong> {note}</Text></>}
             </Section>
-            <Button style={buttonStyle} href="https://relaxobeanbag.com/dashboard">
+            <Button style={buttonStyle} href="https://booklover.com.bd/dashboard">
               View Order Details
             </Button>
             <Text style={footerStyle}>
@@ -72,7 +72,7 @@ const OrderStatusUpdate = ({
           </Section>
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>

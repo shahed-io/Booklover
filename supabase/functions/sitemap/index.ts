@@ -5,8 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const SITE_URL = 'https://relaxobeanbag.com';
-const SUPABASE_STORAGE_ORIGIN = 'https://dpvdavjwqyviredzoorj.supabase.co';
+const SITE_URL = 'https://booklover.com.bd';
+const SUPABASE_STORAGE_ORIGIN = 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
 const SUPABASE_STORAGE_PUBLIC_PATH = '/storage/v1/object/public/';
 
 const escape = (s: string) =>
@@ -120,8 +120,8 @@ Deno.serve(async (req) => {
         }
       }
 
-      const imageTitle = escape(p.seo_title || `${p.name} - Buy at Best Price in Bangladesh | Relaxo Bean Bag`);
-      const imageCaption = escape(`${p.name} - High quality product image from Relaxo Bean Bag Bangladesh`);
+      const imageTitle = escape(p.seo_title || `${p.name} - Buy at Best Price in Bangladesh | Booklover`);
+      const imageCaption = escape(`${p.name} - High quality product image from Booklover Bangladesh`);
 
       const imageBlocks = allImages.map((img, i) => `
     <image:image>

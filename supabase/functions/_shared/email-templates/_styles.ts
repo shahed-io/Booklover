@@ -2,7 +2,7 @@
 const BRAND_PURPLE = '#7c3aed';
 const BRAND_PURPLE_LIGHT = '#ede9fe';
 const BRAND_PURPLE_BORDER = '#c4b5fd';
-const SITE_URL = 'https://relaxobeanbag.com';
+const SITE_URL = 'https://booklover.com.bd';
 const LOGO_URL = `${SITE_URL}/logo.png`;
 
 export { BRAND_PURPLE, BRAND_PURPLE_LIGHT, BRAND_PURPLE_BORDER, SITE_URL, LOGO_URL };

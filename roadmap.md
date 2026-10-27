@@ -1,5 +1,10 @@
 # Roadmap
 
+## Legacy-brand cleanup
+- [ ] Audit code, assets, configuration and Cloud settings for inherited branding and connections.
+- [ ] Remove legacy content and media, reset inherited defaults, and preserve commerce and admin design.
+- [ ] Verify remaining references, tests, preview and Cloud cleanup; document any access blockers.
+
 ## Booklover storefront
 - [x] Record inspected reference pages, product details, and unverified areas in .lovable/booklover-reference-audit.md.
 - [x] Prepare two white-theme Booklover homepage previews with the supplied original logo.

@@ -14,25 +14,25 @@ const _prefetchedKeys = new Set<string>();
 
 /** Map of route key → dynamic import factory. Add new routes here as needed. */
 const ROUTE_LOADERS: Record<string, () => Promise<unknown>> = {
-  '/':              () => import('@/pages/Index'),
-  '/shop':          () => import('@/pages/Shop'),
+  '/':              () => import('@/components/booklover/Home'),
+  '/shop':          () => import('@/components/booklover/CatalogPage'),
   '/checkout':      () => import('@/pages/Checkout'),
   '/blog':          () => import('@/pages/Blog'),
   '/dashboard':     () => import('@/pages/UserDashboard'),
-  '/contact':       () => import('@/pages/ContactUs'),
-  '/about':         () => import('@/pages/AboutUs'),
-  '/faqs':          () => import('@/pages/FAQs'),
-  '/privacy-policy':() => import('@/pages/PrivacyPolicy'),
-  '/terms-conditions':() => import('@/pages/TermsConditions'),
-  '/refund-policy': () => import('@/pages/RefundPolicy'),
-  '/order-policy':  () => import('@/pages/OrderPolicy'),
-  '/delivery-info': () => import('@/pages/DeliveryInfo'),
-  '/return-policy': () => import('@/pages/ReturnPolicy'),
+  '/contact':       () => import('@/components/booklover/CustomerPages'),
+  '/about':         () => import('@/components/booklover/CustomerPages'),
+  '/faqs':          () => import('@/components/booklover/CustomerPages'),
+  '/privacy-policy':() => import('@/components/booklover/CustomerPages'),
+  '/terms-conditions':() => import('@/components/booklover/CustomerPages'),
+  '/refund-policy': () => import('@/components/booklover/CustomerPages'),
+  '/order-policy':  () => import('@/components/booklover/CustomerPages'),
+  '/delivery-info': () => import('@/components/booklover/CustomerPages'),
+  '/return-policy': () => import('@/components/booklover/CustomerPages'),
   '/refund-request':() => import('@/pages/RefundRequest'),
   '/install':       () => import('@/pages/InstallApp'),
   
   // Dynamic routes — keyed by prefix
-  '/product/':      () => import('@/pages/ProductDetail'),
+  '/product/':      () => import('@/components/booklover/ProductPage'),
   '/blog/':         () => import('@/pages/BlogPost'),
   '/link':          () => import('@/pages/HelpCenter'),
 };

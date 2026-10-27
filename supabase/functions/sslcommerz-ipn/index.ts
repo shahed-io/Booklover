@@ -104,14 +104,14 @@ Deno.serve(async (req) => {
   }
 
   // Browser flows: 302 redirect back to the storefront
-  const ALLOWED_REDIRECT_HOSTS = new Set(['relaxobeanbag.com', 'www.relaxobeanbag.com', 'relaxobeanbag.lovable.app']);
+  const ALLOWED_REDIRECT_HOSTS = new Set(['booklover.com.bd', 'booklover.com.bd', 'booklover.lovable.app']);
   let dest: URL;
   try {
-    dest = new URL(redirectBase, 'https://relaxobeanbag.com');
+    dest = new URL(redirectBase, 'https://booklover.com.bd');
     const okHost = ALLOWED_REDIRECT_HOSTS.has(dest.hostname) || dest.hostname.endsWith('.lovable.app');
-    if (dest.protocol !== 'https:' || !okHost) dest = new URL('https://relaxobeanbag.com/');
+    if (dest.protocol !== 'https:' || !okHost) dest = new URL('https://booklover.com.bd/');
   } catch {
-    dest = new URL('https://relaxobeanbag.com/');
+    dest = new URL('https://booklover.com.bd/');
   }
   dest.searchParams.set('sslc', type);
   if (tranId) dest.searchParams.set('order', tranId);

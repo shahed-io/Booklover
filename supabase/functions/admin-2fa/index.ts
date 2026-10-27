@@ -10,7 +10,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const ISSUER = "Relaxo Bean Bag Admin";
+const ISSUER = "Booklover Admin";
 const DEFAULT_SESSION_TTL_HOURS = 12;
 const DEFAULT_REMEMBER_TTL_DAYS = 30;
 

@@ -45,14 +45,14 @@ const WelcomeEmail = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
 
           <Section style={contentStyle}>
             <Text style={h1Style}>Welcome, {customerName}!</Text>
             <Text style={subtitleStyle}>
-              Thank you for joining <strong>Relaxo Bean Bag</strong>. We provide the best digital products in Bangladesh — software licenses, gaming keys, and much more.
+              Thank you for joining <strong>Booklover</strong>. We provide the best digital products in Bangladesh — software licenses, gaming keys, and much more.
             </Text>
 
             <Section style={featureBox}>
@@ -71,7 +71,7 @@ const WelcomeEmail = ({
               </Text>
             </Section>
 
-            <Button style={buttonStyle} href="https://relaxobeanbag.lovable.app/shop">
+            <Button style={buttonStyle} href="https://booklover.com.bd/shop">
               Browse Products
             </Button>
 
@@ -82,7 +82,7 @@ const WelcomeEmail = ({
 
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>
@@ -93,7 +93,7 @@ const WelcomeEmail = ({
 
 export const template = {
   component: WelcomeEmail,
-  subject: 'Welcome to Relaxo Bean Bag!',
+  subject: 'Welcome to Booklover!',
   displayName: 'Welcome Email',
   previewData: {
     customerName: 'Rahul Ahmed',

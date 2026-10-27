@@ -47,7 +47,7 @@ export default function NoticeSignatureManager({ onChanged }: Props) {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const { data, error } = await supabase.functions.invoke('ai-generate-signature', {
-        body: { name: sig.signedBy || 'Relaxo Bean Bag Authority', style: aiStyle },
+        body: { name: sig.signedBy || 'Booklover Authority', style: aiStyle },
         headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : undefined,
       });
       if (error) throw error;

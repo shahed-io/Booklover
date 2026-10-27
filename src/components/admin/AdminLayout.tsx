@@ -365,7 +365,7 @@ const AdminLayout = () => {
             </div>
           ) : (
             <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">
-              <img src={logoIcon} alt="Relaxo Bean Bag" className="w-9 h-9 object-contain" />
+              <img src={logoIcon} alt="Booklover" className="w-9 h-9 object-contain" />
             </div>
           )}
         </div>
