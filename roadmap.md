@@ -1,5 +1,12 @@
 # Roadmap
 
+## Booklover storefront
+- [x] Record inspected reference pages, product details, and unverified areas in .lovable/booklover-reference-audit.md.
+- [x] Prepare two white-theme Booklover homepage previews with the supplied original logo.
+- [ ] Obtain the user's header/logo choice before applying design changes.
+- [ ] Recreate approved reference storefront pages and interactions without changing the admin-panel design — waiting for design selection.
+- [ ] Verify shopping flows and page layouts, and inspect remaining reference interactions — waiting for design selection and implementation.
+
 ## Remix setup
 - [x] Verify copied Drizzle migrations were cleared and the new migration journal is empty and valid.
 - [ ] Replace the 37 requested secret values — secure replacement form was declined; waiting for user submission.
