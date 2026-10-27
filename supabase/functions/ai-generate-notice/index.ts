@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
         ? (isBn ? 'বন্ধুসুলভ, উষ্ণ, সহজ ভাষা — কিন্তু পেশাদার।' : 'Warm, friendly, easy — but still professional.')
         : (isBn ? 'আনুষ্ঠানিক, সম্মানজনক, অফিসিয়াল সার্কুলারের ভাষা।' : 'Formal, respectful, official circular tone.');
 
-    const system = `You are the official Notice & Circular writer for "Relaxo Bean Bag" — a Bangladeshi digital software & services store. You write notices that look and read like real, polished, ready-to-publish corporate circulars.
+    const system = `You are the official Notice & Circular writer for "Booklover" — a Bangladeshi digital software & services store. You write notices that look and read like real, polished, ready-to-publish corporate circulars.
 
 ═══ INTENT UNDERSTANDING (CRITICAL) ═══
 The admin will describe the notice in ${isBn ? 'Bengali (often informal, sometimes mixed with English, sometimes via voice with grammar/spelling errors)' : 'English (sometimes informal or with typos)'}. Your FIRST job is to deeply understand WHAT they actually want to announce — not to copy their words. Read the WHOLE input. Identify:
@@ -72,7 +72,7 @@ Return ONLY a single valid JSON object. No code fences, no commentary, no markdo
   "summary": "1-2 sentence executive summary (max 180 chars). What + when, no fluff.",
   "reference_no": "NTC-${yearShort}-${refSuffix}",
   "body_markdown": "Full notice in clean markdown. See STRUCTURE below.",
-  "signed_by": "Relaxo Bean Bag Authority",
+  "signed_by": "Booklover Authority",
   "signed_role": "Management",
   "effective_date": "${today}"
 }
@@ -86,12 +86,12 @@ Write the body as a real corporate notice with these sections, in this order:
 4. **\`## ${isBn ? 'গুরুত্বপূর্ণ তথ্য' : 'Key Information'}\`** — bullet list of the important facts (dates, times, durations, affected services, amounts, percentages, links). Use \`- **Label:** value\` format. Always include at least 3 bullets.
 5. **\`## ${isBn ? 'করণীয়' : 'What You Need to Do'}\`** — only if there's an action for the reader; otherwise replace with \`## ${isBn ? 'আমাদের প্রতিশ্রুতি' : 'Our Commitment'}\` and a reassuring line.
 6. **Closing paragraph** — polite apology for any inconvenience (if applicable) + thanks for understanding/support.
-7. **Sign-off line** — exactly: \`${isBn ? 'ধন্যবাদান্তে,' : 'Sincerely,'}\` on its own line, then a blank line, then \`**Relaxo Bean Bag Authority**\` and \`*Management*\`.
+7. **Sign-off line** — exactly: \`${isBn ? 'ধন্যবাদান্তে,' : 'Sincerely,'}\` on its own line, then a blank line, then \`**Booklover Authority**\` and \`*Management*\`.
 
 ═══ HARD RULES ═══
 - Language: ${isBn ? 'বাংলা — স্বাভাবিক, সাবলীল, পেশাদার বাংলা। কোনো অনুবাদ-গন্ধ নয়। শুদ্ধ বানান।' : 'English — clean professional English. No translation feel.'}
 - Tone: ${toneGuide}
-- Store name spelling by language: in English text write exactly \`Relaxo Bean Bag\`; in Bengali text write exactly \`রিলাক্সো বিন ব্যাগ\`. Always write the brand name exactly as \`Relaxo Bean Bag\` in English and \`রিলাক্সো বিন ব্যাগ\` in Bengali.
+- Store name spelling by language: in English text write exactly \`Booklover\`; in Bengali text write exactly \`Booklover\`. Always write the brand name exactly as \`Booklover\` in English and \`Booklover\` in Bengali.
 - Use \`**bold**\` for important keywords (dates, amounts, deadlines).
 - Use markdown lists for any enumeration of 2+ items.
 - Length: aim for 180-350 words in body_markdown for normal notices, up to 500 for complex ones. Never under 120 words.
@@ -117,7 +117,7 @@ Write the body as a real corporate notice with these sections, in this order:
     let plan: any;
     try { plan = JSON.parse(match[0]); } catch { throw new Error('AI returned invalid JSON'); }
 
-    // Normalize store name — language-aware (English → "Relaxo Bean Bag", Bengali → "রিলাক্সো বিন ব্যাগ")
+    // Normalize store name — language-aware (English → "Booklover", Bengali → "Booklover")
     const { normalizeBrandNameText } = await import('../_shared/brand-name.ts');
     const fixStoreName = (s: string) => normalizeBrandNameText(String(s || ''));
 
@@ -126,7 +126,7 @@ Write the body as a real corporate notice with these sections, in this order:
       summary: fixStoreName(plan.summary).slice(0, 300),
       reference_no: String(plan.reference_no || `NTC-${new Date().getFullYear()}-${refSuffix}`).slice(0, 50),
       body_markdown: fixStoreName(plan.body_markdown),
-      signed_by: fixStoreName(plan.signed_by || 'Relaxo Bean Bag Authority').slice(0, 120),
+      signed_by: fixStoreName(plan.signed_by || 'Booklover Authority').slice(0, 120),
       signed_role: String(plan.signed_role || 'Management').slice(0, 120),
       effective_date: typeof plan.effective_date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(plan.effective_date)
         ? plan.effective_date : today,

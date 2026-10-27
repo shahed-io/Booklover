@@ -10,14 +10,14 @@ const UA = 'Mozilla/5.0 (compatible; RelaxoImporter/1.0)'
 
 const rebrand = (s: string) =>
   (s ?? '')
-    .replaceAll('aarambeanbag.com', 'relaxobeanbag.com')
-    .replaceAll('Aaram Bean Bag', 'Relaxo Bean Bag')
-    .replaceAll('AARAM', 'RELAXO')
-    .replaceAll('Aaram', 'Relaxo')
-    .replaceAll('aaram', 'relaxo')
-    .replaceAll('আরাম বিন ব্যাগ', 'রিলাক্সো বিন ব্যাগ')
-    .replaceAll('আরাম (Relaxo)', 'রিলাক্সো (Relaxo)')
-    .replaceAll('আরাম (Aaram)', 'রিলাক্সো (Relaxo)')
+    .replaceAll('aarambeanbag.com', 'booklover.com.bd')
+    .replaceAll('Aaram Bean Bag', 'Booklover')
+    .replaceAll('AARAM', 'Booklover')
+    .replaceAll('Aaram', 'Booklover')
+    .replaceAll('aaram', 'Booklover')
+    .replaceAll('আরাম বিন ব্যাগ', 'Booklover')
+    .replaceAll('আরাম (Booklover)', 'রিলাক্সো (Booklover)')
+    .replaceAll('আরাম (Aaram)', 'রিলাক্সো (Booklover)')
 
 const stripHtml = (s: string) =>
   (s ?? '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
           images: urls,
           image_alt: rebrand(wp.name),
           tags: (wp.tags ?? []).map((t: any) => rebrand(t.name)),
-          brand: 'Relaxo Bean Bag',
+          brand: 'Booklover',
           is_digital: false,
           product_type: 'physical',
           delivery_type: 'shipping',
@@ -158,7 +158,7 @@ Deno.serve(async (req) => {
           refund_note: 'পণ্য হাতে পেয়ে দেখে মূল্য পরিশোধের সুযোগ (ক্যাশ অন ডেলিভারি)',
           what_you_get: bullets,
           sort_order: offset + idx,
-          seo_title: `${rebrand(wp.name)} | Relaxo Bean Bag`.slice(0, 60),
+          seo_title: `${rebrand(wp.name)} | Booklover`.slice(0, 60),
           seo_description: (stripHtml(rebrand(wp.short_description ?? wp.description ?? '')) ||
             rebrand(wp.name)).slice(0, 155),
           is_featured: false,

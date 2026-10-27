@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRight, ShoppingBag, TrendingUp, Zap, Shield, Clock, Star, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
-import bannerOne from '@/assets/banner-relaxo-1.jpg';
-import bannerTwo from '@/assets/banner-relaxo-2.jpg';
-import bannerThree from '@/assets/banner-relaxo-3.jpg';
+import bannerOne from '@/assets/banner-Booklover-1.jpg';
+import bannerTwo from '@/assets/banner-Booklover-2.jpg';
+import bannerThree from '@/assets/banner-Booklover-3.jpg';
 import { useHeroBanner, type SlideData } from '@/hooks/useHeroBanner';
 
 type Slide = {
@@ -94,7 +94,7 @@ const HeroBanner = () => {
         className="relative mx-auto w-full max-w-[1800px] rounded-[20px] lg:rounded-[28px] overflow-hidden"
         role="region"
         aria-roledescription="carousel"
-        aria-label="Relaxo Bean Bag banner"
+        aria-label="Booklover banner"
         style={{ boxShadow: '0 18px 50px hsla(222,60%,20%,0.14)' }}
         onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
         onTouchEnd={(e) => {
@@ -108,7 +108,7 @@ const HeroBanner = () => {
           <img
             key={`bg-${active}`}
             src={bgUrl}
-            alt="Relaxo Bean Bag"
+            alt="Booklover"
             loading="eager"
             decoding="async"
             fetchPriority="high"
@@ -307,7 +307,7 @@ const HeroBanner = () => {
 
           {/* Whole banner is tappable while there is no CTA button */}
           {!hasCopy && (
-            <a href={href} aria-label="Shop Relaxo Bean Bag" className="absolute inset-0" />
+            <a href={href} aria-label="Shop Booklover" className="absolute inset-0" />
           )}
 
           {SLIDES.length > 1 && (

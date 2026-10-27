@@ -46,8 +46,8 @@ const AdminTelegramBot = () => {
     
     // Set defaults
     if (!map['telegram_shop_bot_enabled']) map['telegram_shop_bot_enabled'] = 'true';
-    if (!map['telegram_shop_bot_username']) map['telegram_shop_bot_username'] = '@Relaxo_Bean_Bag_bot';
-    if (!map['telegram_shop_bot_welcome']) map['telegram_shop_bot_welcome'] = '🛍️ Relaxo Bean Bag আপনাকে স্বাগতম জানাচ্ছে! আমাদের টেলিগ্রাম বট দিয়ে সরাসরি শপিং করুন।';
+    if (!map['telegram_shop_bot_username']) map['telegram_shop_bot_username'] = '@booklover_bot';
+    if (!map['telegram_shop_bot_welcome']) map['telegram_shop_bot_welcome'] = '🛍️ Booklover আপনাকে স্বাগতম জানাচ্ছে! আমাদের টেলিগ্রাম বট দিয়ে সরাসরি শপিং করুন।';
     if (!map['telegram_shop_bot_footer']) map['telegram_shop_bot_footer'] = '📞 সমস্যা? /start দিয়ে শুরু করুন।';
     
     setSettings(map);
@@ -155,7 +155,7 @@ const AdminTelegramBot = () => {
             Telegram <span className="gradient-text">Shop Bot</span>
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            @Relaxo_Bean_Bag_bot — টেলিগ্রাম থেকে সরাসরি শপিং সিস্টেম কন্ট্রোল করুন
+            @booklover_bot — টেলিগ্রাম থেকে সরাসরি শপিং সিস্টেম কন্ট্রোল করুন
           </p>
         </div>
         <div className="flex gap-2">
@@ -226,7 +226,7 @@ const AdminTelegramBot = () => {
             <input
               value={settings.telegram_shop_bot_username || ''}
               onChange={e => setSettings(s => ({ ...s, telegram_shop_bot_username: e.target.value }))}
-              placeholder="@Relaxo_Bean_Bag_bot"
+              placeholder="@booklover_bot"
               className={inputCls}
             />
           </div>
@@ -279,7 +279,7 @@ const AdminTelegramBot = () => {
               value={settings.telegram_shop_bot_welcome || ''}
               onChange={e => setSettings(s => ({ ...s, telegram_shop_bot_welcome: e.target.value }))}
               rows={3}
-              placeholder="🛍️ Relaxo Bean Bag আপনাকে স্বাগতম জানাচ্ছে!"
+              placeholder="🛍️ Booklover আপনাকে স্বাগতম জানাচ্ছে!"
               className={inputCls + " resize-none"}
             />
           </div>
@@ -305,7 +305,7 @@ const AdminTelegramBot = () => {
           </div>
           <div>
             <h3 className="font-bold text-foreground">বটের ফিচার সমূহ</h3>
-            <p className="text-xs text-muted-foreground">@Relaxo_Bean_Bag_bot এ যা যা কাজ করে</p>
+            <p className="text-xs text-muted-foreground">@booklover_bot এ যা যা কাজ করে</p>
           </div>
         </div>
 
@@ -383,10 +383,10 @@ const AdminTelegramBot = () => {
           <Bot size={24} className="text-[#229ED9]" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-foreground">বটটি টেস্ট করুন</p>
-            <p className="text-xs text-muted-foreground">Telegram-এ {settings.telegram_shop_bot_username || '@Relaxo_Bean_Bag_bot'} সার্চ করে /start দিন</p>
+            <p className="text-xs text-muted-foreground">Telegram-এ {settings.telegram_shop_bot_username || '@booklover_bot'} সার্চ করে /start দিন</p>
           </div>
           <a
-            href={`https://t.me/${(settings.telegram_shop_bot_username || '@Relaxo_Bean_Bag_bot').replace('@', '')}`}
+            href={`https://t.me/${(settings.telegram_shop_bot_username || '@booklover_bot').replace('@', '')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#229ED9] text-white hover:bg-[#229ED9]/80 transition-colors flex items-center gap-2"

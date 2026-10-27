@@ -36,7 +36,7 @@ const STATUS_EMOJI: Record<string, string> = {
 type Lang = 'bn' | 'en';
 const T = {
   bn: {
-    welcome_title: '🛍️ *Relaxo Bean Bag* আপনাকে স্বাগতম জানাচ্ছে!',
+    welcome_title: '🛍️ *Booklover* আপনাকে স্বাগতম জানাচ্ছে!',
     welcome_sub: 'বাংলাদেশের #১ ডিজিটাল প্রোডাক্ট স্টোর। আপনার চাহিদা মতো সাবস্ক্রিপশন, লাইসেন্স কী, সফটওয়্যার — সব এক জায়গায়।',
     quick_actions: '⚡ দ্রুত অ্যাকশন বেছে নিন:',
     btn_shop: '🛍️ শপিং শুরু', btn_deals: '🔥 ডিল ও অফার',
@@ -76,7 +76,7 @@ const T = {
     no_orders: '😔 এখনো কোনো অর্ডার নেই।\n\n/shop দিয়ে শপিং শুরু করুন!',
     account_title: '👤 আপনার অ্যাকাউন্ট:',
     account_link_prompt: 'অ্যাকাউন্ট তথ্য দেখতে নিচের লিংক ব্যবহার করুন:',
-    help_title: '❓ Relaxo Bean Bag Bot — সাহায্য',
+    help_title: '❓ Booklover Bot — সাহায্য',
     help_body: 'আপনি নিচের কমান্ডগুলো ব্যবহার করতে পারেন। যেকোনো সময় /menu দিয়ে মূল মেনুতে ফিরতে পারেন।',
     contact_title: '📞 যোগাযোগ',
     contact_body: 'আপনার যেকোনো প্রশ্ন/সমস্যায় আমাদের সাথে যোগাযোগ করুন:',
@@ -103,7 +103,7 @@ const T = {
     you: 'আপনি',
   },
   en: {
-    welcome_title: '🛍️ Welcome to *Relaxo Bean Bag*!',
+    welcome_title: '🛍️ Welcome to *Booklover*!',
     welcome_sub: "Bangladesh's #1 digital products store. Subscriptions, license keys, software — all in one place.",
     quick_actions: '⚡ Pick a quick action:',
     btn_shop: '🛍️ Start Shopping', btn_deals: '🔥 Deals & Offers',
@@ -143,7 +143,7 @@ const T = {
     no_orders: '😔 No orders yet.\n\nUse /shop to start shopping!',
     account_title: '👤 Your Account:',
     account_link_prompt: 'View your full account on the website:',
-    help_title: '❓ Relaxo Bean Bag Bot — Help',
+    help_title: '❓ Booklover Bot — Help',
     help_body: 'You can use the commands below. Use /menu anytime to return to the main menu.',
     contact_title: '📞 Contact Us',
     contact_body: 'For any question/issue, get in touch with us:',
@@ -207,7 +207,7 @@ function inlineKb(buttons: { text: string; callback_data?: string; url?: string 
 }
 
 function getSiteUrl(): string {
-  return 'https://relaxobeanbag.com';
+  return 'https://booklover.com.bd';
 }
 
 // ─── LICENSE KEY CHECKER (PidMS) ──────────────────────────────────────────
@@ -638,7 +638,7 @@ async function registerBotCommands(botToken: string) {
     fetch(`https://api.telegram.org/bot${botToken}/setMyDescription`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        description: '🛍️ Relaxo Bean Bag — বাংলাদেশের #১ ডিজিটাল প্রোডাক্ট স্টোর। সাবস্ক্রিপশন, লাইসেন্স কী, সফটওয়্যার সরাসরি Telegram থেকেই কিনুন।',
+        description: '🛍️ Booklover — বাংলাদেশের #১ ডিজিটাল প্রোডাক্ট স্টোর। সাবস্ক্রিপশন, লাইসেন্স কী, সফটওয়্যার সরাসরি Telegram থেকেই কিনুন।',
       }),
     }),
     fetch(`https://api.telegram.org/bot${botToken}/setMyShortDescription`, {
@@ -1281,7 +1281,7 @@ async function confirmOrder(bot: string, chatId: number, data: any, supabase: an
   const { data: order, error } = await supabase.from('orders').insert({
     order_number: orderNumber,
     customer_name: data.name || 'Telegram User',
-    customer_email: data.email || 'telegram@relaxobeanbag.com',
+    customer_email: data.email || 'telegram@booklover.com.bd',
     customer_phone: data.phone || '',
     payment_method: data.paymentMethod || 'bkash',
     transaction_id: data.trxId || '',
@@ -1406,8 +1406,8 @@ async function processUpdate(update: any, BOT_TOKEN: string, supabase: any): Pro
       // Confirmation ID system disabled.
       await sendMsg(BOT_TOKEN, chatId,
         lang === 'bn'
-          ? '⚠️ Confirmation ID সার্ভিসটি বর্তমানে বন্ধ রয়েছে।\n\nসহায়তার জন্য WhatsApp: 01873990004'
-          : '⚠️ The Confirmation ID service is currently disabled.\n\nFor help, WhatsApp: 01873990004');
+          ? '⚠️ Confirmation ID সার্ভিসটি বর্তমানে বন্ধ রয়েছে।\n\nসহায়তার জন্য WhatsApp: '
+          : '⚠️ The Confirmation ID service is currently disabled.\n\nFor help, WhatsApp: ');
 
 
 
@@ -1539,8 +1539,8 @@ async function processUpdate(update: any, BOT_TOKEN: string, supabase: any): Pro
     // Confirmation ID system disabled — direct user to support.
     await sendMsg(BOT_TOKEN, chatId,
       lang === 'bn'
-        ? '⚠️ Confirmation ID সার্ভিসটি বর্তমানে বন্ধ রয়েছে।\n\nসহায়তার জন্য WhatsApp: 01873990004'
-        : '⚠️ The Confirmation ID service is currently disabled.\n\nFor help, WhatsApp: 01873990004',
+        ? '⚠️ Confirmation ID সার্ভিসটি বর্তমানে বন্ধ রয়েছে।\n\nসহায়তার জন্য WhatsApp: '
+        : '⚠️ The Confirmation ID service is currently disabled.\n\nFor help, WhatsApp: ',
       inlineKb([[{ text: t(lang, 'btn_menu'), callback_data: 'start' }]])
     );
 

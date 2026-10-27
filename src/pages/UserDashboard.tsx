@@ -150,7 +150,7 @@ const InstallAppTab = () => {
           <CheckCircle2 size={28} className="text-green-600" />
         </div>
         <h3 className="text-lg font-bold text-foreground">App is already installed!</h3>
-        <p className="text-sm text-muted-foreground">You are using the Relaxo Bean Bag app</p>
+        <p className="text-sm text-muted-foreground">You are using the Booklover app</p>
       </div>
     );
   }
@@ -169,9 +169,9 @@ const InstallAppTab = () => {
             border: '1px solid hsla(258,78%,75%,0.25)',
             boxShadow: '0 4px 20px hsla(258,78%,55%,0.15)',
           }}>
-          <img src="/favicon.png" alt="Relaxo Bean Bag" className="w-14 h-14 object-contain" />
+          <img src="/favicon.png" alt="Booklover" className="w-14 h-14 object-contain" />
         </div>
-        <h3 className="text-lg font-black text-foreground">Install Relaxo Bean Bag App</h3>
+        <h3 className="text-lg font-black text-foreground">Install Booklover App</h3>
         <p className="text-sm text-muted-foreground mt-1">Get direct access on your phone</p>
       </div>
 
@@ -1004,7 +1004,7 @@ const UserDashboard = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(240,30%,96%) 0%, hsl(260,25%,94%) 50%, hsl(280,20%,95%) 100%)' }}>
-      <SEOHead title="My Dashboard" description="Manage your orders, wallet, and account at Relaxo Bean Bag." noIndex />
+      <SEOHead title="My Dashboard" description="Manage your orders, wallet, and account at Booklover." noIndex />
 
       {/* Ambient gradient blobs - desktop only for visual richness */}
       <div className="hidden md:block pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">

@@ -1,9 +1,9 @@
 // Brand name normalization
-//   • English contexts  → "Relaxo Bean Bag"
-//   • Bengali contexts  → "রিলাক্সো বিন ব্যাগ"
+//   • English contexts  → "Booklover"
+//   • Bengali contexts  → "Booklover"
 
-const EN_NAME = 'Relaxo Bean Bag';
-const BN_NAME = 'রিলাক্সো বিন ব্যাগ';
+const EN_NAME = 'Booklover';
+const BN_NAME = 'Booklover';
 
 // Bengali Unicode range
 const BN_RE = /[\u0980-\u09FF]/;
@@ -19,13 +19,13 @@ export const normalizeBrandNameText = (value: string): string => {
 
   // 1. Common English variants → canonical English name
   out = out
-    .replace(/RelaxoBeanBag/gi, EN_NAME)
+    .replace(/booklover/gi, EN_NAME)
     .replace(/\bRelaxo\s+Bean\s+Bags?\b/gi, EN_NAME)
     .replace(/\bRelaxo\s{2,}Bean\s{2,}Bag\b/gi, EN_NAME);
 
   // 2. In Bengali contexts use the Bengali form (keeps case markers like "-এর")
   out = out.replace(
-    /Relaxo Bean Bag(\s*-\s*|\s+)?(এর|কে|তে|এ|ের|য়|ে)?/g,
+    /Booklover(\s*-\s*|\s+)?(এর|কে|তে|এ|ের|য়|ে)?/g,
     (match, separator, suffix, offset, full) => {
       if (isBengaliContext(full, offset, match.length)) {
         return BN_NAME + (suffix ? '' : separator || '') + (suffix || '');
@@ -36,9 +36,9 @@ export const normalizeBrandNameText = (value: string): string => {
 
   // 3. Country suffixes
   out = out
-    .replace(/Relaxo Bean Bag\s*বাংলাদেশ/g, `${BN_NAME} বাংলাদেশ`)
-    .replace(/Relaxo Bean Bag\s*Bangladesh/gi, `${EN_NAME} Bangladesh`)
-    .replace(/Relaxo Bean Bag\s*BD/gi, `${EN_NAME} BD`);
+    .replace(/Booklover\s*বাংলাদেশ/g, `${BN_NAME} বাংলাদেশ`)
+    .replace(/Booklover\s*Bangladesh/gi, `${EN_NAME} Bangladesh`)
+    .replace(/Booklover\s*BD/gi, `${EN_NAME} BD`);
 
   // 4. Ensure the Bengali brand name is followed by a space before other Bengali words
   out = out.replace(

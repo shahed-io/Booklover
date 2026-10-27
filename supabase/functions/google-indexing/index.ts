@@ -12,7 +12,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const SITE_URL = "https://relaxobeanbag.com";
+const SITE_URL = "https://booklover.com.bd";
 const INDEXING_ENDPOINT =
   "https://indexing.googleapis.com/v3/urlNotifications:publish";
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";

@@ -88,7 +88,7 @@ const LicenseDeliveryEmail = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
 
@@ -127,7 +127,7 @@ const LicenseDeliveryEmail = ({
               </Text>
             </Section>
 
-            <Button style={buttonStyle} href="https://relaxobeanbag.com/dashboard">
+            <Button style={buttonStyle} href="https://booklover.com.bd/dashboard">
               Go to Dashboard
             </Button>
 
@@ -138,7 +138,7 @@ const LicenseDeliveryEmail = ({
 
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>
@@ -152,7 +152,7 @@ export const template = {
   subject: (data: any) =>
     data?.orderNumber
       ? `Your License Key — Order #${data.orderNumber}`
-      : 'Your License Key from Relaxo Bean Bag',
+      : 'Your License Key from Booklover',
   displayName: 'License Delivery',
   previewData: {
     customerName: 'Rahul Ahmed',

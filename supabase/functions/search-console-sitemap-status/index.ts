@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     if (!GSC_KEY) throw new Error("GOOGLE_SEARCH_CONSOLE_API_KEY is not configured");
 
     const body = await req.json().catch(() => ({}));
-    const siteUrl: string = body.siteUrl || "sc-domain:relaxobeanbag.com";
+    const siteUrl: string = body.siteUrl || "sc-domain:booklover.com.bd";
 
     const headers = {
       Authorization: `Bearer ${LOVABLE_API_KEY}`,
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
       throw new Error(`Sites list failed [${sitesRes.status}]: ${JSON.stringify(sitesJson)}`);
     }
     const matched = (sitesJson.siteEntry || []).find((s: any) => s.siteUrl === siteUrl)
-      || (sitesJson.siteEntry || []).find((s: any) => s.siteUrl?.includes("relaxobeanbag"));
+      || (sitesJson.siteEntry || []).find((s: any) => s.siteUrl?.includes("booklover"));
     const resolvedSiteUrl = matched?.siteUrl || siteUrl;
 
     // 2. List sitemaps for the site

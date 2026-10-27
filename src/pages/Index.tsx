@@ -67,10 +67,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SEOHead
-        title="Relaxo Bean Bag – Premium Home & Lifestyle Furniture BD"
-        description="Shop premium bean bags, bean bag sofas, lounge chairs, ottomans and cushions in Bangladesh with free Dhaka delivery from Relaxo Bean Bag."
+        title="Booklover – Premium Home & Lifestyle Furniture BD"
+        description="Shop premium bean bags, bean bag sofas, lounge chairs, ottomans and cushions in Bangladesh with free Dhaka delivery from Booklover."
         ogType="website"
-        canonical="https://relaxobeanbag.com/"
+        canonical="https://booklover.com.bd/"
         schema={[
           organizationSchema(),
           websiteSchema(),
@@ -93,7 +93,7 @@ const Index = () => {
       <Navbar />
       <main>
         <h1 className="sr-only">
-          Relaxo Bean Bag (RelaxoBeanBag / Relaxo Bean Bag BD / রিলাক্সো বিন ব্যাগ) — Bangladesh's trusted premium home & lifestyle furniture brand
+          Booklover (booklover / Booklover BD / Booklover) — Bangladesh's trusted premium home & lifestyle furniture brand
         </h1>
         <HeroBanner />
         <TickerBanner />

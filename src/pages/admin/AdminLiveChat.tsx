@@ -56,16 +56,16 @@ interface LiveSet {
 const DEFAULT_SETTINGS: LiveChatSettings = {
   chat_enabled: true,
   whatsapp_enabled: true,
-  whatsapp_number: '8801873990004',
+  whatsapp_number: '88',
   whatsapp_label: 'WhatsApp',
   whatsapp_subtitle: 'সরাসরি কথা বলুন',
   phone_enabled: true,
-  phone_number: '01873-990004',
+  phone_number: '',
   phone_label: 'ফোন করুন',
   phone_subtitle: 'সরাসরি কল করুন',
   ai_label: 'AI Support',
   ai_subtitle: 'তাৎক্ষণিক উত্তর পান',
-  ai_welcome_message: 'হ্যালো! 👋 আমি Relaxo Bean Bag AI সহকারী। Windows, Office, Adobe, Netflix, Spotify সহ যেকোনো প্রোডাক্ট সম্পর্কে প্রশ্ন করুন!',
+  ai_welcome_message: 'হ্যালো! 👋 আমি Booklover AI সহকারী। Windows, Office, Adobe, Netflix, Spotify সহ যেকোনো প্রোডাক্ট সম্পর্কে প্রশ্ন করুন!',
   ai_placeholder: 'আপনার প্রশ্ন লিখুন...',
   quick_suggestions: ['💰 দাম জানতে চাই', '📦 কোন প্রোডাক্ট ভালো?', '🚚 ডেলিভারি কতক্ষণ?'],
   fab_label: 'কোনটি পছন্দ করবেন?',
@@ -361,7 +361,7 @@ const ChatHistoryPanel = () => {
                           <Bot className="w-3 h-3 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs font-medium text-primary mb-0.5">Relaxo AI</p>
+                          <p className="text-xs font-medium text-primary mb-0.5">Booklover AI</p>
                           <p className="text-sm text-foreground bg-primary/5 rounded-xl px-3 py-2 border border-primary/10 whitespace-pre-wrap">
                             {msg.ai_response}
                           </p>
@@ -759,7 +759,7 @@ const AdminLiveChat = () => {
                   onChange={e => setSettings(prev => ({ ...prev, whatsapp_number: e.target.value }))}
                   placeholder="8801XXXXXXXXX"
                 />
-                <p className="text-xs text-muted-foreground">উদাহরণ: 8801873990004 (+ ছাড়া)</p>
+                <p className="text-xs text-muted-foreground">উদাহরণ: 88 (+ ছাড়া)</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -796,7 +796,7 @@ const AdminLiveChat = () => {
                 <Input
                   value={settings.phone_number}
                   onChange={e => setSettings(prev => ({ ...prev, phone_number: e.target.value }))}
-                  placeholder="01873-990004"
+                  placeholder=""
                 />
                 <p className="text-xs text-muted-foreground">যেকোনো ফরম্যাটে দিতে পারেন — অটো ক্লিন হয়ে কলে যাবে</p>
               </div>
@@ -903,8 +903,8 @@ const AdminLiveChat = () => {
                         onChange={e => updateLiveSet(set.id, 'value', e.target.value)}
                         placeholder={
                           set.type === 'custom_link' ? 'https://...' :
-                          set.type === 'messenger' ? 'relaxobeanbag' :
-                          set.type === 'telegram' ? '@relaxobeanbag' :
+                          set.type === 'messenger' ? 'booklover' :
+                          set.type === 'telegram' ? '@booklover' :
                           '8801XXXXXXXXX'
                         }
                       />

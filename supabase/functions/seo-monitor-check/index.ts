@@ -25,7 +25,7 @@ async function checkUrl(name: string, url: string): Promise<CheckResult> {
   const started = Date.now();
   try {
     const r = await fetch(url, {
-      headers: { 'User-Agent': 'RelaxoBeanBag-SEO-Monitor/1.0 (+admin)' },
+      headers: { 'User-Agent': 'booklover-SEO-Monitor/1.0 (+admin)' },
       redirect: 'follow',
     });
     const text = await r.text();
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const site: string = body.site || 'https://relaxobeanbag.com';
+    const site: string = body.site || 'https://booklover.com.bd';
     const targets: { name: string; url: string }[] = body.targets || [
       { name: 'sitemap.xml', url: `${site}/sitemap.xml` },
       { name: 'image-sitemap.xml', url: `${site}/image-sitemap.xml` },
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
     ];
 
     // Only check our own public site / backend hosts
-    const ALLOWED = new Set(['relaxobeanbag.com', 'www.relaxobeanbag.com', 'relaxobeanbag.lovable.app',
+    const ALLOWED = new Set(['booklover.com.bd', 'booklover.com.bd', 'booklover.lovable.app',
       (() => { try { return new URL(Deno.env.get('SUPABASE_URL') || '').hostname; } catch { return ''; } })()]);
     const safeTargets = (Array.isArray(targets) ? targets : []).slice(0, 20).filter((t) => {
       try { const u = new URL(String(t?.url)); return u.protocol === 'https:' && ALLOWED.has(u.hostname); } catch { return false; }

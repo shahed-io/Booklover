@@ -83,17 +83,17 @@ export const ContactCard = ({ accentFrom, accentTo }: { accentFrom: string; acce
     }}>
     <p className="font-sora font-bold text-sm mb-3" style={{ color: 'hsl(226,35%,18%)' }}>যোগাযোগ করুন</p>
     <div className="space-y-2 text-[13px]" style={{ color: 'hsl(226,25%,42%)' }}>
-      <a href="https://wa.me/8801873990004" target="_blank" rel="noopener noreferrer"
+      <a href="https://wa.me/88" target="_blank" rel="noopener noreferrer"
         className="flex items-center gap-2 hover:underline w-fit" style={{ color: accentFrom }}>
-        💬 WhatsApp: 01873-990004
+        💬 WhatsApp: 
       </a>
-      <a href="mailto:relaxobeanbag@gmail.com"
+      <a href="mailto:"
         className="flex items-center gap-2 hover:underline w-fit" style={{ color: accentFrom }}>
-        ✉️ relaxobeanbag@gmail.com
+        ✉️ 
       </a>
-      <a href="tel:01873990004"
+      <a href="tel:"
         className="flex items-center gap-2 hover:underline w-fit" style={{ color: accentFrom }}>
-        📞 01873-990004
+        📞 
       </a>
     </div>
   </div>

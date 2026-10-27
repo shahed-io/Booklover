@@ -6,8 +6,8 @@ const B = 'hsl(200,90%,45%)';
 
 const DeliveryInfo = () => (
   <PolicyLayout
-    seoTitle="Delivery Info — Relaxo Bean Bag"
-    seoDesc="Relaxo Bean Bag ডেলিভারি প্রক্রিয়া, সময়সীমা ও পদ্ধতি জানুন। ঢাকায় ১–৩ দিন, ঢাকার বাইরে ৩–৫ দিনের মধ্যে হোম ডেলিভারি।"
+    seoTitle="Delivery Info — Booklover"
+    seoDesc="Booklover ডেলিভারি প্রক্রিয়া, সময়সীমা ও পদ্ধতি জানুন। ঢাকায় ১–৩ দিন, ঢাকার বাইরে ৩–৫ দিনের মধ্যে হোম ডেলিভারি।"
     badge="Home Delivery"
     badgeIcon={<Truck size={13} />}
     title="Delivery Info"

@@ -175,8 +175,8 @@ const AdminBackup = () => {
         return [table, rows] as const;
       });
       const results: Record<string, any[]> = Object.fromEntries(entries);
-      const payload = { exported_at: new Date().toISOString(), version: '3.0', store: 'Relaxo Bean Bag', tables: results };
-      downloadJson(payload, `relaxo_bean_bag_full_backup_${today()}.json`);
+      const payload = { exported_at: new Date().toISOString(), version: '3.0', store: 'Booklover', tables: results };
+      downloadJson(payload, `booklover_full_backup_${today()}.json`);
       const total = Object.values(results).reduce((s, v) => s + v.length, 0);
       addHistory({ label: 'Full Backup', tableName: 'all', date: new Date().toISOString(), records: total, type: 'export', status: 'success' });
       toast.success(`✅ Full Backup ডাউনলোড সম্পন্ন! (${total} রেকর্ড)`);
@@ -203,7 +203,7 @@ const AdminBackup = () => {
 
       // 1) Database: fetch all tables IN PARALLEL (up to 6 concurrent)
       setProgressLabel('Fetching database (parallel)…');
-      const manifest: any = { exported_at: new Date().toISOString(), version: '3.0', store: 'Relaxo Bean Bag', tables: {} };
+      const manifest: any = { exported_at: new Date().toISOString(), version: '3.0', store: 'Booklover', tables: {} };
 
       // Phase 1 weights: DB = 40%, Storage = 60%
       let dbDone = 0;
@@ -269,7 +269,7 @@ const AdminBackup = () => {
 
       // 3) README
       zip.file('README.txt',
-`Relaxo Bean Bag — Complete Website Backup
+`Booklover — Complete Website Backup
 Exported: ${new Date().toISOString()}
 
 Contents:
@@ -297,7 +297,7 @@ Restore:
       );
       const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
-      a.href = url; a.download = `relaxo_bean_bag_complete_${today()}.zip`; a.click();
+      a.href = url; a.download = `booklover_complete_${today()}.zip`; a.click();
       URL.revokeObjectURL(url);
       setProgress(100);
 
@@ -926,7 +926,7 @@ Restore:
                   <Upload size={18} className="group-hover:text-emerald-400 transition-colors" />
                 </div>
                 <span className="font-medium">Full Backup JSON আপলোড</span>
-                <span className="text-[10px] text-muted-foreground/70">relaxo_bean_bag_full_backup_XXXX.json</span>
+                <span className="text-[10px] text-muted-foreground/70">booklover_full_backup_XXXX.json</span>
               </button>
               <input ref={fullFileInputRef} type="file" accept=".json" className="hidden" onChange={e => handleFileSelect(e, 'full')} />
 
@@ -988,7 +988,7 @@ Restore:
                 <Upload size={18} className="group-hover:text-purple-400 transition-colors" />
               </div>
               <span className="font-medium">Complete Backup ZIP আপলোড</span>
-              <span className="text-[10px] text-muted-foreground/70">relaxo_bean_bag_complete_XXXX.zip</span>
+              <span className="text-[10px] text-muted-foreground/70">booklover_complete_XXXX.zip</span>
             </button>
             <input ref={zipInputRef} type="file" accept=".zip" className="hidden" onChange={handleZipSelect} />
 

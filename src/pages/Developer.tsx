@@ -20,8 +20,8 @@ const services = [
 
 const Developer = () => (
   <PolicyLayout
-    seoTitle="Developer — Shahed IT | Relaxo Bean Bag"
-    seoDesc="Relaxo Bean Bag ওয়েবসাইটটি ডিজাইন ও ডেভেলপ করেছে Shahed IT — বাংলাদেশের একটি বিশ্বস্ত প্রিমিয়াম আইটি এজেন্সি।"
+    seoTitle="Developer — Shahed IT | Booklover"
+    seoDesc="Booklover ওয়েবসাইটটি ডিজাইন ও ডেভেলপ করেছে Shahed IT — বাংলাদেশের একটি বিশ্বস্ত প্রিমিয়াম আইটি এজেন্সি।"
     badge="Developer Spotlight"
     badgeIcon={<Code size={13} />}
     title="Developer Spotlight"
@@ -30,7 +30,7 @@ const Developer = () => (
     accentTo={B}
   >
     <p className="text-[13px] leading-relaxed mb-6" style={{ color: 'hsl(226,25%,40%)' }}>
-      Relaxo Bean Bag ওয়েবসাইটটির সম্পূর্ণ ডিজাইন, ডেভেলপমেন্ট ও রক্ষণাবেক্ষণের দায়িত্বে রয়েছে <strong>Shahed IT</strong> — বাংলাদেশের একটি বিশ্বস্ত প্রিমিয়াম আইটি এজেন্সি, যারা দেশি-বিদেশি গ্রাহকদের জন্য উচ্চমানের ডিজিটাল সল্যুশন তৈরি করে আসছে।
+      Booklover ওয়েবসাইটটির সম্পূর্ণ ডিজাইন, ডেভেলপমেন্ট ও রক্ষণাবেক্ষণের দায়িত্বে রয়েছে <strong>Shahed IT</strong> — বাংলাদেশের একটি বিশ্বস্ত প্রিমিয়াম আইটি এজেন্সি, যারা দেশি-বিদেশি গ্রাহকদের জন্য উচ্চমানের ডিজিটাল সল্যুশন তৈরি করে আসছে।
     </p>
 
     {/* Disclaimer */}
@@ -93,9 +93,9 @@ const Developer = () => (
       </ul>
     </SectionCard>
 
-    <SectionCard icon={<Monitor size={15} />} title="Relaxo Bean Bag প্রজেক্ট সম্পর্কে" accentFrom={A} accentTo={B}>
+    <SectionCard icon={<Monitor size={15} />} title="Booklover প্রজেক্ট সম্পর্কে" accentFrom={A} accentTo={B}>
       <p className="text-[12.5px] leading-relaxed" style={{ color: 'hsl(226,25%,40%)' }}>
-        Relaxo Bean Bag একটি আধুনিক প্রিমিয়াম হোম ও লাইফস্টাইল ফার্নিচার ই-কমার্স প্ল্যাটফর্ম, যেখানে গ্রাহকরা সহজেই বিন ব্যাগ, সোফা ও হোম ডেকর পণ্য অর্ডার করতে পারেন। এই প্ল্যাটফর্মের পুরো UI/UX, frontend, backend, payment integration এবং admin panel — সবকিছুই Shahed IT টিমের নিজস্ব নকশা ও কোডিংয়ে তৈরি। মোবাইল-ফার্স্ট রেসপনসিভ ডিজাইন, দ্রুত লোডিং, নিরাপদ পেমেন্ট ফ্লো এবং ২৪/৭ সাপোর্ট সিস্টেম — প্রতিটি ফিচারই গ্রাহকের অভিজ্ঞতাকে সর্বোচ্চ গুরুত্ব দিয়ে তৈরি।
+        Booklover একটি আধুনিক প্রিমিয়াম হোম ও লাইফস্টাইল ফার্নিচার ই-কমার্স প্ল্যাটফর্ম, যেখানে গ্রাহকরা সহজেই বিন ব্যাগ, সোফা ও হোম ডেকর পণ্য অর্ডার করতে পারেন। এই প্ল্যাটফর্মের পুরো UI/UX, frontend, backend, payment integration এবং admin panel — সবকিছুই Shahed IT টিমের নিজস্ব নকশা ও কোডিংয়ে তৈরি। মোবাইল-ফার্স্ট রেসপনসিভ ডিজাইন, দ্রুত লোডিং, নিরাপদ পেমেন্ট ফ্লো এবং ২৪/৭ সাপোর্ট সিস্টেম — প্রতিটি ফিচারই গ্রাহকের অভিজ্ঞতাকে সর্বোচ্চ গুরুত্ব দিয়ে তৈরি।
       </p>
     </SectionCard>
 
@@ -107,7 +107,7 @@ const Developer = () => (
         আপনার ব্যবসার জন্য একটি প্রিমিয়াম ওয়েবসাইট, ই-কমার্স স্টোর কিংবা কাস্টম সফটওয়্যার সল্যুশন তৈরি করতে চাইলে আজই Shahed IT-এর সাথে যোগাযোগ করুন।
       </p>
       <div className="flex flex-wrap items-center justify-center gap-2.5">
-        <a href="https://wa.me/8801873990004" target="_blank" rel="noopener noreferrer"
+        <a href="https://wa.me/88" target="_blank" rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[12px] font-bold transition-all hover:-translate-y-0.5"
           style={{ background: `linear-gradient(180deg, ${B}, hsl(35,90%,44%))`, color: 'hsl(222,60%,14%)' }}>
           <Mail size={12} /> Get a Quote

@@ -381,7 +381,7 @@ const AdminMaintenance = () => {
         </Field>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="WhatsApp number (with country code)">
-            <input value={settings.whatsapp} onChange={e => set('whatsapp', e.target.value)} placeholder="8801873990004" className={inputCls} />
+            <input value={settings.whatsapp} onChange={e => set('whatsapp', e.target.value)} placeholder="88" className={inputCls} />
           </Field>
           <Field label="WhatsApp button label">
             <input value={settings.whatsappLabel} onChange={e => set('whatsappLabel', e.target.value)} placeholder="Chat on WhatsApp" className={inputCls} />
@@ -392,13 +392,13 @@ const AdminMaintenance = () => {
         </Field>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="Support email">
-            <input value={settings.email} onChange={e => set('email', e.target.value)} placeholder="relaxobeanbag@gmail.com" className={inputCls} />
+            <input value={settings.email} onChange={e => set('email', e.target.value)} placeholder="" className={inputCls} />
           </Field>
           <Field label="Hotline / phone">
-            <input value={settings.phone} onChange={e => set('phone', e.target.value)} placeholder="01873-990004" className={inputCls} />
+            <input value={settings.phone} onChange={e => set('phone', e.target.value)} placeholder="" className={inputCls} />
           </Field>
           <Field label="Website">
-            <input value={settings.website} onChange={e => set('website', e.target.value)} placeholder="www.relaxobeanbag.com" className={inputCls} />
+            <input value={settings.website} onChange={e => set('website', e.target.value)} placeholder="booklover.com.bd" className={inputCls} />
           </Field>
           <Field label="Address">
             <input value={settings.address} onChange={e => set('address', e.target.value)} placeholder="Dhaka, Bangladesh" className={inputCls} />

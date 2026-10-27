@@ -316,7 +316,7 @@ const AdminHelp = () => {
                   <div className="glass-card rounded-xl p-4">
                     <p className="text-xs font-semibold text-muted-foreground mb-3 flex items-center gap-1.5"><Globe size={12} /> Google Preview</p>
                     <p className="text-blue-400 text-sm font-medium">{editArt.seo_title || editArt.title}</p>
-                    <p className="text-emerald-500 text-[11px]">relaxobeanbag.com/link/{editArt.slug}</p>
+                    <p className="text-emerald-500 text-[11px]">booklover.com.bd/link/{editArt.slug}</p>
                     <p className="text-muted-foreground text-xs mt-1">{editArt.seo_description || editArt.excerpt}</p>
                   </div>
                   <div>

@@ -62,7 +62,7 @@ export default function PublicNotices() {
           <div className="text-center py-20 text-muted-foreground">Notice পাওয়া যায়নি।</div>
         ) : (
           <div ref={noticeRef}>
-            <NoticeTemplate notice={one} brand={{ name: 'Relaxo Bean Bag' }} signatureUrl={signature.imageDataUrl || undefined} />
+            <NoticeTemplate notice={one} brand={{ name: 'Booklover' }} signatureUrl={signature.imageDataUrl || undefined} />
           </div>
         )}
       </div>
@@ -71,7 +71,7 @@ export default function PublicNotices() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-10 px-4">
-      <SEOHead title="Notices" description="Latest notices and announcements from Relaxo Bean Bag." />
+      <SEOHead title="Notices" description="Latest notices and announcements from Booklover." />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-violet-100 text-violet-700 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
@@ -146,7 +146,7 @@ function NoticeActions({ targetRef, notice }: { targetRef: React.RefObject<HTMLD
 
   const filename = () => {
     const slug = (notice.slug || 'notice').replace(/[^a-z0-9-_]/gi, '-').slice(0, 60);
-    return `relaxobeanbag-store-notice-${slug}.png`;
+    return `booklover-store-notice-${slug}.png`;
   };
 
   const handleSave = async () => {

@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Map, Download, RefreshCw, Globe, FileText, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
-const SITE_URL = 'https://relaxobeanbag.com';
+const SITE_URL = 'https://booklover.com.bd';
 
 const AdminSitemap = () => {
   const [products, setProducts] = useState<any[]>([]);

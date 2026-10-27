@@ -16,8 +16,8 @@ const CONTACT_INFO = [
   {
     icon: <Phone size={18} />,
     label: 'ফোন',
-    value: '01873-990004',
-    href: 'tel:01873990004',
+    value: '',
+    href: 'tel:',
     color: 'hsl(142,72%,38%)',
     bg: 'hsla(142,72%,38%,0.08)',
     border: 'hsla(142,72%,38%,0.20)',
@@ -25,8 +25,8 @@ const CONTACT_INFO = [
   {
     icon: <MessageCircle size={18} />,
     label: 'WhatsApp',
-    value: '01873-990004',
-    href: 'https://wa.me/8801873990004',
+    value: '',
+    href: 'https://wa.me/88',
     color: 'hsl(142,58%,40%)',
     bg: 'hsla(142,58%,40%,0.08)',
     border: 'hsla(142,58%,40%,0.20)',
@@ -35,8 +35,8 @@ const CONTACT_INFO = [
   {
     icon: <Mail size={18} />,
     label: 'ইমেইল',
-    value: 'relaxobeanbag@gmail.com',
-    href: 'mailto:relaxobeanbag@gmail.com',
+    value: '',
+    href: 'mailto:',
     color: A,
     bg: 'hsla(258,78%,55%,0.08)',
     border: 'hsla(258,78%,55%,0.20)',
@@ -44,8 +44,8 @@ const CONTACT_INFO = [
   {
     icon: <Globe size={18} />,
     label: 'ওয়েবসাইট',
-    value: 'www.relaxobeanbag.com',
-    href: 'https://www.relaxobeanbag.com',
+    value: 'booklover.com.bd',
+    href: 'https://booklover.com.bd',
     color: B,
     bg: 'hsla(200,90%,45%,0.08)',
     border: 'hsla(200,90%,45%,0.20)',
@@ -54,7 +54,7 @@ const CONTACT_INFO = [
   {
     icon: <MapPin size={18} />,
     label: 'ঠিকানা',
-    value: 'Gulshan Ara City, Islampur, Dhaka',
+    value: '',
     href: 'https://maps.google.com/?q=Gulshan+Ara+City+Islampur+Dhaka',
     color: 'hsl(24,90%,50%)',
     bg: 'hsla(24,90%,50%,0.08)',
@@ -64,9 +64,9 @@ const CONTACT_INFO = [
 ];
 
 const SOCIAL = [
-  { icon: <Facebook size={20} />, label: 'Facebook', href: 'https://www.facebook.com/share/1EU8koottB/', color: 'hsl(221,44%,41%)', ext: true },
-  { icon: <MessageCircle size={20} />, label: 'WhatsApp', href: 'https://wa.me/8801873990004', color: 'hsl(142,58%,40%)', ext: true },
-  { icon: <Instagram size={20} />, label: 'Instagram', href: 'https://www.instagram.com/relaxobeanbag.com/', color: 'hsl(329,86%,56%)', ext: true },
+  { icon: <Facebook size={20} />, label: 'Facebook', href: '', color: 'hsl(221,44%,41%)', ext: true },
+  { icon: <MessageCircle size={20} />, label: 'WhatsApp', href: 'https://wa.me/88', color: 'hsl(142,58%,40%)', ext: true },
+  { icon: <Instagram size={20} />, label: 'Instagram', href: '.bd/', color: 'hsl(329,86%,56%)', ext: true },
 ];
 
 const HOURS = [
@@ -124,7 +124,7 @@ export default function ContactUs() {
       className="min-h-screen text-foreground"
       style={{ background: 'linear-gradient(145deg, hsl(258,55%,97%) 0%, hsl(220,40%,96%) 40%, hsl(200,50%,96%) 100%)' }}
     >
-      <SEOHead title="Contact Relaxo Bean Bag – Customer Support Bangladesh" description="Contact Relaxo Bean Bag for support. Reach us via phone, email, WhatsApp or our contact form. Fast response, 7 days a week. Bangladesh's trusted bean bag & home furniture store." canonical="https://relaxobeanbag.com/contact" />
+      <SEOHead title="Contact Booklover – Customer Support Bangladesh" description="Contact Booklover for support. Reach us via phone, email, WhatsApp or our contact form. Fast response, 7 days a week. Bangladesh's trusted bean bag & home furniture store." canonical="https://booklover.com.bd/contact" />
       <Navbar />
 
       {/* ── Hero ── */}
@@ -338,7 +338,7 @@ export default function ContactUs() {
             {/* Quick Address */}
             <SectionCard icon={<MapPin size={15} />} title="লোকেশন" accentFrom={A} accentTo={B}>
               <p className="text-[13px] leading-relaxed" style={{ color: 'hsl(226,25%,42%)' }}>
-                📍 Gulshan Ara City, Islampur, Dhaka — সারা বাংলাদেশে হোম ডেলিভারি।
+                📍  — সারা বাংলাদেশে হোম ডেলিভারি।
               </p>
             </SectionCard>
           </div>

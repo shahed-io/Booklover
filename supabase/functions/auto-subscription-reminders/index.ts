@@ -2,7 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { requireServiceRole } from '../_shared/admin-auth.ts'
 
-const SITE = Deno.env.get('PUBLIC_SITE_URL') || 'https://relaxobeanbag.com'
+const SITE = Deno.env.get('PUBLIC_SITE_URL') || 'https://booklover.com.bd'
 
 const fmtDate = (iso: string) => {
   try {

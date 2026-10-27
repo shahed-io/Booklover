@@ -89,8 +89,8 @@ const AdminFooterSettings = () => {
       {/* Store Info */}
       <Section title="স্টোর তথ্য" icon={Globe}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Store Name" k="store_name" placeholder="Relaxo Bean Bag" />
-          <Field label="Website URL" k="website_url" placeholder="https://www.relaxobeanbag.com" />
+          <Field label="Store Name" k="store_name" placeholder="Booklover" />
+          <Field label="Website URL" k="website_url" placeholder="https://booklover.com.bd" />
         </div>
         <div className="mt-4">
           <label className="text-xs text-muted-foreground mb-1.5 block">Tagline / বর্ণনা</label>
@@ -107,9 +107,9 @@ const AdminFooterSettings = () => {
       {/* Contact Info */}
       <Section title="যোগাযোগ তথ্য" icon={Phone}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Field label="ফোন নম্বর" k="phone" placeholder="01873-990004" />
-          <Field label="ইমেইল" k="email" placeholder="relaxobeanbag@gmail.com" />
-          <Field label="ঠিকানা" k="address" placeholder="Gulshan Ara City, Islampur, Dhaka" />
+          <Field label="ফোন নম্বর" k="phone" placeholder="" />
+          <Field label="ইমেইল" k="email" placeholder="" />
+          <Field label="ঠিকানা" k="address" placeholder="" />
         </div>
       </Section>
 

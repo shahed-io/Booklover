@@ -39,21 +39,21 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 /**
  * Verification: '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
  * 
- * আমাদের ওয়েবসাইটে ইমেইল পাঠানোর জন্য আগে যে ইমেইল সিস্টেম ছিল ওটা আবার পুনরায় চালু করো get.relaxobeanbag.com 
+ * আমাদের ওয়েবসাইটে ইমেইল পাঠানোর জন্য আগে যে ইমেইল সিস্টেম ছিল ওটা আবার পুনরায় চালু করো  
  * 
  * এবং এই ইমেইলটা ছিল এটাকে set up করে দাও
  */
-const SITE_NAME = "Relaxo Bean Bag"
-const SENDER_DOMAIN = "get.relaxobeanbag.com"
-const ROOT_DOMAIN = "relaxobeanbag.com"
-const FROM_DOMAIN = "relaxobeanbag.com" // Domain shown in From address (may be root or sender subdomain)
+const SITE_NAME = "Booklover"
+const SENDER_DOMAIN = ""
+const ROOT_DOMAIN = "booklover.com.bd"
+const FROM_DOMAIN = "booklover.com.bd" // Domain shown in From address (may be root or sender subdomain)
 
 // Sample data for preview mode ONLY (not used in actual email sending).
 // URLs are baked in at scaffold time from the project's real data.
 // The sample email uses a fixed placeholder (RFC 6761 .test TLD) so the Go backend
 // can always find-and-replace it with the actual recipient when sending test emails,
 // even if the project's domain has changed since the template was scaffolded.
-const SAMPLE_PROJECT_URL = "https://relaxobeanbag.lovable.app"
+const SAMPLE_PROJECT_URL = "https://booklover.com.bd"
 const SAMPLE_EMAIL = "user@example.test"
 const SAMPLE_DATA: Record<string, object> = {
   signup: {

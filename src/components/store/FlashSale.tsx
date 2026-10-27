@@ -21,7 +21,7 @@ interface FlashProduct {
   stock_quantity: number | null;
 }
 
-const WA_NUMBER = '8801873990004';
+const WA_NUMBER = '88';
 
 const getSaleEndTime = (): number => {
   const key = 'flash_sale_end';

@@ -636,7 +636,7 @@ const Checkout = () => {
         order_number: orderNum,
         customer_name: form.name,
         // Email is optional for guests; keep a stable placeholder so the order still saves
-        customer_email: form.email.trim() || `no-email-${orderNum.toLowerCase()}@guest.relaxobeanbag.com`,
+        customer_email: form.email.trim() || `no-email-${orderNum.toLowerCase()}@guest.booklover.com.bd`,
         customer_phone: form.phone,
         subtotal,
         discount_amount: discountAmount + refCreditApplied,
@@ -1141,7 +1141,7 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead title="Checkout" description="Complete your secure checkout at Relaxo Bean Bag." noIndex />
+      <SEOHead title="Checkout" description="Complete your secure checkout at Booklover." noIndex />
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} redirectAfterLogin={false} oauthRedirectTo={typeof window !== 'undefined' ? window.location.href : undefined} />
 
 
@@ -1459,7 +1459,7 @@ const Checkout = () => {
               />
               <span className="text-sm text-muted-foreground leading-relaxed">
                 আমি{' '}
-                <a href="https://relaxobeanbag.com/terms-conditions" className="text-primary hover:underline">Terms & Conditions</a>
+                <a href="https://booklover.com.bd/terms-conditions" className="text-primary hover:underline">Terms & Conditions</a>
                 {' '}এবং{' '}
                 <button type="button" onClick={() => navigate('/refund-policy')} className="text-primary hover:underline">Refund Policy</button>
                 {' '}পড়েছি এবং সম্মত আছি।

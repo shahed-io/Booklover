@@ -11,11 +11,11 @@ import listMyWalletTransactions from "./tools/list-my-wallet-transactions";
 const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_ID ?? "project-ref-unset";
 
 export default defineMcp({
-  name: "relaxo-bean-bag-mcp",
-  title: "Relaxo Bean Bag",
+  name: "booklover-mcp",
+  title: "Booklover",
   version: "0.1.0",
   instructions:
-    "Tools for the signed-in Relaxo Bean Bag customer. Look up your profile, orders, personal licenses, wallet transactions, and search the public product catalog. All tools act as the authenticated user; Row-Level Security in the database keeps other users' data private.",
+    "Tools for the signed-in Booklover customer. Look up your profile, orders, personal licenses, wallet transactions, and search the public product catalog. All tools act as the authenticated user; Row-Level Security in the database keeps other users' data private.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",

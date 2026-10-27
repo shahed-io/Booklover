@@ -1,8 +1,8 @@
 import { SITE_URL, SITE_NAME } from './SEOHead';
 
-const PHONE = '+8801873990004';
+const PHONE = '+88';
 const BD_AREA_CODE = 'BD';
-const SUPABASE_STORAGE_ORIGIN = 'https://dpvdavjwqyviredzoorj.supabase.co';
+const SUPABASE_STORAGE_ORIGIN = 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
 const SUPABASE_STORAGE_PUBLIC_PATH = '/storage/v1/object/public/';
 
 const seoImageUrl = (url?: string | null, fallback = `${SITE_URL}/favicon.png`) => {
@@ -181,15 +181,15 @@ export const organizationSchema = () => ({
   '@context': 'https://schema.org',
   '@type': ['Organization', 'OnlineStore'],
   name: SITE_NAME,
-  legalName: 'Relaxo Bean Bag',
+  legalName: 'Booklover',
   alternateName: [
-    'Relaxo Bean Bag BD',
-    'Relaxo Bean Bag',
-    'RelaxoBeanBag',
-    'Relaxo Bean Bag Bangladesh',
-    'relaxobeanbag.com',
-    'রিলাক্সো বিন ব্যাগ',
-    'রিলাক্সো বিন ব্যাগ বাংলাদেশ',
+    'Booklover BD',
+    'Booklover',
+    'booklover',
+    'Booklover Bangladesh',
+    'booklover.com.bd',
+    'Booklover',
+    'Booklover বাংলাদেশ',
   ],
   brand: { '@type': 'Brand', name: SITE_NAME },
   url: SITE_URL,
@@ -216,7 +216,7 @@ export const organizationSchema = () => ({
   contactPoint: [
     {
       '@type': 'ContactPoint',
-      telephone: '+8801873990004',
+      telephone: '+88',
       contactType: 'customer service',
       contactOption: 'TollFree',
       availableLanguage: ['Bengali', 'English'],
@@ -224,13 +224,13 @@ export const organizationSchema = () => ({
     },
   ],
   sameAs: [
-    'https://www.facebook.com/share/1EU8koottB/',
-    'https://wa.me/8801873990004',
-    'https://www.instagram.com/relaxobeanbag',
-    'https://www.youtube.com/@relaxobeanbag',
-    'https://www.linkedin.com/company/relaxobeanbag',
-    'https://www.tiktok.com/@relaxobeanbag',
-    'https://t.me/relaxobeanbag',
+    '',
+    'https://wa.me/88',
+    '',
+    '',
+    '',
+    '',
+    '',
   ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -294,7 +294,7 @@ export const websiteSchema = () => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: SITE_NAME,
-  alternateName: ['Relaxo Bean Bag BD', 'RelaxoBeanBag', 'রিলাক্সো বিন ব্যাগ', 'relaxobeanbag.com'],
+  alternateName: ['Booklover BD', 'booklover', 'Booklover', 'booklover.com.bd'],
   url: SITE_URL,
   publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
   inLanguage: ['bn-BD', 'en'],
@@ -366,7 +366,7 @@ export const localBusinessSchema = () => ({
   image: `${SITE_URL}/favicon.png`,
   url: SITE_URL,
   telephone: PHONE,
-  email: 'relaxobeanbag@gmail.com',
+  email: '',
   priceRange: '৳৳ BDT',
   currenciesAccepted: 'BDT',
   paymentAccepted: 'bKash, Nagad, Rocket, Bank Transfer, DBBL',
@@ -377,7 +377,7 @@ export const localBusinessSchema = () => ({
   }],
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Gulshan Ara City, Islampur',
+    streetAddress: '',
     addressLocality: 'Dhaka',
     addressRegion: 'Dhaka Division',
     postalCode: '1200',
@@ -385,7 +385,7 @@ export const localBusinessSchema = () => ({
   },
   geo: { '@type': 'GeoCoordinates', latitude: 23.8103, longitude: 90.4125 },
   areaServed: { '@type': 'Country', name: 'Bangladesh' },
-  sameAs: ['https://www.facebook.com/share/1EU8koottB/'],
+  sameAs: [''],
   hasMap: 'https://maps.google.com/?q=Gulshan+Ara+City+Islampur+Dhaka',
 });
 

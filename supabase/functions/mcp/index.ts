@@ -17,7 +17,7 @@ function supabaseForUser(ctx) {
 var get_my_profile_default = defineTool({
   name: "get_my_profile",
   title: "Get my profile",
-  description: "Return the signed-in user's Relaxo Bean Bag profile (name, email, phone, wallet balance, points).",
+  description: "Return the signed-in user's Booklover profile (name, email, phone, wallet balance, points).",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx) => {
@@ -45,7 +45,7 @@ function supabaseForUser2(ctx) {
 var list_my_orders_default = defineTool2({
   name: "list_my_orders",
   title: "List my orders",
-  description: "List the signed-in user's recent Relaxo Bean Bag orders with status, total and item summary.",
+  description: "List the signed-in user's recent Booklover orders with status, total and item summary.",
   inputSchema: {
     limit: z.number().int().min(1).max(50).default(10).describe("Max orders to return (1-50)."),
     status: z.enum(["pending", "processing", "delivered", "completed", "cancelled", "refunded", "failed"]).optional().describe("Optional order status filter.")
@@ -108,7 +108,7 @@ function supabaseForUser4(ctx) {
 var search_products_default = defineTool4({
   name: "search_products",
   title: "Search products",
-  description: "Search Relaxo Bean Bag's public product catalog by keyword. Returns name, price and slug.",
+  description: "Search Booklover's public product catalog by keyword. Returns name, price and slug.",
   inputSchema: {
     query: z3.string().trim().min(1).describe("Search term matched against product name/description."),
     limit: z3.number().int().min(1).max(50).default(10)
@@ -159,10 +159,10 @@ var list_my_wallet_transactions_default = defineTool5({
 // src/lib/mcp/index.ts
 var projectRef = "tzkmjdcpgkbztxlchdpu";
 var mcp_default = defineMcp({
-  name: "relaxo-bean-bag-mcp",
-  title: "Relaxo Bean Bag",
+  name: "booklover-mcp",
+  title: "Booklover",
   version: "0.1.0",
-  instructions: "Tools for the signed-in Relaxo Bean Bag customer. Look up your profile, orders, personal licenses, wallet transactions, and search the public product catalog. All tools act as the authenticated user; Row-Level Security in the database keeps other users' data private.",
+  instructions: "Tools for the signed-in Booklover customer. Look up your profile, orders, personal licenses, wallet transactions, and search the public product catalog. All tools act as the authenticated user; Row-Level Security in the database keeps other users' data private.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"

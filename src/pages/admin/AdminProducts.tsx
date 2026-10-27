@@ -95,7 +95,7 @@ export interface CustomField {
 const emptyForm = {
   // Basic
   name: '', slug: '', short_description: '', description: '',
-  brand: 'Relaxo Bean Bag', badge: '', product_type: 'physical',
+  brand: 'Booklover', badge: '', product_type: 'physical',
   // Subtitle (custom text below product title)
   subtitle: '' as string,
   // Account type & access
@@ -576,9 +576,9 @@ const AdminProducts = () => {
       tags: tagList,
       what_you_get: cleanWYG.length ? cleanWYG : null,
       faq: cleanFaq.length ? cleanFaq : [],
-      seo_title: (form.seo_title || `${form.name} Price in Bangladesh | Relaxo Bean Bag`).substring(0, 60) || null,
+      seo_title: (form.seo_title || `${form.name} Price in Bangladesh | Booklover`).substring(0, 60) || null,
       seo_description: (form.seo_description || (form.description || form.short_description || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 155)) || null,
-      image_alt: (form.image_alt || (form.name ? `${form.name} - Relaxo Bean Bag BD` : '')) || null,
+      image_alt: (form.image_alt || (form.name ? `${form.name} - Booklover BD` : '')) || null,
       variants: cleanVariants.length ? cleanVariants : [],
       attributes: finalAttrs.length ? finalAttrs : [],
       custom_fields: form.custom_fields.filter(f => f.label.trim()) || [],
@@ -1028,8 +1028,8 @@ const AdminProducts = () => {
                         onChange={e => {
                           const n = e.target.value;
                           // Auto-fill SEO defaults only when the field is empty (user overrides win)
-                          const autoTitle = n ? `${n} Price in Bangladesh | Relaxo Bean Bag`.substring(0, 60) : '';
-                          const autoAlt = n ? `${n} - Relaxo Bean Bag BD` : '';
+                          const autoTitle = n ? `${n} Price in Bangladesh | Booklover`.substring(0, 60) : '';
+                          const autoAlt = n ? `${n} - Booklover BD` : '';
                           setForm(p => ({
                             ...p,
                             name: n,
@@ -1077,7 +1077,7 @@ const AdminProducts = () => {
                           placeholder="product-name-here" className={ic} />
                         {form.slug && (
                           <p className="text-[10px] text-muted-foreground mt-1 truncate">
-                            🔗 relaxobeanbag.com/product/<span className="text-primary">{form.slug}</span>
+                            🔗 booklover.com.bd/product/<span className="text-primary">{form.slug}</span>
                           </p>
                         )}
                       </div>
@@ -1833,7 +1833,7 @@ const AdminProducts = () => {
                       <p className="text-xs text-muted-foreground mt-1">{form.seo_description.length}/160</p>
                     </div>
                     <div>
-                      <label className={lc}>URL Slug <span className="text-muted-foreground/60">(relaxobeanbag.com/product/...)</span></label>
+                      <label className={lc}>URL Slug <span className="text-muted-foreground/60">(booklover.com.bd/product/...)</span></label>
                       <div className="flex gap-2">
                         <input value={form.slug}
                           onChange={e => setForm(p => ({ ...p, slug: e.target.value.toLowerCase().replace(/[^\w-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') }))}
@@ -1847,14 +1847,14 @@ const AdminProducts = () => {
                       <input value={form.image_alt}
                         onChange={e => setForm(p => ({ ...p, image_alt: e.target.value }))}
                         maxLength={125}
-                        placeholder="e.g. Windows 11 Pro License Key - Relaxo Bean Bag BD" className={ic} />
+                        placeholder="e.g. Windows 11 Pro License Key - Booklover BD" className={ic} />
                       <p className="text-xs text-muted-foreground mt-1">{form.image_alt.length}/125</p>
                     </div>
                     {(form.seo_title || form.seo_description) && (
                       <div className="glass-card rounded-xl p-4 border border-border">
                         <p className="text-xs text-muted-foreground mb-2 font-medium">🔍 Google Preview</p>
                         <p className="text-primary text-sm font-medium line-clamp-1">{form.seo_title || form.name || 'Product Title'}</p>
-                        <p className="text-accent text-xs">relaxobeanbag.com/product/{form.slug || 'product-slug'}</p>
+                        <p className="text-accent text-xs">booklover.com.bd/product/{form.slug || 'product-slug'}</p>
                         <p className="text-muted-foreground text-xs mt-1 line-clamp-2">{form.seo_description || 'No description.'}</p>
                       </div>
                     )}

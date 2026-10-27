@@ -77,10 +77,10 @@ serve(async (req) => {
 
     // ── House style: physical home & lifestyle furniture (bean bags, sofas, cushions)
     const houseStyle = `
-BUSINESS: Relaxo Bean Bag (রিলাক্সো বিন ব্যাগ) — Bangladesh-এর প্রিমিয়াম হোম ও লাইফস্টাইল ফার্নিচার ব্র্যান্ড (বিন ব্যাগ, ফুটরেস্ট, কুশন, সোফা)।
+BUSINESS: Booklover (Booklover) — Bangladesh-এর প্রিমিয়াম হোম ও লাইফস্টাইল ফার্নিচার ব্র্যান্ড (বিন ব্যাগ, ফুটরেস্ট, কুশন, সোফা)।
 PRODUCTS ARE PHYSICAL. কখনোই সফটওয়্যার, লাইসেন্স কী, অ্যাকাউন্ট, সাবস্ক্রিপশন, ডিজিটাল ডেলিভারি, অ্যাক্টিভেশন — এসব উল্লেখ করবে না।
 LANGUAGE: প্রধানত সহজ বাংলা, প্রয়োজনে ইংরেজি শব্দ (Bean Bag, Cord Fabric, EPS Beans) মিশিয়ে।
-FACTS TO USE (Relaxo standard):
+FACTS TO USE (Booklover standard):
 - কাপড়: উন্নতমানের কর্ড ফ্যাব্রিক / ফক্স লেদার (প্রোডাক্ট অনুযায়ী)
 - সেলাই: ৩ স্তরের মজবুত সেলাই (Triple Stitching)
 - ফিলার: প্রিমিয়াম কোয়ালিটি তাইওয়ানিজ EPS Beans; কুশনে কোরিয়ান পলি ফাইবার তুলা
@@ -91,7 +91,7 @@ FACTS TO USE (Relaxo standard):
 SEO: বাংলাদেশ টার্গেট। স্বাভাবিকভাবে যুক্ত করবে — "[product] দাম বাংলাদেশ", "[product] price in bd", "বিন ব্যাগ কিনুন", শহরের নাম (${bdCities}) থেকে ১–২টি।
 PRICE FORMAT: ৳[amount]
 PUNCTUATION RULE: ইংরেজি শব্দ/সংখ্যার পরে English period (.) ব্যবহার করবে, Bengali danda (।) নয়। শুধু পুরোপুরি বাংলা বাক্যের শেষে । ব্যবহার করবে।
-BRAND SPELLING: ইংরেজিতে "Relaxo Bean Bag", বাংলায় "রিলাক্সো বিন ব্যাগ"।`;
+BRAND SPELLING: ইংরেজিতে "Booklover", বাংলায় "Booklover"।`;
 
     // Reference markdown skeleton used by every existing product (must be matched)
     const descSkeleton = `## [প্রোডাক্টের নাম]
@@ -113,7 +113,7 @@ BRAND SPELLING: ইংরেজিতে "Relaxo Bean Bag", বাংলায�
 ### যত্ন ও পরিষ্কার
 - (সহজ ২–৩টি টিপস)
 
-### কেন রিলাক্সো (Relaxo) বিন ব্যাগ বেছে নেবেন?
+### কেন রিলাক্সো (Booklover) বিন ব্যাগ বেছে নেবেন?
 - ফ্রি হোম ডেলিভারি – সারা বাংলাদেশে পাচ্ছেন একদম ফ্রি হোম ডেলিভারি সুবিধা।
 - ক্যাশ অন ডেলিভারি – পণ্য হাতে পেয়ে দেখে তারপর মূল্য পরিশোধ করার নিশ্চয়তা।
 - ১৮ মাসের অফিসিয়াল ওয়ারেন্টি – স্টিচিং এবং ওপরের ম্যাটেরিয়ালের ওপর থাকছে দীর্ঘ ১৮ মাসের ওয়ারেন্টি।`;
@@ -121,7 +121,7 @@ BRAND SPELLING: ইংরেজিতে "Relaxo Bean Bag", বাংলায�
     if (type === "short_description") {
       const numOptions = count && count > 1 ? count : 1;
       maxTokens = 900;
-      systemPrompt = `তুমি Relaxo Bean Bag-এর প্রোডাক্ট কপিরাইটার।
+      systemPrompt = `তুমি Booklover-এর প্রোডাক্ট কপিরাইটার।
 ${houseStyle}
 
 TASK: short description লিখবে ঠিক এই ফরম্যাটে (markdown):
@@ -137,7 +137,7 @@ TASK: short description লিখবে ঠিক এই ফরম্যাট�
 
     } else if (type === "description" || type === "demo_style") {
       maxTokens = 2600;
-      systemPrompt = `তুমি Relaxo Bean Bag-এর সিনিয়র eCommerce কনটেন্ট রাইটার।
+      systemPrompt = `তুমি Booklover-এর সিনিয়র eCommerce কনটেন্ট রাইটার।
 ${houseStyle}
 
 নিচের স্কেলিটন হুবহু অনুসরণ করে সম্পূর্ণ প্রোডাক্ট ডেসক্রিপশন লিখবে (markdown, ### হেডিং, বুলেট পয়েন্ট):
@@ -164,7 +164,7 @@ seo_description: ৳ দাম, "ফ্রি হোম ডেলিভারি
 
     } else if (type === "all") {
       maxTokens = 3000;
-      systemPrompt = `তুমি Relaxo Bean Bag-এর প্রোডাক্ট কপিরাইটার ও Bangladesh SEO expert।
+      systemPrompt = `তুমি Booklover-এর প্রোডাক্ট কপিরাইটার ও Bangladesh SEO expert।
 ${houseStyle}
 
 Return ONLY valid JSON in this exact shape (newline গুলো \\n হিসেবে escape করবে):
@@ -184,7 +184,7 @@ ${descSkeleton}
 
     } else if (type === "rich_content") {
       maxTokens = 4000;
-      systemPrompt = `তুমি Relaxo Bean Bag-এর সিনিয়র eCommerce SEO কনটেন্ট স্ট্র্যাটেজিস্ট।
+      systemPrompt = `তুমি Booklover-এর সিনিয়র eCommerce SEO কনটেন্ট স্ট্র্যাটেজিস্ট।
 ${houseStyle}
 
 Return ONLY valid JSON:
@@ -200,7 +200,7 @@ FAQ: বাংলাদেশি ক্রেতার বাস্তব প্
 
     } else if (type === "faq") {
       maxTokens = 2000;
-      systemPrompt = `তুমি Relaxo Bean Bag-এর কাস্টমার এক্সপেরিয়েন্স রাইটার।
+      systemPrompt = `তুমি Booklover-এর কাস্টমার এক্সপেরিয়েন্স রাইটার।
 ${houseStyle}
 
 Return ONLY valid JSON: { "faq": [ { "q": "...", "a": "..." }, ... ৬–৮টি ] }

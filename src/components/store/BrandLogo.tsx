@@ -14,7 +14,7 @@ const BrandLogo = ({ size = 'md', className = '' }: BrandLogoProps) => {
     <div className={`flex items-center flex-shrink-0 ${className}`}>
       <img
         src="/logo.png"
-        alt="Relaxo Bean Bag"
+        alt="Booklover"
         className={`${dimensions} object-contain select-none`}
       />
     </div>

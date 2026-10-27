@@ -81,7 +81,7 @@ const CidDeliveryEmail = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
 
@@ -123,7 +123,7 @@ const CidDeliveryEmail = ({
               </Text>
             </Section>
 
-            <Button style={buttonStyle} href="https://relaxobeanbag.com/get-cid">
+            <Button style={buttonStyle} href="https://booklover.com.bd/get-cid">
               Generate Another CID
             </Button>
 
@@ -134,7 +134,7 @@ const CidDeliveryEmail = ({
 
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>

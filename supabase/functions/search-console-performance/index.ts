@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
     }
     const saJson = JSON.parse(saRaw);
 
-    const { siteUrl = "sc-domain:relaxobeanbag.com", days = 28 } = await req.json().catch(() => ({}));
+    const { siteUrl = "sc-domain:booklover.com.bd", days = 28 } = await req.json().catch(() => ({}));
 
     const token = await getAccessToken(saJson);
 

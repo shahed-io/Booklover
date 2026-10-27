@@ -6,8 +6,8 @@ const B = 'hsl(200,90%,45%)';
 
 const ReturnPolicy = () => (
   <PolicyLayout
-    seoTitle="Return Policy — Relaxo Bean Bag"
-    seoDesc="Relaxo Bean Bag রিটার্ন পলিসি জানুন। ক্ষতিগ্রস্ত বা ভুল পণ্যের ক্ষেত্রে ৭ দিনের মধ্যে রিটার্নের নিয়ম।"
+    seoTitle="Return Policy — Booklover"
+    seoDesc="Booklover রিটার্ন পলিসি জানুন। ক্ষতিগ্রস্ত বা ভুল পণ্যের ক্ষেত্রে ৭ দিনের মধ্যে রিটার্নের নিয়ম।"
     badge="Return Guidelines"
     badgeIcon={<RotateCcw size={13} />}
     title="Return Policy"

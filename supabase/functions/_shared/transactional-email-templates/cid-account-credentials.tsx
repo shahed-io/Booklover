@@ -54,7 +54,7 @@ const CidAccountCredentialsEmail = ({
   email = '',
   password = '',
   initialCredit = 0,
-  loginUrl = 'https://relaxobeanbag.com/get-cid',
+  loginUrl = 'https://booklover.com.bd/get-cid',
 }: CidAccountCredentialsProps) => {
   return (
     <Html lang="en" dir="ltr">
@@ -63,7 +63,7 @@ const CidAccountCredentialsEmail = ({
         <Container style={wrapper}>
           <Section style={headerStyle}>
             <div style={logoCardStyle}>
-              <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+              <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
             </div>
           </Section>
 
@@ -109,7 +109,7 @@ const CidAccountCredentialsEmail = ({
 
           <Section style={footerSection}>
             <Text style={copyrightStyle}>
-              &copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.
+              &copy; {new Date().getFullYear()} Booklover. All rights reserved.
             </Text>
           </Section>
         </Container>
@@ -120,14 +120,14 @@ const CidAccountCredentialsEmail = ({
 
 export const template = {
   component: CidAccountCredentialsEmail,
-  subject: 'Your CID Account Credentials - Relaxo Bean Bag',
+  subject: 'Your CID Account Credentials - Booklover',
   displayName: 'CID Account Credentials',
   previewData: {
     customerName: 'Rahul Ahmed',
     email: 'rahul@example.com',
     password: 'TempPass123!',
     initialCredit: 50,
-    loginUrl: 'https://relaxobeanbag.com/get-cid',
+    loginUrl: 'https://booklover.com.bd/get-cid',
   },
 } satisfies TemplateEntry
 

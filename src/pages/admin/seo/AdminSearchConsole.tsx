@@ -26,7 +26,7 @@ const AdminSearchConsole = () => {
     toast.success('Verification code saved!');
   };
 
-  const SITE_URL = 'https://relaxobeanbag.com';
+  const SITE_URL = 'https://booklover.com.bd';
 
   return (
     <div className="space-y-6">
@@ -94,7 +94,7 @@ const AdminSearchConsole = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         {[
           { step: '1', title: 'Open GSC', desc: 'Go to search.google.com/search-console' },
-          { step: '2', title: 'Add Property', desc: 'Add your domain: relaxobeanbag.com' },
+          { step: '2', title: 'Add Property', desc: 'Add your domain: booklover.com.bd' },
           { step: '3', title: 'Verify Ownership', desc: 'Copy meta tag code and paste above, then click Save' },
           { step: '4', title: 'Submit Sitemap', desc: 'In GSC: Sitemaps → Enter sitemap URL → Submit' },
         ].map(s => (

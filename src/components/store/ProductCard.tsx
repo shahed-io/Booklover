@@ -14,7 +14,7 @@ interface ProductCardProps {
   priority?: boolean; // true for first ~4 cards (above fold)
 }
 
-const WA = '8801873990004';
+const WA = '88';
 
 // Ripple particle type
 type Particle = { id: number; x: number; y: number };
@@ -120,8 +120,8 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
               <div className="w-48 flex-shrink-0 relative overflow-hidden">
                 <img
                   src={product.image}
-                  alt={`${product.name} price in Bangladesh - Relaxo Bean Bag`}
-                  title={`${product.name} - Relaxo Bean Bag Bangladesh`}
+                  alt={`${product.name} price in Bangladesh - Booklover`}
+                  title={`${product.name} - Booklover Bangladesh`}
                   width={300}
                   height={300}
                   loading="lazy"
@@ -334,8 +334,8 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
 
           <img
             src={product.image}
-            alt={`${product.name} price in Bangladesh - Relaxo Bean Bag`}
-            title={`${product.name} - Relaxo Bean Bag Bangladesh`}
+            alt={`${product.name} price in Bangladesh - Booklover`}
+            title={`${product.name} - Booklover Bangladesh`}
             width={400}
             height={400}
             loading={priority ? 'eager' : 'lazy'}

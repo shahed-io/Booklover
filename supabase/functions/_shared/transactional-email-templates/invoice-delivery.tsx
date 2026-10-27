@@ -6,8 +6,8 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
 
-const SITE_NAME = 'Relaxo Bean Bag'
-const SITE_URL = 'https://www.relaxobeanbag.com'
+const SITE_NAME = 'Booklover'
+const SITE_URL = 'https://booklover.com.bd'
 const LOGO_URL = `${SITE_URL}/logo.png`
 
 interface InvoiceItemData {
@@ -188,8 +188,8 @@ const InvoiceDeliveryEmail = ({
                 {SITE_URL.replace('https://', '')}
               </Link>
               {' • '}
-              <Link href="mailto:relaxobeanbag@gmail.com" style={{ color: '#7c3aed', textDecoration: 'none' }}>
-                relaxobeanbag@gmail.com
+              <Link href="mailto:" style={{ color: '#7c3aed', textDecoration: 'none' }}>
+                
               </Link>
             </Text>
           </Section>

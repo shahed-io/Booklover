@@ -131,7 +131,7 @@ async function renderMenu(bot: string, chatId: number, supabase: any, editId?: n
   const todayRev = (todaySales.data || []).reduce((s: number, r: any) => s + Number(r.total || 0), 0);
 
   const text =
-    `🔐 <b>Relaxo Bean Bag — Admin</b>\n` +
+    `🔐 <b>Booklover — Admin</b>\n` +
     `━━━━━━━━━━━━━━━━━━\n` +
     `📦 মোট অর্ডার: <b>${tot.count || 0}</b>\n` +
     `⏳ পেন্ডিং: <b>${pen.count || 0}</b>\n` +
@@ -572,7 +572,7 @@ Deno.serve(async (req) => {
 
           if (!adminChatId || String(chatId) !== adminChatId) {
             await sendMsg(BOT_TOKEN, chatId,
-              `🔒 এই বটটি শুধুমাত্র এডমিনের জন্য।\n\n🛍️ শপিংয়ের জন্য @Relaxo_Bean_Bag_bot ব্যবহার করুন।`);
+              `🔒 এই বটটি শুধুমাত্র এডমিনের জন্য।\n\n🛍️ শপিংয়ের জন্য @booklover_bot ব্যবহার করুন।`);
             totalProcessed++; continue;
           }
 

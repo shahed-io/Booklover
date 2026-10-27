@@ -71,9 +71,9 @@ export default function AboutUs() {
       style={{ background: 'linear-gradient(145deg, hsl(258,55%,97%) 0%, hsl(220,40%,96%) 40%, hsl(200,50%,96%) 100%)' }}
     >
       <SEOHead
-        title="About Relaxo Bean Bag"
-        description="Learn about Relaxo Bean Bag, our team, mission, and commitment to premium bean bags, sofas & lifestyle furniture with fast delivery across Bangladesh."
-        canonical="https://relaxobeanbag.com/about"
+        title="About Booklover"
+        description="Learn about Booklover, our team, mission, and commitment to premium bean bags, sofas & lifestyle furniture with fast delivery across Bangladesh."
+        canonical="https://booklover.com.bd/about"
       />
       <Navbar />
 
@@ -139,7 +139,7 @@ export default function AboutUs() {
           </div>
           <div className="space-y-4 text-[13.5px] leading-relaxed" style={{ color: 'hsl(226,25%,38%)' }}>
             <p>
-              <strong style={{ color: 'hsl(226,35%,18%)' }}>Relaxo Bean Bag</strong> বাংলাদেশের একটি বিশ্বস্ত হোম ও লাইফস্টাইল ফার্নিচার ব্র্যান্ড। আমরা <strong style={{ color: 'hsl(258,78%,50%)' }}>২০২২ সাল</strong> থেকে গ্রাহকদের কাছে প্রিমিয়াম বিন ব্যাগ, বিন ব্যাগ সোফা, লাউঞ্জ চেয়ার, ওটোম্যান, কুশন, কিডস বিন ব্যাগ, বিন রিফিল ও কভার সরবরাহ করে আসছি।
+              <strong style={{ color: 'hsl(226,35%,18%)' }}>Booklover</strong> বাংলাদেশের একটি বিশ্বস্ত হোম ও লাইফস্টাইল ফার্নিচার ব্র্যান্ড। আমরা <strong style={{ color: 'hsl(258,78%,50%)' }}>২০২২ সাল</strong> থেকে গ্রাহকদের কাছে প্রিমিয়াম বিন ব্যাগ, বিন ব্যাগ সোফা, লাউঞ্জ চেয়ার, ওটোম্যান, কুশন, কিডস বিন ব্যাগ, বিন রিফিল ও কভার সরবরাহ করে আসছি।
             </p>
             <p>
               আমাদের লক্ষ্য সহজ — প্রতিটি বাংলাদেশি পরিবারের কাছে আরামদায়ক ও প্রিমিয়াম বিন ব্যাগ ফার্নিচার সাশ্রয়ী মূল্যে পৌঁছে দেওয়া। ঢাকায় ১–৩ দিনে ও সারা বাংলাদেশে ৩–৫ দিনে ক্যাশ অন ডেলিভারিতে ডেলিভারি — শুধু দ্রুত, নিরাপদ ও নির্ভরযোগ্য সেবা।

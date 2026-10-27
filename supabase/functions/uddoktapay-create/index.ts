@@ -55,12 +55,12 @@ Deno.serve(async (req) => {
       return json({ error: 'Order already paid' }, 409);
     }
 
-    const origin = req.headers.get('origin') || 'https://relaxobeanbag.com';
+    const origin = req.headers.get('origin') || 'https://booklover.com.bd';
     const base = String(cfg.base_url).replace(/\/+$/, '');
 
     const payload = {
       full_name: order.customer_name || 'Customer',
-      email: order.customer_email || 'noreply@relaxobeanbag.com',
+      email: order.customer_email || 'noreply@booklover.com.bd',
       amount: Number(order.total).toFixed(2),
       metadata: { order_id: order.id, order_number: order.order_number },
       redirect_url: `${origin}/uddoktapay/return?order_id=${order.id}`,

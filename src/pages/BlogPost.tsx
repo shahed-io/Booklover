@@ -289,7 +289,7 @@ const BlogPost = () => {
         ogImage={post.featured_image || undefined}
         ogImageAlt={post.title}
         ogType="article"
-        canonical={`https://relaxobeanbag.com/blog/${post.slug}`}
+        canonical={`https://booklover.com.bd/blog/${post.slug}`}
         schema={seoSchemas}
         article={{
           publishedTime: post.published_at || post.created_at,

@@ -28,7 +28,7 @@ interface Product {
   stock_quantity?: number | null;
 }
 
-const SHOP_WA = '8801873990004';
+const SHOP_WA = '88';
 
 interface Category {
   id: string;
@@ -87,7 +87,7 @@ const ShopProductCard = ({ product }: { product: Product }) => {
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-muted">
         {product.image_url
-          ? <img src={product.image_url} alt={`${product.name} — Buy Online in Bangladesh at Relaxo Bean Bag`} title={product.name} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          ? <img src={product.image_url} alt={`${product.name} — Buy Online in Bangladesh at Booklover`} title={product.name} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           : <div className="w-full h-full flex items-center justify-center text-4xl" style={{ background: 'hsla(258,78%,55%,0.06)' }}>🛒</div>
         }
         {outOfStock && (
@@ -312,49 +312,49 @@ const Shop = () => {
   // Per-category SEO copy targeting "buy {category} in Bangladesh"
   const CATEGORY_SEO: Record<string, { title: string; desc: string; keywords: string }> = {
     'bean-bag': {
-      title: 'Buy Bean Bags in Bangladesh | Relaxo Bean Bag',
+      title: 'Buy Bean Bags in Bangladesh | Booklover',
       desc: 'Buy premium bean bags in Bangladesh at the best price. High-density beans, durable fabric, free Dhaka delivery, cash on delivery available.',
-      keywords: 'buy bean bag in bangladesh, bean bag price bd, bean bag chair bangladesh, Relaxo Bean Bag',
+      keywords: 'buy bean bag in bangladesh, bean bag price bd, bean bag chair bangladesh, Booklover',
     },
     'bean-bag-sofa': {
-      title: 'Buy Bean Bag Sofa in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy premium bean bag sofas in Bangladesh at the best price. Comfortable, durable fabric, free Dhaka delivery. Relaxo Bean Bag BD.',
-      keywords: 'buy bean bag sofa in bangladesh, bean bag sofa price bd, Relaxo Bean Bag',
+      title: 'Buy Bean Bag Sofa in Bangladesh | Booklover',
+      desc: 'Buy premium bean bag sofas in Bangladesh at the best price. Comfortable, durable fabric, free Dhaka delivery. Booklover BD.',
+      keywords: 'buy bean bag sofa in bangladesh, bean bag sofa price bd, Booklover',
     },
     'lounge-chair': {
-      title: 'Buy Lounge Chairs in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy premium lounge chairs in Bangladesh at the best price. Stylish, comfortable seating for your living room. Relaxo Bean Bag BD.',
-      keywords: 'buy lounge chair in bangladesh, lounge chair price bd, Relaxo Bean Bag',
+      title: 'Buy Lounge Chairs in Bangladesh | Booklover',
+      desc: 'Buy premium lounge chairs in Bangladesh at the best price. Stylish, comfortable seating for your living room. Booklover BD.',
+      keywords: 'buy lounge chair in bangladesh, lounge chair price bd, Booklover',
     },
     'cushion': {
-      title: 'Buy Cushions in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy premium cushions in Bangladesh at the best price. Soft, durable fabric in various sizes and colors. Relaxo Bean Bag BD.',
-      keywords: 'buy cushion in bangladesh, cushion price bd, Relaxo Bean Bag',
+      title: 'Buy Cushions in Bangladesh | Booklover',
+      desc: 'Buy premium cushions in Bangladesh at the best price. Soft, durable fabric in various sizes and colors. Booklover BD.',
+      keywords: 'buy cushion in bangladesh, cushion price bd, Booklover',
     },
     'ottoman': {
-      title: 'Buy Ottomans in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy premium ottomans in Bangladesh at the best price. Perfect footrest & extra seating for your home. Relaxo Bean Bag BD.',
-      keywords: 'buy ottoman in bangladesh, ottoman price bd, Relaxo Bean Bag',
+      title: 'Buy Ottomans in Bangladesh | Booklover',
+      desc: 'Buy premium ottomans in Bangladesh at the best price. Perfect footrest & extra seating for your home. Booklover BD.',
+      keywords: 'buy ottoman in bangladesh, ottoman price bd, Booklover',
     },
     'kids': {
-      title: 'Buy Kids Bean Bags in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy safe, soft kids bean bags in Bangladesh at the best price. Fun colors, durable fabric. Relaxo Bean Bag BD.',
-      keywords: 'buy kids bean bag in bangladesh, kids bean bag price bd, Relaxo Bean Bag',
+      title: 'Buy Kids Bean Bags in Bangladesh | Booklover',
+      desc: 'Buy safe, soft kids bean bags in Bangladesh at the best price. Fun colors, durable fabric. Booklover BD.',
+      keywords: 'buy kids bean bag in bangladesh, kids bean bag price bd, Booklover',
     },
     'covers': {
-      title: 'Buy Bean Bag Covers in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy replacement bean bag covers in Bangladesh at the best price. Durable, washable fabric in various sizes. Relaxo Bean Bag BD.',
-      keywords: 'buy bean bag cover in bangladesh, bean bag cover price bd, Relaxo Bean Bag',
+      title: 'Buy Bean Bag Covers in Bangladesh | Booklover',
+      desc: 'Buy replacement bean bag covers in Bangladesh at the best price. Durable, washable fabric in various sizes. Booklover BD.',
+      keywords: 'buy bean bag cover in bangladesh, bean bag cover price bd, Booklover',
     },
     'accessories': {
-      title: 'Buy Bean Bag Accessories in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy bean bag accessories in Bangladesh at the best price. Relaxo Bean Bag BD.',
-      keywords: 'buy bean bag accessories in bangladesh, Relaxo Bean Bag',
+      title: 'Buy Bean Bag Accessories in Bangladesh | Booklover',
+      desc: 'Buy bean bag accessories in Bangladesh at the best price. Booklover BD.',
+      keywords: 'buy bean bag accessories in bangladesh, Booklover',
     },
     'refill': {
-      title: 'Buy Bean Bag Refill Beans in Bangladesh | Relaxo Bean Bag',
-      desc: 'Buy high-density bean bag refill beans in Bangladesh at the best price. Restore your bean bag\'s comfort. Relaxo Bean Bag BD.',
-      keywords: 'buy bean bag refill in bangladesh, bean bag beans price bd, Relaxo Bean Bag',
+      title: 'Buy Bean Bag Refill Beans in Bangladesh | Booklover',
+      desc: 'Buy high-density bean bag refill beans in Bangladesh at the best price. Restore your bean bag\'s comfort. Booklover BD.',
+      keywords: 'buy bean bag refill in bangladesh, bean bag beans price bd, Booklover',
     },
   };
   const catSeo = activeCategory ? CATEGORY_SEO[activeCategory.slug] : undefined;
@@ -364,17 +364,17 @@ const Shop = () => {
       <SEOHead
         title={catSeo?.title
           ?? (activeCategory
-            ? `Buy ${activeCategory.name} in Bangladesh | Best Price – Relaxo Bean Bag`
+            ? `Buy ${activeCategory.name} in Bangladesh | Best Price – Booklover`
             : 'Buy Bean Bags, Sofas, Lounge Chairs & Cushions – Best Price in Bangladesh')}
         description={catSeo?.desc
           ?? (activeCategory
-            ? `Buy premium ${activeCategory.name} at the best price in Bangladesh. High-quality fabric, free Dhaka delivery, cash on delivery. Relaxo Bean Bag BD.`
+            ? `Buy premium ${activeCategory.name} at the best price in Bangladesh. High-quality fabric, free Dhaka delivery, cash on delivery. Booklover BD.`
             : 'Shop bean bags, bean bag sofas, lounge chairs, cushions, ottomans and kids bean bags at the best price in Bangladesh. Free Dhaka delivery, cash on delivery.')}
-        canonical={activeCatSlug ? `https://relaxobeanbag.com/shop?category=${activeCatSlug}` : 'https://relaxobeanbag.com/shop'}
+        canonical={activeCatSlug ? `https://booklover.com.bd/shop?category=${activeCatSlug}` : 'https://booklover.com.bd/shop'}
         keywords={catSeo?.keywords
           ?? (activeCategory
-            ? `buy ${activeCategory.name} in bangladesh, ${activeCategory.name} price bd, ${activeCategory.name} bangladesh, Relaxo Bean Bag`
-            : 'bean bag bangladesh, bean bag sofa bd, lounge chair bangladesh, cushion bd, ottoman bangladesh, kids bean bag bd, Relaxo Bean Bag')}
+            ? `buy ${activeCategory.name} in bangladesh, ${activeCategory.name} price bd, ${activeCategory.name} bangladesh, Booklover`
+            : 'bean bag bangladesh, bean bag sofa bd, lounge chair bangladesh, cushion bd, ottoman bangladesh, kids bean bag bd, Booklover')}
         schema={[
           ...(products.length > 0 ? [itemListSchema(products.map(p => ({ name: p.name, slug: p.slug, image: p.image_url, price: p.price })))] : []),
           breadcrumbSchema([

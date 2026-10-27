@@ -4,7 +4,7 @@ import { Code2, Save, Check, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AdminSchema = () => {
-  const [org, setOrg] = useState({ name: 'Relaxo Bean Bag', url: 'https://relaxobeanbag.com', logo: '', phone: '', email: '', facebook: '', description: '' });
+  const [org, setOrg] = useState({ name: 'Booklover', url: 'https://booklover.com.bd', logo: '', phone: '', email: '', facebook: '', description: '' });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -38,12 +38,12 @@ const AdminSchema = () => {
   }, null, 2);
 
   const FIELDS = [
-    { key: 'name', label: 'Organization Name', placeholder: 'Relaxo Bean Bag' },
-    { key: 'url', label: 'Website URL', placeholder: 'https://relaxobeanbag.com' },
-    { key: 'logo', label: 'Logo URL', placeholder: 'https://relaxobeanbag.com/logo.png' },
-    { key: 'phone', label: 'Phone Number', placeholder: '+8801873990004' },
-    { key: 'email', label: 'Email Address', placeholder: 'relaxobeanbag@gmail.com' },
-    { key: 'facebook', label: 'Facebook URL', placeholder: 'https://www.facebook.com/share/1EU8koottB/' },
+    { key: 'name', label: 'Organization Name', placeholder: 'Booklover' },
+    { key: 'url', label: 'Website URL', placeholder: 'https://booklover.com.bd' },
+    { key: 'logo', label: 'Logo URL', placeholder: 'https://booklover.com.bd/logo.png' },
+    { key: 'phone', label: 'Phone Number', placeholder: '+88' },
+    { key: 'email', label: 'Email Address', placeholder: '' },
+    { key: 'facebook', label: 'Facebook URL', placeholder: '' },
     { key: 'description', label: 'Description', placeholder: "Bangladesh's trusted digital software store" },
   ];
 

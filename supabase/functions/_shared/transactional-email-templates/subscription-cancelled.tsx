@@ -24,7 +24,7 @@ const Email = ({
   cancellationDate,
   accessUntil,
   reason,
-  reactivateUrl = 'https://relaxobeanbag.com/shop',
+  reactivateUrl = 'https://booklover.com.bd/shop',
   orderNumber,
 }: Props) => (
   <Html lang="en" dir="ltr">
@@ -33,7 +33,7 @@ const Email = ({
       <Container style={wrapper}>
         <Section style={headerStyle}>
           <div style={logoCardStyle}>
-            <Img src={LOGO_URL} width="240" height="65" alt="Relaxo Bean Bag" style={logoStyle} />
+            <Img src={LOGO_URL} width="240" height="65" alt="Booklover" style={logoStyle} />
           </div>
         </Section>
         <Section style={contentStyle}>
@@ -55,7 +55,7 @@ const Email = ({
           <Text style={footerStyle}>Feedback? Reply to this email — we'd love to hear how we can improve.</Text>
         </Section>
         <Section style={footerSection}>
-          <Text style={copyrightStyle}>&copy; {new Date().getFullYear()} Relaxo Bean Bag. All rights reserved.</Text>
+          <Text style={copyrightStyle}>&copy; {new Date().getFullYear()} Booklover. All rights reserved.</Text>
         </Section>
       </Container>
     </Body>

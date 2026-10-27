@@ -5,9 +5,9 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 
 export const BRAND = {
-  name: 'Relaxo Bean Bag',
-  url: 'https://relaxobeanbag.com',
-  logo: 'https://relaxobeanbag.com/logo.png',
+  name: 'Booklover',
+  url: 'https://booklover.com.bd',
+  logo: 'https://booklover.com.bd/logo.png',
   primary: '#7c3aed',
   primaryDark: '#6d28d9',
   primaryLight: '#f5f1ff',

@@ -45,14 +45,14 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(160deg, hsl(230,25%,97%) 0%, hsl(243,20%,96%) 100%)' }}>
-      <SEOHead title="Reset Password" description="Reset your Relaxo Bean Bag password." noIndex />
+      <SEOHead title="Reset Password" description="Reset your Booklover password." noIndex />
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <a href="/" className="flex items-center gap-2.5">
             <img src={logoIcon} alt="Logo" className="w-10 h-10 rounded-xl" />
             <span className="font-black tracking-widest" style={{ fontFamily: 'Orbitron, sans-serif', color: 'hsl(var(--primary))' }}>
-              RELAXO BEAN BAG
+              Booklover
             </span>
           </a>
         </div>

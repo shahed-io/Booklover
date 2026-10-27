@@ -1,8 +1,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const SITE_URL = 'https://relaxobeanbag.com';
-const SITE_NAME = 'Relaxo Bean Bag';
-const SUPABASE_STORAGE_ORIGIN = 'https://dpvdavjwqyviredzoorj.supabase.co';
+const SITE_URL = 'https://booklover.com.bd';
+const SITE_NAME = 'Booklover';
+const SUPABASE_STORAGE_ORIGIN = 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
 const SUPABASE_STORAGE_PUBLIC_PATH = '/storage/v1/object/public/';
 
 const escape = (s: string) =>
@@ -190,7 +190,7 @@ Deno.serve(async (req) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escape(title)}</title>
   <meta name="description" content="${escape(description)}">
-  <meta name="keywords" content="${escape(product.name)}, buy ${escape(product.name)} bangladesh, ${escape(product.name)} price bd, ${escape(categoryName)}, digital software bangladesh, Relaxo Bean Bag">
+  <meta name="keywords" content="${escape(product.name)}, buy ${escape(product.name)} bangladesh, ${escape(product.name)} price bd, ${escape(categoryName)}, digital software bangladesh, Booklover">
   <meta name="author" content="${SITE_NAME}">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="geo.region" content="BD">

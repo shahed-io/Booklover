@@ -151,7 +151,7 @@ serve(async (req) => {
         ? Math.round(((originalPrice - price) / originalPrice) * 100)
         : 0;
 
-      const prompt = `Write a detailed, SEO-optimized blog post in ENGLISH about the digital product "${product.name}" for a Bangladeshi digital software store called "Relaxo Bean Bag" (website: relaxobeanbag.com).
+      const prompt = `Write a detailed, SEO-optimized blog post in ENGLISH about the digital product "${product.name}" for a Bangladeshi digital software store called "Booklover" (website: booklover.com.bd).
 
 Product Details:
 - Name: ${product.name}
@@ -165,11 +165,11 @@ Requirements for the blog post:
 1. Title: Engaging, SEO-friendly (include product name + benefit keyword)
 2. Length: 800-1200 words
 3. Structure with markdown headings (##, ###)
-4. Include: Introduction, Features/Benefits, Why Buy From Relaxo Bean Bag, How to Activate, FAQ section, Conclusion with CTA
+4. Include: Introduction, Features/Benefits, Why Buy From Booklover, How to Activate, FAQ section, Conclusion with CTA
 5. Mention the affordable price in BDT
 6. Include keywords naturally: license key, Bangladesh, genuine, instant delivery, affordable
-7. Mention Relaxo Bean Bag website: relaxobeanbag.com
-STORE NAME RULE: Use the correct spelling based on language. In English text write exactly "Relaxo Bean Bag". In Bengali text write exactly "রিলাক্সো বিন ব্যাগ". Always write the brand name exactly as "Relaxo Bean Bag" in English and "রিলাক্সো বিন ব্যাগ" in Bengali.
+7. Mention Booklover website: booklover.com.bd
+STORE NAME RULE: Use the correct spelling based on language. In English text write exactly "Booklover". In Bengali text write exactly "Booklover". Always write the brand name exactly as "Booklover" in English and "Booklover" in Bengali.
 8. Write in a professional, helpful tone
 
 Also provide:
@@ -205,7 +205,7 @@ Respond ONLY with this JSON (no markdown, no explanation):
             content: blogData.content || "",
             status: auto_publish ? "published" : "draft",
             published_at: auto_publish ? new Date().toISOString() : null,
-            author_name: "Relaxo Bean Bag",
+            author_name: "Booklover",
             featured_image: product.image_url || null,
             tags: blogData.tags || product.tags || [],
             reading_time: blogData.reading_time || 5,

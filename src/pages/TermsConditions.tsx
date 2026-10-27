@@ -6,22 +6,22 @@ const B = 'hsl(200,90%,45%)';
 
 const TermsConditions = () => (
   <PolicyLayout
-    seoTitle="Terms & Conditions — Relaxo Bean Bag"
-    seoDesc="Relaxo Bean Bag থেকে বিন ব্যাগ ও ফার্নিচার কেনার শর্তাবলী পড়ুন।"
+    seoTitle="Terms & Conditions — Booklover"
+    seoDesc="Booklover থেকে বিন ব্যাগ ও ফার্নিচার কেনার শর্তাবলী পড়ুন।"
     badge="Legal Document"
     badgeIcon={<FileText size={13} />}
     title="Terms & Conditions"
-    subtitle="Relaxo Bean Bag ব্যবহার করার আগে এই শর্তাবলী মনোযোগ দিয়ে পড়ুন। সাইট ব্যবহার করলে আপনি এই শর্তগুলো মেনে নিচ্ছেন বলে ধরা হবে।"
+    subtitle="Booklover ব্যবহার করার আগে এই শর্তাবলী মনোযোগ দিয়ে পড়ুন। সাইট ব্যবহার করলে আপনি এই শর্তগুলো মেনে নিচ্ছেন বলে ধরা হবে।"
     accentFrom={A}
     accentTo={B}
   >
     <div className="rounded-2xl p-4 mb-6 text-[13px] leading-relaxed"
       style={{ background: `linear-gradient(135deg, ${A}0d, ${B}08)`, border: `1px solid ${A}25`, color: 'hsl(226,35%,28%)' }}>
-      এই Terms & Conditions Relaxo Bean Bag এবং আপনার মধ্যে একটি আইনি চুক্তি। <strong>relaxobeanbag.com</strong>-এ প্রবেশ বা যেকোনো পরিষেবা ব্যবহারের মাধ্যমে আপনি এই শর্তগুলো মেনে নিচ্ছেন।
+      এই Terms & Conditions Booklover এবং আপনার মধ্যে একটি আইনি চুক্তি। <strong>booklover.com.bd</strong>-এ প্রবেশ বা যেকোনো পরিষেবা ব্যবহারের মাধ্যমে আপনি এই শর্তগুলো মেনে নিচ্ছেন।
     </div>
 
     <SectionCard icon={<ShoppingCart size={15} />} title="১. পরিষেবার বিবরণ" accentFrom={A} accentTo={B}>
-      <p className="mb-2">Relaxo Bean Bag একটি প্রিমিয়াম হোম ও লাইফস্টাইল ফার্নিচার বিক্রয় প্ল্যাটফর্ম। আমরা বিক্রি করি:</p>
+      <p className="mb-2">Booklover একটি প্রিমিয়াম হোম ও লাইফস্টাইল ফার্নিচার বিক্রয় প্ল্যাটফর্ম। আমরা বিক্রি করি:</p>
       <ul className="space-y-1.5">
         <Bullet>বিভিন্ন সাইজ ও ফ্যাব্রিকের বিন ব্যাগ</Bullet>
         <Bullet>সোফা ও লাউঞ্জ চেয়ার</Bullet>

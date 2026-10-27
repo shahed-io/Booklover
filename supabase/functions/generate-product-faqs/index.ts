@@ -18,9 +18,9 @@ serve(async (req) => {
     if (!product?.name) throw new Error("product.name required");
 
     // Enforce correct store name based on language — never let AI invent variants
-    const storeName = "Relaxo Bean Bag";
+    const storeName = "Booklover";
     const lang = language === "en" ? "English" : "Bengali (বাংলা)";
-    const nameRule = `STORE NAME RULE: Use the correct spelling based on language. In English text write exactly "Relaxo Bean Bag". In Bengali text write exactly "রিলাক্সো বিন ব্যাগ". Always write the brand name exactly as "Relaxo Bean Bag" in English and "রিলাক্সো বিন ব্যাগ" in Bengali.`;
+    const nameRule = `STORE NAME RULE: Use the correct spelling based on language. In English text write exactly "Booklover". In Bengali text write exactly "Booklover". Always write the brand name exactly as "Booklover" in English and "Booklover" in Bengali.`;
     const prompt = `You are an expert SEO copywriter for "${storeName}", a digital software store in Bangladesh.
 
 ${nameRule}

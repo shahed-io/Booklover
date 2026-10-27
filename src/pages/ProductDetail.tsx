@@ -27,7 +27,7 @@ import { normalizeBrandNameFaqs, normalizeBrandNameText } from '@/lib/brandName'
 
 import { useAuth } from '@/hooks/useAuth';
 
-const WA = '8801873990004';
+const WA = '88';
 const PLACEHOLDER = 'https://placehold.co/600x600/0d1117/a855f7?text=Product';
 
 // Fix: replace Bengali danda (।) after English/numbers with English period (.)
@@ -428,17 +428,17 @@ const ProductDetail = () => {
   const dbSeoTitle = normalizeBrandNameText((product as any).seo_title || '');
   const dbSeoDesc = normalizeBrandNameText((product as any).seo_description || '');
 
-  // Title format: "{Product Name} – ৳{Price} in BD | Relaxo Bean Bag"
+  // Title format: "{Product Name} – ৳{Price} in BD | Booklover"
   const seoTitle = dbSeoTitle
     ? dbSeoTitle
-    : `${productDisplayName} – ৳${displayPrice.toLocaleString()} in BD | Relaxo Bean Bag`;
+    : `${productDisplayName} – ৳${displayPrice.toLocaleString()} in BD | Booklover`;
 
   const seoDescription = (() => {
     if (dbSeoDesc) return dbSeoDesc.substring(0, 160);
     // Auto-generate 150-160 char description mentioning product name, BDT price, home delivery.
     const priceStr = `৳${displayPrice.toLocaleString()} BDT`;
     const catStr = product.categories?.name ? ` ${product.categories.name.toLowerCase()}` : '';
-    const base = `Buy ${productDisplayName} at ${priceStr} in Bangladesh. Premium${catStr} quality with fast home delivery. bKash/Nagad accepted — Relaxo Bean Bag.`;
+    const base = `Buy ${productDisplayName} at ${priceStr} in Bangladesh. Premium${catStr} quality with fast home delivery. bKash/Nagad accepted — Booklover.`;
     // Pad short strings to hit 150+ chars; truncate long ones to 160.
     if (base.length >= 150) return base.substring(0, 160);
     return `${base} Trusted bean bag & furniture shop in BD.`.substring(0, 160);
@@ -455,7 +455,7 @@ const ProductDetail = () => {
     `buy ${productDisplayName} bangladesh`,
     `${productDisplayName} cheap price bangladesh`,
     product.categories?.name ? `${product.categories.name} বাংলাদেশ` : '',
-    'Relaxo Bean Bag',
+    'Booklover',
     'furniture shop bangladesh',
   ].filter(Boolean).join(', ');
 
@@ -499,7 +499,7 @@ const ProductDetail = () => {
         ogImage={product.image_url || undefined}
         ogImages={(product.images || []).filter(Boolean)}
         ogType="product"
-        canonical={`https://relaxobeanbag.com/product/${product.slug}`}
+        canonical={`https://booklover.com.bd/product/${product.slug}`}
         schema={seoSchemas}
         keywords={seoKeywords}
       />
@@ -549,8 +549,8 @@ const ProductDetail = () => {
                 <img
                   key={images[activeImg]}
                   src={images[activeImg]}
-                  alt={(product as any).image_alt || `${productDisplayName} price in Bangladesh - Relaxo Bean Bag`}
-                  title={`${productDisplayName} - ৳${displayPrice.toLocaleString()} | Relaxo Bean Bag Bangladesh`}
+                  alt={(product as any).image_alt || `${productDisplayName} price in Bangladesh - Booklover`}
+                  title={`${productDisplayName} - ৳${displayPrice.toLocaleString()} | Booklover Bangladesh`}
                   width={800}
                   height={800}
                   loading="eager"
@@ -622,7 +622,7 @@ const ProductDetail = () => {
                   {images.map((img, i) => (
                     <button key={i} onClick={() => { setActiveImg(i); setImgLoaded(false); }}
                       className={`flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all hover:scale-105 ${activeImg === i ? 'border-primary shadow-[0_0_16px_hsla(271,91%,65%,0.5)]' : 'border-border hover:border-primary/50'}`}>
-                      <img src={img} alt={(product as any).image_alt || `${productDisplayName} price in Bangladesh - Relaxo Bean Bag`} title={`${productDisplayName} gallery image ${i + 1}`} width={160} height={160} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                      <img src={img} alt={(product as any).image_alt || `${productDisplayName} price in Bangladesh - Booklover`} title={`${productDisplayName} gallery image ${i + 1}`} width={160} height={160} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
@@ -1367,7 +1367,7 @@ const RelatedProducts = ({ categoryId, currentProductId }: { categoryId: string 
                   <div className="relative aspect-square overflow-hidden rounded-lg border border-border bg-muted/30 group-hover:border-primary/40 transition-colors">
                     <img
                       src={p.image_url || PLACEHOLDER}
-                      alt={`${p.name} price in Bangladesh - Relaxo Bean Bag`}
+                      alt={`${p.name} price in Bangladesh - Booklover`}
                       width={300}
                       height={300}
                       loading="lazy"

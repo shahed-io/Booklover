@@ -28,7 +28,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
   {
     id: 'bkash',
     label: 'BKash',
-    number: '01873990004',
+    number: '',
     type: 'Send Money',
     logoUrl: '',
     accentColor: 'hsl(338,90%,48%)',
@@ -48,7 +48,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
   {
     id: 'nagad',
     label: 'Nagad',
-    number: '01873990004',
+    number: '',
     type: 'Send Money',
     logoUrl: '',
     accentColor: 'hsl(22,100%,48%)',
@@ -68,7 +68,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
   {
     id: 'rocket',
     label: 'Rocket',
-    number: '01873990004',
+    number: '',
     type: 'Send Money',
     logoUrl: '',
     accentColor: 'hsl(270,80%,48%)',
@@ -88,7 +88,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
   {
     id: 'upay',
     label: 'উপায় (Upay)',
-    number: '01873990004',
+    number: '',
     type: 'Send Money',
     logoUrl: '',
     accentColor: 'hsl(142,70%,38%)',
@@ -108,7 +108,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
   {
     id: 'bkash_merchant',
     label: 'BKash Merchant',
-    number: '01873990004',
+    number: '',
     type: 'Merchant Payment',
     logoUrl: '',
     accentColor: 'hsl(338,85%,42%)',
@@ -128,15 +128,15 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
   {
     id: 'bank_transfer',
     label: 'Bank Transfer',
-    number: '1351100467666',
+    number: '',
     type: 'Bank Transfer',
     logoUrl: '',
     accentColor: 'hsl(214,80%,48%)',
     bgColor: 'hsla(214,80%,48%,0.07)',
     bankName: 'Dutch Bangla Bank',
-    accountName: 'Relaxo Bean Bag',
+    accountName: 'Booklover',
     branchName: 'Rajshahi',
-    routingNumber: '090811933',
+    routingNumber: '',
     steps: [
       'আপনার ব্যাংক অ্যাপ বা ব্রাঞ্চে যান',
       'উপরের অ্যাকাউন্ট নম্বরে টাকা ট্রান্সফার করুন',

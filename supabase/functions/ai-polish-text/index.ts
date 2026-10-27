@@ -63,8 +63,8 @@ Deno.serve(async (req) => {
     const lang = body.language && body.language !== 'auto' ? body.language : detectLang(text || instruction);
     const langInstr =
       lang === 'bn'
-        ? 'Write the improved text in natural Bengali (বাংলা). Use "রিলাক্সো বিন ব্যাগ" for the brand name; natural case markers (এর/কে/তে) are OK on the Bengali brand name only, never on English "Relaxo Bean Bag".'
-        : 'Write the improved text in clean English. Use exactly "Relaxo Bean Bag" for the brand name.';
+        ? 'Write the improved text in natural Bengali (বাংলা). Use "Booklover" for the brand name; natural case markers (এর/কে/তে) are OK on the Bengali brand name only, never on English "Booklover".'
+        : 'Write the improved text in clean English. Use exactly "Booklover" for the brand name.';
 
     const maxChars = body.maxChars && body.maxChars > 0 ? body.maxChars : 1500;
 

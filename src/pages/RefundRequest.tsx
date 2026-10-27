@@ -279,7 +279,7 @@ ${isChangeOfMind ? `⚠️ মন পরিবর্তনের কারণে
 
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(145deg, hsl(258,55%,97%) 0%, hsl(220,40%,96%) 40%, hsl(200,50%,96%) 100%)' }}>
-      <SEOHead title="Refund Request — Relaxo Bean Bag" description="রিটার্ন ও রিফান্ড রিকোয়েস্ট করুন। Relaxo Bean Bag রিটার্ন পলিসি দেখুন এবং আবেদন ফর্ম পূরণ করুন।" />
+      <SEOHead title="Refund Request — Booklover" description="রিটার্ন ও রিফান্ড রিকোয়েস্ট করুন। Booklover রিটার্ন পলিসি দেখুন এবং আবেদন ফর্ম পূরণ করুন।" />
       <Navbar />
 
       {/* Hero */}
@@ -765,7 +765,7 @@ ${isChangeOfMind ? `⚠️ মন পরিবর্তনের কারণে
                 style={{ background: `linear-gradient(135deg, ${A}08, ${B}06)`, border: `1px solid ${A}20` }}>
                 <Info size={16} style={{ color: A, flexShrink: 0, marginTop: 1 }} />
                 <p className="text-[12px] leading-relaxed" style={{ color: 'hsl(226,25%,42%)' }}>
-                  আবেদন জমার পর আমাদের টিম <strong>১–৬ ঘণ্টার মধ্যে</strong> আপনার ইমেইল বা WhatsApp-এ যোগাযোগ করবে। জরুরি প্রয়োজনে সরাসরি <strong>01873-990004</strong> নম্বরে যোগাযোগ করুন।
+                  আবেদন জমার পর আমাদের টিম <strong>১–৬ ঘণ্টার মধ্যে</strong> আপনার ইমেইল বা WhatsApp-এ যোগাযোগ করবে। জরুরি প্রয়োজনে সরাসরি <strong></strong> নম্বরে যোগাযোগ করুন।
                 </p>
               </div>
 

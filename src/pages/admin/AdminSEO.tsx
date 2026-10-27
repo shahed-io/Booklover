@@ -267,19 +267,19 @@ const AdminSEO = () => {
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">ডিফল্ট OG Image URL</label>
               <input value={settings.og_image || ''} onChange={e => setSettings(p => ({ ...p, og_image: e.target.value }))}
-                placeholder="https://relaxobeanbag.com/og-image.png"
+                placeholder="https://booklover.com.bd/og-image.png"
                 className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Twitter / X হ্যান্ডেল</label>
               <input value={settings.twitter_site || ''} onChange={e => setSettings(p => ({ ...p, twitter_site: e.target.value }))}
-                placeholder="@relaxobeanbag"
+                placeholder="@booklover"
                 className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
             </div>
             <div className="md:col-span-2">
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">ডিফল্ট মেটা ডেসক্রিপশন <span className="opacity-60">(160 অক্ষর)</span></label>
               <textarea value={settings.meta_description_default || ''} onChange={e => setSettings(p => ({ ...p, meta_description_default: e.target.value }))}
-                placeholder="Relaxo Bean Bag – Bangladesh's most trusted digital software shop..."
+                placeholder="Booklover – Bangladesh's most trusted digital software shop..."
                 rows={2}
                 className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary resize-none" />
             </div>
@@ -288,12 +288,12 @@ const AdminSEO = () => {
           {/* Google Preview */}
           <div className="bg-white rounded-xl p-4 border border-border">
             <p className="text-[10px] text-gray-400 uppercase font-medium mb-2">গুগল সার্চ প্রিভিউ</p>
-            <p className="text-xs text-green-700 font-mono">relaxobeanbag.com</p>
+            <p className="text-xs text-green-700 font-mono">booklover.com.bd</p>
             <p className="text-base text-blue-700 font-medium hover:underline cursor-pointer">
               {SITE_NAME} – Buy Digital Software at Best Price in Bangladesh
             </p>
             <p className="text-xs text-gray-600 leading-relaxed mt-0.5">
-              {settings.meta_description_default || 'Relaxo Bean Bag – Bangladesh\'s most trusted digital software shop. Buy Windows 11, Microsoft Office 365, Adobe Creative Cloud at lowest price.'}
+              {settings.meta_description_default || 'Booklover – Bangladesh\'s most trusted digital software shop. Buy Windows 11, Microsoft Office 365, Adobe Creative Cloud at lowest price.'}
             </p>
           </div>
         </div>
@@ -342,7 +342,7 @@ const AdminSEO = () => {
                       <span className={`text-[10px] font-mono ${title.length > 60 ? 'text-red-400' : title.length > 0 ? 'text-green-400' : 'text-muted-foreground'}`}>{title.length}/60</span>
                     </div>
                     <input value={title} onChange={e => setProductEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], seo_title: e.target.value } }))}
-                      placeholder={`${p.name} – Buy at Best Price | Relaxo Bean Bag`}
+                      placeholder={`${p.name} – Buy at Best Price | Booklover`}
                       className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
                   </div>
                   <div>

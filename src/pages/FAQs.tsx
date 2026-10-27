@@ -59,7 +59,7 @@ const FAQ_CATS: FAQCategory[] = [
     items: [
       {
         q: 'কোন কোন পেমেন্ট মেথড গ্রহণ করা হয়?',
-        a: 'আমরা বিকাশ (Send Money ও Merchant), নগদ, রকেট, উপায় এবং ক্যাশ অন ডেলিভারি (COD) গ্রহণ করি। যেকোনো পেমেন্ট সংক্রান্ত সহায়তার জন্য: 01873-990004।',
+        a: 'আমরা বিকাশ (Send Money ও Merchant), নগদ, রকেট, উপায় এবং ক্যাশ অন ডেলিভারি (COD) গ্রহণ করি। যেকোনো পেমেন্ট সংক্রান্ত সহায়তার জন্য: ।',
       },
       {
         q: 'পেমেন্ট করার পর কী করতে হবে?',
@@ -99,7 +99,7 @@ const FAQ_CATS: FAQCategory[] = [
       },
       {
         q: 'ডেলিভারি না পেলে কী করব?',
-        a: 'প্রত্যাশিত সময়ের মধ্যে পণ্য না পেলে আমাদের WhatsApp (01873-990004) বা সাইটের Contact Us পেজের মাধ্যমে সাথে সাথে জানান। আমরা দ্রুত সমাধান করব।',
+        a: 'প্রত্যাশিত সময়ের মধ্যে পণ্য না পেলে আমাদের WhatsApp () বা সাইটের Contact Us পেজের মাধ্যমে সাথে সাথে জানান। আমরা দ্রুত সমাধান করব।',
       },
     ],
   },
@@ -215,9 +215,9 @@ const FAQs = () => {
     <>
       <SEOHead
         title="Frequently Asked Questions – Orders, Payment, Delivery & Refund"
-        description="Find answers to all your questions about orders, payment methods, delivery, warranty and refunds at Relaxo Bean Bag – Bangladesh's trusted premium bean bag & furniture store."
-        canonical="https://relaxobeanbag.com/faqs"
-        keywords="Relaxo Bean Bag faq, bean bag faq bangladesh, furniture order help, payment help"
+        description="Find answers to all your questions about orders, payment methods, delivery, warranty and refunds at Booklover – Bangladesh's trusted premium bean bag & furniture store."
+        canonical="https://booklover.com.bd/faqs"
+        keywords="Booklover faq, bean bag faq bangladesh, furniture order help, payment help"
         schema={faqSchema(allFaqItems)}
       />
       <Navbar />
@@ -361,7 +361,7 @@ const FAQs = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
-                href="https://wa.me/8801873990004"
+                href="https://wa.me/88"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold text-white transition-all hover:opacity-90"
