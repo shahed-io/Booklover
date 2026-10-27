@@ -163,7 +163,7 @@ Clear recommendation with reasoning. Mention Booklover products naturally where 
 4-6 bullet points of pitfalls.
 
 ## কেন Booklover থেকে কিনবেন? (Why Buy From Booklover)
-3-5 bullets: genuine license, instant delivery, bKash/Nagad/Rocket, 24/7 support, DBID 586772174 official registration.
+Include only verified catalog details. Never invent registration IDs, support hours, shipping guarantees or payment methods.
 
 ## উপসংহার (Conclusion)
 2-3 paragraph wrap-up + a clear call to action linking to https://booklover.com.bd/shop.

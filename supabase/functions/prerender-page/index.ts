@@ -36,13 +36,7 @@ const orgSchema = {
     '',
     'https://wa.me/88',
   ],
-  contactPoint: {
-    '@type': 'ContactPoint',
-    telephone: '+88',
-    contactType: 'customer service',
-    areaServed: 'BD',
-    availableLanguage: ['Bengali', 'English'],
-  },
+
   areaServed: { '@type': 'Country', name: 'Bangladesh' },
 };
 
@@ -108,7 +102,7 @@ Deno.serve(async (req) => {
       }));
     }
 
-    const meta = STATIC_META[path] || STATIC_META['/'];
+    const meta = STATIC_META[path] || { title: `${SITE_NAME} | ${path === '/' ? 'Online Bookshop Bangladesh' : path.slice(1).replaceAll('-', ' ')}`, description: 'Browse books and collections at Booklover Bangladesh.', h1: SITE_NAME, intro: '', path };
     const canonicalUrl = `${SITE_URL}${meta.path}`;
 
     // For homepage and shop, list top products as anchor links so Googlebot crawls them

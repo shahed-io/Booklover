@@ -17,7 +17,7 @@ async function callLovableAI(prompt: string): Promise<string> {
       {
         role: "system",
         content:
-          "You are an expert SEO blog writer for a digital software store in Bangladesh. Always respond with valid JSON only, no markdown code blocks.",
+          "You are an expert SEO blog writer for a bookshop in Bangladesh. Always respond with valid JSON only, no markdown code blocks.",
       },
       { role: "user", content: prompt },
     ],
@@ -144,20 +144,20 @@ serve(async (req) => {
       const categoryName = product.categories?.name || "Software";
       const whatYouGet =
         (product.what_you_get || []).join(", ") ||
-        "Digital License Key, Instant Delivery, 24/7 Support";
+        "";
       const price = product.price;
       const originalPrice = product.original_price;
       const discount = originalPrice
         ? Math.round(((originalPrice - price) / originalPrice) * 100)
         : 0;
 
-      const prompt = `Write a detailed, SEO-optimized blog post in ENGLISH about the digital product "${product.name}" for a Bangladeshi digital software store called "Booklover" (website: booklover.com.bd).
+      const prompt = `Write a detailed, SEO-optimized blog post in ENGLISH about the book "${product.name}" for a Bangladeshi bookshop called "Booklover" (website: booklover.com.bd).
 
 Product Details:
 - Name: ${product.name}
 - Category: ${categoryName}
 - Price: ৳${price} BDT${originalPrice ? ` (Original: ৳${originalPrice}, Save ${discount}%)` : ""}
-- Description: ${product.description || product.short_description || "Premium digital license key"}
+- Description: ${product.description || product.short_description || ""}
 - What you get: ${whatYouGet}
 - Tags: ${(product.tags || []).join(", ") || categoryName}
 
@@ -165,9 +165,9 @@ Requirements for the blog post:
 1. Title: Engaging, SEO-friendly (include product name + benefit keyword)
 2. Length: 800-1200 words
 3. Structure with markdown headings (##, ###)
-4. Include: Introduction, Features/Benefits, Why Buy From Booklover, How to Activate, FAQ section, Conclusion with CTA
+4. Include: Introduction, Features/Benefits, Why Buy From Booklover, Book details, FAQ section, Conclusion with CTA
 5. Mention the affordable price in BDT
-6. Include keywords naturally: license key, Bangladesh, genuine, instant delivery, affordable
+6. Include keywords naturally: book title, author and publisher (only when supplied)
 7. Mention Booklover website: booklover.com.bd
 STORE NAME RULE: Use the correct spelling based on language. In English text write exactly "Booklover". In Bengali text write exactly "Booklover". Always write the brand name exactly as "Booklover" in English and "Booklover" in Bengali.
 8. Write in a professional, helpful tone
