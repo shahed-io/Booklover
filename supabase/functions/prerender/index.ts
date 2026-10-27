@@ -190,7 +190,7 @@ Deno.serve(async (req) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escape(title)}</title>
   <meta name="description" content="${escape(description)}">
-  <meta name="keywords" content="${escape(product.name)}, buy ${escape(product.name)} bangladesh, ${escape(product.name)} price bd, ${escape(categoryName)}, digital software bangladesh, Booklover">
+  <meta name="keywords" content="${escape(product.name)}, buy ${escape(product.name)} bangladesh, ${escape(product.name)} price bd, ${escape(categoryName)}, books bangladesh, Booklover">
   <meta name="author" content="${SITE_NAME}">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="geo.region" content="BD">
@@ -261,7 +261,7 @@ ${extraOgImages}
 
   <footer>
     <p>&copy; ${new Date().getFullYear()} ${SITE_NAME}. All rights reserved.</p>
-    <p>Bangladesh's most trusted digital software shop.</p>
+    <p>Booklover online bookshop.</p>
     <nav>
       <a href="${SITE_URL}/about">About Us</a> |
       <a href="${SITE_URL}/contact">Contact</a> |

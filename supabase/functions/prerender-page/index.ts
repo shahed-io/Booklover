@@ -34,7 +34,7 @@ const orgSchema = {
   logo: `${SITE_URL}/favicon.png`,
   sameAs: [
     '',
-    'https://wa.me/88',
+    '',
   ],
 
   areaServed: { '@type': 'Country', name: 'Bangladesh' },
@@ -206,7 +206,7 @@ ${o.schemas.map(s => `<script type="application/ld+json">${JSON.stringify(s)}</s
 </head><body>
 <header><nav><a href="${SITE_URL}">${SITE_NAME}</a> — <a href="${SITE_URL}/shop">Shop</a> — <a href="${SITE_URL}/blog">Blog</a> — <a href="${SITE_URL}/faqs">FAQ</a> — <a href="${SITE_URL}/contact-us">Contact</a></nav></header>
 <main><h1>${escape(o.h1)}</h1>${o.bodyHtml}</main>
-<footer><p>&copy; ${new Date().getFullYear()} ${SITE_NAME} — Bangladesh's most trusted digital software shop.</p></footer>
+<footer><p>&copy; ${new Date().getFullYear()} ${SITE_NAME} — Booklover online bookshop.</p></footer>
 <script>if(!/bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduck|facebookexternalhit|twitterbot|linkedinbot/i.test(navigator.userAgent)){location.replace("${o.canonical}");}</script>
 </body></html>`;
 }

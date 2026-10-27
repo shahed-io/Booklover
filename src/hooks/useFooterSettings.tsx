@@ -27,7 +27,7 @@ const DEFAULTS: FooterSettings = {
   tagline: '',
   facebook_url: '',
   whatsapp_url: '',
-  instagram_url: '.bd/',
+  instagram_url: '',
   telegram_url: '',
 };
 
