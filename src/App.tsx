@@ -21,7 +21,11 @@ import { useMarketingPixelsPageView } from "@/hooks/useMarketingPixelsPageView";
 import { useCart } from "@/hooks/useCart";
 
 // Critical pages — eager load
-import Index from "./pages/Index";
+import Index from "./components/booklover/Home";
+import CatalogPage from "./components/booklover/CatalogPage";
+import BookloverProduct from "./components/booklover/ProductPage";
+import { CartPage, AccountPage, InformationPage } from "./components/booklover/CustomerPages";
+import { CartDrawer as BookloverCartDrawer, Header as BookloverHeader, Footer as BookloverFooter } from "./components/booklover/Layout";
 const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 
 // Deferred non-critical components — lazy loaded
@@ -264,7 +268,7 @@ const AppContent = () => {
           <FacebookPixel />
           <GoogleTracking />
           <MarketingPixels />
-          <CartDrawer />
+          {!isAdminArea && <BookloverCartDrawer />}
           <RedirectEnforcer />
         </Suspense>
       )}
@@ -276,9 +280,16 @@ const AppContent = () => {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/product/:slug" element={<ProductDetail />} />
+          <Route path="/shop" element={<CatalogPage />} />
+          <Route path="/collections" element={<CatalogPage />} />
+          <Route path="/collections/:slug" element={<CatalogPage />} />
+          <Route path="/search" element={<CatalogPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/wishlist" element={<CartPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/checkout" element={<div className="booklover booklover-checkout"><BookloverHeader /><Checkout /><BookloverFooter /></div>} />
+          <Route path="/product/:slug" element={<BookloverProduct />} />
+          <Route path="/products/:slug" element={<BookloverProduct />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/link" element={<HelpCenter />} />
@@ -391,18 +402,18 @@ const AppContent = () => {
 
           <Route path="/notices" element={<PublicNotices />} />
           <Route path="/notices/:slug" element={<PublicNotices />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/privacy-policy" element={<InformationPage />} />
 
-          <Route path="/terms-conditions" element={<TermsConditions />} />
-          <Route path="/refund-policy" element={<RefundPolicy />} />
-          <Route path="/order-policy" element={<OrderPolicy />} />
-          <Route path="/delivery-info" element={<DeliveryInfo />} />
+          <Route path="/terms-conditions" element={<InformationPage />} />
+          <Route path="/refund-policy" element={<InformationPage />} />
+          <Route path="/order-policy" element={<InformationPage />} />
+          <Route path="/delivery-info" element={<InformationPage />} />
           <Route path="/developer" element={<Developer />} />
-          <Route path="/return-policy" element={<ReturnPolicy />} />
-          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/return-policy" element={<InformationPage />} />
+          <Route path="/contact-us" element={<InformationPage />} />
           <Route path="/contact" element={<Navigate to="/contact-us" replace />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/faqs" element={<FAQs />} />
+          <Route path="/about" element={<InformationPage />} />
+          <Route path="/faqs" element={<InformationPage />} />
           <Route path="/antivirus-price-in-bd" element={<Navigate to="/shop" replace />} />
           <Route path="/free-tools" element={<Navigate to="/shop" replace />} />
           <Route path="/free-tools/:toolId" element={<Navigate to="/shop" replace />} />
@@ -418,8 +429,8 @@ const AppContent = () => {
       </Suspense>
       {deferReady && (
         <Suspense fallback={null}>
-          <MobileBottomNav />
-          {!location.pathname.startsWith('/admin') && <FloatingSupport />}
+          {isAdminArea && <MobileBottomNav />}
+          
         </Suspense>
       )}
     </>
