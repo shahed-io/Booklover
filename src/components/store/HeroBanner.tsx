@@ -9,7 +9,7 @@ type Slide = {
   emoji: string; logoImg?: string; bgImage?: string; features: string[]; productSlug?: string;
 };
 
-const FALLBACK_BANNERS = [bannerOne, bannerTwo, bannerThree];
+const FALLBACK_BANNERS: string[] = [];
 
 /**
  * Image-only default banner. No copy is baked in — the admin panel
@@ -28,7 +28,7 @@ const STATIC_SLIDES: Slide[] = FALLBACK_BANNERS.map(emptySlide);
 // Admin-uploaded bgImage always wins, otherwise rotate the bundled banners.
 const pickBannerBg = (s: Slide, idx: number): string => {
   if (s.bgImage && s.bgImage.trim()) return s.bgImage;
-  return FALLBACK_BANNERS[idx % FALLBACK_BANNERS.length];
+  return '';
 };
 
 const dbSlideToSlide = (s: SlideData): Slide => ({

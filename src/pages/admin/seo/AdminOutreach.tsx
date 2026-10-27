@@ -612,7 +612,7 @@ const AdminOutreach = () => {
 
       {/* Template viewer */}
       {showTpl && (() => {
-        const variants = TEMPLATE_VARIANTS[showTpl.pitch_template] || TEMPLATE_VARIANTS.guest_post;
+        const variants = TEMPLATE_VARIANTS[showTpl.pitch_template] || [{ label: 'Custom', subject: '', body: '' }];
         const safeIdx = Math.min(variantIdx, variants.length - 1);
         const t = renderVariant(variants[safeIdx], showTpl);
         return (
