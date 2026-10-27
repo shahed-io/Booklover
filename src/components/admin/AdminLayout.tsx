@@ -111,6 +111,7 @@ const MENU_SECTIONS: MenuSection[] = [
   {
     title: 'Storefront',
     items: [
+      { icon: Sliders, label: 'Booklover Homepage & Menu', path: '/admin/booklover-home' },
       { icon: Sliders, label: 'Hero Banner', path: '/admin/hero-banner' },
       { icon: Flame, label: 'Flash Sale', path: '/admin/flash-sale' },
       { icon: Star, label: 'Testimonials', path: '/admin/testimonials' },

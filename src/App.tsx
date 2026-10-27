@@ -110,6 +110,7 @@ const AdminBrokenLinks      = lazy(() => import("./pages/admin/seo/AdminBrokenLi
 const AdminOutreach         = lazy(() => import("./pages/admin/seo/AdminOutreach"));
 const AdminWallet           = lazy(() => import("./pages/admin/AdminWallet"));
 const AdminHeroBanner       = lazy(() => import("./pages/admin/AdminHeroBanner"));
+const AdminBookloverHome = lazy(() => import('./pages/admin/AdminBookloverHome'));
 const AdminFlashSale        = lazy(() => import("./pages/admin/AdminFlashSale"));
 const AdminTestimonials     = lazy(() => import("./pages/admin/AdminTestimonials"));
 const AdminAnnouncementBar  = lazy(() => import("./pages/admin/AdminAnnouncementBar"));
@@ -349,6 +350,7 @@ const AppContent = () => {
             <Route path="pages" element={<AdminSuspense><AdminPages /></AdminSuspense>} />
             <Route path="media-library" element={<AdminSuspense><AdminMediaLibrary /></AdminSuspense>} />
             <Route path="wallet" element={<AdminSuspense><AdminWallet /></AdminSuspense>} />
+            <Route path="booklover-home" element={<AdminSuspense><AdminBookloverHome /></AdminSuspense>} />
             <Route path="hero-banner" element={<AdminSuspense><AdminHeroBanner /></AdminSuspense>} />
             <Route path="flash-sale" element={<AdminSuspense><AdminFlashSale /></AdminSuspense>} />
             <Route path="testimonials" element={<AdminSuspense><AdminTestimonials /></AdminSuspense>} />

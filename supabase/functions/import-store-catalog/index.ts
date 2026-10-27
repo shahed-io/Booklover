@@ -85,6 +85,35 @@ Deno.serve(async (req) => {
       if (missing.length) await db.from('products').update({ category_id: cat.id }).in('id', missing)
       return json({ ok: true, count: links.length })
     }
+    if (body.action === 'images') {
+      // Copy external product images into Booklover storage.
+      const limit = Math.min(Number(body.limit) || 25, 50)
+      const { data: ps, error: e } = await db.from('products').select('id,slug,image_url,images')
+        .like('image_url', 'https://%').not('image_url', 'like', `${url}%`).gt('id', body.after || '00000000-0000-0000-0000-000000000000').order('id').limit(limit)
+      if (e) throw e
+      let copied = 0, failed = 0
+      await Promise.all((ps ?? []).map(async (p: any) => {
+        const src: string[] = (p.images?.length ? p.images : [p.image_url]).filter(Boolean)
+        const out: string[] = []
+        for (let i = 0; i < src.length; i++) {
+          try {
+            if (src[i].startsWith(url)) { out.push(src[i]); continue }
+            const r = await fetch(src[i])
+            if (!r.ok) throw new Error(String(r.status))
+            const type = r.headers.get('content-type') ?? 'image/jpeg'
+            const ext = type.includes('png') ? 'png' : type.includes('webp') ? 'webp' : 'jpg'
+            const path = `catalog/${p.slug}-${i}.${ext}`
+            const { error: ue } = await db.storage.from('product-images').upload(path, await r.arrayBuffer(), { contentType: type, upsert: true })
+            if (ue) throw ue
+            out.push(db.storage.from('product-images').getPublicUrl(path).data.publicUrl)
+          } catch { out.push(src[i]) }
+        }
+        const ok = out[0] && out[0].startsWith(url)
+        if (ok) { copied++; await db.from('products').update({ image_url: out[0], images: out }).eq('id', p.id) }
+        else failed++
+      }))
+      return json({ ok: true, copied, failed, last: ps?.length ? ps[ps.length - 1].id : null, done: (ps ?? []).length === 0 })
+    }
     return json({ error: 'unknown action' }, 400)
   } catch (e) {
     console.error(e)
