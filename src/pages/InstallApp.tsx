@@ -67,7 +67,7 @@ const InstallApp = () => {
         title="Install Booklover App – PWA"
         description="Booklover অ্যাপটি আপনার ফোনে ইনস্টল করুন। দ্রুত লোডিং, অফলাইন সাপোর্ট এবং নেটিভ অ্যাপের মতো অভিজ্ঞতা পান।"
         canonical="https://booklover.com.bd/install"
-        keywords="Booklover app install, pwa bangladesh, furniture store app download"
+        keywords="Booklover app install, pwa bangladesh, bookshop app"
       />
       <Navbar />
 

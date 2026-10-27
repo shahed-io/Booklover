@@ -111,7 +111,7 @@ serve(async (req) => {
 
     const bdCities = "ঢাকা, চট্টগ্রাম, সিলেট, রাজশাহী, খুলনা, বরিশাল, ময়মনসিংহ, কুমিল্লা";
 
-    const systemPrompt = `You are a senior SEO content strategist for Booklover (DBID: 586772174) — Bangladesh's #1 digital software & subscription store (booklover.com.bd).
+    const systemPrompt = `You are a senior SEO content strategist for Booklover — online bookshop (booklover.com.bd).
 
 GOAL: Write a comprehensive, deeply informational blog post in Bangla-English mix that ranks #1 on Google Bangladesh AND gets cited by ChatGPT, Perplexity, and Google AI Overview.
 

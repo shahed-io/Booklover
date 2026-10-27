@@ -4,8 +4,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useReveal } from '@/hooks/useReveal';
 
 const CAT_META: Record<string, { icon: string; glow: string; accent: string }> = {
-  'Bean Bag':      { icon: '🛋️', glow: 'hsla(210,90%,60%,0.18)', accent: 'hsl(210,90%,60%)' },
-  'Bean Bag Sofa': { icon: '🛏️', glow: 'hsla(25,90%,60%,0.18)',  accent: 'hsl(25,90%,60%)' },
   'Lounge Chair':  { icon: '🪑', glow: 'hsla(263,70%,62%,0.18)', accent: 'hsl(263,70%,62%)' },
   'Cushion':       { icon: '🧵', glow: 'hsla(190,70%,48%,0.18)', accent: 'hsl(190,70%,48%)' },
   'Ottoman':       { icon: '🪆', glow: 'hsla(283,65%,62%,0.18)', accent: 'hsl(283,65%,62%)' },
@@ -105,7 +103,7 @@ const Categories = () => {
               </span>
             </h2>
             <p className="mt-2 text-[14px] max-w-md leading-relaxed text-muted-foreground">
-              প্রিমিয়াম বিন ব্যাগ ও লাইফস্টাইল ফার্নিচার সব ধরনের ক্যাটাগরিতে।
+              বইয়ের সংগ্রহ
             </p>
           </div>
           <a href="/shop" className="inline-flex items-center gap-2 text-sm font-bold hover:gap-3 transition-all flex-shrink-0 group"
@@ -162,7 +160,7 @@ const Categories = () => {
 
                 <div className="relative">
                   <h3 className="font-sora font-bold text-[13px] leading-tight text-foreground">{cat.name}</h3>
-                  <p className="text-[11px] mt-1 leading-relaxed text-muted-foreground">{cat.description || 'Premium Furniture'}</p>
+                  <p className="text-[11px] mt-1 leading-relaxed text-muted-foreground">{cat.description || ''}</p>
                 </div>
 
                 <div className="relative flex items-center justify-between mt-auto pt-1">

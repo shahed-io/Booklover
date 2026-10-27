@@ -11,13 +11,13 @@ export interface TextRegistryEntry {
 
 export const TEXT_REGISTRY: TextRegistryEntry[] = [
   // ---------- Homepage / Hero ----------
-  { key: 'home.hero.badge',       category: 'Homepage — Hero',  defaultValue: 'প্রিমিয়াম বিন ব্যাগ স্টোর',           description: 'Hero ছোট badge text' },
+  { key: 'home.hero.badge',       category: 'Homepage — Hero',  defaultValue: '',           description: 'Hero ছোট badge text' },
   { key: 'home.hero.cta_primary', category: 'Homepage — Hero',  defaultValue: 'এখনই কিনুন',                       description: 'প্রধান CTA বাটন' },
   { key: 'home.hero.cta_secondary', category: 'Homepage — Hero', defaultValue: 'সব প্রোডাক্ট দেখুন',              description: 'সেকেন্ডারি বাটন' },
 
   // ---------- Why Choose Us ----------
   { key: 'home.why.title',        category: 'Why Choose Us',     defaultValue: 'কেন আমাদের বেছে নেবেন?',           description: 'সেকশন হেডিং' },
-  { key: 'home.why.subtitle',     category: 'Why Choose Us',     defaultValue: 'বাংলাদেশের সবচেয়ে বিশ্বস্ত বিন ব্যাগ ও ফার্নিচার ব্র্যান্ড', description: 'সেকশন সাবটাইটেল' },
+  { key: 'home.why.subtitle',     category: 'Why Choose Us',     defaultValue: '', description: 'সেকশন সাবটাইটেল' },
 
   // ---------- Flash Sale ----------
   { key: 'home.flash.title',      category: 'Flash Sale',        defaultValue: 'ফ্ল্যাশ সেল',                      description: 'Flash sale heading' },

@@ -1038,7 +1038,7 @@ const AdminProducts = () => {
                             image_alt: p.image_alt || autoAlt,
                           }));
                         }}
-                        placeholder="যেমন: MonoLux Giant Bean Bag Combo Brown" className={ic} />
+                        placeholder="বইয়ের নাম" className={ic} />
                       {form.name.trim() && (
                         <button
                           type="button"
@@ -1383,7 +1383,7 @@ const AdminProducts = () => {
                       <label className={lc}>Product Tags <span className="text-muted-foreground/60">(comma separated)</span></label>
                       <input value={form.tags}
                         onChange={e => setForm(p => ({ ...p, tags: e.target.value }))}
-                        placeholder="বিন ব্যাগ, সোফা, ফার্নিচার..." className={ic} />
+                        placeholder="বইয়ের তথ্য..." className={ic} />
                     </div>
 
 

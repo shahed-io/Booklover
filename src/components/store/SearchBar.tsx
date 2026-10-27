@@ -23,7 +23,7 @@ interface Category {
   slug: string;
 }
 
-const RECENT_KEY = 'relaxo_recent_searches';
+const RECENT_KEY = 'booklover_recent_searches';
 
 const getRecent = (): string[] => {
   try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; }
@@ -364,7 +364,7 @@ const useGoogleSearch = () => {
 };
 
 // ── Popular search terms ─────────────────────────────────────────────
-const POPULAR_SEARCHES = ['Bean Bag', 'XXL Bean Bag', 'Bean Bag Sofa', 'Lounge Chair', 'Kids Bean Bag', 'Cushion', 'Ottoman', 'Bean Refill'];
+const POPULAR_SEARCHES: string[] = [];
 
 // ══════════════════════════════════════════════════════════════════════
 // DESKTOP: Google-style Command Palette

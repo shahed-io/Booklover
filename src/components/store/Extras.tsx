@@ -28,13 +28,7 @@ const DEFAULT_SETTINGS: AnnouncementSettings = {
   textColor: 'hsl(226,35%,18%)',
   accentColor: 'hsl(258,78%,55%)',
   liveLabel: 'LIVE',
-  items: [
-    { label: 'XXL Bean Bag', price: '৳3,490', off: '-25%' },
-    { label: 'Bean Bag Sofa', price: '৳6,990', off: '-20%' },
-    { label: 'Lounge Chair', price: '৳4,990', off: '-18%' },
-    { label: 'Kids Bean Bag', price: '৳1,990', off: '-22%' },
-    { label: 'Floor Cushion', price: '৳1,290', off: '-15%' },
-  ],
+  items: [],
 };
 
 const formatBDT = (n: number) => `৳${Math.round(n).toLocaleString('en-US')}`;

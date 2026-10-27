@@ -30,8 +30,6 @@ const NAV_LINKS = [
 ];
 
 const CAT_ICON_MAP: Record<string, { icon: string; color: string }> = {
-  'Bean Bag':     { icon: '🛋️', color: 'hsla(35,92%,62%,0.12)' },
-  'Bean Bags':    { icon: '🛋️', color: 'hsla(35,92%,62%,0.12)' },
   'Sofa':         { icon: '🛋️', color: 'hsla(222,58%,32%,0.12)' },
   'Chair':        { icon: '🪑', color: 'hsla(25,90%,60%,0.12)' },
   'Lounge Chair': { icon: '🪑', color: 'hsla(25,90%,60%,0.12)' },

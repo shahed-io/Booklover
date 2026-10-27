@@ -73,7 +73,7 @@ const NICHE_OPTIONS = [
   'Interior Design',
   'Lifestyle / Vlog',
   'Family / Parenting',
-  'Furniture Review',
+  'Book Review',
   'Business / Marketing',
   'Real Estate',
   'Design / Creative',

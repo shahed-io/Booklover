@@ -110,14 +110,14 @@ ${houseStyle}
 ${descSkeleton}
 
 RULES:
-- মাপ/সাইজ অনুমান করা লাগলে ওই ধরনের বিন ব্যাগের বাস্তবসম্মত মাপ দাও।
+- মাপ/সাইজ অনুমান করা লাগলে কোনো তথ্য অনুমান করবে না।
 - কোনো ইমোজি হেডিং নয়, কোনো "Important Notes" ফুটার নয়, কোনো দাম-প্ল্যান টেবিল নয়।
 - ৩৫০–৬০০ শব্দ। শুধু markdown রিটার্ন করবে।${demoDescription ? `\n- নিচের রেফারেন্স ডেসক্রিপশনের টোন ও স্ট্রাকচার মেনে চলবে।` : ""}`;
       userPrompt = `প্রোডাক্ট: ${productName}${specHint ? `\n${specHint}` : ""}${demoDescription ? `\n\n=== REFERENCE STYLE ===\n${String(demoDescription).slice(0, 6000)}` : ""}`;
 
     } else if (type === "seo") {
       maxTokens = 500;
-      systemPrompt = `তুমি Bangladesh-focused SEO expert (হোম ফার্নিচার ও বিন ব্যাগ)।
+      systemPrompt = `তুমি Bangladesh-focused SEO expert (বই)।
 ${houseStyle}
 
 Return ONLY valid JSON:

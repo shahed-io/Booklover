@@ -1,7 +1,7 @@
 {
   "name": "Booklover",
   "short_name": "Booklover",
-  "description": "বাংলাদেশের সবচেয়ে বিশ্বস্ত ডিজিটাল সফটওয়্যার শপ",
+  "description": "Booklover online bookshop",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -26,13 +26,9 @@
       "purpose": "maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/pwa-screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow"
-    }
-  ],
-  "categories": ["shopping", "business"]
+  "screenshots": [],
+  "categories": [
+    "shopping",
+    "business"
+  ]
 }

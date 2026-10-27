@@ -491,7 +491,7 @@ ${isChangeOfMind ? `⚠️ মন পরিবর্তনের কারণে
                   <div className="sm:col-span-2">
                     <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>পণ্যের নাম</label>
                     <input value={form.product_name} onChange={e => set('product_name', e.target.value)}
-                      placeholder="যেমন: প্রিমিয়াম XL বিন ব্যাগ সোফা" className={inputCls} maxLength={200} />
+                      placeholder="বইয়ের নাম" className={inputCls} maxLength={200} />
                   </div>
                   <div>
                     <label className={labelCls} style={{ color: 'hsl(226,35%,28%)' }}>ওয়ারেন্টির মেয়াদ</label>
