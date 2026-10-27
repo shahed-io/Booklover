@@ -1257,7 +1257,7 @@ const UserDashboard = () => {
                       style={{ background: 'linear-gradient(135deg, hsl(45,95%,55%), hsl(35,90%,52%))', boxShadow: '0 4px 12px hsla(38,92%,50%,0.40)' }}>
                       <Zap size={15} className="text-white" />
                     </span>
-                    <span className="flex-1 text-left">Shop Bean Bags</span>
+                    <span className="flex-1 text-left">Shop Books</span>
                     <ChevronRight size={14} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                   </button>
                   {isAdmin && (

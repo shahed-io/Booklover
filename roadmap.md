@@ -1,9 +1,12 @@
 # Roadmap
 
 ## Legacy-brand cleanup
-- [ ] Audit code, assets, configuration and Cloud settings for inherited branding and connections.
-- [ ] Remove legacy content and media, reset inherited defaults, and preserve commerce and admin design.
-- [ ] Verify remaining references, tests, preview and Cloud cleanup; document any access blockers.
+- [x] Audit source, assets, configuration, public database functions/defaults, storage and schedules for inherited branding.
+- [x] Remove old media/reference images/importer, clear inherited testimonials and claims, replace logo paths with approved Booklover logo, and blank payment/contact defaults without changing admin styling.
+- [x] Delete 23 inherited external-provider secrets, detach source-project HTTP callbacks, and clear old message defaults while preserving commerce tables and in-app notifications.
+- [x] Verify 38 tests, build OK, eight public/admin-login pages with no runtime errors or legacy requests, and zero legacy database function/default matches.
+- [ ] Verify authenticated purchases/admin editors — no catalog or account exists; requires owner catalog/account.
+- [ ] Verify blog page end-to-end — automated browser could not read the page body; source branding scan passed but rendering remains unverified.
 
 ## Booklover storefront
 - [x] Record inspected reference pages, product details, and unverified areas in .lovable/booklover-reference-audit.md.
@@ -17,7 +20,7 @@
 
 ## Remix setup
 - [x] Verify copied Drizzle migrations were cleared and the new migration journal is empty and valid.
-- [ ] Replace the 37 requested secret values — secure replacement form was declined; waiting for user submission.
+- [ ] Configure owner credentials/providers — 23 inherited provider secrets removed during cleanup; retained admin/security/AI secrets require owner replacement through secure forms.
 - [ ] Replace remaining legacy email calls with managed feature-specific sending — waiting for the user to configure an owned sender domain.
 
 ## Done

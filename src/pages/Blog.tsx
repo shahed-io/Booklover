@@ -67,16 +67,16 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SEOHead
-        title="Home Decor Tips, Bean Bag Care & Styling Guides – Blog"
-        description="Booklover Blog – Read guides, tips and news about home decor, bean bag care, living room styling and lifestyle furniture in Bangladesh."
+        title="Booklover Blog"
+        description="Booklover articles and news."
         ogType="website"
         canonical="https://booklover.com.bd/blog"
-        keywords="home decor tips bangladesh, bean bag care guide, living room styling, furniture blog bd"
+        keywords="Booklover, books, reading"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'Blog',
           name: 'Booklover Blog',
-          description: 'Tips, guides and news about home decor and lifestyle furniture',
+          description: 'Booklover articles',
           url: `${SITE_URL}/blog`,
         }}
       />
@@ -113,7 +113,7 @@ const Blog = () => {
           </h1>
 
           <p className="text-muted-foreground max-w-lg mx-auto text-base mb-10 leading-relaxed">
-            হোম ডেকর, বিন ব্যাগ কেয়ার এবং লিভিং রুম স্টাইলিং টিপস পড়ুন
+            Booklover-এর লেখা ও খবর
           </p>
 
           {/* Search bar */}

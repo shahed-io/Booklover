@@ -26,8 +26,8 @@ const DEFAULTS: FooterSettings = {
   store_name: 'Booklover',
   tagline: '',
   facebook_url: '',
-  whatsapp_url: 'https://wa.me/88',
-  instagram_url: '.bd/',
+  whatsapp_url: '',
+  instagram_url: '',
   telegram_url: '',
 };
 

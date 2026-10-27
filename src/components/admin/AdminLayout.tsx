@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import BrandLogo from '@/components/store/BrandLogo';
-import logoIcon from '@/assets/logo-icon.webp';
+import logoAsset from '@/assets/booklover-logo.jpeg.asset.json';
+const logoIcon = logoAsset.url;
 import { NavLink, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';

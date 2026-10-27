@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Lock, Eye, EyeOff, ShieldCheck, RefreshCw } from 'lucide-react';
-import logoIcon from '@/assets/logo-icon.webp';
+import logoAsset from '@/assets/booklover-logo.jpeg.asset.json';
+const logoIcon = logoAsset.url;
 import SEOHead from '@/components/seo/SEOHead';
 
 const ResetPassword = () => {

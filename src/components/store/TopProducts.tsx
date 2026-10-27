@@ -41,14 +41,7 @@ const fetchProducts = async () => {
   if (error) throw error;
   const rows = data ?? [];
   // Hidden on the homepage only (still searchable / visible in shop)
-const hiddenCats: string[] = [
-    'Faux Leather Giant Roll 3pcs Combo Bean Bag',
-    'Faux Leather XXL Pear Shape 3pcs Combo',
-    'Faux Leather XXL Pumpkin Shape 3pcs Combo',
-    'Faux Leather Xxxl Pear Shape 3pcs Combo',
-    'XXL Pumpkin Shape Single Bean Bag',
-    'XXXL Pear Shape Single Bean Bag',
-  ];
+const hiddenCats: string[] = [];
   const filteredRows = rows.filter((p: any) => !hiddenCats.includes(p.category?.name));
   const products = filteredRows.map(mapProduct);
   const map = new Map<string, number>();

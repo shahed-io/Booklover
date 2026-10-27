@@ -44,9 +44,9 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
  * এবং এই ইমেইলটা ছিল এটাকে set up করে দাও
  */
 const SITE_NAME = "Booklover"
-const SENDER_DOMAIN = ""
+const SENDER_DOMAIN = Deno.env.get("EMAIL_SENDER_DOMAIN") || ""
 const ROOT_DOMAIN = "booklover.com.bd"
-const FROM_DOMAIN = "booklover.com.bd" // Domain shown in From address (may be root or sender subdomain)
+const FROM_DOMAIN = Deno.env.get("EMAIL_SENDER_DOMAIN") || "" // Domain shown in From address (may be root or sender subdomain)
 
 // Sample data for preview mode ONLY (not used in actual email sending).
 // URLs are baked in at scaffold time from the project's real data.

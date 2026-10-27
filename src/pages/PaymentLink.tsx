@@ -231,7 +231,7 @@ export default function PaymentLink() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="sm:col-span-2">
                   <Label>পণ্য / সার্ভিসের নাম *</Label>
-                  <Input value={form.open_product_name} onChange={e => setForm({ ...form, open_product_name: e.target.value })} placeholder="যেমন: XXL Bean Bag — Navy Blue" required />
+                  <Input value={form.open_product_name} onChange={e => setForm({ ...form, open_product_name: e.target.value })} placeholder="বইয়ের নাম" required />
                 </div>
                 <div>
                   <Label>পরিমাণ (৳) *</Label>

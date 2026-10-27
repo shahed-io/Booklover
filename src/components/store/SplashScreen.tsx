@@ -106,7 +106,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
         </p>
         <p className="text-center text-[10px] mt-1.5 tracking-[0.25em] uppercase"
           style={{ color: 'hsla(0, 0%, 100%, 0.45)' }}>
-          Premium Home & Lifestyle Furniture
+          Booklover
         </p>
       </div>
 

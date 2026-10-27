@@ -23,85 +23,7 @@ interface PageMeta {
   path: string;
 }
 
-const STATIC_META: Record<string, PageMeta> = {
-  '/': {
-    title: `${SITE_NAME} — Bangladesh's #1 Digital Software Shop | Windows, Office, Adobe`,
-    description: `Buy Windows 11, Microsoft Office 365, Adobe Creative Cloud, Antivirus, VPN at the lowest price in Bangladesh. 100% genuine licenses. Instant delivery. Trusted by 10,000+ customers.`,
-    h1: `${SITE_NAME} — Bangladesh's Most Trusted Digital Software Shop`,
-    intro: `Welcome to ${SITE_NAME}, the #1 destination in Bangladesh for genuine digital software licenses, Office 365, Windows keys, antivirus, VPN, streaming subscriptions and more — all at the lowest prices with instant delivery.`,
-    path: '/',
-  },
-  '/shop': {
-    title: `Shop All Digital Software Bangladesh — Lowest Price | ${SITE_NAME}`,
-    description: `Browse all genuine software products in Bangladesh: Windows, Office 365, Adobe, Antivirus, Netflix, Spotify, VPN. 100% original. Fast delivery from ${SITE_NAME}.`,
-    h1: 'Shop All Products',
-    intro: `Explore the complete catalog of digital software, license keys, and subscriptions available in Bangladesh from ${SITE_NAME}.`,
-    path: '/shop',
-  },
-  '/blog': {
-    title: `Software Tips, Guides & News — ${SITE_NAME} Blog`,
-    description: `Read the latest tips, tutorials, and guides on Windows, Office, Adobe, antivirus, VPN, and more. Curated by ${SITE_NAME} for Bangladesh users.`,
-    h1: `${SITE_NAME} Blog`,
-    intro: `In-depth software tutorials, buying guides, and tech news for Bangladesh users.`,
-    path: '/blog',
-  },
-  '/faqs': {
-    title: `Frequently Asked Questions — ${SITE_NAME} Bangladesh`,
-    description: `Answers to common questions about ordering, payment, delivery, refund and software activation at ${SITE_NAME} Bangladesh.`,
-    h1: 'Frequently Asked Questions',
-    intro: `Everything you need to know about shopping for digital software with ${SITE_NAME}.`,
-    path: '/faqs',
-  },
-  '/about': {
-    title: `About ${SITE_NAME} — Bangladesh's Trusted Software Shop`,
-    description: `${SITE_NAME} is Bangladesh's leading digital software shop. Genuine licenses, instant delivery, and 24/7 customer support since 2020.`,
-    h1: `About ${SITE_NAME}`,
-    intro: `${SITE_NAME} has been serving thousands of customers across Bangladesh with genuine software licenses since 2020.`,
-    path: '/about',
-  },
-  '/contact-us': {
-    title: `Contact ${SITE_NAME} — Customer Support Bangladesh`,
-    description: `Get in touch with ${SITE_NAME} for product support, sales enquiries, or order help. WhatsApp, phone, and email support available 24/7.`,
-    h1: 'Contact Us',
-    intro: `Reach the ${SITE_NAME} team via WhatsApp, phone, or email — 24/7 support for all customers in Bangladesh.`,
-    path: '/contact-us',
-  },
-  '/free-tools': {
-    title: `Free Tools & Utilities — ${SITE_NAME} Bangladesh`,
-    description: `Free software tools, license checkers, key validators and tech utilities curated by ${SITE_NAME} for Bangladesh users.`,
-    h1: 'Free Tools',
-    intro: `Useful free tools and utilities provided by ${SITE_NAME}.`,
-    path: '/free-tools',
-  },
-  '/delivery-info': {
-    title: `Delivery Information — ${SITE_NAME} Bangladesh`,
-    description: `Learn how digital products are delivered at ${SITE_NAME}. Most orders delivered instantly within 1–24 hours via email and WhatsApp.`,
-    h1: 'Delivery Information',
-    intro: `Fast, instant digital delivery across Bangladesh.`,
-    path: '/delivery-info',
-  },
-  '/refund-policy': {
-    title: `Refund Policy — ${SITE_NAME} Bangladesh`,
-    description: `${SITE_NAME} refund policy: clear timelines, fair process. Refunds processed within 1–7 days subject to terms.`,
-    h1: 'Refund Policy',
-    intro: `Our customer-friendly refund policy explained.`,
-    path: '/refund-policy',
-  },
-  '/privacy-policy': {
-    title: `Privacy Policy — ${SITE_NAME}`,
-    description: `How ${SITE_NAME} protects and handles your personal data, in compliance with Bangladesh data privacy practices.`,
-    h1: 'Privacy Policy',
-    intro: `Your privacy and trust are our top priorities.`,
-    path: '/privacy-policy',
-  },
-  '/terms-conditions': {
-    title: `Terms & Conditions — ${SITE_NAME}`,
-    description: `Terms of service and shopping conditions at ${SITE_NAME} Bangladesh.`,
-    h1: 'Terms & Conditions',
-    intro: `Please read our terms before placing an order.`,
-    path: '/terms-conditions',
-  },
-};
+const STATIC_META: Record<string, PageMeta> = {};
 
 const orgSchema = {
   '@context': 'https://schema.org',
@@ -112,15 +34,9 @@ const orgSchema = {
   logo: `${SITE_URL}/favicon.png`,
   sameAs: [
     '',
-    'https://wa.me/88',
+    '',
   ],
-  contactPoint: {
-    '@type': 'ContactPoint',
-    telephone: '+88',
-    contactType: 'customer service',
-    areaServed: 'BD',
-    availableLanguage: ['Bengali', 'English'],
-  },
+
   areaServed: { '@type': 'Country', name: 'Bangladesh' },
 };
 
@@ -186,7 +102,7 @@ Deno.serve(async (req) => {
       }));
     }
 
-    const meta = STATIC_META[path] || STATIC_META['/'];
+    const meta = STATIC_META[path] || { title: `${SITE_NAME} | ${path === '/' ? 'Online Bookshop Bangladesh' : path.slice(1).replaceAll('-', ' ')}`, description: 'Browse books and collections at Booklover Bangladesh.', h1: SITE_NAME, intro: '', path };
     const canonicalUrl = `${SITE_URL}${meta.path}`;
 
     // For homepage and shop, list top products as anchor links so Googlebot crawls them
@@ -290,7 +206,7 @@ ${o.schemas.map(s => `<script type="application/ld+json">${JSON.stringify(s)}</s
 </head><body>
 <header><nav><a href="${SITE_URL}">${SITE_NAME}</a> — <a href="${SITE_URL}/shop">Shop</a> — <a href="${SITE_URL}/blog">Blog</a> — <a href="${SITE_URL}/faqs">FAQ</a> — <a href="${SITE_URL}/contact-us">Contact</a></nav></header>
 <main><h1>${escape(o.h1)}</h1>${o.bodyHtml}</main>
-<footer><p>&copy; ${new Date().getFullYear()} ${SITE_NAME} — Bangladesh's most trusted digital software shop.</p></footer>
+<footer><p>&copy; ${new Date().getFullYear()} ${SITE_NAME} — Booklover online bookshop.</p></footer>
 <script>if(!/bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduck|facebookexternalhit|twitterbot|linkedinbot/i.test(navigator.userAgent)){location.replace("${o.canonical}");}</script>
 </body></html>`;
 }

@@ -572,7 +572,7 @@ Deno.serve(async (req) => {
 
           if (!adminChatId || String(chatId) !== adminChatId) {
             await sendMsg(BOT_TOKEN, chatId,
-              `🔒 এই বটটি শুধুমাত্র এডমিনের জন্য।\n\n🛍️ শপিংয়ের জন্য @booklover_bot ব্যবহার করুন।`);
+              `🔒 এই বটটি শুধুমাত্র এডমিনের জন্য।\n\n🛍️ শপিংয়ের জন্য ওয়েবসাইট ব্যবহার করুন।`);
             totalProcessed++; continue;
           }
 

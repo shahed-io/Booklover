@@ -245,7 +245,7 @@ const HelpCenter = () => {
         title="Help Center – Size Guide, Delivery & Support"
         description="Booklover হেল্প সেন্টার — সাইজ গাইড, ফেব্রিক কেয়ার, ডেলিভারি, ওয়ারেন্টি, বিন রিফিল ও অর্ডার ট্র্যাকিং সংক্রান্ত সকল সমাধান পান।"
         canonical="https://booklover.com.bd/link"
-        keywords="Booklover help center, bean bag size guide bangladesh, fabric care, delivery, warranty, bean refill, order tracking"
+        keywords="Booklover help, orders"
       />
       <Navbar />
 

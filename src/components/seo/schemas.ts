@@ -1,6 +1,6 @@
 import { SITE_URL, SITE_NAME } from './SEOHead';
 
-const PHONE = '+88';
+const PHONE = '';
 const BD_AREA_CODE = 'BD';
 const SUPABASE_STORAGE_ORIGIN = 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
 const SUPABASE_STORAGE_PUBLIC_PATH = '/storage/v1/object/public/';
@@ -52,8 +52,8 @@ export const productSchema = (p: {
   }));
 
   // Synthetic baseline rating to ensure rich snippet eligibility (overridden by real reviews)
-  const rating = p.rating ?? 4.9;
-  const reviewCount = p.reviewCount ?? 127;
+  const rating = p.rating;
+  const reviewCount = p.reviewCount;
 
   return ({
   '@context': 'https://schema.org',
@@ -66,7 +66,7 @@ export const productSchema = (p: {
   sku: p.sku || p.slug,
   mpn: p.sku || p.slug,
   brand: { '@type': 'Brand', name: SITE_NAME },
-  category: p.category || 'Furniture',
+  category: p.category || 'Books',
   offers: {
     '@type': 'Offer',
     '@id': `${SITE_URL}/product/${p.slug}#offer`,
@@ -82,25 +82,6 @@ export const productSchema = (p: {
       url: SITE_URL,
       areaServed: { '@type': 'Country', name: 'Bangladesh', '@id': 'https://www.wikidata.org/wiki/Q902' },
     },
-    // Required for Google Merchant rich results
-    shippingDetails: {
-      '@type': 'OfferShippingDetails',
-      shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'BDT' },
-      shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'BD' },
-      deliveryTime: {
-        '@type': 'ShippingDeliveryTime',
-        handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 1, unitCode: 'HUR' },
-        transitTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 24, unitCode: 'HUR' },
-      },
-    },
-    hasMerchantReturnPolicy: {
-      '@type': 'MerchantReturnPolicy',
-      applicableCountry: 'BD',
-      returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
-      merchantReturnDays: 7,
-      returnMethod: 'https://schema.org/ReturnByMail',
-      returnFees: 'https://schema.org/FreeReturn',
-    },
     ...(p.originalPrice && p.originalPrice > p.price ? {
       priceSpecification: {
         '@type': 'UnitPriceSpecification',
@@ -110,13 +91,7 @@ export const productSchema = (p: {
       },
     } : {}),
   },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: rating,
-    reviewCount: reviewCount,
-    bestRating: 5,
-    worstRating: 1,
-  },
+  ...(rating !== undefined && reviewCount !== undefined && reviewCount > 0 ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: rating, reviewCount, bestRating: 5, worstRating: 1 } } : {}),
 });
 };
 
@@ -177,124 +152,12 @@ export const faqSchema = (faqs: { q: string; a: string }[]) => ({
 });
 
 /** Organization / LocalBusiness schema — enhanced for Bangladesh Google ranking */
-export const organizationSchema = () => ({
-  '@context': 'https://schema.org',
-  '@type': ['Organization', 'OnlineStore'],
-  name: SITE_NAME,
-  legalName: 'Booklover',
-  alternateName: [
-    'Booklover BD',
-    'Booklover',
-    'booklover',
-    'Booklover Bangladesh',
-    'booklover.com.bd',
-    'Booklover',
-    'Booklover বাংলাদেশ',
-  ],
-  brand: { '@type': 'Brand', name: SITE_NAME },
-  url: SITE_URL,
-  logo: {
-    '@type': 'ImageObject',
-    url: `${SITE_URL}/logo.png`,
-    width: 512,
-    height: 512,
-  },
-  image: `${SITE_URL}/favicon.png`,
-  description: "Bangladesh's most trusted bean bag & lifestyle furniture brand. Shop bean bags, bean bag sofas, lounge chairs, cushions, ottomans and kids bean bags at the best price. Premium quality, fast delivery.",
-  foundingDate: '2020',
-  areaServed: {
-    '@type': 'Country',
-    name: 'Bangladesh',
-    '@id': 'https://www.wikidata.org/wiki/Q902',
-  },
-  address: {
-    '@type': 'PostalAddress',
-    addressCountry: 'BD',
-    addressLocality: 'Dhaka',
-    addressRegion: 'Dhaka',
-  },
-  contactPoint: [
-    {
-      '@type': 'ContactPoint',
-      telephone: '+88',
-      contactType: 'customer service',
-      contactOption: 'TollFree',
-      availableLanguage: ['Bengali', 'English'],
-      areaServed: 'BD',
-    },
-  ],
-  sameAs: [
-    '',
-    'https://wa.me/88',
-    '',
-    '',
-    '',
-    '',
-    '',
-  ],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Bean Bag & Lifestyle Furniture',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        priceCurrency: 'BDT',
-        itemOffered: {
-          '@type': 'Product',
-          name: 'Bean Bag Sofa Bangladesh',
-          image: `${SITE_URL}/favicon.png`,
-          url: `${SITE_URL}/shop?category=bean-bag-sofa`,
-        },
-      },
-      {
-        '@type': 'Offer',
-        priceCurrency: 'BDT',
-        itemOffered: {
-          '@type': 'Product',
-          name: 'XXL Bean Bag Bangladesh',
-          image: `${SITE_URL}/favicon.png`,
-          url: `${SITE_URL}/shop?category=xxl-bean-bag`,
-        },
-      },
-      {
-        '@type': 'Offer',
-        priceCurrency: 'BDT',
-        itemOffered: {
-          '@type': 'Product',
-          name: 'Lounge Chair Bangladesh',
-          image: `${SITE_URL}/favicon.png`,
-          url: `${SITE_URL}/shop?category=lounge-chair`,
-        },
-      },
-      {
-        '@type': 'Offer',
-        priceCurrency: 'BDT',
-        itemOffered: {
-          '@type': 'Product',
-          name: 'Kids Bean Bag Bangladesh',
-          image: `${SITE_URL}/favicon.png`,
-          url: `${SITE_URL}/shop?category=kids-bean-bag`,
-        },
-      },
-      {
-        '@type': 'Offer',
-        priceCurrency: 'BDT',
-        itemOffered: {
-          '@type': 'Product',
-          name: 'Cushions & Ottomans Bangladesh',
-          image: `${SITE_URL}/favicon.png`,
-          url: `${SITE_URL}/shop?category=cushions`,
-        },
-      },
-    ],
-  },
-});
+export const organizationSchema = () => ({ '@context': 'https://schema.org', '@type': 'Organization', name: SITE_NAME, url: SITE_URL, logo: `${SITE_URL}/logo.png` });
 
 export const websiteSchema = () => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: SITE_NAME,
-  alternateName: ['Booklover BD', 'booklover', 'Booklover', 'booklover.com.bd'],
   url: SITE_URL,
   publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
   inLanguage: ['bn-BD', 'en'],
@@ -312,8 +175,8 @@ export const websiteSchema = () => ({
 export const itemListSchema = (items: { name: string; slug: string; image?: string | null; price: number }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: `Bean Bag & Furniture Products — ${SITE_NAME}`,
-  description: 'Shop bean bags, sofas, lounge chairs and furniture at the best price in Bangladesh',
+  name: `Books — ${SITE_NAME}`,
+  description: 'Browse books at Booklover',
   numberOfItems: items.length,
   itemListElement: items.slice(0, 20).map((item, i) => ({
     '@type': 'ListItem',
@@ -358,36 +221,7 @@ export const speakableSchema = (selectors: string[] = ['h1', '.product-title', '
 });
 
 /** LocalBusiness — strong local-SEO boost for "near me" queries in BD */
-export const localBusinessSchema = () => ({
-  '@context': 'https://schema.org',
-  '@type': 'FurnitureStore',
-  '@id': `${SITE_URL}/#localbusiness`,
-  name: SITE_NAME,
-  image: `${SITE_URL}/favicon.png`,
-  url: SITE_URL,
-  telephone: PHONE,
-  email: '',
-  priceRange: '৳৳ BDT',
-  currenciesAccepted: 'BDT',
-  paymentAccepted: 'bKash, Nagad, Rocket, Bank Transfer, DBBL',
-  openingHoursSpecification: [{
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-    opens: '00:00', closes: '23:59',
-  }],
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '',
-    addressLocality: 'Dhaka',
-    addressRegion: 'Dhaka Division',
-    postalCode: '1200',
-    addressCountry: 'BD',
-  },
-  geo: { '@type': 'GeoCoordinates', latitude: 23.8103, longitude: 90.4125 },
-  areaServed: { '@type': 'Country', name: 'Bangladesh' },
-  sameAs: [''],
-  hasMap: 'https://maps.google.com/?q=Gulshan+Ara+City+Islampur+Dhaka',
-});
+export const localBusinessSchema = organizationSchema;
 
 /** SiteNavigationElement — helps Google build sitelinks */
 export const siteNavigationSchema = (items: { name: string; url: string }[]) => ({

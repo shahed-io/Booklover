@@ -52,7 +52,7 @@ const WelcomeEmail = ({
           <Section style={contentStyle}>
             <Text style={h1Style}>Welcome, {customerName}!</Text>
             <Text style={subtitleStyle}>
-              Thank you for joining <strong>Booklover</strong>. We provide the best digital products in Bangladesh — software licenses, gaming keys, and much more.
+              Thank you for joining <strong>Booklover</strong>. Browse our book catalog.
             </Text>
 
             <Section style={featureBox}>

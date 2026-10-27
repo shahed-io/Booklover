@@ -116,7 +116,7 @@ const AdminFooterSettings = () => {
       {/* Status Text */}
       <Section title="Status Text" icon={Shield}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Field label="স্ট্যাটাস টেক্সট" k="status_text" placeholder="Premium Bean Bag & Lifestyle Furniture Store" />
+          <Field label="স্ট্যাটাস টেক্সট" k="status_text" placeholder="" />
         </div>
       </Section>
 

@@ -111,7 +111,7 @@ serve(async (req) => {
 
     const bdCities = "ঢাকা, চট্টগ্রাম, সিলেট, রাজশাহী, খুলনা, বরিশাল, ময়মনসিংহ, কুমিল্লা";
 
-    const systemPrompt = `You are a senior SEO content strategist for Booklover (DBID: 586772174) — Bangladesh's #1 digital software & subscription store (booklover.com.bd).
+    const systemPrompt = `You are a senior SEO content strategist for Booklover — online bookshop (booklover.com.bd).
 
 GOAL: Write a comprehensive, deeply informational blog post in Bangla-English mix that ranks #1 on Google Bangladesh AND gets cited by ChatGPT, Perplexity, and Google AI Overview.
 
@@ -163,7 +163,7 @@ Clear recommendation with reasoning. Mention Booklover products naturally where 
 4-6 bullet points of pitfalls.
 
 ## কেন Booklover থেকে কিনবেন? (Why Buy From Booklover)
-3-5 bullets: genuine license, instant delivery, bKash/Nagad/Rocket, 24/7 support, DBID 586772174 official registration.
+Include only verified catalog details. Never invent registration IDs, support hours, shipping guarantees or payment methods.
 
 ## উপসংহার (Conclusion)
 2-3 paragraph wrap-up + a clear call to action linking to https://booklover.com.bd/shop.

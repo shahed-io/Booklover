@@ -27,10 +27,10 @@ const GLASS_SHADOW = '0 18px 40px -26px hsla(222,60%,15%,0.45), inset 0 1px 0 hs
 // Two-color highlight on tagline keywords
 const HIGHLIGHT_GREEN = [
   'বিশ্বস্ত', 'সাশ্রয়ী মূল্যে', 'সেরা দামে', 'ফ্রি ডেলিভারি',
-  'প্রিমিয়াম ফার্নিচার ব্র্যান্ড', 'হোম ও লাইফস্টাইল ফার্নিচার স্টোর', 'গ্রাহকদের',
+  '', '', 'গ্রাহকদের',
 ];
 const HIGHLIGHT_ORANGE = [
-  'প্রিমিয়াম বিন ব্যাগ', 'হাই-কোয়ালিটি ফেব্রিক', 'অরিজিনাল', 'বিন ব্যাগ সোফা',
+  '', 'হাই-কোয়ালিটি ফেব্রিক', 'অরিজিনাল', '',
 ];
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]!));
 const highlightTagline = (text: string) => {
@@ -351,9 +351,7 @@ const Footer = () => {
             <span style={{ color: 'hsla(0,0%,100%,0.30)' }}>·</span>
             <span style={{ color: 'hsl(0,0%,100%)', fontWeight: 600 }}>All Rights Reserved</span>
             <span style={{ color: 'hsla(0,0%,100%,0.30)' }}>·</span>
-            <span className="italic" style={{ color: 'hsla(0,0%,100%,0.72)' }}>Designed &amp; Developed by{' '}
-              <a href="/developer" className="not-italic font-bold transition-colors hover:underline" style={{ color: 'hsl(40,100%,72%)' }}>Shahed IT</a>
-            </span>
+            
 
           </p>
 

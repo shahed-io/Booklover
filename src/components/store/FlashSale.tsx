@@ -127,7 +127,7 @@ const TIME_UNITS = [
                 Best Deals
               </span>
             </h2>
-            <p className="text-muted-foreground mt-2 text-[14px]">Bean bags & home furniture at the biggest discounts — order before time runs out.</p>
+            <p className="text-muted-foreground mt-2 text-[14px]">Current offers</p>
           </div>
 
           {/* Countdown */}
