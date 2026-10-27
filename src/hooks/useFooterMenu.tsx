@@ -29,8 +29,6 @@ const DEFAULT_SECTIONS: FooterSection[] = [
     is_active: true,
     sort_order: 1,
     links: [
-      { id: 'l-1', label: 'Bean Bags',        href: '/shop?category=bean-bag', is_active: true, sort_order: 1 },
-      { id: 'l-2', label: 'Bean Bag Sofas',   href: '/shop?category=sofa',     is_active: true, sort_order: 2 },
       { id: 'l-3', label: 'All Products',     href: '/shop',                   is_active: true, sort_order: 3 },
       { id: 'l-6', label: 'New Arrivals',     href: '/shop?sort=newest',       is_active: true, sort_order: 4 },
     ],

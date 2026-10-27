@@ -40,7 +40,6 @@ const FloatingSupport = lazy(() => import("@/components/store/FloatingSupport").
 
 // All other pages — lazy loaded
 const Checkout              = lazy(() => import("./pages/Checkout"));
-const ProductDetail         = lazy(() => import("./pages/ProductDetail"));
 const NotFound              = lazy(() => import("./pages/NotFound"));
 const AdminLogin            = lazy(() => import("./pages/AdminLogin"));
 const AdminLayout           = lazy(() => import("./components/admin/AdminLayout"));
@@ -83,17 +82,6 @@ const AdminSEOMonitor       = lazy(() => import("./pages/admin/AdminSEOMonitor")
 const AdminSemrush          = lazy(() => import("./pages/admin/AdminSemrush"));
 const AdminAttributes       = lazy(() => import("./pages/admin/AdminAttributes"));
 const AdminPages            = lazy(() => import("./pages/admin/AdminPages"));
-const Shop                  = lazy(() => import("./pages/Shop"));
-const PrivacyPolicy         = lazy(() => import("./pages/PrivacyPolicy"));
-const TermsConditions       = lazy(() => import("./pages/TermsConditions"));
-const RefundPolicy          = lazy(() => import("./pages/RefundPolicy"));
-const OrderPolicy           = lazy(() => import("./pages/OrderPolicy"));
-const DeliveryInfo          = lazy(() => import("./pages/DeliveryInfo"));
-const Developer             = lazy(() => import("./pages/Developer"));
-const ReturnPolicy          = lazy(() => import("./pages/ReturnPolicy"));
-const ContactUs             = lazy(() => import("./pages/ContactUs"));
-const AboutUs               = lazy(() => import("./pages/AboutUs"));
-const FAQs                  = lazy(() => import("./pages/FAQs"));
 const RefundRequest         = lazy(() => import("./pages/RefundRequest"));
 const InstallApp            = lazy(() => import("./pages/InstallApp"));
 const Unsubscribe           = lazy(() => import("./pages/Unsubscribe"));
@@ -408,7 +396,7 @@ const AppContent = () => {
           <Route path="/refund-policy" element={<InformationPage />} />
           <Route path="/order-policy" element={<InformationPage />} />
           <Route path="/delivery-info" element={<InformationPage />} />
-          <Route path="/developer" element={<Developer />} />
+          <Route path="/developer" element={<InformationPage />} />
           <Route path="/return-policy" element={<InformationPage />} />
           <Route path="/contact-us" element={<InformationPage />} />
           <Route path="/contact" element={<Navigate to="/contact-us" replace />} />

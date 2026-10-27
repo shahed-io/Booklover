@@ -17,14 +17,14 @@ export interface FooterSettings {
 }
 
 const DEFAULTS: FooterSettings = {
-  status_text: 'Premium Bean Bag & Lifestyle Furniture Store',
-  payment_methods: 'BKash,Nagad,Rocket,Upay,BKash Merchant',
+  status_text: '',
+  payment_methods: '',
   phone: '',
   email: '',
   address: '',
   website_url: 'https://booklover.com.bd',
   store_name: 'Booklover',
-  tagline: 'বাংলাদেশের প্রিমিয়াম বিন ব্যাগ ও হোম ফার্নিচার ব্র্যান্ড। আরামদায়ক ডিজাইন, টেকসই ম্যাটেরিয়াল, সারা দেশে হোম ডেলিভারি।',
+  tagline: '',
   facebook_url: '',
   whatsapp_url: 'https://wa.me/88',
   instagram_url: '.bd/',

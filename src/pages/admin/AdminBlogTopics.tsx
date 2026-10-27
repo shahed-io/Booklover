@@ -7,23 +7,7 @@ import {
 import { toast } from 'sonner';
 
 // Seeded topic library — Bangladesh-focused informational SEO targets.
-const SEED_TOPICS: { title: string; intent: string }[] = [
-  { title: 'Bean Bag Price in Bangladesh 2026 — Full Size Wise List', intent: 'pricing' },
-  { title: 'বিন ব্যাগ কেনার আগে যা জানা দরকার (Complete Guide)', intent: 'how-to' },
-  { title: 'Bean Bag vs Sofa — ছোট রুমের জন্য কোনটি Best?', intent: 'comparison' },
-  { title: 'Best Bean Bag for Gaming in Bangladesh 2026', intent: 'best-of' },
-  { title: 'Kids Bean Bag Bangladesh — Safety ও Size Guide', intent: 'guide' },
-  { title: 'Bean Bag Refill Beans — কতদিন পর দিতে হয়?', intent: 'how-to' },
-  { title: 'বিন ব্যাগ পরিষ্কার ও যত্ন নেওয়ার সহজ উপায়', intent: 'how-to' },
-  { title: 'Leather vs Cotton vs Velvet Bean Bag — কোন ফেব্রিক ভালো?', intent: 'comparison' },
-  { title: 'Living Room Furniture Ideas for Small Flats in Dhaka', intent: 'best-of' },
-  { title: 'Lounge Chair vs Recliner — Bangladeshi Homes এর জন্য', intent: 'comparison' },
-  { title: 'Floor Cushion ও Pouf — Best Picks in Bangladesh', intent: 'best-of' },
-  { title: 'Cash on Delivery-তে ফার্নিচার অর্ডার করার নিরাপদ উপায়', intent: 'how-to' },
-  { title: 'Bean Bag Gift Guide — জন্মদিন ও বিয়ের উপহার', intent: 'guide' },
-  { title: 'Home Office Setup — আরামদায়ক বসার ব্যবস্থা কম বাজেটে', intent: 'how-to' },
-  { title: '১০ হাজার টাকায় রুম সাজানোর আইডিয়া', intent: 'how-to' },
-];
+const SEED_TOPICS: { title: string; intent: string }[] = [];
 
 type QueueItem = {
   id: string;

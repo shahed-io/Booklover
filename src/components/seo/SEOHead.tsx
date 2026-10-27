@@ -31,9 +31,9 @@ const SITE_NAME = 'Booklover';
 const SITE_URL = 'https://booklover.com.bd';
 const SUPABASE_STORAGE_ORIGIN = 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
 const SUPABASE_STORAGE_PUBLIC_PATH = '/storage/v1/object/public/';
-const DEFAULT_DESC = 'Shop premium bean bags, bean bag sofas, lounge chairs, cushions and ottomans in Bangladesh with fast delivery from Booklover.';
+const DEFAULT_DESC = 'Browse books and collections at Booklover Bangladesh.';
 const DEFAULT_OG = '/og-image.jpg';
-const DEFAULT_KEYWORDS = 'bean bag bangladesh, bean bag sofa, xxl bean bag, lounge chair bd, kids bean bag, cushions bangladesh, ottoman bd, furniture shop dhaka, Booklover';
+const DEFAULT_KEYWORDS = 'Booklover, books Bangladesh, online bookshop';
 
 // Cache for GA/GSC/Clarity settings so we only fetch once per session
 let _seoCache: { ga?: string; gsc?: string; clarity?: string; verification?: Record<string, string>; loaded?: boolean } = {};
@@ -106,7 +106,7 @@ const SEOHead = ({
   const shouldNoIndex = noIndex || hasTrackingParams;
 
   const truncate = (value: string, max: number) => value.length > max ? `${value.slice(0, max - 1).trimEnd()}…` : value;
-  const pageTitle = title || `${SITE_NAME} – Premium Bean Bag & Lifestyle Furniture BD`;
+  const pageTitle = title || `${SITE_NAME} – Online Bookshop Bangladesh`;
   const fullTitle = truncate(pageTitle.includes(SITE_NAME) ? pageTitle : `${pageTitle} | ${SITE_NAME}`, 60);
   const metaDescription = truncate(description, 160);
   const canonicalUrl = canonical || `${SITE_URL}${cleanPath}`;

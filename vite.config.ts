@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://dpvdavjwqyviredzoorj.supabase.co';
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({

@@ -42,7 +42,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
     ],
     warning: 'বিঃদ্রঃ অবশ্যই "Send Money" করবেন, "Payment" নয়।',
-    isActive: true,
+    isActive: false,
     sortOrder: 0,
   },
   {
@@ -62,7 +62,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
     ],
     warning: undefined,
-    isActive: true,
+    isActive: false,
     sortOrder: 1,
   },
   {
@@ -82,7 +82,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
     ],
     warning: 'Rocket নম্বরের শেষে একটি অতিরিক্ত ডিজিট থাকতে পারে।',
-    isActive: true,
+    isActive: false,
     sortOrder: 2,
   },
   {
@@ -102,7 +102,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
     ],
     warning: undefined,
-    isActive: true,
+    isActive: false,
     sortOrder: 3,
   },
   {
@@ -122,7 +122,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
     ],
     warning: 'Merchant Payment-এ কোনো চার্জ নেই — আপনি যা পাঠাবেন তাই পাবেন।',
-    isActive: true,
+    isActive: false,
     sortOrder: 4,
   },
   {
@@ -133,9 +133,9 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
     logoUrl: '',
     accentColor: 'hsl(214,80%,48%)',
     bgColor: 'hsla(214,80%,48%,0.07)',
-    bankName: 'Dutch Bangla Bank',
-    accountName: 'Booklover',
-    branchName: 'Rajshahi',
+    bankName: '',
+    accountName: '',
+    branchName: '',
     routingNumber: '',
     steps: [
       'আপনার ব্যাংক অ্যাপ বা ব্রাঞ্চে যান',
@@ -144,7 +144,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'নিচের বক্সে TRN নম্বর দিয়ে অর্ডার সম্পন্ন করুন',
     ],
     warning: 'ব্যাংক ট্রান্সফার ভেরিফাই হতে ১-২ কার্যদিবস সময় লাগতে পারে।',
-    isActive: true,
+    isActive: false,
     sortOrder: 5,
   },
 ];

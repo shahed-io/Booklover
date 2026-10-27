@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRight, ShoppingBag, TrendingUp, Zap, Shield, Clock, Star, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
-import bannerOne from '@/assets/banner-Booklover-1.jpg';
-import bannerTwo from '@/assets/banner-Booklover-2.jpg';
-import bannerThree from '@/assets/banner-Booklover-3.jpg';
 import { useHeroBanner, type SlideData } from '@/hooks/useHeroBanner';
 
 type Slide = {
