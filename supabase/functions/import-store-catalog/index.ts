@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
       // Copy external product images into Booklover storage.
       const limit = Math.min(Number(body.limit) || 25, 50)
       const { data: ps, error: e } = await db.from('products').select('id,slug,image_url,images')
-        .like('image_url', 'https://%').not('image_url', 'like', `${url}%`).limit(limit)
+        .like('image_url', 'https://%').not('image_url', 'like', `${url}%`).gt('id', body.after || '00000000-0000-0000-0000-000000000000').order('id').limit(limit)
       if (e) throw e
       let copied = 0, failed = 0
       await Promise.all((ps ?? []).map(async (p: any) => {
@@ -110,9 +110,9 @@ Deno.serve(async (req) => {
         }
         const ok = out[0] && out[0].startsWith(url)
         if (ok) { copied++; await db.from('products').update({ image_url: out[0], images: out }).eq('id', p.id) }
-        else { failed++; await db.from('products').update({ image_url: 'missing:' + p.image_url }).eq('id', p.id) }
+        else failed++
       }))
-      return json({ ok: true, copied, failed, done: (ps ?? []).length === 0 })
+      return json({ ok: true, copied, failed, last: ps?.length ? ps[ps.length - 1].id : null, done: (ps ?? []).length === 0 })
     }
     return json({ error: 'unknown action' }, 400)
   } catch (e) {
