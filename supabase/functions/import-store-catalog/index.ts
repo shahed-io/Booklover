@@ -72,8 +72,12 @@ Deno.serve(async (req) => {
       const { products } = await get(`/collections/${handle}/products.json?limit=250&page=${page}`)
       const slugs = products.map((p: any) => p.handle)
       if (!slugs.length) return json({ ok: true, count: 0 })
-      const { data: ps, error: e1 } = await db.from('products').select('id,category_id').in('slug', slugs)
-      if (e1) throw e1
+      const ps: { id: string; category_id: string | null }[] = []
+      for (let k = 0; k < slugs.length; k += 40) {
+        const { data, error: e1 } = await db.from('products').select('id,category_id').in('slug', slugs.slice(k, k + 40))
+        if (e1) throw e1
+        ps.push(...(data ?? []))
+      }
       const links = (ps ?? []).map((p) => ({ product_id: p.id, category_id: cat.id }))
       const { error } = await db.from('product_categories').upsert(links, { onConflict: 'product_id,category_id', ignoreDuplicates: true })
       if (error) throw error
