@@ -1,5 +1,11 @@
 # Roadmap
 
+## Booklover storefront
+- [ ] Inventory the reference site's public pages and controls, including product details.
+- [ ] Show Booklover prototypes using the supplied logo and current white theme; await design selection before implementation.
+- [ ] Recreate approved reference storefront pages and interactions without changing the admin-panel design.
+- [ ] Verify shopping flows and page layouts; identify reference areas that cannot be inspected.
+
 ## Remix setup
 - [x] Verify copied Drizzle migrations were cleared and the new migration journal is empty and valid.
 - [ ] Replace the 37 requested secret values — secure replacement form was declined; waiting for user submission.
