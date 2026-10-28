@@ -39,25 +39,18 @@ interface Category { id: string; name: string; parent_id: string | null; }
 interface Product {
   id: string; name: string; price: number; original_price: number | null;
   cost_price?: number | null | undefined; discount_percent: number | null; status: string | undefined;
-
   image_url: string | null; images?: string[] | null | undefined; video_url?: string | null | undefined;
   total_sales: number; created_at: string; is_featured: boolean; is_digital: boolean;
   tags: string[] | null; description: string | null; short_description: string | null;
   download_link: string | null; sku: string | null; category_id: string | null;
   subcategory_id?: string | null | undefined; brand?: string | null | undefined; delivery_time: string | null | undefined;
-
   delivery_type?: string | null | undefined; what_you_get: string[] | null | undefined;
-
   faq: { q: string; a: string }[] | null; seo_title: string | null;
   seo_description: string | null; variants: { name: string; options: { label: string; price: string }[] }[] | null;
   badge?: string | null | undefined; demo_url?: string | null | undefined; warranty_note?: string | null | undefined;
-
   refund_note?: string | null | undefined; product_type?: string | null | undefined;
-
   attributes?: { key: string; value: string }[] | null | undefined;
-
   category?: { name: string } | null | undefined;
-
 }
 
 const DURATION_PRESETS = [

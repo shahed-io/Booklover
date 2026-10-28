@@ -8,7 +8,6 @@ export interface CartItem {
   category: string;
   price: number;
   originalPrice?: number | undefined;
-
   image: string;
   quantity: number;
   variant?: string | undefined; // selected variant label

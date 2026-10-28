@@ -31,7 +31,6 @@ interface OrderInfo {
   status: string | null;
   created_at: string;
   items?: Array<{ product_name: string | null; quantity: number; price: number }> | undefined;
-
 }
 
 interface Props {

@@ -14,14 +14,11 @@ type CommandItem = {
   id: string;
   label: string;
   description?: string | undefined;
-
   icon: any;
   path: string;
   group: string;
   keywords?: string | undefined;
-
   badge?: string | undefined;
-
 };
 
 type DynamicResult = {

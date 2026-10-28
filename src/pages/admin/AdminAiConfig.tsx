@@ -8,7 +8,6 @@ interface ApiKeyEntry {
   value: string;
   category: string;
   isNew?: boolean | undefined;
-
 }
 
 const KNOWN_PROVIDERS: Record<string, { name: string; icon: string; color: string; bgColor: string; borderColor: string; testType?: string | undefined; link?: string | undefined; description?: string | undefined }> = {

@@ -11,7 +11,6 @@ import { useCurrency } from '@/hooks/useCurrency';
 interface ProductCardProps {
   product: Product;
   delay?: number | undefined;
-
   priority?: boolean | undefined; // true for first ~4 cards (above fold)
 }
 

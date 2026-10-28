@@ -14,12 +14,9 @@ interface NavItem {
   path: string;
   match: (path: string) => boolean;
   badgeCount?: number | undefined;
-
   requireAuth?: boolean | undefined;
-
   gradient: string;
   srText?: string | undefined;
-
 }
 
 /**

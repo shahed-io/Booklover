@@ -27,22 +27,16 @@ interface Props {
   onChange: (next: string) => void;
   /** Semantic hint that tunes the AI prompt. */
   kind?: Kind | undefined;
-
   /** Show a small label next to the icon. */
   label?: string | undefined;
-
   /** Language override — otherwise auto-detected. */
   language?: 'bn' | 'en' | 'auto' | undefined;
-
   /** Max character limit passed to AI. */
   maxChars?: number | undefined;
-
   /** Button size */
   size?: 'sm' | 'icon' | undefined;
-
   /** Extra class names for the trigger button. */
   className?: string | undefined;
-
 }
 
 /**

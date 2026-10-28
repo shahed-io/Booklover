@@ -74,7 +74,6 @@ export interface SendInvoiceEmailOptions {
   recipientEmail: string;
   /** Optional live DOM element to snapshot (preview modal). If absent, builds an off-screen template. */
   element?: HTMLElement | null | undefined;
-
 }
 
 /**

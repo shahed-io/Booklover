@@ -13,7 +13,6 @@ import AuthModal from '@/components/store/AuthModal';
 
 type PaymentMethod = { name: string; number?: string | undefined; instructions?: string | undefined };
 type CustomField = { label: string; type?: 'text' | 'email' | 'number' | undefined; required?: boolean | undefined };
-
 export default function PaymentLink() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();

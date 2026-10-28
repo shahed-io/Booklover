@@ -13,9 +13,7 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   redirectAfterLogin?: boolean | undefined;
-
   oauthRedirectTo?: string | undefined;
-
 }
 
 type Mode = 'login' | 'signup' | 'forgot';
@@ -736,17 +734,11 @@ interface GlassFieldProps {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   valid?: boolean | undefined;
-
   invalid?: boolean | undefined;
-
   errorMsg?: string | undefined;
-
   required?: boolean | undefined;
-
   uppercase?: boolean | undefined;
-
   rightSlot?: React.ReactNode | undefined;
-
 }
 
 const GlassField = ({ icon, type, placeholder, value, onChange, onBlur, onKeyDown, onKeyUp, valid, invalid, errorMsg, required, uppercase, rightSlot }: GlassFieldProps) => {

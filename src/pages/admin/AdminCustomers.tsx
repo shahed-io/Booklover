@@ -28,23 +28,14 @@ type Customer = {
   created_at: string;
   wallet_balance: number;
   order_count?: number | undefined;
-
   total_spent?: number | undefined;
-
   last_order?: string | null | undefined;
-
   points_balance?: number | undefined;
-
   total_points_earned?: number | undefined;
-
   total_points_redeemed?: number | undefined;
-
   is_suspended?: boolean | undefined;
-
   suspended_at?: string | null | undefined;
-
   suspended_reason?: string | null | undefined;
-
 };
 
 type OrderItem = {

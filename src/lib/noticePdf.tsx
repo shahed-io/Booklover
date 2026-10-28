@@ -6,11 +6,8 @@ import { downloadInvoicePdfFromElement } from './invoicePdf';
 
 export interface DownloadNoticeOptions {
   brand?: NoticeBrand | undefined;
-
   signatureUrl?: string | undefined;
-
   filename?: string | undefined;
-
 }
 
 const slugify = (s: string) =>

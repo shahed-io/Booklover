@@ -23,13 +23,9 @@ interface Referral {
   reward_paid: boolean;
   created_at: string;
   referrer_name?: string | undefined;
-
   referrer_email?: string | undefined;
-
   referred_email?: string | undefined;
-
   referrer_total?: number | undefined;
-
 }
 
 const AdminReferrals = () => {

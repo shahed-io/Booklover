@@ -26,9 +26,7 @@ export interface InvoiceItem {
   quantity: number;
   price: number;
   total?: number | undefined;
-
   license_key?: string | null | undefined;
-
 }
 
 export interface InvoiceData {
@@ -37,26 +35,17 @@ export interface InvoiceData {
   customer: {
     name: string;
     phone?: string | undefined;
-
     email?: string | undefined;
-
     address?: string | undefined;
-
   };
   items: InvoiceItem[];
   subtotal?: number | undefined;
-
   discount?: number | undefined;
-
   total: number;
   paymentMethod?: string | undefined;
-
   transactionId?: string | undefined;
-
   status?: string | undefined;
-
   notes?: string | undefined;
-
 }
 
 const PM_LABELS: Record<string, string> = {

@@ -33,7 +33,6 @@ interface AdminNotif {
   message: string;
   time: string;
   link?: string | undefined;
-
 }
 
 type MenuItem = { icon: any; label: string; path: string; badge?: 'live' | 'new' | undefined };

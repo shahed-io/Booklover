@@ -15,7 +15,6 @@ interface Product {
   short_description: string | null;
   category_id: string | null;
   total_sales?: number | null | undefined;
-
 }
 
 interface Category {
@@ -52,11 +51,9 @@ const SuggestionItem = ({
   text: string;
   query: string;
   rightAction?: React.ReactNode | undefined;
-
   onClick: () => void;
   onFill?: () => void;
   isActive?: boolean | undefined;
-
 }) => {
   const highlight = (t: string, q: string) => {
     if (!q.trim()) return <span className="font-medium">{t}</span>;
@@ -112,10 +109,8 @@ const ProductResultItem = ({
   product: Product;
   query: string;
   categoryName?: string | null | undefined;
-
   onClick: () => void;
   isActive?: boolean | undefined;
-
 }) => {
   const { format: fmtPrice } = useCurrency();
   const highlight = (t: string, q: string) => {
@@ -913,9 +908,7 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
 // ══════════════════════════════════════════════════════════════════════
 interface SearchBarProps {
   className?: string | undefined;
-
   variant?: 'navbar' | 'standalone' | undefined;
-
   onClose?: () => void;
 }
 

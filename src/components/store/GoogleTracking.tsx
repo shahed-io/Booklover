@@ -116,7 +116,6 @@ const sha256 = async (input: string): Promise<string> => {
 };
 
 interface UserData { email?: string | undefined; phone?: string | undefined; name?: string | undefined; }
-
 const setEnhancedUserData = async (userData?: UserData | undefined) => {
   if (!cachedConfig?.enhanced_conversions_enabled || !userData) return;
   if (typeof window === 'undefined' || !window.gtag) return;

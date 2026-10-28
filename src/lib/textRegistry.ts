@@ -7,7 +7,6 @@ export interface TextRegistryEntry {
   defaultValue: string;
   category: string;
   description?: string | undefined;
-
 }
 
 export const TEXT_REGISTRY: TextRegistryEntry[] = [

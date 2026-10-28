@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import { Download, Upload, FileText, CheckCircle2, AlertCircle, Loader2, Info } from 'lucide-react';
 
 type ImportRow = { name: string; slug: string; price: string; original_price?: string | undefined; description?: string | undefined; category?: string | undefined; status?: string | undefined; sku?: string | undefined };
-
 const HEADERS = ['name', 'slug', 'price', 'original_price', 'description', 'short_description', 'status', 'sku', 'brand', 'tags'];
 
 const AdminProductImportExport = () => {

@@ -16,7 +16,6 @@ import { Plus, Copy, Edit, Trash2, Eye, Check, X as XIcon, Pause, Play, QrCode, 
 
 type PaymentMethod = { name: string; number?: string | undefined; instructions?: string | undefined };
 type CustomField = { label: string; type?: 'text' | 'email' | 'number' | undefined; required?: boolean | undefined };
-
 const emptyLink = {
   id: '' as string | undefined,
   slug: '', title: '', description: '',

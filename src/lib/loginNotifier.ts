@@ -166,9 +166,7 @@ const SENT_KEY = 'login_notify_sent_at';
 export async function sendLoginNotification(opts: {
   email: string;
   customerName?: string | undefined;
-
   isAdmin?: boolean | undefined;
-
 }) {
   if (!opts?.email) return;
   try {

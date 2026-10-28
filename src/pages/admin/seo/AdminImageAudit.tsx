@@ -29,7 +29,6 @@ interface PageResult {
   totalImages: number;
   issueCount: number;
   error?: string | undefined;
-
 }
 
 const ISSUE_LABEL: Record<Issue, string> = {

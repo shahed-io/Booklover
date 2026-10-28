@@ -12,18 +12,13 @@ export interface PaymentMethodConfig {
   bgColor: string;
   steps: string[];
   warning?: string | undefined;
-
   isActive: boolean;
   sortOrder: number;
   // Bank-specific fields (only for type === 'Bank Transfer')
   bankName?: string | undefined;
-
   accountName?: string | undefined;
-
   branchName?: string | undefined;
-
   routingNumber?: string | undefined;
-
 }
 
 export const PAYMENT_SETTINGS_KEY = 'payment_methods_config';

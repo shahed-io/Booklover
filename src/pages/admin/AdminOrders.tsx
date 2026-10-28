@@ -893,16 +893,12 @@ const OrderDetailModal = ({
 // ─── Edit Order Modal ──────────────────────────────────────────────────────
 interface EditItem {
   id?: string | undefined;
-
   product_id?: string | null | undefined;
-
   product_name: string;
   quantity: number;
   price: number;
   license_key?: string | null | undefined;
-
   _new?: boolean | undefined;
-
 }
 
 const EditOrderModal = ({

@@ -5,11 +5,8 @@ import { usePrefetchHandlers } from "@/hooks/usePrefetchRoute";
 
 interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
   className?: string | undefined;
-
   activeClassName?: string | undefined;
-
   pendingClassName?: string | undefined;
-
 }
 
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(

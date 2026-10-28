@@ -1,10 +1,7 @@
 type LovableErrorOptions = {
   mechanism?: "manual" | "onerror" | "unhandledrejection" | "react_error_boundary" | undefined;
-
   handled?: boolean | undefined;
-
   severity?: "error" | "warning" | "info" | undefined;
-
 };
 
 type LovableEvents = {
@@ -19,13 +16,10 @@ type LovableEvents = {
 declare global {
   interface Window {
     __lovableEvents?: LovableEvents | undefined;
-
     __lovableReportRuntimeError?: (payload: {
       message: string;
       stack?: string | undefined;
-
       filename?: string | undefined;
-
     }) => void;
   }
 }

@@ -4,7 +4,6 @@ import { Link2Off, RefreshCw, ExternalLink, CheckCircle, XCircle } from 'lucide-
 import { toast } from 'sonner';
 
 interface LinkCheck { url: string; label: string; status: 'ok' | 'broken' | 'checking' | 'pending'; code?: number | undefined; }
-
 const SITE_URL = 'https://booklover.com.bd';
 const STATIC_PAGES = [
   { url: '/', label: 'Home' }, { url: '/shop', label: 'Shop' }, { url: '/blog', label: 'Blog' },

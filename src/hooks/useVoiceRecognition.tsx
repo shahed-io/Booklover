@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 interface Options {
   lang?: string | undefined; // 'bn-BD' | 'en-US'
   continuous?: boolean | undefined;
-
   interim?: boolean | undefined;
-
 }
 
 export function useVoiceRecognition({ lang = 'bn-BD', continuous = true, interim = true }: Options = {}) {

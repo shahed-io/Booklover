@@ -20,25 +20,16 @@ const seoImageUrl = (url?: string | null | undefined, fallback = `${SITE_URL}/fa
 export const productSchema = (p: {
   name: string;
   description?: string | null | undefined;
-
   image?: string | null | undefined;
-
   images?: string[] | undefined;
-
   price: number;
   slug: string;
   rating?: number | undefined;
-
   reviewCount?: number | undefined;
-
   category?: string | undefined;
-
   sku?: string | undefined;
-
   originalPrice?: number | null | undefined;
-
   inStock?: boolean | undefined;
-
 }) => {
   // Build full image array for Google Image indexing
   const allImages: string[] = [];
@@ -123,16 +114,11 @@ export const breadcrumbSchema = (
 export const articleSchema = (post: {
   title: string;
   description?: string | null | undefined;
-
   image?: string | null | undefined;
-
   slug: string;
   publishedAt?: string | null | undefined;
-
   updatedAt?: string | undefined;
-
   authorName?: string | null | undefined;
-
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'Article',
@@ -253,9 +239,7 @@ export const howToSchema = (h: {
   name: string;
   description: string;
   image?: string | undefined;
-
   totalTime?: string | undefined;
-
   steps: { name: string; text: string; image?: string | undefined }[];
 }) => ({
   '@context': 'https://schema.org',
@@ -277,7 +261,6 @@ export const howToSchema = (h: {
 export const videoObjectSchema = (v: {
   name: string; description: string; thumbnailUrl: string;
   uploadDate?: string | undefined; contentUrl?: string | undefined; embedUrl?: string | undefined; duration?: string | undefined;
-
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'VideoObject',

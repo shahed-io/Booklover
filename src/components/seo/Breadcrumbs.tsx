@@ -5,13 +5,11 @@ import { cn } from '@/lib/utils';
 interface BreadcrumbItem {
   label: string;
   href?: string | undefined;
-
 }
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   className?: string | undefined;
-
 }
 
 const Breadcrumbs = ({ items, className }: BreadcrumbsProps) => {

@@ -11,7 +11,6 @@ import { SITE_URL, SITE_NAME } from '@/components/seo/SEOHead';
 
 /* ───────────── types ───────────── */
 interface Redirect { id?: string | undefined; from_path: string; to_path: string; type: '301' | '302'; }
-
 /* ───────────── component ───────────── */
 const AdminSEO = () => {
   const [loading, setLoading] = useState(true);

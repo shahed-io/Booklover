@@ -13,25 +13,16 @@ interface SitemapStat {
   count: number;
   status: 'ok' | 'fail' | 'loading' | 'warn';
   lastFetch?: string | undefined;
-
   responseMs?: number | undefined;
-
   bytes?: number | undefined;
-
   httpStatus?: number | undefined;
-
   lastModified?: string | null | undefined;
-
   contentType?: string | undefined;
-
   error?: string | undefined;
-
   sample?: string[] | undefined;
-
 }
 interface PingLog { id: string; entity: 'product' | 'blog'; title: string; slug: string; updated_at: string; }
 interface SchemaCheck { type: string; present: boolean; valid: boolean; note?: string | undefined; }
-
 const SITE = 'https://booklover.com.bd';
 
 const Card = ({ children, className = '' }: any) => (

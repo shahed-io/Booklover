@@ -12,11 +12,8 @@ type CarouselPlugin = UseCarouselParameters[1];
 
 type CarouselProps = {
   opts?: CarouselOptions | undefined;
-
   plugins?: CarouselPlugin | undefined;
-
   orientation?: "horizontal" | "vertical" | undefined;
-
   setApi?: (api: CarouselApi) => void;
 };
 

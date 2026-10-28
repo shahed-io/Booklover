@@ -5,42 +5,25 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface SEOHeadProps {
   title?: string | undefined;
-
   description?: string | undefined;
-
   ogImage?: string | undefined;
-
   ogImages?: string[] | undefined;
-
   ogImageAlt?: string | undefined;
-
   ogType?: 'website' | 'article' | 'product' | undefined;
-
   canonical?: string | undefined;
-
   noIndex?: boolean | undefined;
-
   schema?: object | object[] | undefined;
-
   keywords?: string | undefined;
-
   /** Pagination (helps Google understand series of pages) */
   prevUrl?: string | undefined;
-
   nextUrl?: string | undefined;
-
   /** Article-specific (blog posts) */
   article?: {
     publishedTime?: string | undefined;
-
     modifiedTime?: string | undefined;
-
     author?: string | undefined;
-
     section?: string | undefined;
-
     tags?: string[] | undefined;
-
   };
 }
 
@@ -54,7 +37,6 @@ const DEFAULT_KEYWORDS = 'Booklover, books Bangladesh, online bookshop';
 
 // Cache for GA/GSC/Clarity settings so we only fetch once per session
 let _seoCache: { ga?: string | undefined; gsc?: string | undefined; clarity?: string | undefined; verification?: Record<string, string>; loaded?: boolean | undefined } = {};
-
 const VERIFICATION_META: Record<string, string> = {
   google: 'google-site-verification',
   bing: 'msvalidate.01',

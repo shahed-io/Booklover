@@ -18,19 +18,14 @@ interface Props {
   onOpenChange: (o: boolean) => void;
   /** Prefill title */
   defaultTitle?: string | undefined;
-
   /** Prefill message */
   defaultMessage?: string | undefined;
-
   /** Prefill link (e.g. /offer/slug or /notices/slug) */
   defaultLink?: string | undefined;
-
   /** notification "type" label (e.g. "offer", "notice") */
   type?: string | undefined;
-
   /** Small badge shown at top of the dialog identifying the source */
   sourceLabel?: string | undefined;
-
 }
 
 const AUDIENCES: { value: NotificationAudience; label: string; help: string; icon: any }[] = [

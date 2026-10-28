@@ -11,7 +11,6 @@ interface AdminHeroHeaderProps {
   Icon: LucideIcon;
   /** Optional decorative icons that drift in the background */
   decorIcons?: LucideIcon[] | undefined;
-
 }
 
 interface LiveStats {

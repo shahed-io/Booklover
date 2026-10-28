@@ -26,7 +26,6 @@ interface Transaction {
   created_by: string | null;
   created_at: string;
   profiles?: { display_name: string | null; email: string | null } | undefined;
-
 }
 
 interface TopupRequest {
@@ -40,7 +39,6 @@ interface TopupRequest {
   admin_notes: string | null;
   created_at: string;
   profiles?: { display_name: string | null; email: string | null } | undefined;
-
 }
 
 const AdminWallet = () => {

@@ -9,9 +9,7 @@ const THEMES = { light: "", dark: ".dark" } as const;
 export type ChartConfig = {
   [k in string]: {
     label?: React.ReactNode | undefined;
-
     icon?: React.ComponentType | undefined;
-
   } & ({ color?: string | undefined; theme?: never | undefined } | { color?: never | undefined; theme: Record<keyof typeof THEMES, string> });
 };
 
@@ -96,15 +94,10 @@ const ChartTooltipContent = React.forwardRef<
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
     React.ComponentProps<"div"> & {
       hideLabel?: boolean | undefined;
-
       hideIndicator?: boolean | undefined;
-
       indicator?: "line" | "dot" | "dashed" | undefined;
-
       nameKey?: string | undefined;
-
       labelKey?: string | undefined;
-
     }
 >(
   (
@@ -238,13 +231,9 @@ const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     payload?: any | undefined;
-
     verticalAlign?: "top" | "bottom" | "middle" | undefined;
-
     hideIcon?: boolean | undefined;
-
     nameKey?: string | undefined;
-
   }
 >(({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
   const { config } = useChart();
