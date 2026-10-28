@@ -27,12 +27,12 @@ function HomeCard({ book }: { book: Book }) {
   );
 }
 
-function Row({ title, books, to }: { title: string; books: Book[]; to: string }) {
-  if (!books.length) return null;
+function Row({ title, books, to, loading }: { title: string; books: Book[]; to: string; loading?: boolean }) {
+  if (!books.length && !loading) return null;
   return (
     <section className="bl-hsection">
       <div className="bl-hwrap"><h2>{title}</h2></div>
-      <div className="bl-hrow">{books.map(b => <HomeCard key={b.id} book={b} />)}</div>
+      <div className="bl-hrow">{books.length ? books.map(b => <HomeCard key={b.id} book={b} />) : Array.from({ length: 5 }, (_, i) => <div key={i} className="bl-skel" />)}</div>
       <div className="bl-hcenter"><Link to={to} className="bl-pill">View all</Link></div>
     </section>
   );
@@ -92,10 +92,10 @@ export default function Home() {
         <div className="bl-hcenter"><Link to="/collections" className="bl-pill">View all</Link></div>
       </section>
 
-      <Row title={cfg.bestsellerTitle} books={bestsellers} to="/collections/best-sellers" />
+      <Row title={cfg.bestsellerTitle} books={bestsellers} loading={!data} to="/collections/best-sellers" />
       {cfg.collectionRows.map(r => {
         const c = catOf(r.title, r.collection);
-        return <Row key={r.title} title={r.title} books={data?.rows[r.title] || []} to={`/collections/${c?.slug || r.collection}`} />;
+        return <Row key={r.title} title={r.title} books={data?.rows[r.title] || []} loading={!data} to={`/collections/${c?.slug || r.collection}`} />;
       })}
     </Layout>
   );
