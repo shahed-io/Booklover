@@ -61,7 +61,7 @@ export default function Home() {
   const bestsellers = data ? [...data.books].sort((a, b) => (b.total_sales || 0) - (a.total_sales || 0)).slice(0, cfg.bestsellerCount) : [];
 
   return (
-    <Layout dark>
+    <Layout>
       <Helmet><title>{cfg.seoTitle}</title><meta name="description" content={cfg.seoDescription} /><link rel="canonical" href="https://booklover.com.bd/" /></Helmet>
 
       <section className="bl-hero">

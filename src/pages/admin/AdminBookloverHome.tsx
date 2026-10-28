@@ -58,6 +58,11 @@ export default function AdminBookloverHome() {
         <Button variant="outline" onClick={() => set('banners', [...s.banners, { title: '', subtitle: '', image: '' }])}><Plus /> স্লাইড যোগ করুন</Button>
       </CardContent></Card>
 
+      <Card><CardHeader><CardTitle>ওয়েবসাইট থিম</CardTitle></CardHeader><CardContent className="space-y-3">
+        <Label>ভিজিটররা প্রথমে কোন থিম দেখবে (তারা উপরের ☀/☾ বাটন দিয়ে বদলাতে পারবে)</Label>
+        <select className="border rounded-md p-2 w-full bg-background" value={s.theme} onChange={(e) => set('theme', e.target.value as 'dark' | 'white')}><option value="dark">ডার্ক থিম (bookhavenbd.shop এর মতো)</option><option value="white">হোয়াইট প্রিমিয়াম গ্লসি থিম</option></select>
+      </CardContent></Card>
+
       <Card><CardHeader><CardTitle>হোমপেজ সেকশন</CardTitle></CardHeader><CardContent className="space-y-3">
         <Label>কালেকশন সেকশনের শিরোনাম</Label><Input value={s.collectionsTitle} onChange={(e) => set('collectionsTitle', e.target.value)} />
         <Label>দেখানো কালেকশন (প্রতি লাইনে একটি নাম, ক্রম অনুযায়ী)</Label>
