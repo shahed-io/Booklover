@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Index from "@/components/booklover/Home";
-import heroImg from "@/assets/booklover-reading.webp";
+import heroImg from "@/assets/banner-1.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({

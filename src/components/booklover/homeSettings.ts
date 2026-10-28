@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import banner1 from '@/assets/banner-1.webp';
+import banner2 from '@/assets/banner-2.webp';
+import banner3 from '@/assets/banner-3.webp';
+const DEFAULT_BANNER_IMAGES = [banner1, banner2, banner3];
 
 export const BOOKLOVER_HOME_KEY = 'booklover_home';
 
@@ -26,9 +30,9 @@ export type HomeSettings = {
 export const HOME_DEFAULTS: HomeSettings = {
   eyebrow: 'BOOKLOVER',
   banners: [
-    { title: 'Happiness\nis a good\nbook.', subtitle: 'Find your next favourite\nat Booklover.', image: '' },
-    { title: 'A world\nbetween\nthe pages.', subtitle: 'Explore our book collections.', image: '' },
-    { title: 'Your next\nchapter\nstarts here.', subtitle: 'Discover books at Booklover.', image: '' },
+    { title: 'Happiness\nis a good\nbook.', subtitle: 'Find your next favourite\nat Booklover.', image: banner1 },
+    { title: 'A world\nbetween\nthe pages.', subtitle: 'Explore our book collections.', image: banner2 },
+    { title: 'Your next\nchapter\nstarts here.', subtitle: 'Discover books at Booklover.', image: banner3 },
   ],
   collectionsTitle: 'Explore Our Book Collections',
   featuredCollections: ['All Books', 'Crime Fiction', 'Biography & Memoir', 'Romance Books', 'Self-Help & Psychology', 'Fantasy', 'Timeless Classics', 'Young Adult (YA)'],
@@ -56,7 +60,7 @@ export const HOME_DEFAULTS: HomeSettings = {
 export function mergeHome(raw: unknown): HomeSettings {
   if (!raw || typeof raw !== 'object') return HOME_DEFAULTS;
   const r = raw as Partial<HomeSettings>;
-  return { ...HOME_DEFAULTS, ...r, banners: r.banners?.length ? r.banners : HOME_DEFAULTS.banners };
+  return { ...HOME_DEFAULTS, ...r, banners: (r.banners?.length ? r.banners : HOME_DEFAULTS.banners).map((b, i) => ({ ...b, image: b.image || DEFAULT_BANNER_IMAGES[i % DEFAULT_BANNER_IMAGES.length]! })) };
 }
 
 export function useHomeSettings() {
