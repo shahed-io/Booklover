@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AntivirusPriceInBdRouteImport } from './routes/antivirus-price-in-bd'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -164,11 +163,6 @@ const AccountRoute = AccountRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AntivirusPriceInBdRoute = AntivirusPriceInBdRouteImport.update({
-  id: '/antivirus-price-in-bd',
-  path: '/antivirus-price-in-bd',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
@@ -834,7 +828,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
-  '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
@@ -971,7 +964,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
-  '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
@@ -1110,7 +1102,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
-  '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
@@ -1250,7 +1241,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/admin'
-    | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
     | '/checkout'
@@ -1387,7 +1377,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/account'
-    | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
     | '/checkout'
@@ -1525,7 +1514,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/admin'
-    | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
     | '/checkout'
@@ -1664,7 +1652,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AntivirusPriceInBdRoute: typeof AntivirusPriceInBdRoute
   AtomDotxmlRoute: typeof AtomDotxmlRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -1737,13 +1724,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/antivirus-price-in-bd': {
-      id: '/antivirus-price-in-bd'
-      path: '/antivirus-price-in-bd'
-      fullPath: '/antivirus-price-in-bd'
-      preLoaderRoute: typeof AntivirusPriceInBdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/atom.xml': {
@@ -2857,7 +2837,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
   AdminRoute: AdminRouteWithChildren,
-  AntivirusPriceInBdRoute: AntivirusPriceInBdRoute,
   AtomDotxmlRoute: AtomDotxmlRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
