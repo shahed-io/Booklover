@@ -8,7 +8,6 @@ import { supabase } from '@/integrations/supabase/client';
 import logoImg from '@/assets/booklover-logo-transparent.png';
 import { collectionNames, money, slugify } from './catalog';
 import { useHomeSettings, HOME_DEFAULTS } from './homeSettings';
-import './booklover.css';
 export function Quantity({value,onChange}:{value:number;onChange:(n:number)=>void}) {return <div className="bl-quantity"><Button variant="ghost" size="icon" aria-label="Decrease quantity" onClick={()=>onChange(Math.max(1,value-1))}><Minus/></Button><input aria-label="Quantity" type="number" min={1} max={99} value={value} onChange={e=>onChange(Math.max(1,Math.min(99,Number(e.target.value)||1)))}/><Button variant="ghost" size="icon" aria-label="Increase quantity" onClick={()=>onChange(Math.min(99,value+1))}><Plus/></Button></div>}
 const THEME_KEY='bl-theme';
 export function useBlTheme(){const {data:hs}=useHomeSettings();const [pick,setPick]=useState<string|null>(()=>typeof window==='undefined'?null:localStorage.getItem(THEME_KEY));useEffect(()=>{const h=()=>setPick(localStorage.getItem(THEME_KEY));window.addEventListener('bl-theme',h);return()=>window.removeEventListener('bl-theme',h);},[]);const theme=(pick==='white'||pick==='dark')?pick:((hs||HOME_DEFAULTS).theme||'dark');const toggle=()=>{localStorage.setItem(THEME_KEY,theme==='dark'?'white':'dark');window.dispatchEvent(new Event('bl-theme'));};return {theme,toggle};}
