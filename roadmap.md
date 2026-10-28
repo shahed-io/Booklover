@@ -1,5 +1,9 @@
 # Roadmap
 
+## Full-width homepage book rows
+- [ ] Expand every product row below categories to desktop screen width, adapting visible book count while preserving category design.
+- [ ] Verify real book rows and arrow navigation across desktop widths and mobile.
+
 ## Legacy-brand cleanup
 - [x] Audit source, assets, configuration, public database functions/defaults, storage and schedules for inherited branding.
 - [x] Remove old media/reference images/importer, clear inherited testimonials and claims, replace logo paths with approved Booklover logo, and blank payment/contact defaults without changing admin styling.
