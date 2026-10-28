@@ -1,29 +1,46 @@
 import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from '@/lib/router-compat';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 
 interface SEOHeadProps {
-  title?: string;
-  description?: string;
-  ogImage?: string;
-  ogImages?: string[];
-  ogImageAlt?: string;
-  ogType?: 'website' | 'article' | 'product';
-  canonical?: string;
-  noIndex?: boolean;
-  schema?: object | object[];
-  keywords?: string;
+  title?: string | undefined;
+
+  description?: string | undefined;
+
+  ogImage?: string | undefined;
+
+  ogImages?: string[] | undefined;
+
+  ogImageAlt?: string | undefined;
+
+  ogType?: 'website' | 'article' | 'product' | undefined;
+
+  canonical?: string | undefined;
+
+  noIndex?: boolean | undefined;
+
+  schema?: object | object[] | undefined;
+
+  keywords?: string | undefined;
+
   /** Pagination (helps Google understand series of pages) */
-  prevUrl?: string;
-  nextUrl?: string;
+  prevUrl?: string | undefined;
+
+  nextUrl?: string | undefined;
+
   /** Article-specific (blog posts) */
   article?: {
-    publishedTime?: string;
-    modifiedTime?: string;
-    author?: string;
-    section?: string;
-    tags?: string[];
+    publishedTime?: string | undefined;
+
+    modifiedTime?: string | undefined;
+
+    author?: string | undefined;
+
+    section?: string | undefined;
+
+    tags?: string[] | undefined;
+
   };
 }
 

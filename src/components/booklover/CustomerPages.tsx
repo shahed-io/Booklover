@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link,useLocation,useNavigate } from 'react-router-dom';
+import { Link,useLocation,useNavigate } from '@/lib/router-compat';
 import { Helmet } from 'react-helmet-async';
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';

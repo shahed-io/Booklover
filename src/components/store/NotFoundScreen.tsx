@@ -1,11 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 
 interface NotFoundScreenProps {
-  title?: string;
-  message?: string;
-  ctaLabel?: string;
-  ctaHref?: string;
-  code?: string; // shown behind OOPS! (e.g. "404")
+  title?: string | undefined;
+
+  message?: string | undefined;
+
+  ctaLabel?: string | undefined;
+
+  ctaHref?: string | undefined;
+
+  code?: string | undefined; // shown behind OOPS! (e.g. "404")
 }
 
 /**

@@ -113,7 +113,7 @@ const AdminAnnouncementBar = () => {
       const items = [...p.items];
       const ni = i + dir;
       if (ni < 0 || ni >= items.length) return p;
-      [items[i], items[ni]] = [items[ni], items[i]];
+      [items[i]!, items[ni]!] = [items[ni]!, items[i]!];
       return { ...p, items };
     });
   };
@@ -217,7 +217,7 @@ const AdminAnnouncementBar = () => {
                 <div className="w-8 h-8 rounded-lg border border-border flex-shrink-0"
                   style={{ background: settings[key] }} />
                 <input value={settings[key]} onChange={e => setSettings(p => ({ ...p, [key]: e.target.value }))}
-                  className="flex-1 bg-muted/30 border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary font-mono" />
+                  className="flex-1 bg-muted/30 border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-hidden focus:border-primary font-mono" />
               </div>
             </div>
           ))}
@@ -225,7 +225,7 @@ const AdminAnnouncementBar = () => {
         <div className="max-w-xs">
           <label className="text-xs text-muted-foreground mb-1.5 block">LIVE লেবেল টেক্সট</label>
           <input value={settings.liveLabel} onChange={e => setSettings(p => ({ ...p, liveLabel: e.target.value }))}
-            className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+            className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
         </div>
       </div>
 
@@ -262,11 +262,11 @@ const AdminAnnouncementBar = () => {
                 </button>
               </div>
               <input value={item.label} onChange={e => updateItem(i, 'label', e.target.value)} placeholder="প্রোডাক্ট নাম (edit করা যাবে)"
-                className="flex-1 bg-transparent text-sm text-foreground focus:outline-none border-b border-transparent focus:border-primary/40 px-1" />
+                className="flex-1 bg-transparent text-sm text-foreground focus:outline-hidden border-b border-transparent focus:border-primary/40 px-1" />
               <input value={item.price} onChange={e => updateItem(i, 'price', e.target.value)} placeholder="৳000"
-                className="w-24 bg-transparent text-sm text-foreground focus:outline-none text-center font-mono border-b border-transparent focus:border-primary/40" />
+                className="w-24 bg-transparent text-sm text-foreground focus:outline-hidden text-center font-mono border-b border-transparent focus:border-primary/40" />
               <input value={item.off} onChange={e => updateItem(i, 'off', e.target.value)} placeholder="-00%"
-                className="w-20 bg-transparent text-sm text-foreground focus:outline-none text-center font-mono border-b border-transparent focus:border-primary/40" />
+                className="w-20 bg-transparent text-sm text-foreground focus:outline-hidden text-center font-mono border-b border-transparent focus:border-primary/40" />
               <button onClick={() => removeItem(i)} className="p-1 text-muted-foreground hover:text-destructive rounded-lg transition-colors">
                 <Trash2 size={13} />
               </button>
@@ -286,7 +286,7 @@ const AdminAnnouncementBar = () => {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="প্রোডাক্ট নাম দিয়ে সার্চ করুন..."
-                className="flex-1 bg-transparent text-sm text-foreground focus:outline-none"
+                className="flex-1 bg-transparent text-sm text-foreground focus:outline-hidden"
               />
               <button onClick={() => setShowSearch(false)} className="p-1 text-muted-foreground hover:text-foreground rounded-lg">
                 <X size={16} />

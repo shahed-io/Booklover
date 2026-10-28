@@ -6,9 +6,9 @@
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const h = hex.replace('#', '').trim();
   if (h.length === 3) {
-    const r = parseInt(h[0] + h[0], 16);
-    const g = parseInt(h[1] + h[1], 16);
-    const b = parseInt(h[2] + h[2], 16);
+    const r = parseInt(h[0]! + h[0]!, 16);
+    const g = parseInt(h[1]! + h[1]!, 16);
+    const b = parseInt(h[2]! + h[2]!, 16);
     return { r, g, b };
   }
   if (h.length === 6) {

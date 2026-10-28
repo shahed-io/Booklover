@@ -5,9 +5,12 @@ import NoticeTemplate, { type NoticeData, type NoticeBrand } from '@/components/
 import { downloadInvoicePdfFromElement } from './invoicePdf';
 
 export interface DownloadNoticeOptions {
-  brand?: NoticeBrand;
-  signatureUrl?: string;
-  filename?: string;
+  brand?: NoticeBrand | undefined;
+
+  signatureUrl?: string | undefined;
+
+  filename?: string | undefined;
+
 }
 
 const slugify = (s: string) =>
@@ -30,8 +33,8 @@ export async function downloadNoticePdf(
   root.render(
     <NoticeTemplate
       notice={notice}
-      brand={opts.brand}
-      signatureUrl={opts.signatureUrl}
+      brand={opts.brand!}
+      signatureUrl={opts.signatureUrl!}
     />
   );
 

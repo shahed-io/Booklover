@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from '@/lib/router-compat';
 import DOMPurify from 'dompurify';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/store/Navbar';
@@ -34,7 +34,7 @@ const renderMarkdown = (content: string): string => {
     })
     .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-black text-foreground mt-6 mb-4">$1</h1>')
     .replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground font-semibold">$1</strong>')
-    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded text-xs font-mono" style="background:var(--neon-violet-dim);color:hsl(var(--primary))">$1</code>')
+    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-[0.25rem] text-xs font-mono" style="background:var(--neon-violet-dim);color:hsl(var(--primary))">$1</code>')
     .replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre class="glass-card rounded-xl p-4 overflow-x-auto my-4 text-sm font-mono text-foreground/80 border border-border"><code>$1</code></pre>')
     .replace(/^> (.+)$/gm, '<blockquote class="border-l-4 pl-4 my-3 italic text-muted-foreground" style="border-color:hsl(var(--primary))">$1</blockquote>')
     .replace(/^\- (.+)$/gm, '<li class="flex items-start gap-2 text-muted-foreground text-sm mb-1"><span class="text-primary mt-1">▸</span><span>$1</span></li>')
@@ -127,7 +127,7 @@ const HelpCenter = () => {
             <ChevronRight size={12} />
             <Link to="/link" className="hover:text-primary transition-colors">Help Center</Link>
             <ChevronRight size={12} />
-            <span style={{ color: catCfg.color }}>{catCfg.label}</span>
+            <span style={{ color: catCfg!.color }}>{catCfg!.label}</span>
           </nav>
 
           <div className="flex flex-col lg:flex-row gap-8">
@@ -137,8 +137,8 @@ const HelpCenter = () => {
                 {/* Category badge */}
                 <div className="flex items-center gap-2 mb-4">
                   <span className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5"
-                    style={{ background: `${catCfg.color}20`, color: catCfg.color }}>
-                    <catCfg.icon size={11} /> {catCfg.label}
+                    style={{ background: `${catCfg!.color}20`, color: catCfg!.color }}>
+                    <catCfg.icon size={11} /> {catCfg!.label}
                   </span>
                   {currentArticle.is_featured && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-500">⭐ Featured</span>
@@ -150,7 +150,7 @@ const HelpCenter = () => {
                 </h1>
 
                 {currentArticle.excerpt && (
-                  <div className="glass-card rounded-xl px-4 py-3 mb-6 border-l-4" style={{ borderColor: catCfg.color }}>
+                  <div className="glass-card rounded-xl px-4 py-3 mb-6 border-l-4" style={{ borderColor: catCfg!.color }}>
                     <p className="text-sm text-muted-foreground">{currentArticle.excerpt}</p>
                   </div>
                 )}
@@ -212,7 +212,7 @@ const HelpCenter = () => {
                         <li key={a.id}>
                           <Link to={`/link/${a.slug}`}
                             className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-start gap-2 py-1">
-                            <ChevronRight size={12} className="mt-0.5 flex-shrink-0" style={{ color: cfg.color }} />
+                            <ChevronRight size={12} className="mt-0.5 flex-shrink-0" style={{ color: cfg!.color }} />
                             {a.title}
                           </Link>
                         </li>
@@ -276,7 +276,7 @@ const HelpCenter = () => {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="যা জানতে চান লিখুন..."
-              className="w-full bg-card border border-border rounded-2xl pl-11 pr-5 py-3.5 text-sm focus:outline-none focus:border-primary transition-colors"
+              className="w-full bg-card border border-border rounded-2xl pl-11 pr-5 py-3.5 text-sm focus:outline-hidden focus:border-primary transition-colors"
             />
           </div>
         </div>
@@ -297,13 +297,13 @@ const HelpCenter = () => {
                   className={`glass-card rounded-2xl p-4 flex flex-col items-center gap-2 transition-all hover:-translate-y-0.5 border ${
                     selectedCat === cat ? 'border-transparent' : 'border-border hover:border-primary/30'
                   }`}
-                  style={selectedCat === cat ? { background: `${cfg.color}15`, borderColor: `${cfg.color}40` } : {}}
+                  style={selectedCat === cat ? { background: `${cfg!.color}15`, borderColor: `${cfg!.color}40` } : {}}
                 >
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ background: `${cfg.color}20` }}>
-                    <cfg.icon size={18} style={{ color: cfg.color }} />
+                    style={{ background: `${cfg!.color}20` }}>
+                    <cfg.icon size={18} style={{ color: cfg!.color }} />
                   </div>
-                  <span className="text-xs font-semibold text-foreground">{cfg.label}</span>
+                  <span className="text-xs font-semibold text-foreground">{cfg!.label}</span>
                   <span className="text-[10px] text-muted-foreground">{count} আর্টিকেল</span>
                 </button>
               );
@@ -325,10 +325,10 @@ const HelpCenter = () => {
                     className="glass-card rounded-2xl p-4 hover:border-primary/30 transition-all hover:-translate-y-0.5 group">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                        style={{ background: `${cfg.color}20` }}>
-                        <cfg.icon size={15} style={{ color: cfg.color }} />
+                        style={{ background: `${cfg!.color}20` }}>
+                        <cfg.icon size={15} style={{ color: cfg!.color }} />
                       </div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: cfg.color }}>{cfg.label}</span>
+                      <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: cfg!.color }}>{cfg!.label}</span>
                     </div>
                     <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">{a.title}</p>
                     {a.excerpt && <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">{a.excerpt}</p>}
@@ -346,7 +346,7 @@ const HelpCenter = () => {
               <h2 className="font-bold text-foreground text-sm flex items-center gap-2">
                 {(() => {
                   const cfg = CATEGORY_CONFIG[selectedCat] || CATEGORY_CONFIG['general'];
-                  return <><cfg.icon size={14} style={{ color: cfg.color }} /> {cfg.label}</>;
+                  return <><cfg.icon size={14} style={{ color: cfg!.color }} /> {cfg!.label}</>;
                 })()}
               </h2>
               <button onClick={() => setSelectedCat('all')} className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -378,8 +378,8 @@ const HelpCenter = () => {
                     className="glass-card rounded-xl px-5 py-4 flex items-center gap-4 hover:border-primary/30 transition-all group"
                   >
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: `${cfg.color}15` }}>
-                      <cfg.icon size={16} style={{ color: cfg.color }} />
+                      style={{ background: `${cfg!.color}15` }}>
+                      <cfg.icon size={16} style={{ color: cfg!.color }} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{a.title}</p>

@@ -84,14 +84,14 @@ const AdminFaqManager = () => {
                           <span className="text-xs font-bold text-primary mt-2.5 flex-shrink-0">Q</span>
                           <input value={faq.q} onChange={e => updateFaq(p.id, i, 'q', e.target.value)}
                             placeholder="Enter question…"
-                            className="flex-1 bg-transparent border-b border-border py-1.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+                            className="flex-1 bg-transparent border-b border-border py-1.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
                           <button onClick={() => removeFaq(p.id, i)} className="text-muted-foreground hover:text-red-400 transition-colors p-1 flex-shrink-0"><Trash2 size={13} /></button>
                         </div>
                         <div className="flex items-start gap-2">
                           <span className="text-xs font-bold text-muted-foreground mt-2.5 flex-shrink-0">A</span>
                           <textarea value={faq.a} onChange={e => updateFaq(p.id, i, 'a', e.target.value)}
                             placeholder="Enter answer…" rows={2}
-                            className="flex-1 bg-transparent border-b border-border py-1.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none" />
+                            className="flex-1 bg-transparent border-b border-border py-1.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none" />
                         </div>
                       </div>
                     ))}

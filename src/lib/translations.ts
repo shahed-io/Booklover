@@ -1864,15 +1864,15 @@ export const translateDbText = (text: string, lang: LangCode): string => {
   if (orderMatch) {
     const orderNum = orderMatch[0];
     if (/পেমেন্ট/.test(text)) {
-      const base = LANG_DB_TEXTS[lang]?.db_wallet_order_payment ?? dbTextEn.db_wallet_order_payment;
+      const base = LANG_DB_TEXTS[lang]?.['db_wallet_order_payment'] ?? dbTextEn['db_wallet_order_payment'];
       return `${base} — ${orderNum}`;
     }
     if (/পয়েন্ট/.test(text)) {
-      const base = LANG_DB_TEXTS[lang]?.db_points_earned_order ?? dbTextEn.db_points_earned_order;
+      const base = LANG_DB_TEXTS[lang]?.['db_points_earned_order'] ?? dbTextEn['db_points_earned_order'];
       return `${base} — ${orderNum}`;
     }
     if (/স্ট্যাটাস|আপডেট/.test(text)) {
-      const base = LANG_DB_TEXTS[lang]?.db_notif_order_status ?? dbTextEn.db_notif_order_status;
+      const base = LANG_DB_TEXTS[lang]?.['db_notif_order_status'] ?? dbTextEn['db_notif_order_status'];
       return `${base} — ${orderNum}`;
     }
   }

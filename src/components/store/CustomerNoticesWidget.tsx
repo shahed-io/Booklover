@@ -1,6 +1,6 @@
 // Customer dashboard widget — shows latest published notices for customers
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Megaphone, ChevronRight } from 'lucide-react';
 
@@ -41,7 +41,7 @@ export default function CustomerNoticesWidget() {
   if (list.length === 0) return null;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-xs">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-semibold text-base flex items-center gap-2">
           <Megaphone className="w-4 h-4 text-violet-600" /> নোটিশ

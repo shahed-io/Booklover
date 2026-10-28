@@ -11,14 +11,19 @@ export interface PaymentMethodConfig {
   accentColor: string;
   bgColor: string;
   steps: string[];
-  warning?: string;
+  warning?: string | undefined;
+
   isActive: boolean;
   sortOrder: number;
   // Bank-specific fields (only for type === 'Bank Transfer')
-  bankName?: string;
-  accountName?: string;
-  branchName?: string;
-  routingNumber?: string;
+  bankName?: string | undefined;
+
+  accountName?: string | undefined;
+
+  branchName?: string | undefined;
+
+  routingNumber?: string | undefined;
+
 }
 
 export const PAYMENT_SETTINGS_KEY = 'payment_methods_config';
@@ -61,7 +66,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'Transaction ID কপি করুন',
       'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
     ],
-    warning: undefined,
+    warning: undefined!,
     isActive: false,
     sortOrder: 1,
   },
@@ -101,7 +106,7 @@ export const DEFAULT_PAYMENT_CONFIGS: PaymentMethodConfig[] = [
       'Transaction ID কপি করুন',
       'নিচের বক্সে TrxID পেস্ট করে অর্ডার সম্পন্ন করুন',
     ],
-    warning: undefined,
+    warning: undefined!,
     isActive: false,
     sortOrder: 3,
   },

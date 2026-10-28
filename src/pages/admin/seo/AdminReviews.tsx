@@ -36,10 +36,10 @@ const Field = ({ label, value, onChange, textarea = false, placeholder = '' }: {
     <label className="text-xs text-muted-foreground mb-1.5 block">{label}</label>
     {textarea ? (
       <textarea value={value} rows={3} placeholder={placeholder} onChange={e => onChange(e.target.value)}
-        className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none" />
+        className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none" />
     ) : (
       <input value={value} placeholder={placeholder} onChange={e => onChange(e.target.value)}
-        className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+        className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
     )}
   </div>
 );
@@ -96,7 +96,7 @@ const AdminReviews = () => {
       const nIdx = idx + dir;
       if (nIdx < 0 || nIdx >= prev.length) return prev;
       const a = [...prev];
-      [a[idx], a[nIdx]] = [a[nIdx], a[idx]];
+      [a[idx]!, a[nIdx]!] = [a[nIdx]!, a[idx]!];
       return a;
     });
     setDirty(true);
@@ -186,12 +186,12 @@ const AdminReviews = () => {
             <div className="flex items-center gap-3 pt-2">
               <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
                 <input type="checkbox" checked={newReview.verified} onChange={e => setNewReview(p => ({ ...p, verified: e.target.checked }))}
-                  className="rounded" />
+                  className="rounded-[0.25rem]" />
                 Verified Purchase
               </label>
               <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
                 <input type="checkbox" checked={newReview.is_visible} onChange={e => setNewReview(p => ({ ...p, is_visible: e.target.checked }))}
-                  className="rounded" />
+                  className="rounded-[0.25rem]" />
                 দৃশ্যমান
               </label>
             </div>
@@ -211,7 +211,7 @@ const AdminReviews = () => {
       <div className="relative">
         <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="নাম, রিভিউ বা প্রোডাক্ট দিয়ে খুঁজুন…"
-          className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+          className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
       </div>
 
       {/* List */}
@@ -308,11 +308,11 @@ const AdminReviews = () => {
                   <Field label="রিভিউ টেক্সট" value={r.review || ''} onChange={v => updateField(r.id, 'review', v)} textarea />
                   <div className="flex items-center gap-4">
                     <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-                      <input type="checkbox" checked={r.verified !== false} onChange={e => updateField(r.id, 'verified', e.target.checked)} className="rounded" />
+                      <input type="checkbox" checked={r.verified !== false} onChange={e => updateField(r.id, 'verified', e.target.checked)} className="rounded-[0.25rem]" />
                       Verified Purchase
                     </label>
                     <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-                      <input type="checkbox" checked={r.is_visible !== false} onChange={e => updateField(r.id, 'is_visible', e.target.checked)} className="rounded" />
+                      <input type="checkbox" checked={r.is_visible !== false} onChange={e => updateField(r.id, 'is_visible', e.target.checked)} className="rounded-[0.25rem]" />
                       দৃশ্যমান
                     </label>
                   </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Lock, Eye, EyeOff, ShieldCheck, RefreshCw } from 'lucide-react';
@@ -78,7 +78,7 @@ const ResetPassword = () => {
                   onChange={e => setPassword(e.target.value)}
                   required
                   placeholder="নতুন পাসওয়ার্ড লিখুন"
-                  className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-none transition-all border bg-muted/30"
+                  className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-hidden transition-all border bg-muted/30"
                   style={{ borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)}
@@ -98,7 +98,7 @@ const ResetPassword = () => {
                   onChange={e => setConfirm(e.target.value)}
                   required
                   placeholder="পাসওয়ার্ড আবার লিখুন"
-                  className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-none transition-all border bg-muted/30"
+                  className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-hidden transition-all border bg-muted/30"
                   style={{ borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
                 />
                 <button type="button" onClick={() => setShowConfirm(!showConfirm)}

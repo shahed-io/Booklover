@@ -36,13 +36,13 @@ export function variantsOf(raw: Book['variants']): VariantGroup[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap(v=>{
     if (!v || typeof v!=='object' || Array.isArray(v)) return [];
-    const options = Array.isArray(v.options) ? v.options.flatMap(o=>{
+    const options = Array.isArray(v['options']) ? v['options'].flatMap(o=>{
       if(typeof o==='string') return [{label:o}];
-      if(!o || typeof o!=='object' || Array.isArray(o) || typeof o.label!=='string') return [];
-      const price=Number(o.price);
-      return [{label:o.label,price:Number.isFinite(price)&&price>0?price:undefined}];
+      if(!o || typeof o!=='object' || Array.isArray(o) || typeof o['label']!=='string') return [];
+      const price=Number(o['price']);
+      return [{label:o['label'],price:Number.isFinite(price)&&price>0?price:undefined}];
     }):[];
-    return options.length?[{name:typeof v.name==='string'?v.name:'Book Cover Type',options}]:[];
+    return options.length?[{name:typeof v['name']==='string'?v['name']:'Book Cover Type',options}]:[];
   });
 }
 

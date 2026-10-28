@@ -12,14 +12,22 @@ interface SitemapStat {
   url: string;
   count: number;
   status: 'ok' | 'fail' | 'loading' | 'warn';
-  lastFetch?: string;
-  responseMs?: number;
-  bytes?: number;
-  httpStatus?: number;
-  lastModified?: string | null;
-  contentType?: string;
-  error?: string;
-  sample?: string[];
+  lastFetch?: string | undefined;
+
+  responseMs?: number | undefined;
+
+  bytes?: number | undefined;
+
+  httpStatus?: number | undefined;
+
+  lastModified?: string | null | undefined;
+
+  contentType?: string | undefined;
+
+  error?: string | undefined;
+
+  sample?: string[] | undefined;
+
 }
 interface PingLog { id: string; entity: 'product' | 'blog'; title: string; slug: string; updated_at: string; }
 interface SchemaCheck { type: string; present: boolean; valid: boolean; note?: string; }
@@ -27,7 +35,7 @@ interface SchemaCheck { type: string; present: boolean; valid: boolean; note?: s
 const SITE = 'https://booklover.com.bd';
 
 const Card = ({ children, className = '' }: any) => (
-  <div className={`rounded-2xl border border-border bg-card/80 backdrop-blur-md p-5 shadow-sm ${className}`}>
+  <div className={`rounded-2xl border border-border bg-card/80 backdrop-blur-md p-5 shadow-xs ${className}`}>
     {children}
   </div>
 );
@@ -64,7 +72,7 @@ const AdminSEOMonitor = () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
       const r = await fetch(
         `https://${projectId}.supabase.co/functions/v1/seo-monitor-check`,
         {
@@ -130,7 +138,7 @@ const AdminSEOMonitor = () => {
     try {
       const r = await fetch(`https://tzkmjdcpgkbztxlchdpu.supabase.co/functions/v1/prerender-page?path=/`, { cache: 'no-store' });
       const html = await r.text();
-      const scripts = Array.from(html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map(m => m[1].trim());
+      const scripts = Array.from(html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map(m => m[1]!.trim());
       const types = new Set<string>();
       let validCount = 0;
       let totalCount = scripts.length;
@@ -330,7 +338,7 @@ const AdminSEOMonitor = () => {
               <div key={`${p.entity}-${p.id}`} className="flex items-center justify-between gap-3 p-3 rounded-xl border border-border/60 bg-background/50">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded uppercase font-mono ${p.entity === 'product' ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400' : 'bg-purple-500/15 text-purple-600 dark:text-purple-400'}`}>{p.entity}</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-[0.25rem] uppercase font-mono ${p.entity === 'product' ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400' : 'bg-purple-500/15 text-purple-600 dark:text-purple-400'}`}>{p.entity}</span>
                     <span className="text-sm font-medium truncate">{p.title}</span>
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">

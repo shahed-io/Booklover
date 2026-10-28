@@ -3,7 +3,7 @@ import { X, Mail, Lock, User, Eye, EyeOff, LogIn, KeyRound, ArrowLeft, Gift, Spa
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { toast } from 'sonner';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from '@/lib/router-compat';
 import BrandLogo from '@/components/store/BrandLogo';
 import { sendWelcomeEmail } from '@/lib/loginNotifier';
 import TurnstileWidget, { useTurnstileSiteKey } from '@/components/store/TurnstileWidget';
@@ -12,8 +12,10 @@ import TurnstileWidget, { useTurnstileSiteKey } from '@/components/store/Turnsti
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  redirectAfterLogin?: boolean;
-  oauthRedirectTo?: string;
+  redirectAfterLogin?: boolean | undefined;
+
+  oauthRedirectTo?: string | undefined;
+
 }
 
 type Mode = 'login' | 'signup' | 'forgot';
@@ -507,7 +509,7 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
                   onChange={(v) => setName(v)}
                   onBlur={() => setTouched(t => ({ ...t, name: true }))}
                   valid={nameValid}
-                  invalid={touched.name && !nameValid && name.length > 0}
+                  invalid={(touched.name && !nameValid && name.length > 0)!}
                   errorMsg="নাম কমপক্ষে ২ অক্ষরের হতে হবে"
                   required
                 />
@@ -521,7 +523,7 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
                 onChange={(v) => setEmail(v)}
                 onBlur={() => setTouched(t => ({ ...t, email: true }))}
                 valid={emailValid}
-                invalid={touched.email && !emailValid && email.length > 0}
+                invalid={(touched.email && !emailValid && email.length > 0)!}
                 errorMsg="সঠিক ইমেইল অ্যাড্রেস দিন"
                 required
               />
@@ -538,7 +540,7 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
                     onKeyDown={(e) => setCapsLockOn(e.getModifierState && e.getModifierState('CapsLock'))}
                     onKeyUp={(e) => setCapsLockOn(e.getModifierState && e.getModifierState('CapsLock'))}
                     valid={mode === 'signup' ? passwordValid : pwLen >= 1}
-                    invalid={mode === 'signup' && touched.password && !passwordValid && pwLen > 0}
+                    invalid={(mode === 'signup' && touched.password && !passwordValid && pwLen > 0)!}
                     errorMsg="পাসওয়ার্ড কমপক্ষে ৮ অক্ষর, অক্ষর ও সংখ্যা থাকতে হবে"
                     required
                     rightSlot={
@@ -733,12 +735,18 @@ interface GlassFieldProps {
   onBlur?: () => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  valid?: boolean;
-  invalid?: boolean;
-  errorMsg?: string;
-  required?: boolean;
-  uppercase?: boolean;
-  rightSlot?: React.ReactNode;
+  valid?: boolean | undefined;
+
+  invalid?: boolean | undefined;
+
+  errorMsg?: string | undefined;
+
+  required?: boolean | undefined;
+
+  uppercase?: boolean | undefined;
+
+  rightSlot?: React.ReactNode | undefined;
+
 }
 
 const GlassField = ({ icon, type, placeholder, value, onChange, onBlur, onKeyDown, onKeyUp, valid, invalid, errorMsg, required, uppercase, rightSlot }: GlassFieldProps) => {
@@ -787,7 +795,7 @@ const GlassField = ({ icon, type, placeholder, value, onChange, onBlur, onKeyDow
           onBlur={() => { setFocused(false); onBlur?.(); }}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
-          className={`flex-1 bg-transparent border-0 outline-none px-3 py-3 text-sm placeholder:text-muted-foreground ${uppercase ? 'uppercase tracking-wider' : ''}`}
+          className={`flex-1 bg-transparent border-0 outline-hidden px-3 py-3 text-sm placeholder:text-muted-foreground ${uppercase ? 'uppercase tracking-wider' : ''}`}
           style={{ color: 'hsl(226,40%,18%)' }}
         />
         <span className="pr-3.5 flex items-center gap-2">

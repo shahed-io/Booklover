@@ -79,7 +79,7 @@ const AdminRobots = () => {
             value={loading ? 'Loading…' : content}
             onChange={e => setContent(e.target.value)}
             disabled={loading}
-            className="flex-1 bg-background font-mono text-sm text-foreground px-4 py-4 focus:outline-none resize-none leading-6 min-h-[400px]"
+            className="flex-1 bg-background font-mono text-sm text-foreground px-4 py-4 focus:outline-hidden resize-none leading-6 min-h-[400px]"
             spellCheck={false}
           />
         </div>

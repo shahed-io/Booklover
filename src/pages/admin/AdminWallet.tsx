@@ -25,7 +25,8 @@ interface Transaction {
   reference_id: string | null;
   created_by: string;
   created_at: string;
-  profiles?: { display_name: string | null; email: string | null };
+  profiles?: { display_name: string | null; email: string | null } | undefined;
+
 }
 
 interface TopupRequest {
@@ -38,7 +39,8 @@ interface TopupRequest {
   status: string;
   admin_notes: string | null;
   created_at: string;
-  profiles?: { display_name: string | null; email: string | null };
+  profiles?: { display_name: string | null; email: string | null } | undefined;
+
 }
 
 const AdminWallet = () => {
@@ -291,7 +293,7 @@ const AdminWallet = () => {
               <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-primary text-primary-foreground shadow'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}>
                 <tab.icon size={14} /> {tab.label}
@@ -341,7 +343,7 @@ const AdminWallet = () => {
                             value={adminNote[req.id] || ''}
                             onChange={e => setAdminNote(prev => ({ ...prev, [req.id]: e.target.value }))}
                             placeholder="Admin note (optional)..."
-                            className="w-full rounded-xl px-3 py-2 text-xs border border-border bg-muted/30 text-foreground focus:outline-none focus:border-primary"
+                            className="w-full rounded-xl px-3 py-2 text-xs border border-border bg-muted/30 text-foreground focus:outline-hidden focus:border-primary"
                           />
                           <div className="flex gap-2">
                             <button
@@ -377,7 +379,7 @@ const AdminWallet = () => {
                   <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input value={search} onChange={e => setSearch(e.target.value)}
                     placeholder="Search by name or email..."
-                    className="w-full pl-16 pr-4 py-2.5 text-sm rounded-xl bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors" />
+                    className="w-full pl-16 pr-4 py-2.5 text-sm rounded-xl bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors" />
                 </div>
               </div>
               <div className="divide-y divide-border max-h-[500px] overflow-y-auto">
@@ -391,7 +393,7 @@ const AdminWallet = () => {
                       className={`flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors ${selectedUser?.user_id === c.user_id ? 'bg-primary/10 border-l-2 border-primary' : ''}`}>
                       <div onClick={() => setSelectedUser(c)} className="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center text-xs font-bold text-primary">
-                          {(c.display_name || c.email || '?')[0].toUpperCase()}
+                          {(c.display_name || c.email || '?')[0]!.toUpperCase()}
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-medium text-foreground truncate">{c.display_name || 'Unknown'}</p>
@@ -480,7 +482,7 @@ const AdminWallet = () => {
           {selectedUser ? (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/10 border border-primary/20">
               <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">
-                {(selectedUser.display_name || selectedUser.email || '?')[0].toUpperCase()}
+                {(selectedUser.display_name || selectedUser.email || '?')[0]!.toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-foreground truncate">{selectedUser.display_name || 'Unknown'}</p>
@@ -500,13 +502,13 @@ const AdminWallet = () => {
           <div className="flex gap-2">
             <button onClick={() => setTxType('credit')}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                txType === 'credit' ? 'bg-green-500 text-white shadow' : 'border border-border text-muted-foreground hover:border-green-500/50'
+                txType === 'credit' ? 'bg-green-500 text-white shadow-sm' : 'border border-border text-muted-foreground hover:border-green-500/50'
               }`}>
               <Plus size={14} /> Credit
             </button>
             <button onClick={() => setTxType('debit')}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                txType === 'debit' ? 'bg-destructive text-white shadow' : 'border border-border text-muted-foreground hover:border-destructive/50'
+                txType === 'debit' ? 'bg-destructive text-white shadow-sm' : 'border border-border text-muted-foreground hover:border-destructive/50'
               }`}>
               <Minus size={14} /> Debit
             </button>
@@ -516,7 +518,7 @@ const AdminWallet = () => {
             <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 block">Amount (৳)</label>
             <input type="number" min="1" value={amount} onChange={e => setAmount(e.target.value)}
               placeholder="e.g. 500"
-              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors text-sm" />
+              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors text-sm" />
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -531,7 +533,7 @@ const AdminWallet = () => {
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5 block">Note (optional)</label>
             <input value={note} onChange={e => setNote(e.target.value)} placeholder="Reason..."
-              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors text-sm" />
+              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors text-sm" />
           </div>
 
           <button onClick={handleAdjust} disabled={!selectedUser || !amount || processing}

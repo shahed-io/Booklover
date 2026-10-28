@@ -28,7 +28,8 @@ interface PageResult {
   status: "pending" | "loading" | "done" | "error";
   totalImages: number;
   issueCount: number;
-  error?: string;
+  error?: string | undefined;
+
 }
 
 const ISSUE_LABEL: Record<Issue, string> = {
@@ -175,7 +176,7 @@ export default function AdminImageAudit() {
       setPages([...updated]);
 
       try {
-        const { images, total } = await scanPage(url);
+        const { images, total } = await scanPage(url!);
         allIssues.push(...images);
         if (idx >= 0) {
           updated[idx] = {
@@ -341,7 +342,7 @@ export default function AdminImageAudit() {
                     <img
                       src={i.src}
                       alt=""
-                      className="w-16 h-16 object-cover rounded bg-muted flex-shrink-0"
+                      className="w-16 h-16 object-cover rounded-[0.25rem] bg-muted flex-shrink-0"
                       loading="lazy"
                       onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
                     />
@@ -395,7 +396,7 @@ export default function AdminImageAudit() {
             {pages.map((p) => (
               <div
                 key={p.url}
-                className="flex items-center justify-between gap-2 p-2 rounded border bg-card text-sm"
+                className="flex items-center justify-between gap-2 p-2 rounded-[0.25rem] border bg-card text-sm"
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   {p.status === "loading" && <Loader2 className="h-3 w-3 animate-spin text-blue-500" />}

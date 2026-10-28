@@ -1,5 +1,5 @@
 import { Construction } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from '@/lib/router-compat';
 
 const pageTitles: Record<string, string> = {
   '/admin/customers': 'Customers',

@@ -38,19 +38,26 @@ interface Category { id: string; name: string; parent_id: string | null; }
 
 interface Product {
   id: string; name: string; price: number; original_price: number | null;
-  cost_price?: number | null; discount_percent: number | null; status: string;
+  cost_price?: number | null; discount_percent: number | null; status: string | undefined;
+
   image_url: string | null; images?: string[] | null; video_url?: string | null;
   total_sales: number; created_at: string; is_featured: boolean; is_digital: boolean;
   tags: string[] | null; description: string | null; short_description: string | null;
   download_link: string | null; sku: string | null; category_id: string | null;
-  subcategory_id?: string | null; brand?: string | null; delivery_time: string | null;
-  delivery_type?: string | null; what_you_get: string[] | null;
+  subcategory_id?: string | null; brand?: string | null; delivery_time: string | null | undefined;
+
+  delivery_type?: string | null; what_you_get: string[] | null | undefined;
+
   faq: { q: string; a: string }[] | null; seo_title: string | null;
   seo_description: string | null; variants: { name: string; options: { label: string; price: string }[] }[] | null;
-  badge?: string | null; demo_url?: string | null; warranty_note?: string | null;
-  refund_note?: string | null; product_type?: string | null;
-  attributes?: { key: string; value: string }[] | null;
-  category?: { name: string } | null;
+  badge?: string | null; demo_url?: string | null; warranty_note?: string | null | undefined;
+
+  refund_note?: string | null; product_type?: string | null | undefined;
+
+  attributes?: { key: string; value: string }[] | null | undefined;
+
+  category?: { name: string } | null | undefined;
+
 }
 
 const DURATION_PRESETS = [
@@ -136,7 +143,7 @@ const emptyForm = {
 type FormState = typeof emptyForm;
 type TabId = 'basic' | 'pricing' | 'media' | 'details' | 'seo';
 
-const ic = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground";
+const ic = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground";
 const lc = "text-xs text-muted-foreground mb-1 block font-medium";
 
 const DELIVERY_TYPES = [
@@ -321,16 +328,16 @@ const AdminProducts = () => {
     for (let i = 0; i < targets.length; i++) {
       if (autoSeoCancelRef.current) break;
       const p = targets[i];
-      setAutoSeoProgress({ done: i, total: targets.length, current: p.name });
+      setAutoSeoProgress({ done: i, total: targets.length, current: p!.name });
       try {
-        const catName = categories.find(c => c.id === p.category_id)?.name || '';
+        const catName = categories.find(c => c.id === p!.category_id)?.name || '';
         const { data, error } = await supabase.functions.invoke('generate-product-content', {
           body: {
-            productName: p.name,
+            productName: p!.name,
             category: catName,
             brand: (p as any).brand || '',
             productType: (p as any).product_type || '',
-            price: p.price ? String(p.price) : '',
+            price: p!.price ? String(p!.price) : '',
             durationPlans: '',
             accountType: (p as any).account_type || '',
             subtitle: (p as any).subtitle || '',
@@ -346,13 +353,13 @@ const AdminProducts = () => {
         const { error: upErr } = await supabase
           .from('products')
           .update({ seo_title, seo_description })
-          .eq('id', p.id);
+          .eq('id', p!.id);
         if (upErr) throw upErr;
         success++;
         // Optimistic local update
-        setProducts(prev => prev.map(x => x.id === p.id ? { ...x, seo_title, seo_description } : x));
+        setProducts(prev => prev.map(x => x.id === p!.id ? { ...x, seo_title, seo_description } : x));
       } catch (err: any) {
-        console.error('Auto SEO failed for', p.name, err);
+        console.error('Auto SEO failed for', p!.name, err);
         failed++;
       }
       // Small delay to respect rate limits
@@ -513,7 +520,7 @@ const AdminProducts = () => {
       discount_percent: form.discount_percent,
     });
     if (!validation.success) {
-      toast.error(validation.error.errors[0].message);
+      toast.error(validation.error.errors[0]!.message);
       return;
     }
 
@@ -541,9 +548,9 @@ const AdminProducts = () => {
     const finalAttrs = [...hiddenAttrs, ...cleanAttrs];
 
     // Use first duration plan price as default price if plans exist and no manual price
-    const firstPlanPrice = validPlans.length ? parseFloat(validPlans[0].price) : null;
+    const firstPlanPrice = validPlans.length ? parseFloat(validPlans[0]!.price) : null;
     const mainPrice = parseFloat(form.price) || firstPlanPrice || 0;
-    const mainOriginalPrice = form.original_price ? parseFloat(form.original_price) : (validPlans.length && validPlans[0].original_price ? parseFloat(validPlans[0].original_price) : null);
+    const mainOriginalPrice = form.original_price ? parseFloat(form.original_price) : (validPlans.length && validPlans[0]!.original_price ? parseFloat(validPlans[0]!.original_price) : null);
 
     const payload: any = {
       name: form.name,
@@ -869,7 +876,7 @@ const AdminProducts = () => {
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search by name, SKU, brand..."
-            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
           />
         </div>
         <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
@@ -2029,7 +2036,7 @@ const AdminProducts = () => {
                           <div className="flex items-center gap-2 flex-wrap mt-0.5">
                             {product.brand && <span className="text-xs text-muted-foreground">{product.brand}</span>}
                             {product.is_featured && <span className="text-xs text-primary">⭐</span>}
-                            {product.badge && <span className="text-xs bg-primary/10 text-primary px-1.5 rounded">{product.badge}</span>}
+                            {product.badge && <span className="text-xs bg-primary/10 text-primary px-1.5 rounded-[0.25rem]">{product.badge}</span>}
                           </div>
                         </div>
                       </div>

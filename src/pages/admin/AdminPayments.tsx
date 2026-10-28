@@ -29,7 +29,8 @@ type PaymentProof = {
   id: string; order_id: string; transaction_id: string; payment_method: string;
   amount: number | null; status: string; screenshot_url: string | null;
   submitted_at: string; reviewed_at: string | null; admin_notes: string | null; user_id: string | null;
-  orders?: { order_number: string; customer_name: string; customer_email: string; total: number } | null;
+  orders?: { order_number: string; customer_name: string; customer_email: string; total: number } | null | undefined;
+
 };
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ElementType }> = {
@@ -113,7 +114,7 @@ const MethodEditor = ({
     const arr = [...form.steps];
     const j = i + dir;
     if (j < 0 || j >= arr.length) return;
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [arr[i]!, arr[j]!] = [arr[j]!, arr[i]!];
     set('steps', arr);
   };
 
@@ -394,7 +395,7 @@ const PaymentSettingsTab = () => {
     const arr = [...working];
     const j = i + dir;
     if (j < 0 || j >= arr.length) return;
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [arr[i]!, arr[j]!] = [arr[j]!, arr[i]!];
     update(arr.map((m, idx) => ({ ...m, sortOrder: idx })));
   };
 
@@ -668,7 +669,7 @@ export default function AdminPayments() {
             onClick={() => setActiveTab(key)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === key
-                ? 'bg-background text-foreground shadow-sm border border-border/50'
+                ? 'bg-background text-foreground shadow-xs border border-border/50'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -688,7 +689,7 @@ export default function AdminPayments() {
               const cfg = s === 'all'
                 ? { label: 'Total', color: 'text-primary', bg: 'bg-primary/10', icon: CreditCard }
                 : statusConfig[s];
-              const Icon = cfg.icon;
+              const Icon = cfg!.icon;
               return (
                 <button
                   key={s}
@@ -769,8 +770,8 @@ export default function AdminPayments() {
                   </thead>
                   <tbody>
                     {filtered.map((p, i) => {
-                      const cfg = statusConfig[p.status] ?? statusConfig.pending;
-                      const Icon = cfg.icon;
+                      const cfg = statusConfig[p.status] ?? statusConfig['pending'];
+                      const Icon = cfg!.icon;
                       return (
                         <tr key={p.id} className={`border-b border-border/30 transition-colors hover:bg-muted/20 ${i % 2 === 0 ? '' : 'bg-muted/10'}`}>
                           <td className="px-4 py-3 font-mono text-xs text-primary font-medium">{p.transaction_id}</td>
@@ -791,8 +792,8 @@ export default function AdminPayments() {
                             {format(new Date(p.submitted_at), 'dd MMM, hh:mm a')}
                           </td>
                           <td className="px-4 py-3">
-                            <span className={`inline-flex items-center gap-2 px-2 py-0.5 rounded-full text-[11px] font-medium border ${cfg.color}`}>
-                              <Icon size={11} />{cfg.label}
+                            <span className={`inline-flex items-center gap-2 px-2 py-0.5 rounded-full text-[11px] font-medium border ${cfg!.color}`}>
+                              <Icon size={11} />{cfg!.label}
                             </span>
                           </td>
                           <td className="px-4 py-3">
@@ -818,8 +819,8 @@ export default function AdminPayments() {
                 </DialogTitle>
               </DialogHeader>
               {selected && (() => {
-                const cfg = statusConfig[selected.status] ?? statusConfig.pending;
-                const Icon = cfg.icon;
+                const cfg = statusConfig[selected.status] ?? statusConfig['pending'];
+                const Icon = cfg!.icon;
                 return (
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-3 text-sm">
@@ -829,7 +830,7 @@ export default function AdminPayments() {
                         { label: 'Customer', value: <span className="truncate">{selected.orders?.customer_name ?? '—'}</span> },
                         { label: 'Amount', value: <span className="font-bold text-primary">{selected.amount != null ? `৳${selected.amount.toLocaleString()}` : '—'}</span> },
                         { label: 'Method', value: methodLabels[selected.payment_method] ?? selected.payment_method },
-                        { label: 'Status', value: <span className={`inline-flex items-center gap-2 px-2 py-0.5 rounded-full text-[11px] font-medium border ${cfg.color}`}><Icon size={11} />{cfg.label}</span> },
+                        { label: 'Status', value: <span className={`inline-flex items-center gap-2 px-2 py-0.5 rounded-full text-[11px] font-medium border ${cfg!.color}`}><Icon size={11} />{cfg!.label}</span> },
                       ].map(({ label, value }) => (
                         <div key={label} className="glass-card rounded-lg p-3 border border-border/50">
                           <div className="text-[10px] text-muted-foreground uppercase font-semibold mb-1">{label}</div>

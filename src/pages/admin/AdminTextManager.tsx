@@ -135,7 +135,7 @@ const AdminTextManager = () => {
     qc.invalidateQueries({ queryKey: ['text-overrides'] });
   };
 
-  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   if (isLoading) {
     return <div className="space-y-4">{Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-24 glass-card rounded-2xl animate-pulse" />)}</div>;
@@ -207,10 +207,10 @@ const AdminTextManager = () => {
               <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <code className="text-xs px-2 py-0.5 rounded bg-muted/50 text-foreground font-mono break-all">{r.key}</code>
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-primary/15 text-primary font-bold">{r.category}</span>
-                    {customised && <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-500 font-bold">Customised</span>}
-                    {!r.registered && <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/15 text-amber-500 font-bold">Custom</span>}
+                    <code className="text-xs px-2 py-0.5 rounded-[0.25rem] bg-muted/50 text-foreground font-mono break-all">{r.key}</code>
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[0.25rem] bg-primary/15 text-primary font-bold">{r.category}</span>
+                    {customised && <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[0.25rem] bg-emerald-500/15 text-emerald-500 font-bold">Customised</span>}
+                    {!r.registered && <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[0.25rem] bg-amber-500/15 text-amber-500 font-bold">Custom</span>}
                   </div>
                   {r.description && <p className="text-xs text-muted-foreground mt-1.5">{r.description}</p>}
                   <p className="text-[11px] text-muted-foreground mt-1">Default: <span className="text-foreground/70">{r.default_value}</span></p>

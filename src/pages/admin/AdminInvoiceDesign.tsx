@@ -12,7 +12,7 @@ import {
 const logoIcon = '/logo.png';
 
 const inputCls =
-  'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors';
+  'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors';
 
 const Field = ({
   label,
@@ -21,7 +21,8 @@ const Field = ({
 }: {
   label: string;
   children: React.ReactNode;
-  hint?: string;
+  hint?: string | undefined;
+
 }) => (
   <div>
     <label className="text-xs font-medium text-muted-foreground mb-1 block">{label}</label>
@@ -39,11 +40,12 @@ const ColorField = ({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  allowAuto?: boolean;
+  allowAuto?: boolean | undefined;
+
 }) => {
   const isAuto = value === 'auto';
   return (
-    <Field label={label} hint={allowAuto ? 'Set "Auto" to derive automatically from brand color.' : undefined}>
+    <Field label={label} hint={(allowAuto ? 'Set "Auto" to derive automatically from brand color.' : undefined)!}>
       <div className="flex items-center gap-2">
         <input
           type="color"
@@ -270,7 +272,7 @@ const AdminInvoiceDesign = () => {
               onChange={(e) => { setJsonText(e.target.value); setJsonError(null); }}
               spellCheck={false}
               rows={16}
-              className="w-full font-mono text-xs bg-muted/20 border border-border rounded-xl p-3 text-foreground focus:outline-none focus:border-primary"
+              className="w-full font-mono text-xs bg-muted/20 border border-border rounded-xl p-3 text-foreground focus:outline-hidden focus:border-primary"
             />
             {jsonError && <p className="text-xs text-red-500">⚠️ {jsonError}</p>}
           </section>

@@ -71,7 +71,7 @@ const AdminMaintenance = () => {
     setSettings(p => ({ ...p, [key]: value }));
 
   const inputCls =
-    'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors';
+    'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors';
 
   const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
     <div>
@@ -223,7 +223,7 @@ const AdminMaintenance = () => {
                       onChange={e =>
                         set('areas', e.target.checked ? [...settings.areas, area.key] : settings.areas.filter(k => k !== area.key))
                       }
-                      className="mt-0.5 h-4 w-4 rounded border-border accent-primary"
+                      className="mt-0.5 h-4 w-4 rounded-[0.25rem] border-border accent-primary"
                     />
                     <div>
                       <div className="text-sm font-semibold text-foreground">{area.label}</div>

@@ -56,15 +56,15 @@ const LinkEditRow = ({ link, onSave, onCancel }: {
   return (
     <tr className="bg-primary/5">
       <td className="px-4 py-3">
-        <input className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-primary"
+        <input className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-hidden focus:border-primary"
           value={label} onChange={e => setLabel(e.target.value)} placeholder="Link label" />
       </td>
       <td className="px-4 py-3">
-        <input className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-none focus:border-primary font-mono"
+        <input className="w-full text-sm rounded-lg border border-border bg-background px-3 py-1.5 focus:outline-hidden focus:border-primary font-mono"
           value={href} onChange={e => setHref(e.target.value)} placeholder="/page-path or https://..." />
         <label className="flex items-center gap-1.5 mt-1.5 text-[11px] text-muted-foreground cursor-pointer">
           <input type="checkbox" checked={external} onChange={e => setExternal(e.target.checked)}
-            className="rounded border-border" />
+            className="rounded-[0.25rem] border-border" />
           Open in new tab (external)
         </label>
       </td>
@@ -133,7 +133,7 @@ const PageContentEditor = ({ pageInfo }: { pageInfo: typeof EDITABLE_PAGES[0] })
     const next = [...working.sections];
     const target = idx + dir;
     if (target < 0 || target >= next.length) return;
-    [next[idx], next[target]] = [next[target], next[idx]];
+    [next[idx]!, next[target]!] = [next[target]!, next[idx]!];
     setLocal({ ...working, sections: next });
   };
 
@@ -158,17 +158,17 @@ const PageContentEditor = ({ pageInfo }: { pageInfo: typeof EDITABLE_PAGES[0] })
         <div className="p-5 grid sm:grid-cols-2 gap-4">
           <div>
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Page Title</label>
-            <input className="w-full text-sm rounded-xl border border-border bg-background px-3.5 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition"
+            <input className="w-full text-sm rounded-xl border border-border bg-background px-3.5 py-2.5 focus:outline-hidden focus:border-primary focus:ring-1 focus:ring-primary/30 transition"
               value={working.title} onChange={e => update({ title: e.target.value })} placeholder="Page name" />
           </div>
           <div>
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Badge Label</label>
-            <input className="w-full text-sm rounded-xl border border-border bg-background px-3.5 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition"
+            <input className="w-full text-sm rounded-xl border border-border bg-background px-3.5 py-2.5 focus:outline-hidden focus:border-primary focus:ring-1 focus:ring-primary/30 transition"
               value={working.badge} onChange={e => update({ badge: e.target.value })} placeholder="e.g. Legal Document" />
           </div>
           <div className="sm:col-span-2">
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Subtitle / Description</label>
-            <textarea className="w-full text-sm rounded-xl border border-border bg-background px-3.5 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition resize-none"
+            <textarea className="w-full text-sm rounded-xl border border-border bg-background px-3.5 py-2.5 focus:outline-hidden focus:border-primary focus:ring-1 focus:ring-primary/30 transition resize-none"
               rows={2} value={working.subtitle} onChange={e => update({ subtitle: e.target.value })}
               placeholder="Short page description..." />
           </div>
@@ -183,7 +183,7 @@ const PageContentEditor = ({ pageInfo }: { pageInfo: typeof EDITABLE_PAGES[0] })
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
                 <span className="w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0"
                   style={{ background: pageInfo.color }}>{idx + 1}</span>
-                <input className="text-sm font-bold bg-transparent border-0 outline-none text-foreground placeholder:text-muted-foreground min-w-0 w-full"
+                <input className="text-sm font-bold bg-transparent border-0 outline-hidden text-foreground placeholder:text-muted-foreground min-w-0 w-full"
                   value={sec.title} onChange={e => updateSection(sec.id, { title: e.target.value })} placeholder="Section title..." />
               </div>
               <div className="flex items-center gap-0.5 flex-shrink-0">
@@ -234,7 +234,7 @@ const AdminPages = () => {
   const qc = useQueryClient();
 
   const [activeTab, setActiveTab] = useState<'content' | 'menu'>('menu');
-  const [selectedPage, setSelectedPage] = useState(EDITABLE_PAGES[0].key);
+  const [selectedPage, setSelectedPage] = useState(EDITABLE_PAGES[0]!.key);
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [addingLinkTo, setAddingLinkTo] = useState<string | null>(null);
   const [editingLink, setEditingLink] = useState<string | null>(null);
@@ -276,7 +276,7 @@ const AdminPages = () => {
     const maxOrder = sections.reduce((m, s) => Math.max(m, s.sort_order), 0);
     persist([...sections, {
       id: genId('sec'), title: 'New Section', icon: 'Info',
-      accent: COLOR_OPTIONS[0].value, is_active: true, sort_order: maxOrder + 1, links: [],
+      accent: COLOR_OPTIONS[0]!.value, is_active: true, sort_order: maxOrder + 1, links: [],
     }]);
   };
   const updateSection = (id: string, patch: Partial<FooterSection>) =>
@@ -289,7 +289,7 @@ const AdminPages = () => {
     const sorted = [...sections].sort((a, b) => a.sort_order - b.sort_order);
     const target = idx + dir;
     if (target < 0 || target >= sorted.length) return;
-    [sorted[idx], sorted[target]] = [sorted[target], sorted[idx]];
+    [sorted[idx]!, sorted[target]!] = [sorted[target]!, sorted[idx]!];
     persist(sorted.map((s, i) => ({ ...s, sort_order: i + 1 })));
   };
 
@@ -304,14 +304,14 @@ const AdminPages = () => {
       }],
     } : s));
     setAddingLinkTo(null);
-  };
+   return undefined; };
   const editLink = (sectionId: string, linkId: string, data: Partial<FooterLink>) => {
     if (!data.label?.trim() || !data.href?.trim()) return toast.error('Label and URL are required.');
     persist(sections.map(s => s.id === sectionId ? {
       ...s, links: s.links.map(l => l.id === linkId ? { ...l, ...data } : l),
     } : s));
     setEditingLink(null);
-  };
+   return undefined; };
   const deleteLink = (sectionId: string, linkId: string) => {
     if (!confirm('Delete this link?')) return;
     persist(sections.map(s => s.id === sectionId ? { ...s, links: s.links.filter(l => l.id !== linkId) } : s));
@@ -387,7 +387,7 @@ const AdminPages = () => {
                       </div>
                       <div className="min-w-0">
                         {editingSection === sec.id ? (
-                          <input autoFocus className="text-sm font-bold bg-background border border-primary rounded-lg px-2 py-1 outline-none"
+                          <input autoFocus className="text-sm font-bold bg-background border border-primary rounded-lg px-2 py-1 outline-hidden"
                             value={sec.title}
                             onChange={e => updateSection(sec.id, { title: e.target.value })}
                             onBlur={() => setEditingSection(null)}
@@ -431,7 +431,7 @@ const AdminPages = () => {
                     <div>
                       <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block mb-1">Icon</label>
                       <select value={sec.icon} onChange={e => updateSection(sec.id, { icon: e.target.value })}
-                        className="w-full text-xs rounded-lg border border-border bg-background px-2.5 py-1.5 focus:outline-none focus:border-primary">
+                        className="w-full text-xs rounded-lg border border-border bg-background px-2.5 py-1.5 focus:outline-hidden focus:border-primary">
                         {ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}
                       </select>
                     </div>

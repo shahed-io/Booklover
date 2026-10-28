@@ -55,7 +55,7 @@ const AdminSearchConsole = () => {
           <div className="flex gap-3">
             <input value={loading ? '' : verifyCode} onChange={e => setVerifyCode(e.target.value)}
               placeholder="google-site-verification=xxxxxxxxxxxxxxxx"
-              className="flex-1 bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-none focus:border-primary transition-colors" />
+              className="flex-1 bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary transition-colors" />
             <button onClick={save} disabled={saving} className="btn-glow px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 disabled:opacity-60">
               {saved ? <Check size={14} /> : saving ? <div className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" /> : <Save size={14} />}
               {saved ? 'Saved!' : 'Save'}

@@ -32,10 +32,14 @@ interface LiveChatSettings {
   quick_suggestions: string[];
   // FAB
   fab_label: string;
-  fab_color_from?: string;
-  fab_color_mid?: string;
-  fab_color_to?: string;
-  fab_icon_color?: string;
+  fab_color_from?: string | undefined;
+
+  fab_color_mid?: string | undefined;
+
+  fab_color_to?: string | undefined;
+
+  fab_icon_color?: string | undefined;
+
   // Live Chat Sets (multiple support channels)
   live_sets: LiveSet[];
 }
@@ -50,7 +54,8 @@ interface LiveSet {
   icon_color: string;
   icon: string; // lucide icon name
   is_active: boolean;
-  sort_order?: number;
+  sort_order?: number | undefined;
+
 }
 
 const DEFAULT_SETTINGS: LiveChatSettings = {
@@ -159,7 +164,7 @@ const ChatHistoryPanel = () => {
       const grouped: Record<string, ChatConversation[]> = {};
       for (const c of convos) {
         if (!grouped[c.session_id]) grouped[c.session_id] = [];
-        grouped[c.session_id].push(c);
+        grouped[c.session_id]!.push(c);
       }
 
       const sessionList: GroupedSession[] = Object.entries(grouped).map(([sid, msgs]) => {
@@ -167,9 +172,9 @@ const ChatHistoryPanel = () => {
         return {
           session_id: sid,
           messages: sorted,
-          first_at: sorted[0].created_at,
-          last_at: sorted[sorted.length - 1].created_at,
-          device: getDeviceFromUA(sorted[0].user_agent),
+          first_at: sorted[0]!.created_at,
+          last_at: sorted[sorted.length - 1]!.created_at,
+          device: getDeviceFromUA(sorted[0]!.user_agent),
         };
       });
 
@@ -264,7 +269,7 @@ const ChatHistoryPanel = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
-                {sessions.length > 0 ? formatTime(sessions[0].last_at) : '—'}
+                {sessions.length > 0 ? formatTime(sessions[0]!.last_at) : '—'}
               </p>
               <p className="text-xs text-muted-foreground">সর্বশেষ চ্যাট</p>
             </div>
@@ -309,7 +314,7 @@ const ChatHistoryPanel = () => {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">
-                      {firstMsg.user_message.length > 60 ? firstMsg.user_message.slice(0, 60) + '...' : firstMsg.user_message}
+                      {firstMsg!.user_message.length > 60 ? firstMsg!.user_message.slice(0, 60) + '...' : firstMsg!.user_message}
                     </p>
                     <div className="flex items-center gap-3 mt-0.5">
                       <span className="text-xs text-muted-foreground flex items-center gap-2">
@@ -491,7 +496,7 @@ const AdminLiveChat = () => {
       const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
       if (targetIdx < 0 || targetIdx >= prev.live_sets.length) return prev;
       const next = [...prev.live_sets];
-      [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
+      [next[idx]!, next[targetIdx]!] = [next[targetIdx]!, next[idx]!];
       return { ...prev, live_sets: next.map((s, i) => ({ ...s, sort_order: i })) };
     });
   };
@@ -933,7 +938,7 @@ const AdminLiveChat = () => {
                           type="color"
                           value={set.icon_color}
                           onChange={e => updateLiveSet(set.id, 'icon_color', e.target.value)}
-                          className="w-10 h-10 rounded cursor-pointer border-0"
+                          className="w-10 h-10 rounded-[0.25rem] cursor-pointer border-0"
                         />
                         <Input
                           value={set.icon_color}

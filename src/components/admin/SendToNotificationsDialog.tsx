@@ -17,15 +17,20 @@ interface Props {
   open: boolean;
   onOpenChange: (o: boolean) => void;
   /** Prefill title */
-  defaultTitle?: string;
+  defaultTitle?: string | undefined;
+
   /** Prefill message */
-  defaultMessage?: string;
+  defaultMessage?: string | undefined;
+
   /** Prefill link (e.g. /offer/slug or /notices/slug) */
-  defaultLink?: string;
+  defaultLink?: string | undefined;
+
   /** notification "type" label (e.g. "offer", "notice") */
-  type?: string;
+  type?: string | undefined;
+
   /** Small badge shown at top of the dialog identifying the source */
-  sourceLabel?: string;
+  sourceLabel?: string | undefined;
+
 }
 
 const AUDIENCES: { value: NotificationAudience; label: string; help: string; icon: any }[] = [

@@ -26,17 +26,23 @@ interface Props {
   /** Called with the improved text. */
   onChange: (next: string) => void;
   /** Semantic hint that tunes the AI prompt. */
-  kind?: Kind;
+  kind?: Kind | undefined;
+
   /** Show a small label next to the icon. */
-  label?: string;
+  label?: string | undefined;
+
   /** Language override — otherwise auto-detected. */
-  language?: 'bn' | 'en' | 'auto';
+  language?: 'bn' | 'en' | 'auto' | undefined;
+
   /** Max character limit passed to AI. */
-  maxChars?: number;
+  maxChars?: number | undefined;
+
   /** Button size */
-  size?: 'sm' | 'icon';
+  size?: 'sm' | 'icon' | undefined;
+
   /** Extra class names for the trigger button. */
-  className?: string;
+  className?: string | undefined;
+
 }
 
 /**

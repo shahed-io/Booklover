@@ -30,7 +30,8 @@ interface OrderInfo {
   total: number | null;
   status: string | null;
   created_at: string;
-  items?: Array<{ product_name: string | null; quantity: number; price: number }>;
+  items?: Array<{ product_name: string | null; quantity: number; price: number }> | undefined;
+
 }
 
 interface Props {
@@ -151,7 +152,7 @@ export default function WalletCustomerDetailModal({ customer, onClose }: Props) 
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-lg font-bold flex-shrink-0">
-                {(customer.display_name || customer.email || '?')[0].toUpperCase()}
+                {(customer.display_name || customer.email || '?')[0]!.toUpperCase()}
               </div>
               <div className="min-w-0">
                 <h2 className="text-lg font-bold truncate flex items-center gap-2">
@@ -183,14 +184,14 @@ export default function WalletCustomerDetailModal({ customer, onClose }: Props) 
             <input
               value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search note, order #, reference, by..."
-              className="w-full pl-9 pr-3 py-2 text-sm rounded-lg bg-muted/40 border border-border focus:outline-none focus:border-primary"
+              className="w-full pl-9 pr-3 py-2 text-sm rounded-lg bg-muted/40 border border-border focus:outline-hidden focus:border-primary"
             />
           </div>
           <div className="flex gap-1 p-1 rounded-lg bg-muted/30 border border-border">
             {(['all', 'credit', 'debit'] as const).map(f => (
               <button key={f} onClick={() => setFilter(f)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${
-                  filter === f ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'
+                  filter === f ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
                 }`}>
                 {f === 'all' ? 'All' : f === 'credit' ? 'Credits' : 'Debits'}
               </button>
@@ -231,7 +232,7 @@ export default function WalletCustomerDetailModal({ customer, onClose }: Props) 
                               <span className="flex items-center gap-1.5 flex-wrap">
                                 <ShoppingBag size={13} className="text-violet-600" />
                                 Order Purchase
-                                <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-600">
+                                <span className="font-mono text-xs px-1.5 py-0.5 rounded-[0.25rem] bg-violet-500/10 text-violet-600">
                                   {ord.order_number}
                                 </span>
                               </span>

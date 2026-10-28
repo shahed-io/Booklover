@@ -14,9 +14,12 @@ type Product = {
   description: string | null;
   faq: any;
   status: string;
-  category?: { name: string } | null;
-  brand?: string | null;
-  product_type?: string | null;
+  category?: { name: string } | null | undefined;
+
+  brand?: string | null | undefined;
+
+  product_type?: string | null | undefined;
+
 };
 
 const MIN_WORDS = 700;
@@ -98,7 +101,7 @@ const AdminProductContent = () => {
       //    → produces the standard 9-section markdown matching existing products
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
       const res = await fetch(
         `https://${projectId}.supabase.co/functions/v1/generate-product-content`,
         {
@@ -204,7 +207,7 @@ const AdminProductContent = () => {
       // 2) Call AI with type "faq" — uses the existing description as the source of truth
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
       const res = await fetch(
         `https://${projectId}.supabase.co/functions/v1/generate-product-content`,
         {
@@ -263,7 +266,7 @@ const AdminProductContent = () => {
     let failed = 0;
     for (let i = 0; i < targets.length; i++) {
       if (bulkCancelRef.current) break;
-      const ok = await generateOne(targets[i]);
+      const ok = await generateOne(targets[i]!);
       if (!ok) failed++;
       setBulkProgress({ done: i + 1, total: targets.length, failed });
       if (i < targets.length - 1) await new Promise((r) => setTimeout(r, 1200));
@@ -284,7 +287,7 @@ const AdminProductContent = () => {
     let failed = 0;
     for (let i = 0; i < targets.length; i++) {
       if (bulkCancelRef.current) break;
-      const ok = await restoreOne(targets[i]);
+      const ok = await restoreOne(targets[i]!);
       if (!ok) failed++;
       setBulkProgress({ done: i + 1, total: targets.length, failed });
     }
@@ -304,7 +307,7 @@ const AdminProductContent = () => {
     let failed = 0;
     for (let i = 0; i < targets.length; i++) {
       if (bulkCancelRef.current) break;
-      const ok = await generateFaqOne(targets[i]);
+      const ok = await generateFaqOne(targets[i]!);
       if (!ok) failed++;
       setBulkProgress({ done: i + 1, total: targets.length, failed });
       if (i < targets.length - 1) await new Promise((r) => setTimeout(r, 1000));
@@ -513,7 +516,7 @@ const AdminProductContent = () => {
                               disabled={restoring === p.id || bulkRunning}
                               onClick={() => handleRestoreSingle(p)}
                               className="p-2 rounded-lg border border-amber-500/40 text-amber-600 hover:bg-amber-500/10 disabled:opacity-50"
-                              title={`Restore previous (${backupMap[p.id]} backup${backupMap[p.id] > 1 ? 's' : ''})`}
+                              title={`Restore previous (${backupMap[p.id]} backup${backupMap[p.id]! > 1 ? 's' : ''})`}
                             >
                               {restoring === p.id ? <Loader2 className="animate-spin" size={14} /> : <Undo2 size={14} />}
                             </button>

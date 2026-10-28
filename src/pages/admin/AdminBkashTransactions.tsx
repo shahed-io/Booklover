@@ -392,11 +392,11 @@ const tintMap: Record<string, string> = {
 };
 
 function SectionCard({ icon: Icon, title, tint, children }: { icon: any; title: string; tint: string; children: React.ReactNode }) {
-  const cls = tintMap[tint] || tintMap.pink;
+  const cls = tintMap[tint] || tintMap['pink'];
   const [grad, border, text] = [cls, cls, cls];
   return (
     <div className={`rounded-2xl border bg-gradient-to-br ${cls} backdrop-blur-sm overflow-hidden`}>
-      <div className={`flex items-center gap-2 px-4 py-2.5 border-b border-current/10 ${text.split(' ').filter(c=>c.startsWith('text-')).join(' ')}`}>
+      <div className={`flex items-center gap-2 px-4 py-2.5 border-b border-current/10 ${text!.split(' ').filter(c=>c.startsWith('text-')).join(' ')}`}>
         <Icon className="h-4 w-4" />
         <span className="text-xs font-bold uppercase tracking-wide">{title}</span>
       </div>

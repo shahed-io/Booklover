@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import BrandLoader from '@/components/store/BrandLoader';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/store/Navbar';
 import Footer from '@/components/store/Footer';
@@ -126,7 +126,7 @@ const Blog = () => {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="আর্টিকেল খুঁজুন..."
-                className="w-full bg-transparent pl-12 pr-5 py-4 text-sm focus:outline-none"
+                className="w-full bg-transparent pl-12 pr-5 py-4 text-sm focus:outline-hidden"
               />
               {search && (
                 <button onClick={() => setSearch('')}

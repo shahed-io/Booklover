@@ -131,7 +131,7 @@ const Categories = () => {
                   transform: sectionVisible ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.96)',
                   transition: `opacity 0.6s cubic-bezier(0.23,1,0.32,1) ${i * 0.07}s, transform 0.6s cubic-bezier(0.23,1,0.32,1) ${i * 0.07}s`,
                   boxShadow: isHov
-                    ? `0 12px 32px hsla(226,35%,12%,0.12), 0 0 0 1px ${meta.accent}40`
+                    ? `0 12px 32px hsla(226,35%,12%,0.12), 0 0 0 1px ${meta!.accent}40`
                     : undefined,
                 }}
                 onMouseEnter={() => setHovered(i)}
@@ -139,12 +139,12 @@ const Categories = () => {
               >
                 {/* Glow spot on hover */}
                 <div className="absolute inset-0 rounded-[1.5rem] pointer-events-none transition-opacity duration-300"
-                  style={{ background: `radial-gradient(ellipse at 30% 30%, ${meta.glow}, transparent 60%)`, opacity: isHov ? 1 : 0 }} />
+                  style={{ background: `radial-gradient(ellipse at 30% 30%, ${meta!.glow}, transparent 60%)`, opacity: isHov ? 1 : 0 }} />
 
                 <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center text-3xl cat-icon overflow-hidden"
                   style={{
-                    background: `linear-gradient(135deg, ${meta.glow}, transparent)`,
-                    border: `1px solid ${meta.accent}35`,
+                    background: `linear-gradient(135deg, ${meta!.glow}, transparent)`,
+                    border: `1px solid ${meta!.accent}35`,
                   }}>
                 {cat.image_url
                     ? <img
@@ -154,7 +154,7 @@ const Categories = () => {
                         className="w-full h-full object-cover"
                         onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                       />
-                    : meta.icon
+                    : meta!.icon
                   }
                 </div>
 
@@ -166,18 +166,18 @@ const Categories = () => {
                 <div className="relative flex items-center justify-between mt-auto pt-1">
                   <span className="text-[11px] font-bold px-2.5 py-1 rounded-full"
                     style={{
-                      background: `${meta.accent}14`,
-                      color: meta.accent,
-                      border: `1px solid ${meta.accent}30`,
+                      background: `${meta!.accent}14`,
+                      color: meta!.accent,
+                      border: `1px solid ${meta!.accent}30`,
                     }}>
                     {cat.count} items
                   </span>
                   <div className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200"
                     style={{
-                      background: isHov ? `${meta.accent}18` : 'hsl(var(--muted))',
-                      border: `1px solid ${isHov ? meta.accent + '40' : 'hsl(var(--border))'}`,
+                      background: isHov ? `${meta!.accent}18` : 'hsl(var(--muted))',
+                      border: `1px solid ${isHov ? meta!.accent + '40' : 'hsl(var(--border))'}`,
                     }}>
-                    <ArrowRight size={12} style={{ color: isHov ? meta.accent : 'hsl(var(--muted-foreground))' }} />
+                    <ArrowRight size={12} style={{ color: isHov ? meta!.accent : 'hsl(var(--muted-foreground))' }} />
                   </div>
                 </div>
               </a>

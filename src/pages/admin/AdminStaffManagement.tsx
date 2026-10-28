@@ -235,7 +235,7 @@ const AdminStaffManagement = () => {
           <div className="relative">
             <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="সার্চ..."
-              className="bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary transition-colors w-48" />
+              className="bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary transition-colors w-48" />
           </div>
         </div>
 
@@ -263,7 +263,7 @@ const AdminStaffManagement = () => {
                     <div className="text-xs text-muted-foreground">{profile?.email || ''}</div>
                   </div>
                   <select value={item.role} onChange={e => handleUpdateRole(item.id, e.target.value as AppRole)}
-                    className={`text-xs px-3 py-1.5 rounded-lg border font-medium ${cfg.bg} ${cfg.color} focus:outline-none cursor-pointer`}>
+                    className={`text-xs px-3 py-1.5 rounded-lg border font-medium ${cfg.bg} ${cfg.color} focus:outline-hidden cursor-pointer`}>
                     <option value="admin">Admin</option>
                     <option value="manager">Manager</option>
                   </select>
@@ -306,13 +306,13 @@ const AdminStaffManagement = () => {
                     <Mail size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <input type="email" value={emailForm.email} onChange={e => setEmailForm({ ...emailForm, email: e.target.value })} required
                       placeholder="user@example.com"
-                      className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                      className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
                   </div>
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">রোল *</label>
                   <select value={emailForm.role} onChange={e => setEmailForm({ ...emailForm, role: e.target.value as AppRole })}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary">
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary">
                     <option value="admin">Admin — সম্পূর্ণ এক্সেস</option>
                     <option value="manager">Manager — অর্ডার ও প্রোডাক্ট</option>
                   </select>
@@ -330,13 +330,13 @@ const AdminStaffManagement = () => {
                   <label className="text-xs text-muted-foreground mb-1 block">নাম</label>
                   <input type="text" value={newUserForm.display_name} onChange={e => setNewUserForm({ ...newUserForm, display_name: e.target.value })}
                     placeholder="স্টাফের নাম"
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">ইমেইল *</label>
                   <input type="email" value={newUserForm.email} onChange={e => setNewUserForm({ ...newUserForm, email: e.target.value })} required
                     placeholder="staff@example.com"
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">পাসওয়ার্ড *</label>
@@ -344,7 +344,7 @@ const AdminStaffManagement = () => {
                     <input type={showPassword ? 'text' : 'password'} value={newUserForm.password}
                       onChange={e => setNewUserForm({ ...newUserForm, password: e.target.value })} required minLength={6}
                       placeholder="ন্যূনতম ৬ অক্ষর"
-                      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 pr-10 text-sm text-foreground focus:outline-none focus:border-primary" />
+                      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 pr-10 text-sm text-foreground focus:outline-hidden focus:border-primary" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                       {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -355,12 +355,12 @@ const AdminStaffManagement = () => {
                   <label className="text-xs text-muted-foreground mb-1 block">ফোন</label>
                   <input type="text" value={newUserForm.phone} onChange={e => setNewUserForm({ ...newUserForm, phone: e.target.value })}
                     placeholder="01XXXXXXXXX"
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground mb-1 block">রোল *</label>
                   <select value={newUserForm.role} onChange={e => setNewUserForm({ ...newUserForm, role: e.target.value as AppRole })}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary">
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary">
                     <option value="admin">Admin — সম্পূর্ণ এক্সেস</option>
                     <option value="manager">Manager — অর্ডার ও প্রোডাক্ট</option>
                   </select>

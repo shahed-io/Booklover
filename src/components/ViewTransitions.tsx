@@ -4,7 +4,7 @@
  * Falls back gracefully on browsers that don't support the API.
  */
 import { useEffect, useRef } from 'react';
-import { useLocation, useNavigationType } from 'react-router-dom';
+import { useLocation, useNavigationType } from '@/lib/router-compat';
 
 export const ViewTransitions = () => {
   const location = useLocation();

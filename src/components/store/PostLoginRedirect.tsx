@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from '@/lib/router-compat';
 import { useAuth } from '@/hooks/useAuth';
 
 const STORAGE_KEY = 'post_login_redirect';

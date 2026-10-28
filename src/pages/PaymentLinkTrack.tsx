@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, Clock, CheckCircle2, XCircle, Package } from 'lucide-react';
@@ -32,21 +32,21 @@ export default function PaymentLinkTrack() {
     rejected: { icon: XCircle,      color: 'text-red-600',    bg: 'bg-red-100',    label: 'বাতিল',         msg: 'আপনার সাবমিশন গ্রহণ করা হয়নি।' },
     converted:{ icon: Package,      color: 'text-blue-600',   bg: 'bg-blue-100',   label: 'অর্ডার সম্পন্ন', msg: 'অর্ডার সফল।' },
   };
-  const s = statusConfig[sub.status] || statusConfig.pending;
-  const Icon = s.icon;
+  const s = statusConfig[sub.status] || statusConfig['pending'];
+  const Icon = s!.icon;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 py-6 px-4">
       <div className="max-w-xl mx-auto space-y-4">
         <Card><CardContent className="p-8 text-center space-y-4">
-          <div className={`w-20 h-20 mx-auto rounded-full grid place-items-center ${s.bg}`}>
-            <Icon className={`w-10 h-10 ${s.color}`} />
+          <div className={`w-20 h-20 mx-auto rounded-full grid place-items-center ${s!.bg}`}>
+            <Icon className={`w-10 h-10 ${s!.color}`} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">{s.label}</h1>
-            <p className="text-sm text-muted-foreground mt-2">{s.msg}</p>
+            <h1 className="text-2xl font-bold">{s!.label}</h1>
+            <p className="text-sm text-muted-foreground mt-2">{s!.msg}</p>
             {sub.admin_note && (
-              <p className="text-sm mt-3 p-3 bg-muted/40 rounded">অ্যাডমিন নোট: {sub.admin_note}</p>
+              <p className="text-sm mt-3 p-3 bg-muted/40 rounded-[0.25rem]">অ্যাডমিন নোট: {sub.admin_note}</p>
             )}
           </div>
           {sub.order_number && (

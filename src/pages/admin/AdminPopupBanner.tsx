@@ -199,7 +199,7 @@ const AdminPopupBanner = () => {
                 value={imageUrl}
                 onChange={e => setImageUrl(e.target.value)}
                 placeholder="https://example.com/banner.jpg"
-                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
               />
             </div>
           </div>
@@ -216,7 +216,7 @@ const AdminPopupBanner = () => {
               value={linkUrl}
               onChange={e => setLinkUrl(e.target.value)}
               placeholder="https://booklover.com.bd/product/microsoft-365"
-              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
             />
           </div>
 

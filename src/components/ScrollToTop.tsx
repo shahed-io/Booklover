@@ -5,7 +5,7 @@
  * Back/forward (POP) keeps the browser's native scroll restoration.
  */
 import { useLayoutEffect, useRef } from 'react';
-import { useLocation, useNavigationType } from 'react-router-dom';
+import { useLocation, useNavigationType } from '@/lib/router-compat';
 
 export const ScrollToTop = () => {
   const { pathname, search, hash } = useLocation();

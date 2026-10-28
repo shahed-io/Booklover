@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Home, Store, Globe, Package, User, Check } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from '@/lib/router-compat';
 import { useWishlist } from '@/hooks/useWishlist';
 import { useAuth } from '@/hooks/useAuth';
 import { useCurrency } from '@/hooks/useCurrency';
@@ -13,10 +13,13 @@ interface NavItem {
   icon: typeof Home;
   path: string;
   match: (path: string) => boolean;
-  badgeCount?: number;
-  requireAuth?: boolean;
+  badgeCount?: number | undefined;
+
+  requireAuth?: boolean | undefined;
+
   gradient: string;
-  srText?: string;
+  srText?: string | undefined;
+
 }
 
 /**
@@ -230,9 +233,9 @@ const MobileBottomNav = () => {
                 <div
                   className="w-full h-full rounded-2xl"
                   style={{
-                    background: navItems[activeIndex].gradient,
+                    background: navItems[activeIndex]!.gradient,
                     boxShadow: `0 10px 28px -6px ${
-                      navItems[activeIndex].gradient
+                      navItems[activeIndex]!.gradient
                         .match(/hsl\([^)]+\)/)?.[0] || 'hsla(258,78%,55%,0.55)'
                     }, 0 4px 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.12)`,
                     opacity: 1,

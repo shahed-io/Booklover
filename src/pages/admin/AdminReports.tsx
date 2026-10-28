@@ -79,15 +79,15 @@ const AdminReports = () => {
     // Hourly distribution
     const hourMap: Record<number, number> = {};
     for (let i = 0; i < 24; i++) hourMap[i] = 0;
-    orders.forEach(o => { const h = new Date(o.created_at).getHours(); hourMap[h]++; });
+    orders.forEach(o => { const h = new Date(o.created_at).getHours(); hourMap[h]!++; });
     setHourlyOrders(Object.entries(hourMap).map(([hour, count]) => ({ hour: `${hour}:00`, count })));
 
     // Top products
     const productMap: Record<string, { name: string; sales: number; revenue: number }> = {};
     (orderItemsRes.data || []).forEach(item => {
       if (!productMap[item.product_name]) productMap[item.product_name] = { name: item.product_name, sales: 0, revenue: 0 };
-      productMap[item.product_name].sales += item.quantity;
-      productMap[item.product_name].revenue += item.total;
+      productMap[item.product_name]!.sales += item.quantity;
+      productMap[item.product_name]!.revenue += item.total;
     });
     setTopProducts(Object.values(productMap).sort((a, b) => b.revenue - a.revenue).slice(0, 8));
 
@@ -216,7 +216,7 @@ const AdminReports = () => {
               <ResponsiveContainer width="50%" height={200}>
                 <RePieChart>
                   <Pie data={paymentMethods} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} innerRadius={40}>
-                    {paymentMethods.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                    {paymentMethods.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]!} />)}
                   </Pie>
                   <Tooltip contentStyle={tooltipStyle} />
                 </RePieChart>

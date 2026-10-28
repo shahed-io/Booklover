@@ -1,56 +1,31 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
+// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
+// or the app will break with duplicate plugins:
+//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
+//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
+//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
+// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
+import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
+const SUPABASE_URL = process.env["VITE_SUPABASE_URL"] || "https://tzkmjdcpgkbztxlchdpu.supabase.co";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-    hmr: { overlay: false },
-    proxy: {
-      '/sitemap.xml': {
-        target: `${SUPABASE_URL}/functions/v1/sitemap`,
-        changeOrigin: true,
-        rewrite: () => '',
-      },
-    },
+export default defineConfig({
+  tanstackStart: {
+    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
+    // nitro/vite builds from this
+    server: { entry: "server" },
   },
-  plugins: [
-    react(),
-    mode === "development" && componentTagger(),
-    mcpPlugin(),
-  ].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-supabase': ['@supabase/supabase-js'],
-          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-dropdown-menu'],
-          'vendor-query': ['@tanstack/react-query'],
+  vite: {
+    // The MCP server stays on the backend; this plugin keeps emitting its function entry.
+    plugins: [mcpPlugin()],
+    server: {
+      proxy: {
+        "/sitemap.xml": {
+          target: `${SUPABASE_URL}/functions/v1/sitemap`,
+          changeOrigin: true,
+          rewrite: () => "",
         },
       },
     },
-    chunkSizeWarningLimit: 600,
-    minify: 'esbuild',
-    target: 'es2020',
-    sourcemap: false,
-    cssMinify: true,
-    assetsInlineLimit: 8192,  // Inline larger assets to reduce requests
-    cssCodeSplit: true,
-    modulePreload: { polyfill: false }, // Modern browsers don't need polyfill
   },
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react', '@tanstack/react-query'],
-  },
-}));
+});

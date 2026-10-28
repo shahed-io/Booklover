@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -158,7 +158,7 @@ export default function PaymentLink() {
     } catch (e: any) {
       toast.error(e.message || 'সাবমিট ব্যর্থ');
     } finally { setSubmitting(false); }
-  };
+   return undefined; };
 
   if (loading) {
     return <div className="min-h-screen grid place-items-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;

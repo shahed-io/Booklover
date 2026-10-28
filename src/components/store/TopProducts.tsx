@@ -14,7 +14,7 @@ const mapProduct = (p: any): Product => ({
   name:          p.name,
   category:      p.category?.name || 'Other',
   price:         Number(p.price),
-  originalPrice: p.original_price ? Number(p.original_price) : undefined,
+  originalPrice: (p.original_price ? Number(p.original_price) : undefined)!,
   discount:      p.discount_percent || undefined,
   rating:        4.8,
   reviews:       p.total_sales || Math.floor(Math.random() * 300) + 50,

@@ -35,7 +35,7 @@ const AdminCategories = () => {
   const [uploading, setUploading] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [showAiPanel, setShowAiPanel] = useState(false);
-  const [aiStyle, setAiStyle] = useState(STYLE_PRESETS[0].value);
+  const [aiStyle, setAiStyle] = useState(STYLE_PRESETS[0]!.value);
   const [aiCustomPrompt, setAiCustomPrompt] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,7 +130,7 @@ const AdminCategories = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validation = categorySchema.safeParse(form);
-    if (!validation.success) { toast.error(validation.error.errors[0].message); return; }
+    if (!validation.success) { toast.error(validation.error.errors[0]!.message); return; }
     setSaving(true);
     const sanitized = validation.data;
     const uploadedUrl = await uploadImage();
@@ -296,7 +296,7 @@ const AdminCategories = () => {
                         value={aiCustomPrompt}
                         onChange={e => setAiCustomPrompt(e.target.value)}
                         placeholder="e.g. blue tech icons with circuit board pattern..."
-                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-hidden focus:border-primary transition-colors"
                       />
                     </div>
 
@@ -337,7 +337,7 @@ const AdminCategories = () => {
                   <input required={required} type={type || 'text'} value={(form as any)[field]}
                     onChange={e => setForm({...form, [field]: e.target.value})}
                     placeholder={placeholder}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
                 </div>
               ))}
 

@@ -141,7 +141,7 @@ export const ScraperShield = ({ children }: { children: React.ReactNode }) => {
       });
       return cleanup;
     }
-  }, [isAdmin, pathname, cp]);
+   return undefined; }, [isAdmin, pathname, cp]);
 
   if (blocked) {
     return (

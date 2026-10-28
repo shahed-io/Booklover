@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import {
@@ -42,7 +42,7 @@ type StatusFilter = 'all' | 'pending' | 'converted' | 'contacted';
 
 const fmtBDT = (n: number) => `৳${Number(n || 0).toLocaleString('en-US')}`;
 const fmtDate = (d: string) => new Date(d).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
-const inputCls = 'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors';
+const inputCls = 'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors';
 
 export default function AdminAbandonedCheckouts() {
   const navigate = useNavigate();
@@ -110,7 +110,7 @@ export default function AdminAbandonedCheckouts() {
     toast.success('Deleted');
     setRows(prev => prev.filter(r => r.id !== id));
     if (selected?.id === id) setSelected(null);
-  };
+   return undefined; };
 
   const markContacted = async (id: string, contacted: boolean) => {
     const { error } = await supabase
@@ -121,13 +121,13 @@ export default function AdminAbandonedCheckouts() {
     setRows(prev => prev.map(r => r.id === id ? { ...r, contacted, contacted_at: contacted ? new Date().toISOString() : null } : r));
     if (selected?.id === id) setSelected(s => s ? { ...s, contacted, contacted_at: contacted ? new Date().toISOString() : null } : s);
     toast.success(contacted ? 'Marked as contacted' : 'Unmarked');
-  };
+   return undefined; };
 
   const saveAdminNotes = async (id: string, notes: string) => {
     const { error } = await supabase.from('abandoned_checkouts').update({ admin_notes: notes }).eq('id', id);
     if (error) return toast.error(error.message);
     toast.success('Notes saved');
-  };
+   return undefined; };
 
   const convertToOrder = async (
     row: AbandonedRow,
@@ -284,7 +284,7 @@ export default function AdminAbandonedCheckouts() {
               onClick={() => setStatusFilter(s)}
               className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition ${
                 statusFilter === s
-                  ? 'bg-primary text-primary-foreground shadow'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'bg-muted/40 text-muted-foreground hover:bg-muted/70'
               }`}
             >
@@ -565,7 +565,7 @@ function DetailDrawer({
             {!row.converted && row.item_count > 0 && (
               <button
                 onClick={onConvert}
-                className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 shadow"
+                className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary/80 text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 shadow-sm"
               >
                 <ArrowRightCircle size={16} /> Convert to Order
               </button>
@@ -740,7 +740,7 @@ function ConvertModal({
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value)}
                 placeholder="bkash / nagad / bank"
-                className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm focus:outline-hidden focus:border-primary"
               />
             </div>
             <div>
@@ -749,7 +749,7 @@ function ConvertModal({
                 value={transactionId}
                 onChange={e => setTransactionId(e.target.value)}
                 placeholder="Optional"
-                className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm focus:outline-hidden focus:border-primary"
               />
             </div>
           </div>
@@ -762,7 +762,7 @@ function ConvertModal({
               onChange={e => setAdminNote(e.target.value)}
               rows={2}
               placeholder="Internal note for this recovered order…"
-              className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary"
+              className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm focus:outline-hidden focus:border-primary"
             />
           </div>
 

@@ -40,9 +40,11 @@ interface LiveSet {
   label: string;
   subtitle: string;
   icon_color: string;
-  icon?: string;
+  icon?: string | undefined;
+
   is_active: boolean;
-  sort_order?: number;
+  sort_order?: number | undefined;
+
 }
 
 interface LiveChatConfig {
@@ -61,10 +63,14 @@ interface LiveChatConfig {
   ai_placeholder: string;
   quick_suggestions: string[];
   fab_label: string;
-  fab_color_from?: string;
-  fab_color_mid?: string;
-  fab_color_to?: string;
-  fab_icon_color?: string;
+  fab_color_from?: string | undefined;
+
+  fab_color_mid?: string | undefined;
+
+  fab_color_to?: string | undefined;
+
+  fab_icon_color?: string | undefined;
+
   live_sets: LiveSet[];
 }
 
@@ -91,7 +97,7 @@ const DEFAULTS: LiveChatConfig = {
   live_sets: [],
 };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-support-chat`;
+const CHAT_URL = `${import.meta.env['VITE_SUPABASE_URL']}/functions/v1/ai-support-chat`;
 
 const FloatingSupport = () => {
   const [config, setConfig] = useState<LiveChatConfig>(DEFAULTS);
@@ -226,7 +232,7 @@ const FloatingSupport = () => {
       const productMatch = path.match(/^\/product\/([^/?#]+)/);
       const pageContext = {
         path,
-        productSlug: productMatch ? decodeURIComponent(productMatch[1]) : null,
+        productSlug: productMatch ? decodeURIComponent(productMatch[1]!) : null,
         referrer: typeof document !== 'undefined' ? document.referrer : '',
       };
 
@@ -234,7 +240,7 @@ const FloatingSupport = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY']}`,
         },
         body: JSON.stringify({ messages: newMessages, pageContext, language: language || 'bn' }),
       });
@@ -399,7 +405,7 @@ const FloatingSupport = () => {
                 <div className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                   msg.role === 'user'
                     ? 'bg-primary text-primary-foreground rounded-br-none whitespace-pre-wrap'
-                    : 'bg-background border border-border/60 rounded-bl-none text-foreground shadow-sm'
+                    : 'bg-background border border-border/60 rounded-bl-none text-foreground shadow-xs'
                 }`}>
                   {msg.role === 'user' ? (
                     msg.content
@@ -418,7 +424,7 @@ const FloatingSupport = () => {
                           ),
                           strong: ({ children }) => <strong className="font-semibold text-primary">{children}</strong>,
                           em: ({ children }) => <em className="italic">{children}</em>,
-                          code: ({ children }) => <code className="px-1 py-0.5 rounded bg-muted text-[0.85em] font-mono">{children}</code>,
+                          code: ({ children }) => <code className="px-1 py-0.5 rounded-[0.25rem] bg-muted text-[0.85em] font-mono">{children}</code>,
                           a: ({ children, href }) => <a href={href} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-2 break-all">{children}</a>,
                           h1: ({ children }) => <h1 className="text-base font-bold mt-2 mb-1">{children}</h1>,
                           h2: ({ children }) => <h2 className="text-sm font-bold mt-2 mb-1">{children}</h2>,
@@ -490,7 +496,7 @@ const FloatingSupport = () => {
                 {config.phone_enabled && (
                   <button
                     onClick={openPhoneCall}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:border-blue-500/50 hover:shadow-sm transition-all group"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:border-blue-500/50 hover:shadow-xs transition-all group"
                     title={config.phone_label}
                   >
                     <span
@@ -505,7 +511,7 @@ const FloatingSupport = () => {
                 {config.whatsapp_enabled && (
                   <button
                     onClick={openWhatsApp}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:border-green-500/50 hover:shadow-sm transition-all group"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:border-green-500/50 hover:shadow-xs transition-all group"
                     title={config.whatsapp_label}
                   >
                     <span
@@ -523,7 +529,7 @@ const FloatingSupport = () => {
                     <button
                       key={set.id}
                       onClick={() => openLiveSet(set)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:shadow-sm transition-all group"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:shadow-xs transition-all group"
                       style={{ borderColor: `${set.icon_color}40` }}
                       title={set.subtitle || set.label}
                     >
@@ -549,7 +555,7 @@ const FloatingSupport = () => {
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
               placeholder={language === 'en' ? PLACEHOLDER_EN : config.ai_placeholder}
-              className="flex-1 text-sm bg-muted/40 border border-border rounded-xl px-3 py-2 outline-none focus:border-primary transition-colors text-foreground placeholder:text-muted-foreground"
+              className="flex-1 text-sm bg-muted/40 border border-border rounded-xl px-3 py-2 outline-hidden focus:border-primary transition-colors text-foreground placeholder:text-muted-foreground"
               disabled={loading}
             />
             <button onClick={send} disabled={loading || !input.trim()}

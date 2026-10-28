@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Search, Eye, CheckCircle, XCircle, Truck, RefreshCw, RotateCcw,
@@ -79,7 +79,7 @@ const PM_LABELS: Record<string, string> = {
   bank_transfer: 'Bank Transfer', wallet: 'Wallet',
 };
 
-const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 
 // ─── Invoice Component (printable) ─────────────────────────────────────────
 const OrderInvoice = ({ order, onClose }: { order: any; onClose: () => void }) => {
@@ -196,7 +196,7 @@ const OrderInvoice = ({ order, onClose }: { order: any; onClose: () => void }) =
                 <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.9 }}><span style={{ display: 'inline-block', minWidth: '62px' }}>Method:</span> <strong style={{ color: '#1a1a2e' }}>{PM_LABELS[order.payment_method] || order.payment_method}</strong></div>
                 {order.transaction_id && <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.9, marginTop: '6px' }}><span style={{ display: 'inline-block', minWidth: '62px' }}>TrxID:</span> <span style={{ color: '#1a1a2e', fontFamily: 'monospace', background: '#e8e5f7', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', display: 'inline-block', lineHeight: 1.4 }}>{order.transaction_id}</span></div>}
                 <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.9, marginTop: '6px' }}>
-                  <span style={{ display: 'inline-block', minWidth: '62px' }}>Status:</span> <span style={{ background: brandColor, color: '#fff', padding: '3px 12px', borderRadius: '999px', fontSize: '11px', fontWeight: 600, display: 'inline-block', lineHeight: 1.4 }}>{statusCfg.label}</span>
+                  <span style={{ display: 'inline-block', minWidth: '62px' }}>Status:</span> <span style={{ background: brandColor, color: '#fff', padding: '3px 12px', borderRadius: '999px', fontSize: '11px', fontWeight: 600, display: 'inline-block', lineHeight: 1.4 }}>{statusCfg!.label}</span>
                 </div>
                 {order.coupon_code && <div style={{ fontSize: '12px', color: '#059669', marginTop: '6px' }}>🎟️ Coupon: <strong>{order.coupon_code}</strong></div>}
               </div>
@@ -280,17 +280,17 @@ const OrderTimeline = ({ timeline }: { timeline: any[] }) => {
     <div className="space-y-0">
       {timeline.map((event, idx) => {
         const cfg = STATUS_CONFIG[event.status] || STATUS_CONFIG['pending'];
-        const Icon = cfg.icon;
+        const Icon = cfg!.icon;
         const isLast = idx === timeline.length - 1;
         return (
           <div key={event.id} className="flex gap-3 relative">
             {!isLast && <div className="absolute left-3.5 top-7 w-px bg-border h-full" />}
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${cfg.dot} bg-opacity-20 border border-current`} style={{ color: `hsl(var(--${cfg.dot.replace('bg-','')}))` }}>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${cfg!.dot} bg-opacity-20 border border-current`} style={{ color: `hsl(var(--${cfg!.dot.replace('bg-','')}))` }}>
               <Icon size={12} />
             </div>
             <div className="flex-1 pb-4">
               <div className="flex items-center justify-between">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${cfg.color}`}>{cfg.label}</span>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${cfg!.color}`}>{cfg!.label}</span>
                 <span className="text-[10px] text-muted-foreground">{new Date(event.created_at).toLocaleString('en-BD', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
               </div>
               {event.note && <p className="text-xs text-muted-foreground mt-1">{event.note}</p>}
@@ -364,7 +364,7 @@ const CreateOrderModal = ({ onClose, onSuccess }: { onClose: () => void; onSucce
     }
   };
 
-  const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
@@ -532,7 +532,7 @@ const OrderDetailModal = ({
             <div className="min-w-0 flex-1">
               <h2 className="text-base sm:text-lg font-bold text-foreground truncate">অর্ডার #{order.order_number}</h2>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${cfg.color}`}>{cfg.label}</span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${cfg!.color}`}>{cfg!.label}</span>
                 <p className="text-[11px] text-muted-foreground">{new Date(order.created_at).toLocaleString('en-BD')}</p>
               </div>
             </div>
@@ -892,13 +892,17 @@ const OrderDetailModal = ({
 
 // ─── Edit Order Modal ──────────────────────────────────────────────────────
 interface EditItem {
-  id?: string;
-  product_id?: string | null;
+  id?: string | undefined;
+
+  product_id?: string | null | undefined;
+
   product_name: string;
   quantity: number;
   price: number;
-  license_key?: string | null;
-  _new?: boolean;
+  license_key?: string | null | undefined;
+
+  _new?: boolean | undefined;
+
 }
 
 const EditOrderModal = ({
@@ -1593,7 +1597,7 @@ const AdminOrders = () => {
             <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="অর্ডার ID, নাম, ইমেইল, TrxID..."
-              className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors" />
+              className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors" />
           </div>
           <button onClick={() => setShowFilters(!showFilters)}
             className={`px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 border transition-all ${showFilters ? 'btn-glow border-transparent' : 'glass-card border-border text-muted-foreground hover:text-foreground'}`}>
@@ -1637,7 +1641,7 @@ const AdminOrders = () => {
         <div className="glass-card rounded-2xl p-3 flex flex-wrap items-center gap-3">
           <span className="text-xs font-semibold text-primary">{selectedIds.size}টি সিলেক্ট করা হয়েছে</span>
           <select value={bulkAction} onChange={e => setBulkAction(e.target.value)}
-            className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary">
+            className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary">
             <option value="">অ্যাকশন নির্বাচন করুন</option>
             {ALL_STATUSES.map(s => <option key={s} value={s}>{STATUS_CONFIG[s]?.label || s}</option>)}
           </select>
@@ -1673,7 +1677,7 @@ const AdminOrders = () => {
                   <div key={order.id} className={`p-3 ${selectedIds.has(order.id) ? 'bg-primary/5' : ''}`}>
                     <div className="flex items-start gap-2.5">
                       <input type="checkbox" checked={selectedIds.has(order.id)}
-                        onChange={() => toggleSelect(order.id)} className="w-4 h-4 mt-1 accent-primary rounded flex-shrink-0" />
+                        onChange={() => toggleSelect(order.id)} className="w-4 h-4 mt-1 accent-primary rounded-[0.25rem] flex-shrink-0" />
                       <button onClick={() => setSelectedOrder(order)} className="flex-1 min-w-0 text-left">
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <span className="font-mono font-bold text-primary text-xs truncate">#{order.order_number}</span>
@@ -1748,7 +1752,7 @@ const AdminOrders = () => {
                 <tr className="border-b border-border bg-muted/20">
                   <th className="px-3 py-3 w-8">
                     <input type="checkbox" checked={selectedIds.size === filtered.length && filtered.length > 0}
-                      onChange={toggleSelectAll} className="w-3.5 h-3.5 accent-primary rounded" />
+                      onChange={toggleSelectAll} className="w-3.5 h-3.5 accent-primary rounded-[0.25rem]" />
                   </th>
                   <th className="text-left px-4 py-3 text-xs text-muted-foreground font-medium">Order #</th>
                   <th className="text-left px-4 py-3 text-xs text-muted-foreground font-medium">কাস্টমার</th>
@@ -1767,7 +1771,7 @@ const AdminOrders = () => {
                     <tr key={order.id} className={`hover:bg-muted/10 transition-colors group ${selectedIds.has(order.id) ? 'bg-primary/5' : ''}`}>
                       <td className="px-3 py-3">
                         <input type="checkbox" checked={selectedIds.has(order.id)}
-                          onChange={() => toggleSelect(order.id)} className="w-3.5 h-3.5 accent-primary rounded" />
+                          onChange={() => toggleSelect(order.id)} className="w-3.5 h-3.5 accent-primary rounded-[0.25rem]" />
                       </td>
                       <td className="px-4 py-3">
                         <span className="font-mono font-bold text-primary text-xs">{order.order_number}</span>

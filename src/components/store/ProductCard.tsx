@@ -4,14 +4,15 @@ import { Product, isProductOutOfStock } from '@/data/products';
 import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/hooks/useWishlist';
 import QuickOrderModal from './QuickOrderModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { prefetchRoute } from '@/hooks/usePrefetchRoute';
 import { useCurrency } from '@/hooks/useCurrency';
 
 interface ProductCardProps {
   product: Product;
-  delay?: number;
-  priority?: boolean; // true for first ~4 cards (above fold)
+  delay?: number | undefined;
+
+  priority?: boolean | undefined; // true for first ~4 cards (above fold)
 }
 
 const WA = '88';
@@ -39,7 +40,7 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
   useEffect(() => {
     if (isMobile) { setVisible(true); return; }
     const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+      if (e!.isIntersecting) { setVisible(true); obs.disconnect(); }
     }, { threshold: 0.05 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
@@ -47,7 +48,7 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
 
   const wishlisted = isWishlisted(String(product.id));
   const inCart     = isInCart(product.id);
-  const outOfStock = isProductOutOfStock({ status: product.status, stockQuantity: product.stockQuantity });
+  const outOfStock = isProductOutOfStock({ status: product.status!, stockQuantity: product.stockQuantity! });
 
   const waMsg = () => {
     const msg = encodeURIComponent(`অর্ডার করতে চাই:\n📦 ${product.name}\n💰 ৳${product.price.toLocaleString()}`);
@@ -473,7 +474,7 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
               </button>
               <button
                 disabled={outOfStock}
-                onClick={e => { e.stopPropagation(); if (outOfStock) return; addToCart({ id: product.id, name: product.name, category: product.category, price: product.price, originalPrice: product.originalPrice, image: product.image }); }}
+                onClick={e => { e.stopPropagation(); if (outOfStock) return; addToCart({ id: product.id, name: product.name, category: product.category, price: product.price, originalPrice: product.originalPrice!, image: product.image }); }}
                 className="btn-vision-cart flex items-center justify-center gap-1 py-2 text-[11px] disabled:opacity-50 disabled:cursor-not-allowed">
                 <ShoppingCart size={11} />
                 {outOfStock ? 'Out' : (inCart ? '✓ Added' : 'Cart')}

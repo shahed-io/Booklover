@@ -5,14 +5,22 @@ import { COUNTRIES, DEFAULT_COUNTRY, joinPhone, splitPhone, type Country } from 
 type Props = {
   value: string;
   onChange: (fullNumber: string) => void;
-  placeholder?: string;
-  className?: string;
-  inputClassName?: string;
-  id?: string;
-  name?: string;
-  required?: boolean;
-  disabled?: boolean;
-  autoFocus?: boolean;
+  placeholder?: string | undefined;
+
+  className?: string | undefined;
+
+  inputClassName?: string | undefined;
+
+  id?: string | undefined;
+
+  name?: string | undefined;
+
+  required?: boolean | undefined;
+
+  disabled?: boolean | undefined;
+
+  autoFocus?: boolean | undefined;
+
 };
 
 /**
@@ -101,7 +109,7 @@ const PhoneInput = ({
           emit(country, v);
         }}
         placeholder={placeholder}
-        className={`flex-1 min-w-0 w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors ${inputClassName}`}
+        className={`flex-1 min-w-0 w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors ${inputClassName}`}
       />
 
       {open && (
@@ -117,7 +125,7 @@ const PhoneInput = ({
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Search country or code..."
-                className="flex-1 bg-transparent text-sm text-foreground outline-none"
+                className="flex-1 bg-transparent text-sm text-foreground outline-hidden"
               />
             </div>
           </div>

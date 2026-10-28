@@ -7,7 +7,8 @@ import { getPaymentLogo } from '@/lib/paymentLogos';
 interface Props {
   paymentMethodId: string;
   amount: number;
-  amountLabel?: string;
+  amountLabel?: string | undefined;
+
 }
 
 const PaymentInstructions = ({ paymentMethodId, amount, amountLabel = 'মোট পরিমাণ' }: Props) => {

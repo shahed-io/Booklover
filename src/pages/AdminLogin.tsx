@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import BrandLoader from '@/components/store/BrandLoader';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { Eye, EyeOff, Lock, Mail, ShieldCheck, KeyRound, ArrowLeft, MailCheck } from 'lucide-react';
 import BrandLogo from '@/components/store/BrandLogo';
 import SEOHead from '@/components/seo/SEOHead';
@@ -189,7 +189,7 @@ const AdminLogin = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder=""
                   required
-                  className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-primary"
+                  className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-hidden focus:border-primary"
                 />
               </div>
             </div>
@@ -204,7 +204,7 @@ const AdminLogin = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none focus:border-primary"
+                  className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-hidden focus:border-primary"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary">
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -237,7 +237,7 @@ const AdminLogin = () => {
                 placeholder=""
                 aria-label="Code"
                 required
-                className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-4 py-3 text-base tracking-[0.3em] text-center font-mono focus:outline-none focus:border-primary"
+                className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-4 py-3 text-base tracking-[0.3em] text-center font-mono focus:outline-hidden focus:border-primary"
               />
             </div>
             {emailSentInfo && (

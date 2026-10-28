@@ -7,11 +7,12 @@ export interface CartItem {
   name: string;
   category: string;
   price: number;
-  originalPrice?: number;
+  originalPrice?: number | undefined;
+
   image: string;
   quantity: number;
-  variant?: string; // selected variant label
-  addedAt?: string; // ISO timestamp – used to expire forgotten cart items
+  variant?: string | undefined; // selected variant label
+  addedAt?: string | undefined; // ISO timestamp – used to expire forgotten cart items
 }
 
 export interface CouponState {
@@ -362,7 +363,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
     // Auto-select newly added item
     setSelectedKeys(prev => {
-      const k = itemKey({ id: item.id, variant: item.variant });
+      const k = itemKey({ id: item.id, variant: item.variant! });
       return prev.includes(k) ? prev : [...prev, k];
     });
     setCartOpen(true);
@@ -406,7 +407,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const removeFromCart = (id: number | string, variant?: string) => {
     setItems(prev => prev.filter(i => !(i.id === id && (i.variant || '') === (variant || ''))));
-    setSelectedKeys(prev => prev.filter(k => k !== itemKey({ id, variant })));
+    setSelectedKeys(prev => prev.filter(k => k !== itemKey({ id, variant: variant! })));
     if (userId) dbDeleteItems(userId, [{ product_id: String(id), variant: variant || null }]);
   };
 

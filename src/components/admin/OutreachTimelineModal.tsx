@@ -104,7 +104,7 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
     toast.success('Deleted');
     load();
     onLogChanged?.();
-  };
+   return undefined; };
 
   const localInput = (iso?: string) => {
     const d = iso ? new Date(iso) : new Date();
@@ -142,14 +142,14 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
               <label className="text-xs">
                 <span className="text-muted-foreground">Event</span>
                 <select value={editing.event_type || 'sent'} onChange={e => setEditing({ ...editing, event_type: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary">
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary">
                   {EVENT_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                 </select>
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Channel</span>
                 <select value={editing.channel || 'email'} onChange={e => setEditing({ ...editing, channel: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary capitalize">
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary capitalize">
                   {CHANNELS.map(c => <option key={c} value={c}>{c.replace('_', ' ')}</option>)}
                 </select>
               </label>
@@ -159,7 +159,7 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
                   type="datetime-local"
                   value={localInput(editing.occurred_at)}
                   onChange={e => setEditing({ ...editing, occurred_at: new Date(e.target.value).toISOString() })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary"
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary"
                 />
               </label>
             </div>
@@ -167,13 +167,13 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
               <span className="text-muted-foreground">Subject (optional)</span>
               <input value={editing.subject || ''} onChange={e => setEditing({ ...editing, subject: e.target.value })}
                 placeholder="Email subject or short summary"
-                className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
             </label>
             <label className="text-xs block">
               <span className="text-muted-foreground">Message / Notes</span>
               <textarea value={editing.message || ''} onChange={e => setEditing({ ...editing, message: e.target.value })}
                 rows={4} placeholder="What did you say or hear back?"
-                className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary resize-none" />
+                className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary resize-none" />
             </label>
             <div className="flex justify-end gap-2">
               <button onClick={() => setEditing(null)} className="px-3 py-1.5 rounded-lg text-xs bg-muted/40 hover:bg-muted/60 text-foreground">Cancel</button>
@@ -197,12 +197,12 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
             <div className="space-y-3">
               {logs.map(log => {
                 const t = EVENT_TYPES.find(x => x.value === log.event_type) || EVENT_TYPES[4];
-                const Icon = t.icon;
+                const Icon = t!.icon;
                 return (
                   <div key={log.id} className="relative">
                     <div
                       className="absolute -left-[18px] top-2 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center"
-                      style={{ background: t.color }}
+                      style={{ background: t!.color }}
                     >
                       <Icon size={8} className="text-white" />
                     </div>
@@ -211,9 +211,9 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
                         <div className="flex items-center gap-2 flex-wrap">
                           <span
                             className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium"
-                            style={{ background: `${t.color}22`, color: t.color, border: `1px solid ${t.color}55` }}
+                            style={{ background: `${t!.color}22`, color: t!.color, border: `1px solid ${t!.color}55` }}
                           >
-                            {t.label}
+                            {t!.label}
                           </span>
                           {log.channel && (
                             <span className="text-[10px] uppercase text-muted-foreground/70">via {log.channel}</span>

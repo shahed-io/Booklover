@@ -14,8 +14,10 @@ type QueueItem = {
   title: string;
   intent: string;
   status: 'queued' | 'running' | 'success' | 'skipped' | 'error';
-  message?: string;
-  blog_slug?: string;
+  message?: string | undefined;
+
+  blog_slug?: string | undefined;
+
 };
 
 const AdminBlogTopics = () => {
@@ -48,7 +50,7 @@ const AdminBlogTopics = () => {
   const generate = async (title: string, intent: string): Promise<QueueItem> => {
     const { data: { session } } = await supabase.auth.getSession();
     const token = session?.access_token;
-    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
     try {
       const res = await fetch(`https://${projectId}.supabase.co/functions/v1/generate-topic-blog`, {
         method: 'POST',
@@ -299,7 +301,7 @@ const AdminBlogTopics = () => {
                     </td>
                     <td className="p-2">
                       {!running && (
-                        <button onClick={() => removeFromQueue(q.id)} className="p-1 rounded hover:bg-accent">
+                        <button onClick={() => removeFromQueue(q.id)} className="p-1 rounded-[0.25rem] hover:bg-accent">
                           <X size={12} />
                         </button>
                       )}

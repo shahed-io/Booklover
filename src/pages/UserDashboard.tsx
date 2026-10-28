@@ -5,7 +5,7 @@ import PaymentInstructions from '@/components/store/PaymentInstructions';
 import { usePaymentSettings } from '@/hooks/usePaymentSettings';
 import { useBkashPgwContent } from '@/hooks/useBkashPgwContent';
 import { getPaymentLogo } from '@/lib/paymentLogos';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from '@/lib/router-compat';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useReferralConfig, getReferralTier } from '@/hooks/useReferralConfig';
@@ -53,8 +53,10 @@ interface Order {
   created_at: string; payment_status: string | null;
   payment_method: string | null; transaction_id: string | null;
   notes: string | null; coupon_code: string | null;
-  items?: OrderItem[];
-  timeline?: TimelineEvent[];
+  items?: OrderItem[] | undefined;
+
+  timeline?: TimelineEvent[] | undefined;
+
 }
 interface Address {
   id: string; label: string; recipient_name: string; phone: string;
@@ -69,8 +71,10 @@ interface Referral {
   id: string; referral_code: string; status: string;
   reward_amount: number; created_at: string;
   referred_id: string | null;
-  referred_name?: string;
-  referred_email?: string;
+  referred_name?: string | undefined;
+
+  referred_email?: string | undefined;
+
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
@@ -469,7 +473,7 @@ const UserDashboard = () => {
       setTotalPointsRedeemed((data as any).total_points_redeemed || 0);
     } else {
       if (lastErr) console.warn('fetchProfile failed after retries:', lastErr.message);
-      setProfile({ display_name: user.user_metadata?.display_name || '', username: null, email: user.email || '', phone: '', avatar_url: null, referral_code: null, referral_earnings: 0, referral_credit: 0, referral_discount: 0 });
+      setProfile({ display_name: user.user_metadata?.['display_name'] || '', username: null, email: user.email || '', phone: '', avatar_url: null, referral_code: null, referral_earnings: 0, referral_credit: 0, referral_discount: 0 });
     }
   };
 
@@ -538,8 +542,8 @@ const UserDashboard = () => {
         date: order.created_at,
         customer: {
           name: profile?.display_name || user?.email?.split('@')[0] || 'Customer',
-          email: profile?.email || user?.email || undefined,
-          phone: profile?.phone || undefined,
+          email: (profile?.email || user?.email || undefined)!,
+          phone: (profile?.phone || undefined)!,
         },
         items: (items || []).map(i => ({
           name: i.product_name,
@@ -980,7 +984,7 @@ const UserDashboard = () => {
 
   const handleLogout = async () => { await signOut(); navigate('/'); };
 
-  const displayName = profile.display_name || user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
+  const displayName = profile.display_name || user?.user_metadata?.['display_name'] || user?.email?.split('@')[0] || 'User';
   const initials = displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
   const completedOrders = orders.filter(o => o.status === 'completed').length;
   const totalSpent = orders.filter(o => o.status === 'completed').reduce((s, o) => s + o.total, 0);
@@ -997,7 +1001,7 @@ const UserDashboard = () => {
     </div>
   );
 
-  const inputCls = "w-full rounded-xl pl-10 pr-4 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80 placeholder:text-muted-foreground";
+  const inputCls = "w-full rounded-xl pl-10 pr-4 py-3 text-sm outline-hidden transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80 placeholder:text-muted-foreground";
   const labelCls = "block text-xs font-semibold uppercase tracking-wide mb-2 text-muted-foreground";
   const gradBtn = "text-white font-semibold rounded-xl transition-all hover:opacity-90 active:scale-[0.98]";
   const gradBtnStyle = { background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' };
@@ -1220,7 +1224,7 @@ const UserDashboard = () => {
                     </span>
                     <span className="relative flex-1 text-left truncate">{label}</span>
                     {badge !== undefined && badge > 0 && (
-                      <span className="relative text-[10px] font-black px-2 min-w-[20px] h-[20px] rounded-full flex items-center justify-center text-white shadow-sm"
+                      <span className="relative text-[10px] font-black px-2 min-w-[20px] h-[20px] rounded-full flex items-center justify-center text-white shadow-xs"
                         style={{ background: id === 'notifications' ? 'linear-gradient(135deg, hsl(0,84%,60%), hsl(355,80%,55%))' : 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>{badge}</span>
                     )}
                   </button>
@@ -1658,7 +1662,7 @@ const UserDashboard = () => {
                   ) : (
                     <div className="grid sm:grid-cols-2 gap-3">
                       {wishlistItems.map(item => (
-                        <div key={item.product_id} className="flex items-center gap-3 p-3 rounded-2xl transition-all hover:shadow-sm"
+                        <div key={item.product_id} className="flex items-center gap-3 p-3 rounded-2xl transition-all hover:shadow-xs"
                           style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
                           <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0" style={{ background: 'hsl(240,20%,96%)' }}>
                             {item.product_image ? <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Heart size={16} className="text-muted-foreground" /></div>}
@@ -1702,11 +1706,11 @@ const UserDashboard = () => {
                         <div key={field}>
                           <label className={labelCls}>{label}</label>
                           <input type="text" value={(addressForm as any)[field]} onChange={e => setAddressForm(f => ({ ...f, [field]: e.target.value }))} placeholder={placeholder}
-                            className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80" />
+                            className="w-full rounded-xl px-4 py-3 text-sm outline-hidden transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80" />
                         </div>
                       ))}
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={addressForm.is_default} onChange={e => setAddressForm(f => ({ ...f, is_default: e.target.checked }))} className="rounded" />
+                        <input type="checkbox" checked={addressForm.is_default} onChange={e => setAddressForm(f => ({ ...f, is_default: e.target.checked }))} className="rounded-[0.25rem]" />
                         <span className="text-sm text-foreground">{t(selectedLang, 'set_default')}</span>
                       </label>
                       <div className="flex gap-3">
@@ -1728,7 +1732,7 @@ const UserDashboard = () => {
                   ) : (
                     <div className="space-y-3">
                       {addresses.map(addr => (
-                        <div key={addr.id} className="p-4 rounded-2xl transition-all hover:shadow-sm"
+                        <div key={addr.id} className="p-4 rounded-2xl transition-all hover:shadow-xs"
                           style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
@@ -1910,7 +1914,7 @@ const UserDashboard = () => {
                                   max={pointsBalance}
                                   value={redeemPoints}
                                   onChange={e => setRedeemPoints(e.target.value)}
-                                  className="w-full rounded-xl px-4 py-2.5 text-sm border bg-white/60 text-foreground border-border focus:border-primary outline-none"
+                                  className="w-full rounded-xl px-4 py-2.5 text-sm border bg-white/60 text-foreground border-border focus:border-primary outline-hidden"
                                   placeholder={t(selectedLang, 'points_min_placeholder')}
                                 />
                                 {redeemPoints && parseInt(redeemPoints) >= 20 && parseInt(redeemPoints) % 2 === 0 && parseInt(redeemPoints) <= pointsBalance && (
@@ -2159,7 +2163,7 @@ const UserDashboard = () => {
                       <div className="relative">
                         <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                         <input type={f.show ? 'text' : 'password'} value={f.value} onChange={e => f.set(e.target.value)}
-                          className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80"
+                          className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-hidden transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80"
                           placeholder={f.placeholder} />
                         <button type="button" onClick={f.toggle} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
                           {f.show ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -2501,7 +2505,7 @@ const UserDashboard = () => {
                           <div>
                             <label className={labelCls}>Or enter custom amount</label>
                             <input type="number" min="10" value={topupAmount} onChange={e => setTopupAmount(e.target.value)} placeholder="Min ৳10"
-                              className="w-full rounded-xl px-4 py-3 text-sm outline-none border border-border bg-white/60 text-foreground focus:border-primary focus:bg-white/80" />
+                              className="w-full rounded-xl px-4 py-3 text-sm outline-hidden border border-border bg-white/60 text-foreground focus:border-primary focus:bg-white/80" />
                           </div>
                           <button onClick={() => { if (!topupAmount || parseFloat(topupAmount) < 10) { toast.error('Minimum ৳10'); return; } setTopupStep(1); }}
                             className={`w-full py-3 text-sm flex items-center justify-center gap-2 ${gradBtn}`} style={gradBtnStyle}>
@@ -2585,7 +2589,7 @@ const UserDashboard = () => {
                                     onChange={e => setTopupTxId(e.target.value)}
                                     placeholder="যেমন: 8F3K2P9X"
                                     maxLength={50}
-                                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-mono text-sm"
+                                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-all font-mono text-sm"
                                   />
                                 </div>
                                 {/* Optional screenshot */}

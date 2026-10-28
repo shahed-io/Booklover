@@ -1,15 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BreadcrumbItem {
   label: string;
-  href?: string;
+  href?: string | undefined;
+
 }
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
-  className?: string;
+  className?: string | undefined;
+
 }
 
 const Breadcrumbs = ({ items, className }: BreadcrumbsProps) => {

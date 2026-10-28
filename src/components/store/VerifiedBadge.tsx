@@ -3,9 +3,12 @@
  * Pure SVG so it scales crisply at any size and respects currentColor fallback.
  */
 interface VerifiedBadgeProps {
-  size?: number;
-  className?: string;
-  title?: string;
+  size?: number | undefined;
+
+  className?: string | undefined;
+
+  title?: string | undefined;
+
 }
 
 const VerifiedBadge = ({ size = 14, className = '', title = 'Verified' }: VerifiedBadgeProps) => (

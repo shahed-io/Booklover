@@ -23,7 +23,8 @@ type BackupEntry = {
   records: number;
   type: 'export' | 'import';
   status: 'success' | 'error';
-  error?: string;
+  error?: string | undefined;
+
 };
 
 // Ordered so parents (categories, products, profiles) restore before children (order_items, license_keys)
@@ -69,7 +70,7 @@ async function runPool<T, R>(items: T[], limit: number, worker: (item: T, i: num
   const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
     while (idx < items.length) {
       const i = idx++;
-      try { results[i] = await worker(items[i], i); }
+      try { results[i] = await worker(items[i]!, i); }
       catch (e) { results[i] = e as any; }
     }
   });
@@ -121,7 +122,7 @@ const AdminBackup = () => {
       TABLES.map(({ table }) => supabase.from(table as any).select('id', { count: 'exact', head: true }))
     );
     const s: Record<string, number> = {};
-    TABLES.forEach(({ table }, i) => { s[table] = results[i].count || 0; });
+    TABLES.forEach(({ table }, i) => { s[table] = results[i]!.count || 0; });
     setStats(s);
     setLoading(false);
   };
@@ -333,15 +334,15 @@ Restore:
     if (!files.length) return;
     try {
       if (mode === 'full') {
-        const parsed = JSON.parse(await readText(files[0]));
+        const parsed = JSON.parse(await readText(files[0]!));
         if (!parsed.tables) throw new Error('Invalid full backup format — missing "tables" key');
         const totalRecords = Object.values(parsed.tables as Record<string, any[]>).reduce((s: number, v: any) => s + v.length, 0);
         setImportPreview({ table: '__full__', data: Object.keys(parsed.tables).map(t => ({ table: t, count: (parsed.tables[t] as any[]).length })), file: JSON.stringify(parsed) });
         toast.info(`Full backup loaded: ${Object.keys(parsed.tables).length} tables, ${totalRecords} records`);
       } else if (files.length === 1) {
-        const parsed = JSON.parse(await readText(files[0]));
+        const parsed = JSON.parse(await readText(files[0]!));
         if (!Array.isArray(parsed)) throw new Error('Invalid backup format — expected JSON array');
-        setImportPreview({ table: guessTable(files[0].name), data: parsed, file: JSON.stringify(parsed) });
+        setImportPreview({ table: guessTable(files[0]!.name), data: parsed, file: JSON.stringify(parsed) });
         toast.info(`${parsed.length} রেকর্ড লোড হয়েছে`);
       } else {
         // Multiple table JSON files at once → build a manifest and restore in FK-safe order
@@ -358,7 +359,7 @@ Restore:
         if (unknown.length) toast.warning(`${unknown.length}টি ফাইল শনাক্ত হয়নি: ${unknown.slice(0, 3).join(', ')}`);
         setImportPreview({
           table: '__multi__',
-          data: Object.keys(tables).map(t => ({ table: t, count: tables[t].length })),
+          data: Object.keys(tables).map(t => ({ table: t, count: tables[t]!.length })),
           file: JSON.stringify({ tables }),
         });
         toast.info(`${Object.keys(tables).length}টি টেবিল লোড হয়েছে`);
@@ -531,7 +532,7 @@ Restore:
         records: totalAdded,
         type: 'import',
         status: totalFailed === 0 ? 'success' : 'error',
-        error: totalFailed ? `${totalFailed} rows failed` : undefined,
+        error: (totalFailed ? `${totalFailed} rows failed` : undefined)!,
       });
       if (totalFailed === 0) toast.success(`✅ Full Restore সম্পন্ন! ✨ ${totalAdded} নতুন যোগ, ⏭️ ${totalSkipped} আগেই ছিল।`);
       else toast.warning(`Restore শেষ — ✨ ${totalAdded} added, ⏭️ ${totalSkipped} skipped, ❌ ${totalFailed} failed। বিস্তারিত log দেখুন।`);
@@ -640,7 +641,7 @@ Restore:
       records: dbRes.added + uploaded,
       type: 'import',
       status: dbRes.failed + failedFiles === 0 ? 'success' : 'error',
-      error: dbRes.failed + failedFiles ? `${dbRes.failed} rows / ${failedFiles} files failed` : undefined,
+      error: (dbRes.failed + failedFiles ? `${dbRes.failed} rows / ${failedFiles} files failed` : undefined)!,
     });
     toast.success(`✅ ZIP রিস্টোর সম্পন্ন — ✨ ${dbRes.added} রেকর্ড + ${uploaded} ফাইল যোগ, ⏭️ ${dbRes.skipped + skippedFiles} আগেই ছিল।`);
     fetchStats();
@@ -877,7 +878,7 @@ Restore:
                       <select
                         value={importPreview.table}
                         onChange={e => setImportPreview(p => p ? { ...p, table: e.target.value } : null)}
-                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors">
+                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors">
                         <option value="">— টেবিল বাছুন —</option>
                         {TABLES.map(t => <option key={t.table} value={t.table}>{t.label} ({t.table})</option>)}
                       </select>
@@ -1010,7 +1011,7 @@ Restore:
                     {Object.keys(zipPreview.tables).map(t => (
                       <div key={t} className="flex items-center justify-between px-3 py-2 text-xs">
                         <span className="text-muted-foreground font-mono">{TABLES.find(x => x.table === t)?.label || t}</span>
-                        <span className="text-foreground font-semibold">{zipPreview.tables[t].length} rows</span>
+                        <span className="text-foreground font-semibold">{zipPreview.tables[t]!.length} rows</span>
                       </div>
                     ))}
                   </div>
@@ -1042,7 +1043,7 @@ Restore:
               </h4>
               <div className="space-y-1 max-h-64 overflow-y-auto font-mono text-[11px]">
                 {restoreLog.map((line, i) => (
-                  <div key={i} className={`px-2 py-1 rounded ${line.includes('❌') ? 'bg-destructive/10 text-destructive' : line.includes('✅') ? 'bg-emerald-500/10 text-emerald-400' : 'text-muted-foreground'}`}>
+                  <div key={i} className={`px-2 py-1 rounded-[0.25rem] ${line.includes('❌') ? 'bg-destructive/10 text-destructive' : line.includes('✅') ? 'bg-emerald-500/10 text-emerald-400' : 'text-muted-foreground'}`}>
                     {line}
                   </div>
                 ))}

@@ -27,15 +27,24 @@ type Customer = {
   phone: string | null;
   created_at: string;
   wallet_balance: number;
-  order_count?: number;
-  total_spent?: number;
-  last_order?: string | null;
-  points_balance?: number;
-  total_points_earned?: number;
-  total_points_redeemed?: number;
-  is_suspended?: boolean;
-  suspended_at?: string | null;
-  suspended_reason?: string | null;
+  order_count?: number | undefined;
+
+  total_spent?: number | undefined;
+
+  last_order?: string | null | undefined;
+
+  points_balance?: number | undefined;
+
+  total_points_earned?: number | undefined;
+
+  total_points_redeemed?: number | undefined;
+
+  is_suspended?: boolean | undefined;
+
+  suspended_at?: string | null | undefined;
+
+  suspended_reason?: string | null | undefined;
+
 };
 
 type OrderItem = {
@@ -145,10 +154,10 @@ export default function AdminCustomers() {
       (orders ?? []).forEach(o => {
         if (!o.user_id) return;
         if (!orderMap[o.user_id]) orderMap[o.user_id] = { count: 0, total: 0, last: '' };
-        orderMap[o.user_id].count++;
-        orderMap[o.user_id].total += Number(o.total);
-        if (!orderMap[o.user_id].last || o.created_at > orderMap[o.user_id].last)
-          orderMap[o.user_id].last = o.created_at;
+        orderMap[o.user_id]!.count++;
+        orderMap[o.user_id]!.total += Number(o.total);
+        if (!orderMap[o.user_id]!.last || o.created_at > orderMap[o.user_id]!.last)
+          orderMap[o.user_id]!.last = o.created_at;
       });
 
       return (profiles ?? []).map(p => ({
@@ -425,7 +434,7 @@ export default function AdminCustomers() {
       const lines = text.split(/\r?\n/).filter(l => l.trim());
       if (lines.length < 2) { toast.error('CSV ফাইলে কমপক্ষে ১টি ডেটা সারি দরকার'); return; }
 
-      const headerLine = lines[0].toLowerCase();
+      const headerLine = lines[0]!.toLowerCase();
       const hasEmail = headerLine.includes('email') || headerLine.includes('ইমেইল');
       if (!hasEmail) { toast.error('CSV ফাইলে "email" বা "ইমেইল" কলাম থাকা আবশ্যক'); return; }
 
@@ -441,7 +450,7 @@ export default function AdminCustomers() {
         return result;
       };
 
-      const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().replace(/['"]/g, ''));
+      const headers = parseCSVLine(lines[0]!).map(h => h.toLowerCase().replace(/['"]/g, ''));
       const emailIdx = headers.findIndex(h => h.includes('email') || h.includes('ইমেইল'));
       const nameIdx = headers.findIndex(h => h.includes('name') || h.includes('নাম'));
       const phoneIdx = headers.findIndex(h => h.includes('phone') || h.includes('ফোন'));
@@ -449,7 +458,7 @@ export default function AdminCustomers() {
 
       let successCount = 0, failCount = 0;
       for (let i = 1; i < lines.length; i++) {
-        const cols = parseCSVLine(lines[i]);
+        const cols = parseCSVLine(lines[i]!);
         const email = cols[emailIdx]?.replace(/['"]/g, '').trim();
         if (!email || !email.includes('@')) { failCount++; continue; }
         const displayName = nameIdx >= 0 ? cols[nameIdx]?.replace(/['"]/g, '').trim() : '';
@@ -551,7 +560,7 @@ export default function AdminCustomers() {
               <Trash2 size={13} /> ডিলিট
             </button>
             {selected.phone && (
-              <button onClick={() => sendWhatsApp(selected.phone, selected.display_name ?? '', custOrders[0])}
+              <button onClick={() => sendWhatsApp(selected.phone, selected.display_name ?? '', custOrders[0]!)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors border border-emerald-500/20">
                 <MessageCircle size={13} /> WhatsApp
               </button>
@@ -702,7 +711,7 @@ export default function AdminCustomers() {
                               <select
                                 defaultValue={order.status}
                                 onChange={e => updateOrderStatus(order.id, e.target.value)}
-                                className="text-xs bg-background border border-border rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                                className="text-xs bg-background border border-border rounded-lg px-2 py-1.5 focus:outline-hidden focus:ring-2 focus:ring-primary/20">
                                 {Object.entries(STATUS_CONFIG).map(([k, v]) => (
                                   <option key={k} value={k}>{v.label}</option>
                                 ))}
@@ -755,11 +764,11 @@ export default function AdminCustomers() {
                                         <span className="text-[10px] font-semibold text-muted-foreground uppercase">ডেলিভার্ড কি</span>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded flex-1 break-all">
+                                        <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded-[0.25rem] flex-1 break-all">
                                           {item.license_key}
                                         </code>
                                         <button onClick={() => copyKey(item.license_key!)}
-                                          className="p-1 rounded text-muted-foreground hover:text-primary transition-colors shrink-0">
+                                          className="p-1 rounded-[0.25rem] text-muted-foreground hover:text-primary transition-colors shrink-0">
                                           {copiedKey === item.license_key ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
                                         </button>
                                       </div>
@@ -784,7 +793,7 @@ export default function AdminCustomers() {
                                                     <select
                                                       value={editLicenseStatus}
                                                       onChange={e => setEditLicenseStatus(e.target.value)}
-                                                      className="text-[10px] bg-background border border-border rounded px-1.5 py-0.5 focus:outline-none">
+                                                      className="text-[10px] bg-background border border-border rounded-[0.25rem] px-1.5 py-0.5 focus:outline-hidden">
                                                       {Object.entries(LICENSE_STATUS).map(([k, v]) => (
                                                         <option key={k} value={k}>{v.label}</option>
                                                       ))}
@@ -796,7 +805,7 @@ export default function AdminCustomers() {
                                                   </div>
                                                 ) : (
                                                   <>
-                                                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border ${ls.color}`}>
+                                                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-[0.25rem] text-[9px] font-semibold border ${ls.color}`}>
                                                       {ls.label}
                                                     </span>
                                                     <button onClick={() => { setEditingLicense(lic.id); setEditLicenseStatus(lic.status); }}
@@ -808,11 +817,11 @@ export default function AdminCustomers() {
                                               </div>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                              <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded flex-1 break-all">
+                                              <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded-[0.25rem] flex-1 break-all">
                                                 {lic.key_value}{lic.extra_info ? ` | ${lic.extra_info}` : ''}
                                               </code>
                                               <button onClick={() => copyKey(lic.key_value)}
-                                                className="p-1 rounded text-muted-foreground hover:text-primary transition-colors shrink-0">
+                                                className="p-1 rounded-[0.25rem] text-muted-foreground hover:text-primary transition-colors shrink-0">
                                                 {copiedKey === lic.key_value ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
                                               </button>
                                             </div>
@@ -842,7 +851,7 @@ export default function AdminCustomers() {
                             <div className="flex gap-2">
                               <input value={editNoteValue} onChange={e => setEditNoteValue(e.target.value)}
                                 placeholder="নোট লিখুন..."
-                                className="flex-1 text-xs bg-background border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                                className="flex-1 text-xs bg-background border border-border rounded-lg px-3 py-2 focus:outline-hidden focus:ring-2 focus:ring-primary/20" />
                               <button onClick={() => saveAdminNote(order.id)}
                                 className="px-2 py-1 rounded-lg bg-primary text-primary-foreground text-[10px] font-semibold"><Save size={10} /></button>
                               <button onClick={() => setEditingNote(null)}
@@ -1023,13 +1032,13 @@ export default function AdminCustomers() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0">
-                          {(c.display_name ?? c.email ?? '?')[0].toUpperCase()}
+                          {(c.display_name ?? c.email ?? '?')[0]!.toUpperCase()}
                         </div>
                         <div>
                           <div className="font-medium text-foreground text-xs flex items-center gap-1.5">
                             {c.display_name ?? 'No Name'}
                             {c.is_suspended && (
-                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0 rounded text-[9px] font-bold bg-red-500/15 text-red-600 border border-red-500/30">
+                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0 rounded-[0.25rem] text-[9px] font-bold bg-red-500/15 text-red-600 border border-red-500/30">
                                 <Ban size={8} /> SUSPENDED
                               </span>
                             )}

@@ -27,7 +27,7 @@ const EMPTY = (): Testimonial => ({
   product: 'Windows 11 Pro',
   date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
   enabled: true,
-  color: COLORS[0],
+  color: COLORS[0]!,
 });
 
 const AdminTestimonials = () => {
@@ -72,7 +72,7 @@ const AdminTestimonials = () => {
       const nIdx = idx + dir;
       if (nIdx < 0 || nIdx >= prev.length) return prev;
       const a = [...prev];
-      [a[idx], a[nIdx]] = [a[nIdx], a[idx]];
+      [a[idx]!, a[nIdx]!] = [a[nIdx]!, a[idx]!];
       return a;
     });
   };
@@ -165,7 +165,7 @@ const AdminTestimonials = () => {
                 <div>
                   <label className="text-xs text-muted-foreground mb-1.5 block">রিভিউ টেক্সট</label>
                   <textarea value={item.text} rows={3} onChange={e => update(item.id, 'text', e.target.value)}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none" />
                 </div>
 
                 <div>
@@ -208,7 +208,7 @@ const Field = ({ label, value, onChange }: { label: string; value: string; onCha
   <div>
     <label className="text-xs text-muted-foreground mb-1.5 block">{label}</label>
     <input value={value} onChange={e => onChange(e.target.value)}
-      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
   </div>
 );
 

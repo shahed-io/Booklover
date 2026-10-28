@@ -28,7 +28,7 @@ const couponSchema = z.object({
   }
 });
 
-const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground";
+const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground";
 const labelClass = "text-xs text-muted-foreground mb-1 block";
 
 const emptyForm = {
@@ -69,7 +69,7 @@ const AdminCoupons = () => {
     toast.success(`Deleted ${ids.length} coupon(s)`);
     clearSelection();
     fetchCoupons();
-  };
+   return undefined; };
 
   const bulkSetActive = async (active: boolean) => {
     const ids = Array.from(selectedIds);
@@ -81,7 +81,7 @@ const AdminCoupons = () => {
     toast.success(`${active ? 'Activated' : 'Deactivated'} ${ids.length} coupon(s)`);
     clearSelection();
     fetchCoupons();
-  };
+   return undefined; };
 
   const deleteExpired = async () => {
     const ids = coupons.filter(c => isExpired(c.expires_at)).map(c => c.id);
@@ -93,7 +93,7 @@ const AdminCoupons = () => {
     if (error) return toast.error(handleDbError(error));
     toast.success(`Deleted ${ids.length} expired coupon(s)`);
     fetchCoupons();
-  };
+   return undefined; };
 
   const fetchCoupons = async () => {
     setLoading(true);
@@ -109,7 +109,7 @@ const AdminCoupons = () => {
     // Validate with Zod
     const validation = couponSchema.safeParse({ ...form, code: form.code.toUpperCase() });
     if (!validation.success) {
-      toast.error(validation.error.errors[0].message);
+      toast.error(validation.error.errors[0]!.message);
       return;
     }
     const d = validation.data;

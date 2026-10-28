@@ -7,7 +7,7 @@ import {
 } from '@/hooks/useReferralConfig';
 
 const inputCls =
-  'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors';
+  'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors';
 
 const Section = ({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) => (
   <div className="glass-card rounded-2xl p-5 space-y-4">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { ChevronLeft, ChevronRight, Pause, Play, ArrowRight, BookOpen } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import Layout from './Layout';
@@ -66,12 +66,12 @@ export default function Home() {
       <Helmet><title>{cfg.seoTitle}</title><meta name="description" content={cfg.seoDescription} /><link rel="canonical" href="https://booklover.com.bd/" /></Helmet>
 
       <section className="bl-hero">
-        <img src={active.image || reading} alt="Reading at Booklover" width={1920} height={1024} fetchPriority="high" />
+        <img src={active!.image || reading} alt="Reading at Booklover" width={1920} height={1024} fetchPriority="high" />
         <div className="bl-hero-copy">
           <span className="bl-eyebrow">{cfg.eyebrow}</span>
-          <h1>{lines(active.title)}</h1>
+          <h1>{lines(active!.title)}</h1>
           <div className="bl-hero-rule" />
-          <p>{lines(active.subtitle)}</p>
+          <p>{lines(active!.subtitle)}</p>
         </div>
       </section>
       <div className="bl-slidebar">

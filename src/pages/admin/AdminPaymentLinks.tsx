@@ -132,7 +132,7 @@ export default function AdminPaymentLinks() {
     } catch (e: any) {
       toast.error(e.message || 'Save failed');
     }
-  };
+   return undefined; };
 
   const deleteLink = async (id: string) => {
     if (!confirm('Delete this link?')) return;

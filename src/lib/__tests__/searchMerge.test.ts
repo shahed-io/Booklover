@@ -92,7 +92,7 @@ describe('orderProductsByIds', () => {
   it('puts unranked items at the end without dropping them', () => {
     const subset = [catalog[0], catalog[1], catalog[2]];
     const ordered = orderProductsByIds(subset, ['p2']);
-    expect(ordered[0].id).toBe('p2');
+    expect(ordered[0]!.id).toBe('p2');
     expect(ordered.map((p) => p.id).sort()).toEqual(['p1', 'p2', 'p3']);
   });
 });
@@ -222,7 +222,7 @@ describe('SearchBar AI fallback flow (integration)', () => {
 
   it('shortcut "av" → suggests antivirus product', async () => {
     const r = await runSearch('av', []);
-    expect(r.products[0].id).toBe('p5');
+    expect(r.products[0]!.id).toBe('p5');
     expect(r.didYouMean).toBe('antivirus');
   });
 
@@ -235,11 +235,11 @@ describe('SearchBar AI fallback flow (integration)', () => {
 
   it('Bangla "অফিস" → maps to Office', async () => {
     const r = await runSearch('অফিস', []);
-    expect(r.products[0].id).toBe('p1');
+    expect(r.products[0]!.id).toBe('p1');
   });
 
   it('merges DB hits with AI-suggested extras when DB results are sparse', async () => {
-    const r = await runSearch('ofice', [catalog[2]]);
+    const r = await runSearch('ofice', [catalog[2]!]);
     expect(r.products.map((p) => p.id)).toEqual(['p3', 'p1']);
     expect(r.usedAi).toBe(false);
   });

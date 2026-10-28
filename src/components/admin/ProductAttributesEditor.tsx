@@ -13,7 +13,8 @@ interface GlobalAttr {
 }
 
 interface Assignment {
-  id?: string;
+  id?: string | undefined;
+
   attribute_id: string | null;
   custom_name: string;
   attribute_type: 'global' | 'custom';
@@ -21,15 +22,17 @@ interface Assignment {
   is_visible: boolean;
   use_in_variation: boolean;
   sort_order: number;
-  _deleted?: boolean;
-  _tempId?: string;
+  _deleted?: boolean | undefined;
+
+  _tempId?: string | undefined;
+
 }
 
 interface Props {
   productId: string;
 }
 
-const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground';
+const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground';
 
 let tc = 0;
 const gid = () => `t_${++tc}`;
@@ -172,25 +175,25 @@ const ProductAttributesEditor = ({ productId }: Props) => {
     try {
       for (let i = 0; i < assignments.length; i++) {
         const a = assignments[i];
-        if (a._deleted && a.id) {
-          await supabase.from('product_attribute_assignments' as any).delete().eq('id', a.id);
+        if (a!._deleted && a!.id) {
+          await supabase.from('product_attribute_assignments' as any).delete().eq('id', a!.id);
           continue;
         }
-        if (a._deleted) continue;
+        if (a!._deleted) continue;
 
         const payload = {
           product_id: productId,
-          attribute_id: a.attribute_id,
-          custom_name: a.attribute_type === 'custom' ? a.custom_name.trim() : null,
-          attribute_type: a.attribute_type,
-          selected_values: a.selected_values,
-          is_visible: a.is_visible,
-          use_in_variation: a.use_in_variation,
+          attribute_id: a!.attribute_id,
+          custom_name: a!.attribute_type === 'custom' ? a!.custom_name.trim() : null,
+          attribute_type: a!.attribute_type,
+          selected_values: a!.selected_values,
+          is_visible: a!.is_visible,
+          use_in_variation: a!.use_in_variation,
           sort_order: i,
         };
 
-        if (a.id) {
-          const { error } = await supabase.from('product_attribute_assignments' as any).update(payload).eq('id', a.id);
+        if (a!.id) {
+          const { error } = await supabase.from('product_attribute_assignments' as any).update(payload).eq('id', a!.id);
           if (error) throw error;
         } else {
           const { error } = await supabase.from('product_attribute_assignments' as any).insert(payload);
@@ -410,7 +413,7 @@ const ProductAttributesEditor = ({ productId }: Props) => {
         <div className="flex gap-2 items-center p-3 rounded-xl border border-primary/20 bg-primary/5">
           <Globe size={14} className="text-primary flex-shrink-0" />
           <select value={selectedGlobalId} onChange={e => setSelectedGlobalId(e.target.value)}
-            className="flex-1 bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+            className="flex-1 bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary">
             <option value="">— Select Attribute —</option>
             {availableGlobals.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>

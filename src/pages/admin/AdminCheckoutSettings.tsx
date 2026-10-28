@@ -18,7 +18,7 @@ import {
 } from '@/hooks/useCheckoutConfig';
 
 const inputCls =
-  'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors';
+  'w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors';
 
 const TOGGLES: { key: keyof CheckoutConfig; label: string; hint: string }[] = [
   { key: 'showEmailField', label: 'Email field', hint: 'Show the email input in the customer info form' },
@@ -84,7 +84,7 @@ const AdminCheckoutSettings = () => {
       const next = [...p.customFields];
       const target = index + dir;
       if (target < 0 || target >= next.length) return p;
-      [next[index], next[target]] = [next[target], next[index]];
+      [next[index]!, next[target]!] = [next[target]!, next[index]!];
       return { ...p, customFields: next };
     });
 

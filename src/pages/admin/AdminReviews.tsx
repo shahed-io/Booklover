@@ -22,7 +22,8 @@ interface Review {
   product: string;
   date: string;
   verified: boolean;
-  is_visible?: boolean;
+  is_visible?: boolean | undefined;
+
 }
 
 const emptyReview = (): Review => ({
@@ -117,7 +118,7 @@ const AdminReviews = () => {
     const j = i + dir;
     if (j < 0 || j >= reviews.length) return;
     const next = [...reviews];
-    [next[i], next[j]] = [next[j], next[i]];
+    [next[i]!, next[j]!] = [next[j]!, next[i]!];
     await persist(next);
   };
 
@@ -191,7 +192,7 @@ const AdminReviews = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold">{r.name}</span>
-                    {r.verified && <span className="text-xs bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">Verified</span>}
+                    {r.verified && <span className="text-xs bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-[0.25rem]">Verified</span>}
                     <span className="flex items-center gap-0.5 text-amber-500">
                       {Array.from({ length: r.rating }).map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
                     </span>

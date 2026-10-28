@@ -44,24 +44,37 @@ interface Account {
   total_conversions: number;
   application_note: string | null;
   admin_note: string | null;
-  applicant_name?: string | null;
-  applicant_email?: string | null;
-  applicant_phone?: string | null;
-  website_url?: string | null;
-  facebook_url?: string | null;
-  youtube_url?: string | null;
-  other_social_url?: string | null;
-  audience_size?: string | null;
-  niche?: string | null;
-  why_join?: string | null;
-  promotion_strategy?: string | null;
+  applicant_name?: string | null | undefined;
+
+  applicant_email?: string | null | undefined;
+
+  applicant_phone?: string | null | undefined;
+
+  website_url?: string | null | undefined;
+
+  facebook_url?: string | null | undefined;
+
+  youtube_url?: string | null | undefined;
+
+  other_social_url?: string | null | undefined;
+
+  audience_size?: string | null | undefined;
+
+  niche?: string | null | undefined;
+
+  why_join?: string | null | undefined;
+
+  promotion_strategy?: string | null | undefined;
+
   payout_method: string | null;
   payout_account: string | null;
   payout_account_name: string | null;
   approved_at: string | null;
   created_at: string;
-  email?: string;
-  display_name?: string;
+  email?: string | undefined;
+
+  display_name?: string | undefined;
+
 }
 
 interface Conversion {
@@ -74,7 +87,8 @@ interface Conversion {
   status: string;
   rejection_reason: string | null;
   created_at: string;
-  referral_code?: string;
+  referral_code?: string | undefined;
+
 }
 
 interface Withdrawal {
@@ -89,7 +103,8 @@ interface Withdrawal {
   admin_notes: string | null;
   transaction_id: string | null;
   requested_at: string;
-  referral_code?: string;
+  referral_code?: string | undefined;
+
 }
 
 interface ProductCommission {
@@ -98,7 +113,8 @@ interface ProductCommission {
   commission_percent: number;
   customer_discount_percent: number | null;
   is_active: boolean;
-  product_name?: string;
+  product_name?: string | undefined;
+
 }
 
 const STATUS_BADGE: Record<string, string> = {
@@ -221,7 +237,7 @@ const AdminAffiliates = () => {
     if (error) return toast.error('Update failed: ' + error.message);
     toast.success(`Account ${status}`);
     fetchAll();
-  };
+   return undefined; };
 
   const saveEditAccount = async () => {
     if (!editingAccount) return;
@@ -238,7 +254,7 @@ const AdminAffiliates = () => {
     toast.success('Account updated');
     setEditingAccount(null);
     fetchAll();
-  };
+   return undefined; };
 
   const handleConversion = async (id: string, action: 'approve' | 'reject') => {
     const fn = action === 'approve' ? 'approve_affiliate_conversion' : 'reject_affiliate_conversion';
@@ -247,7 +263,7 @@ const AdminAffiliates = () => {
     if (error || !data?.success) return toast.error(data?.error || error?.message || 'Failed');
     toast.success(`Conversion ${action}d`);
     fetchAll();
-  };
+   return undefined; };
 
   const submitWithdrawalAction = async () => {
     if (!withdrawalAction) return;
@@ -263,7 +279,7 @@ const AdminAffiliates = () => {
     setWithdrawalTxId('');
     setWithdrawalNotes('');
     fetchAll();
-  };
+   return undefined; };
 
   const addProductCommission = async () => {
     if (!newProductCommission.product_id) return toast.error('Select a product');
@@ -279,7 +295,7 @@ const AdminAffiliates = () => {
     toast.success('Product commission saved');
     setNewProductCommission({ product_id: '', commission_percent: 10, customer_discount_percent: 0 });
     fetchAll();
-  };
+   return undefined; };
 
   const toggleProductCommission = async (id: string, is_active: boolean) => {
     await supabase.from('affiliate_product_commissions').update({ is_active }).eq('id', id);
@@ -713,7 +729,7 @@ const StatCard = ({ icon: Icon, label, value, color, onClick }: any) => (
   <button
     type="button"
     onClick={onClick}
-    className="bg-card border border-border rounded-2xl p-3 text-left transition-all hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-primary/40"
+    className="bg-card border border-border rounded-2xl p-3 text-left transition-all hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 active:translate-y-0 focus:outline-hidden focus:ring-2 focus:ring-primary/40"
   >
     <div className="flex items-center gap-2 mb-1">
       <Icon size={14} className={color} />

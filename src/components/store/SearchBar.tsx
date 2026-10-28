@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, X, Clock, TrendingUp, ChevronRight, ArrowUpLeft, Tag, Flame, Zap, Star } from 'lucide-react';
 import { useCurrency } from '@/hooks/useCurrency';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 
 interface Product {
   id: string;
@@ -14,7 +14,8 @@ interface Product {
   image_url: string | null;
   short_description: string | null;
   category_id: string | null;
-  total_sales?: number | null;
+  total_sales?: number | null | undefined;
+
 }
 
 interface Category {
@@ -50,10 +51,12 @@ const SuggestionItem = ({
   icon: React.ReactNode;
   text: string;
   query: string;
-  rightAction?: React.ReactNode;
+  rightAction?: React.ReactNode | undefined;
+
   onClick: () => void;
   onFill?: () => void;
-  isActive?: boolean;
+  isActive?: boolean | undefined;
+
 }) => {
   const highlight = (t: string, q: string) => {
     if (!q.trim()) return <span className="font-medium">{t}</span>;
@@ -108,9 +111,11 @@ const ProductResultItem = ({
 }: {
   product: Product;
   query: string;
-  categoryName?: string | null;
+  categoryName?: string | null | undefined;
+
   onClick: () => void;
-  isActive?: boolean;
+  isActive?: boolean | undefined;
+
 }) => {
   const { format: fmtPrice } = useCurrency();
   const highlight = (t: string, q: string) => {
@@ -403,10 +408,10 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
       e.preventDefault();
       if (s.activeIdx >= 0 && allItems[s.activeIdx]) {
         const item = allItems[s.activeIdx];
-        if (item.type === 'product' && item.product) {
-          s.handleSelect(item.product, close);
+        if (item!.type === 'product' && item!.product) {
+          s.handleSelect(item!.product, close);
         } else {
-          s.handleSuggestionSelect(item.value, close);
+          s.handleSuggestionSelect(item!.value, close);
         }
       } else {
         s.handleSubmit(close);
@@ -439,7 +444,7 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
             onChange={(e) => s.handleChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="প্রোডাক্ট সার্চ করুন..."
-            className="flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground text-foreground"
+            className="flex-1 bg-transparent text-base outline-hidden placeholder:text-muted-foreground text-foreground"
           />
           <span className="sr-only">
             '''Do not make any visual modifications. The phrases I write are commands to understand what I want, not to be written down. Understand their content well, then execute what is required.'''
@@ -532,7 +537,7 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query=""
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                   />
                 ))}
@@ -595,7 +600,7 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query={s.query}
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                     isActive={s.activeIdx === s.suggestions.length + idx}
                   />
@@ -634,8 +639,8 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
           <div className="py-2">
             {[1, 2, 3, 4, 5].map(i => (
               <div key={i} className="flex items-center gap-3 px-4 py-2.5 animate-pulse">
-                <div className="w-5 h-5 rounded bg-muted flex-shrink-0" />
-                <div className="flex-1 h-4 bg-muted rounded" />
+                <div className="w-5 h-5 rounded-[0.25rem] bg-muted flex-shrink-0" />
+                <div className="flex-1 h-4 bg-muted rounded-[0.25rem]" />
               </div>
             ))}
           </div>
@@ -646,9 +651,9 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
       <div className="px-5 py-2 border-t border-border/40 flex items-center justify-between flex-shrink-0"
         style={{ background: 'hsl(var(--muted)/0.25)' }}>
         <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded border border-border/60 text-[9px] font-mono bg-background">↑↓</kbd> নেভিগেট</span>
-          <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded border border-border/60 text-[9px] font-mono bg-background">↵</kbd> সিলেক্ট</span>
-          <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded border border-border/60 text-[9px] font-mono bg-background">Esc</kbd> বন্ধ</span>
+          <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded-[0.25rem] border border-border/60 text-[9px] font-mono bg-background">↑↓</kbd> নেভিগেট</span>
+          <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded-[0.25rem] border border-border/60 text-[9px] font-mono bg-background">↵</kbd> সিলেক্ট</span>
+          <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded-[0.25rem] border border-border/60 text-[9px] font-mono bg-background">Esc</kbd> বন্ধ</span>
         </div>
         <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
           <Zap size={10} className="text-primary" />
@@ -708,7 +713,7 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
               onChange={(e) => s.handleChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="প্রোডাক্ট সার্চ করুন..."
-              className="flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground text-foreground"
+              className="flex-1 bg-transparent text-base outline-hidden placeholder:text-muted-foreground text-foreground"
               autoComplete="off"
             />
             {s.query && (
@@ -793,7 +798,7 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query=""
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                   />
                 ))}
@@ -855,7 +860,7 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query={s.query}
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                   />
                 ))}
@@ -880,8 +885,8 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
           <div className="py-2">
             {[1, 2, 3, 4, 5].map(i => (
               <div key={i} className="flex items-center gap-3 px-4 py-3 animate-pulse">
-                <div className="w-5 h-5 rounded bg-muted flex-shrink-0" />
-                <div className="flex-1 h-4 bg-muted rounded" />
+                <div className="w-5 h-5 rounded-[0.25rem] bg-muted flex-shrink-0" />
+                <div className="flex-1 h-4 bg-muted rounded-[0.25rem]" />
               </div>
             ))}
           </div>
@@ -907,8 +912,10 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
 // DEFAULT EXPORT: Standalone/Navbar inline search bar
 // ══════════════════════════════════════════════════════════════════════
 interface SearchBarProps {
-  className?: string;
-  variant?: 'navbar' | 'standalone';
+  className?: string | undefined;
+
+  variant?: 'navbar' | 'standalone' | undefined;
+
   onClose?: () => void;
 }
 
@@ -1048,7 +1055,7 @@ const SearchBar = ({ className = '', variant = 'standalone', onClose }: SearchBa
               onFocus={() => setOpen(true)}
               onKeyDown={handleKeyDown}
               placeholder="প্রোডাক্ট সার্চ করুন..."
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground text-foreground"
+              className="flex-1 bg-transparent text-sm outline-hidden placeholder:text-muted-foreground text-foreground"
             />
             {query && (
               <button onClick={clear} className="text-muted-foreground hover:text-foreground">
@@ -1098,7 +1105,7 @@ const SearchBar = ({ className = '', variant = 'standalone', onClose }: SearchBa
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="সার্চ করুন..."
-          className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground text-foreground min-w-0"
+          className="flex-1 bg-transparent text-sm outline-hidden placeholder:text-muted-foreground text-foreground min-w-0"
         />
         {query && (
           <button onClick={clear} className="text-muted-foreground hover:text-foreground flex-shrink-0">
@@ -1137,8 +1144,8 @@ const CompactDropdown = ({
       <div className="p-4 space-y-3">
         {[1, 2, 3].map(i => (
           <div key={i} className="flex gap-3 animate-pulse">
-            <div className="w-5 h-5 rounded bg-muted flex-shrink-0" />
-            <div className="flex-1 h-4 bg-muted rounded" />
+            <div className="w-5 h-5 rounded-[0.25rem] bg-muted flex-shrink-0" />
+            <div className="flex-1 h-4 bg-muted rounded-[0.25rem]" />
           </div>
         ))}
       </div>
@@ -1192,7 +1199,7 @@ const CompactDropdown = ({
               <ProductResultItem
                 product={product}
                 query={query}
-                categoryName={product.category_id ? categories[product.category_id] : null}
+                categoryName={(product.category_id ? categories[product.category_id] : null)!}
                 onClick={() => onSelect(product)}
                 isActive={idx === activeIdx}
               />

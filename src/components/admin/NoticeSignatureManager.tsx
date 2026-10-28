@@ -48,7 +48,7 @@ export default function NoticeSignatureManager({ onChanged }: Props) {
       const { data: { session } } = await supabase.auth.getSession();
       const { data, error } = await supabase.functions.invoke('ai-generate-signature', {
         body: { name: sig.signedBy || 'Booklover Authority', style: aiStyle },
-        headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : undefined,
+        headers: (session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : undefined)!,
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -104,7 +104,7 @@ export default function NoticeSignatureManager({ onChanged }: Props) {
 
             <div className="rounded-lg border bg-muted/30 p-4">
               <div className="text-xs font-semibold text-muted-foreground mb-2">Signature Image Preview</div>
-              <div className="bg-white border rounded p-4 flex items-center justify-center min-h-[110px]">
+              <div className="bg-white border rounded-[0.25rem] p-4 flex items-center justify-center min-h-[110px]">
                 {sig.imageDataUrl ? (
                   <img src={sig.imageDataUrl} alt="Signature"
                        style={{ maxHeight: 90, maxWidth: 320, mixBlendMode: 'multiply' }} />

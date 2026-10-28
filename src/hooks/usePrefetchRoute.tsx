@@ -93,7 +93,7 @@ export function usePrefetchInView(path: string | undefined) {
     if (!path || !ref.current) return;
     const obs = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry!.isIntersecting) {
           prefetchRoute(path);
           obs.disconnect();
         }

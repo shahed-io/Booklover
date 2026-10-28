@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import BrandLogo from '@/components/store/BrandLogo';
 import logoAsset from '@/assets/booklover-logo.jpeg.asset.json';
 const logoIcon = logoAsset.url;
-import { NavLink, useLocation, Outlet } from 'react-router-dom';
+import { NavLink, useLocation, Outlet } from '@/lib/router-compat';
 import { useAuth } from '@/hooks/useAuth';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdminPrefetch, prefetchAdminRoute } from '@/hooks/useAdminPrefetch';
 import AdminCommandPalette from '@/components/admin/AdminCommandPalette';
@@ -32,7 +32,8 @@ interface AdminNotif {
   title: string;
   message: string;
   time: string;
-  link?: string;
+  link?: string | undefined;
+
 }
 
 type MenuItem = { icon: any; label: string; path: string; badge?: 'live' | 'new' };
@@ -56,7 +57,7 @@ const ITEM_PALETTE: Array<[string, string]> = [
 function getItemAccent(path: string): { from: string; to: string } {
   let h = 0;
   for (let i = 0; i < path.length; i++) h = (h * 31 + path.charCodeAt(i)) >>> 0;
-  const [from, to] = ITEM_PALETTE[h % ITEM_PALETTE.length];
+  const [from, to] = ITEM_PALETTE[h % ITEM_PALETTE.length]!;
   return { from, to };
 }
 
@@ -447,7 +448,7 @@ const AdminLayout = () => {
                                 </span>
                               )}
                               {item.badge === 'new' && (
-                                <span className="text-[9px] font-bold text-white bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 px-1.5 py-0.5 rounded-md shadow-sm">NEW</span>
+                                <span className="text-[9px] font-bold text-white bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 px-1.5 py-0.5 rounded-md shadow-xs">NEW</span>
                               )}
                             </>
                           )}
@@ -616,7 +617,7 @@ const AdminLayout = () => {
                         ticket: { icon: Headphones, cls: 'text-blue-500 bg-blue-500/10' },
                         stock: { icon: AlertTriangle, cls: 'text-destructive bg-destructive/10' },
                       };
-                      const { icon: NIcon, cls } = icons[n.type] || icons.order;
+                      const { icon: NIcon, cls } = (icons[n.type] || icons['order'])!;
                       return (
                         <a key={n.id} href={n.link || '#'} onClick={() => setShowNotifPanel(false)}
                           className="flex items-start gap-3 px-4 py-3 hover:bg-primary/5 transition-colors">

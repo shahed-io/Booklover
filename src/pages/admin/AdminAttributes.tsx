@@ -15,7 +15,8 @@ interface GlobalAttribute {
   order_by: string;
   has_archives: boolean;
   sort_order: number;
-  values?: GlobalAttributeValue[];
+  values?: GlobalAttributeValue[] | undefined;
+
 }
 
 interface GlobalAttributeValue {
@@ -29,7 +30,7 @@ interface GlobalAttributeValue {
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
-const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground';
+const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground';
 const lc = 'text-xs text-muted-foreground mb-1 block font-medium';
 
 const toSlug = (s: string) =>
@@ -330,7 +331,7 @@ const AdminAttributes = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-foreground text-sm">{attr.name}</span>
-                      <span className="text-[10px] font-mono text-muted-foreground bg-muted/40 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] font-mono text-muted-foreground bg-muted/40 px-1.5 py-0.5 rounded-[0.25rem]">
                         {attr.slug}
                       </span>
                       <span className="text-[10px] px-2 py-0.5 rounded-full border"

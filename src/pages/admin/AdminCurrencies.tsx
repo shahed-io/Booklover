@@ -417,7 +417,7 @@ const AdminCurrencies = () => {
                           <button
                             type="button"
                             onClick={() => setInlineEdit({ id: row.id, value: String(row.rate_per_usd ?? "") })}
-                            className="font-mono text-xs px-2 py-1 rounded hover:bg-primary/10 hover:text-primary transition-colors border border-transparent hover:border-primary/30"
+                            className="font-mono text-xs px-2 py-1 rounded-[0.25rem] hover:bg-primary/10 hover:text-primary transition-colors border border-transparent hover:border-primary/30"
                             title="Click to edit"
                           >
                             {row.rate_per_usd != null ? Number(row.rate_per_usd) : <span className="text-muted-foreground">manual</span>}

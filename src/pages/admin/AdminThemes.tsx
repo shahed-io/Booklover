@@ -30,18 +30,18 @@ const ThemeCard = ({ theme, isActive, onSelect, isPreviewing }: {
 
     {/* Color Preview */}
     <div className="flex gap-2 mb-4">
-      <div className="w-12 h-12 rounded-xl shadow-sm border border-black/5" style={{ background: theme.preview.bg }} />
-      <div className="w-12 h-12 rounded-xl shadow-sm" style={{ background: theme.preview.primary }} />
-      <div className="w-12 h-12 rounded-xl shadow-sm" style={{ background: theme.preview.accent }} />
-      <div className="w-12 h-12 rounded-xl shadow-sm" style={{ background: theme.preview.text }} />
+      <div className="w-12 h-12 rounded-xl shadow-xs border border-black/5" style={{ background: theme.preview.bg }} />
+      <div className="w-12 h-12 rounded-xl shadow-xs" style={{ background: theme.preview.primary }} />
+      <div className="w-12 h-12 rounded-xl shadow-xs" style={{ background: theme.preview.accent }} />
+      <div className="w-12 h-12 rounded-xl shadow-xs" style={{ background: theme.preview.text }} />
     </div>
 
     {/* Mini Preview */}
     <div className="rounded-xl overflow-hidden border border-black/10 mb-4" style={{ background: theme.preview.bg }}>
       <div className="h-2.5" style={{ background: theme.preview.primary }} />
       <div className="p-3 space-y-2">
-        <div className="h-2 w-3/4 rounded" style={{ background: theme.preview.text, opacity: 0.7 }} />
-        <div className="h-2 w-1/2 rounded" style={{ background: theme.preview.text, opacity: 0.4 }} />
+        <div className="h-2 w-3/4 rounded-[0.25rem]" style={{ background: theme.preview.text, opacity: 0.7 }} />
+        <div className="h-2 w-1/2 rounded-[0.25rem]" style={{ background: theme.preview.text, opacity: 0.4 }} />
         <div className="flex gap-2 mt-2">
           <div className="h-6 w-16 rounded-md" style={{ background: theme.preview.primary }} />
           <div className="h-6 w-16 rounded-md" style={{ background: theme.preview.accent }} />

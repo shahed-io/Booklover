@@ -36,8 +36,8 @@ const dbSlideToSlide = (s: SlideData): Slide => ({
   subtitle: s.subtitle || '', desc: s.desc || '', price: s.price || '',
   original: s.original || '', off: s.off ? (s.off.startsWith('-') ? s.off : `-${s.off}`) : '', badge: s.badge || '',
   accentFrom: s.accentFrom || 'hsl(28,88%,52%)', accentTo: s.accentTo || 'hsl(222,60%,26%)',
-  emoji: s.emoji || '', logoImg: s.logoImg || undefined,
-  bgImage: s.bgImage || undefined,
+  emoji: s.emoji || '', logoImg: (s.logoImg || undefined)!,
+  bgImage: (s.bgImage || undefined)!,
   features: s.features || [], productSlug: s.productSlug || '',
 });
 
@@ -72,14 +72,14 @@ const HeroBanner = () => {
   };
 
   const slide = SLIDES[active] ?? SLIDES[0];
-  const bgUrl = pickBannerBg(slide, active);
-  const href = slide.productSlug ? `/product/${slide.productSlug}` : '/shop';
+  const bgUrl = pickBannerBg(slide!, active);
+  const href = slide!.productSlug ? `/product/${slide!.productSlug}` : '/shop';
 
   // Text layer is only mounted when the admin has actually written something.
-  const hasHeadline = Boolean(slide.title || slide.titleAccent || slide.subtitle);
-  const hasPrice = Boolean(slide.price || slide.original || slide.off);
-  const hasTags = Boolean(slide.tag || slide.badge);
-  const hasCopy = hasHeadline || hasPrice || hasTags || Boolean(slide.desc) || (slide.features?.length ?? 0) > 0;
+  const hasHeadline = Boolean(slide!.title || slide!.titleAccent || slide!.subtitle);
+  const hasPrice = Boolean(slide!.price || slide!.original || slide!.off);
+  const hasTags = Boolean(slide!.tag || slide!.badge);
+  const hasCopy = hasHeadline || hasPrice || hasTags || Boolean(slide!.desc) || (slide!.features?.length ?? 0) > 0;
 
   return (
     <section className="relative mt-[64px] lg:mt-[54px] px-2 sm:px-4 lg:px-6 pt-2 pb-3 md:pt-3 md:pb-5">
@@ -93,10 +93,10 @@ const HeroBanner = () => {
         aria-roledescription="carousel"
         aria-label="Booklover banner"
         style={{ boxShadow: '0 18px 50px hsla(222,60%,20%,0.14)' }}
-        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+        onTouchStart={(e) => { touchStartX.current = e.touches[0]!.clientX; }}
         onTouchEnd={(e) => {
           if (touchStartX.current == null) return;
-          const dx = e.changedTouches[0].clientX - touchStartX.current;
+          const dx = e.changedTouches[0]!.clientX - touchStartX.current;
           if (Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
           touchStartX.current = null;
         }}
@@ -142,19 +142,19 @@ const HeroBanner = () => {
               <div className="w-full sm:w-[62%] lg:w-[52%] pl-4 sm:pl-6 md:pl-8 lg:pl-12 pr-3 sm:pr-4 space-y-2 sm:space-y-3 md:space-y-4">
                 {hasTags && (
                   <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                    {slide.tag && (
+                    {slide!.tag && (
                       <span
                         className="inline-flex items-center gap-1 text-[8px] sm:text-[9.5px] font-black uppercase tracking-[0.16em] px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-white"
                         style={{
-                          background: `linear-gradient(135deg, ${slide.accentFrom}, ${slide.accentTo})`,
+                          background: `linear-gradient(135deg, ${slide!.accentFrom}, ${slide!.accentTo})`,
                           boxShadow: '0 4px 16px hsla(28,88%,52%,0.30)',
                         }}
                       >
-                        {slide.tagIcon && <span className="text-[10px] sm:text-[11px]">{slide.tagIcon}</span>}
-                        {slide.tag}
+                        {slide!.tagIcon && <span className="text-[10px] sm:text-[11px]">{slide!.tagIcon}</span>}
+                        {slide!.tag}
                       </span>
                     )}
-                    {slide.badge && (
+                    {slide!.badge && (
                       <span
                         className="hidden sm:inline-flex items-center text-[9px] font-bold tracking-widest uppercase px-2.5 py-1.5 rounded-full"
                         style={{
@@ -163,7 +163,7 @@ const HeroBanner = () => {
                           color: 'hsl(222,60%,26%)',
                         }}
                       >
-                        {slide.badge}
+                        {slide!.badge}
                       </span>
                     )}
                   </div>
@@ -171,47 +171,47 @@ const HeroBanner = () => {
 
                 {hasHeadline && (
                   <div>
-                    {(slide.title || slide.titleAccent) && (
+                    {(slide!.title || slide!.titleAccent) && (
                       <h2
                         className="font-sora font-black leading-[1.05] tracking-tight"
                         style={{ fontSize: 'clamp(1.35rem, 4.2vw, 3.2rem)', color: 'hsl(222,60%,20%)' }}
                       >
-                        {slide.title && <span className="block">{slide.title}</span>}
-                        {slide.titleAccent && (
+                        {slide!.title && <span className="block">{slide!.title}</span>}
+                        {slide!.titleAccent && (
                           <span
                             className="block"
                             style={{
-                              background: `linear-gradient(135deg, ${slide.accentFrom}, ${slide.accentTo})`,
+                              background: `linear-gradient(135deg, ${slide!.accentFrom}, ${slide!.accentTo})`,
                               WebkitBackgroundClip: 'text',
                               WebkitTextFillColor: 'transparent',
                               backgroundClip: 'text',
                             }}
                           >
-                            {slide.titleAccent}
+                            {slide!.titleAccent}
                           </span>
                         )}
                       </h2>
                     )}
-                    {slide.subtitle && (
+                    {slide!.subtitle && (
                       <p
                         className="text-[11px] sm:text-[13px] lg:text-[14px] font-semibold mt-1 sm:mt-2 line-clamp-2"
                         style={{ color: 'hsl(222,30%,38%)' }}
                       >
-                        {slide.subtitle}
+                        {slide!.subtitle}
                       </p>
                     )}
                   </div>
                 )}
 
-                {slide.desc && (
+                {slide!.desc && (
                   <p className="hidden md:block text-[12.5px] leading-relaxed max-w-[420px]" style={{ color: 'hsl(222,20%,44%)' }}>
-                    {slide.desc}
+                    {slide!.desc}
                   </p>
                 )}
 
-                {slide.features?.length > 0 && (
+                {slide!.features?.length > 0 && (
                   <div className="hidden lg:flex flex-wrap gap-1.5">
-                    {slide.features.filter(Boolean).map((f) => (
+                    {slide!.features.filter(Boolean).map((f) => (
                       <span
                         key={f}
                         className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-full"
@@ -232,40 +232,40 @@ const HeroBanner = () => {
 
                 {hasPrice && (
                   <div className="flex items-baseline gap-2 flex-wrap">
-                    {slide.price && (
+                    {slide!.price && (
                       <span
                         className="font-sora font-black leading-none tracking-tight"
                         style={{ fontSize: 'clamp(1.1rem, 2.6vw, 2rem)', color: 'hsl(222,60%,20%)' }}
                       >
-                        {slide.price}
+                        {slide!.price}
                       </span>
                     )}
-                    {slide.original && (
+                    {slide!.original && (
                       <span className="text-[10px] sm:text-xs line-through font-medium" style={{ color: 'hsl(222,15%,55%)' }}>
-                        {slide.original}
+                        {slide!.original}
                       </span>
                     )}
-                    {slide.off && (
+                    {slide!.off && (
                       <span
                         className="text-[9px] sm:text-[10.5px] font-black text-white px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full"
                         style={{
-                          background: `linear-gradient(135deg, ${slide.accentFrom}, ${slide.accentTo})`,
+                          background: `linear-gradient(135deg, ${slide!.accentFrom}, ${slide!.accentTo})`,
                           boxShadow: '0 3px 10px hsla(28,88%,52%,0.30)',
                         }}
                       >
-                        {slide.off} OFF
+                        {slide!.off} OFF
                       </span>
                     )}
                   </div>
                 )}
 
-                {(slide.title || slide.productSlug) && (
+                {(slide!.title || slide!.productSlug) && (
                   <div className="flex flex-wrap gap-2">
                     <a
                       href={href}
                       className="inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-white text-[11px] sm:text-[12.5px] font-bold active:scale-95 transition-transform"
                       style={{
-                        background: `linear-gradient(135deg, ${slide.accentFrom}, ${slide.accentTo})`,
+                        background: `linear-gradient(135deg, ${slide!.accentFrom}, ${slide!.accentTo})`,
                         boxShadow: '0 8px 22px hsla(28,88%,52%,0.32)',
                       }}
                     >

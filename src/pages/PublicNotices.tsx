@@ -1,6 +1,6 @@
 // Public notice list + detail
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import NoticeTemplate, { NoticeData } from '@/components/notices/NoticeTemplate';
 import SEOHead from '@/components/seo/SEOHead';
@@ -49,7 +49,7 @@ export default function PublicNotices() {
   if (slug) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-6 sm:py-10 px-2 sm:px-4">
-        <SEOHead title={one?.title || 'Notice'} description={one?.summary || undefined} />
+        <SEOHead title={one?.title || 'Notice'} description={(one?.summary || undefined)!} />
         <div className="max-w-3xl mx-auto mb-4 flex items-center justify-between gap-2 px-1">
           <Link to="/notices" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4" /> All Notices
@@ -62,7 +62,7 @@ export default function PublicNotices() {
           <div className="text-center py-20 text-muted-foreground">Notice পাওয়া যায়নি।</div>
         ) : (
           <div ref={noticeRef}>
-            <NoticeTemplate notice={one} brand={{ name: 'Booklover' }} signatureUrl={signature.imageDataUrl || undefined} />
+            <NoticeTemplate notice={one} brand={{ name: 'Booklover' }} signatureUrl={(signature.imageDataUrl || undefined)!} />
           </div>
         )}
       </div>
@@ -135,7 +135,7 @@ function NoticeActions({ targetRef, notice }: { targetRef: React.RefObject<HTMLD
         scale: Math.min(2, window.devicePixelRatio || 2),
         useCORS: true,
         logging: false,
-        windowWidth: isSmall ? 800 : undefined,
+        windowWidth: (isSmall ? 800 : undefined)!,
       });
       return await new Promise<Blob | null>((resolve) => canvas.toBlob((b) => resolve(b), 'image/png', 0.95));
     } finally {

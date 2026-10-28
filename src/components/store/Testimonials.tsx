@@ -17,7 +17,8 @@ interface Review {
   product: string;
   date: string;
   verified: boolean;
-  is_visible?: boolean;
+  is_visible?: boolean | undefined;
+
 }
 
 // Real customer reviews collected from Facebook page recommendations
@@ -63,7 +64,7 @@ const StarRating = ({ rating, color }: { rating: number; color: string }) => (
 );
 
 const AvatarCircle = ({ initials, index, seed, name }: { initials: string; index: number; seed: string; name?: string }) => {
-  const [a, b] = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
+  const [a, b] = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length]!;
   const [failed, setFailed] = useState(false);
   // Real Facebook photo only — no AI-generated fallbacks. Missing photos show initials on gradient.
   const realAvatar = name ? getRealAvatar(name) : undefined;
@@ -91,7 +92,7 @@ const AvatarCircle = ({ initials, index, seed, name }: { initials: string; index
 /* ─── Review Card ─────────────────────────────── */
 const ReviewCard = ({ review, index }: { review: Review; index: number }) => {
   const [hov, setHov] = useState(false);
-  const { from } = PALETTES[index % PALETTES.length];
+  const { from } = PALETTES[index % PALETTES.length]!;
 
   return (
     <div
@@ -181,7 +182,7 @@ const Testimonials = () => {
 
   useEffect(() => {
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+      ([entry]) => { if (entry!.isIntersecting) setIsVisible(true); },
       { threshold: 0.1 }
     );
     if (sectionRef.current) obs.observe(sectionRef.current);

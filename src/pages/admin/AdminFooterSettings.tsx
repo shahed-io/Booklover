@@ -38,7 +38,7 @@ const AdminFooterSettings = () => {
   const update = (key: keyof FooterSettings, value: string) =>
     setSettings(prev => ({ ...prev, [key]: value }));
 
-  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   const Section = ({ title, icon: Icon, children }: { title: string; icon: LucideIcon; children: React.ReactNode }) => (
     <div className="glass-card rounded-2xl p-6">

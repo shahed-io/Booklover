@@ -19,17 +19,26 @@ const seoImageUrl = (url?: string | null, fallback = `${SITE_URL}/favicon.png`) 
 /** Product (offers) schema — enhanced for Bangladesh Google ranking */
 export const productSchema = (p: {
   name: string;
-  description?: string | null;
-  image?: string | null;
-  images?: string[];
+  description?: string | null | undefined;
+
+  image?: string | null | undefined;
+
+  images?: string[] | undefined;
+
   price: number;
   slug: string;
-  rating?: number;
-  reviewCount?: number;
-  category?: string;
-  sku?: string;
-  originalPrice?: number | null;
-  inStock?: boolean;
+  rating?: number | undefined;
+
+  reviewCount?: number | undefined;
+
+  category?: string | undefined;
+
+  sku?: string | undefined;
+
+  originalPrice?: number | null | undefined;
+
+  inStock?: boolean | undefined;
+
 }) => {
   // Build full image array for Google Image indexing
   const allImages: string[] = [];
@@ -113,12 +122,17 @@ export const breadcrumbSchema = (
 /** Article / Blog schema */
 export const articleSchema = (post: {
   title: string;
-  description?: string | null;
-  image?: string | null;
+  description?: string | null | undefined;
+
+  image?: string | null | undefined;
+
   slug: string;
-  publishedAt?: string | null;
-  updatedAt?: string;
-  authorName?: string | null;
+  publishedAt?: string | null | undefined;
+
+  updatedAt?: string | undefined;
+
+  authorName?: string | null | undefined;
+
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'Article',
@@ -238,8 +252,10 @@ export const siteNavigationSchema = (items: { name: string; url: string }[]) => 
 export const howToSchema = (h: {
   name: string;
   description: string;
-  image?: string;
-  totalTime?: string;
+  image?: string | undefined;
+
+  totalTime?: string | undefined;
+
   steps: { name: string; text: string; image?: string }[];
 }) => ({
   '@context': 'https://schema.org',
@@ -260,7 +276,8 @@ export const howToSchema = (h: {
 /** VideoObject — for any video embed */
 export const videoObjectSchema = (v: {
   name: string; description: string; thumbnailUrl: string;
-  uploadDate?: string; contentUrl?: string; embedUrl?: string; duration?: string;
+  uploadDate?: string; contentUrl?: string; embedUrl?: string; duration?: string | undefined;
+
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'VideoObject',

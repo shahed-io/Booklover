@@ -7,7 +7,8 @@ interface ApiKeyEntry {
   key: string;
   value: string;
   category: string;
-  isNew?: boolean;
+  isNew?: boolean | undefined;
+
 }
 
 const KNOWN_PROVIDERS: Record<string, { name: string; icon: string; color: string; bgColor: string; borderColor: string; testType?: string; link?: string; description?: string }> = {
@@ -188,7 +189,7 @@ const AdminAiConfig = () => {
   const totalKeys = dbSettings.length;
   const activeKeys = dbSettings.filter(e => e.value).length;
 
-  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   return (
     <div className="space-y-6">
@@ -307,25 +308,25 @@ const AdminAiConfig = () => {
         <div className="space-y-6">
           {filteredGroups.map(([cat, entries]) => {
             const provider = KNOWN_PROVIDERS[cat] || KNOWN_PROVIDERS['other'];
-            const testType = provider.testType;
+            const testType = provider!.testType;
 
             const isCollapsed = !!collapsed[cat];
             return (
-              <div key={cat} className={`glass-card rounded-2xl p-6 ${provider.borderColor} border`}>
+              <div key={cat} className={`glass-card rounded-2xl p-6 ${provider!.borderColor} border`}>
                 <button
                   type="button"
                   onClick={() => setCollapsed(prev => ({ ...prev, [cat]: !prev[cat] }))}
                   className="w-full flex items-center gap-3 mb-5 text-left hover:opacity-90 transition-opacity"
                 >
-                  <div className={`w-10 h-10 rounded-xl ${provider.bgColor} flex items-center justify-center text-xl`}>
-                    {provider.icon}
+                  <div className={`w-10 h-10 rounded-xl ${provider!.bgColor} flex items-center justify-center text-xl`}>
+                    {provider!.icon}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-foreground">{provider.name}</h3>
+                    <h3 className="font-bold text-foreground">{provider!.name}</h3>
                     <p className="text-xs text-muted-foreground">
-                      {provider.description}
-                      {provider.link && (
-                        <> → <a onClick={(e) => e.stopPropagation()} href={provider.link} target="_blank" rel="noopener noreferrer" className="text-primary underline">Key নিন</a></>
+                      {provider!.description}
+                      {provider!.link && (
+                        <> → <a onClick={(e) => e.stopPropagation()} href={provider!.link} target="_blank" rel="noopener noreferrer" className="text-primary underline">Key নিন</a></>
                       )}
                     </p>
                   </div>
@@ -375,7 +376,7 @@ const AdminAiConfig = () => {
                               onClick={() => testApiKey(testType, entry.key)}
                               disabled={testingKeys[entry.key] || !hasValue}
                               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105"
-                              style={{ borderColor: `${provider.color}40`, color: provider.color }}
+                              style={{ borderColor: `${provider!.color}40`, color: provider!.color }}
                             >
                               {testingKeys[entry.key] ? <Loader2 size={12} className="animate-spin" /> : <TestTube size={12} />}
                               টেস্ট

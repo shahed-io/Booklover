@@ -1,0 +1,16 @@
+{
+  "customizations": [
+    { "token": "tailwind theme config (colors, brand/neon palettes, fonts, screens, container, radii, shadows, gradients, keyframes, animations)", "source": "tailwind.config.ts", "reappliedIn": "src/tailwind.config.ts (loaded via @config in src/styles.css)" },
+    { "token": "scrollbar-hide utility", "source": "tailwind.config.ts", "reappliedIn": "src/tailwind.config.ts" },
+    { "token": "@tailwindcss/typography plugin (prose)", "source": "tailwind.config.ts", "reappliedIn": "src/tailwind.config.ts" },
+    { "token": "tailwindcss-animate utilities", "source": "tailwind.config.ts", "reappliedIn": "src/styles.css (tw-animate-css)" },
+    { "token": ":root and theme variant CSS variables (--background, --primary, brand HSL tokens, glows, surfaces, gradients, sidebar)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "base layer rules (border colour, html/body, typography)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "container-fluid responsive container system", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "custom keyframes and animation classes (ticker, neon, admin, view-transition, shimmer, card, button glow)", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "admin panel styles", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "responsive/mobile media-query overrides", "source": "src/index.css", "reappliedIn": "src/styles.css" },
+    { "token": "Arvo and Hind Siliguri font faces", "source": "src/main.tsx", "reappliedIn": "src/styles.css" },
+    { "token": "pre-hydration loader and dark-theme bootstrap styles", "source": "index.html", "reappliedIn": "src/routes/__root.tsx head()" }
+  ]
+}

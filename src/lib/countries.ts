@@ -264,7 +264,7 @@ export const splitPhone = (value: string): { country: Country; local: string } =
       return { country: best, local: raw.slice(best.dial.length).replace(/[^0-9]/g, '') };
     }
   }
-  return { country: DEFAULT_COUNTRY, local: raw.replace(/[^0-9]/g, '') };
+  return { country: DEFAULT_COUNTRY!, local: raw.replace(/[^0-9]/g, '') };
 };
 
 export const joinPhone = (country: Country, local: string) => {

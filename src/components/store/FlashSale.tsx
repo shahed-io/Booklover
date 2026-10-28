@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useReveal } from '@/hooks/useReveal';
 import { useCurrency } from '@/hooks/useCurrency';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { Flame, Timer, ArrowRight, ShoppingCart, Zap, TrendingDown, MessageCircle } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useQuery } from '@tanstack/react-query';
