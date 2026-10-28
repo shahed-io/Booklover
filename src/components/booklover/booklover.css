@@ -201,3 +201,15 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 .bl-white .bl-footer {background:linear-gradient(180deg,hsl(var(--background)),hsl(var(--accent)));border-top:3px solid hsl(var(--primary));}
 .bl-white .bl-drawer {border-radius:20px 0 0 20px;}
 .bl-white .bl-toolbar select,.bl-white .bl-toolbar input,.bl-white .bl-form input,.bl-white .bl-form textarea,.bl-white .bl-form select {border-radius:10px;}
+
+/* Uniform, aligned book cards */
+.bl-book{display:flex;flex-direction:column;height:100%;}
+.bl-book h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:calc(1.55em * 2);text-align:center;}
+.bl-book .bl-price{min-height:calc(1.6em * 2);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;}
+.bl-book .bl-price .line-through{margin-right:0;}
+.bl-book > .w-full:last-child{margin-top:auto;}
+.bl-book .bl-book-image,.bl-dark .bl-book .bl-book-image{aspect-ratio:2/3;align-items:center;}
+.bl-book .bl-book-image img,.bl-dark .bl-book .bl-book-image img{width:100%;height:100%;object-fit:cover;}
+.bl-hcard{display:flex;flex-direction:column;}
+.bl-hcard h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3em;}
+.bl-hcard-price{flex-direction:column;align-items:center;gap:2px;min-height:3.2em;justify-content:flex-end;}
