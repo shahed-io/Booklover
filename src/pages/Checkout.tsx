@@ -1498,13 +1498,8 @@ const Checkout = () => {
               </span>
             </button>
           ) : (() => {
-            const isWallet = paymentMethod === 'wallet';
-            const gradient = isWallet
-              ? 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 45%, #4c1d95 100%)'
-              : 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 45%, #1e3a8a 100%)';
-            const shadow = isWallet
-              ? 'shadow-[0_12px_40px_-8px_rgba(139,92,246,0.55)] hover:shadow-[0_18px_55px_-8px_rgba(139,92,246,0.75)]'
-              : 'shadow-[0_12px_40px_-8px_rgba(79,70,229,0.55)] hover:shadow-[0_18px_55px_-8px_rgba(79,70,229,0.75)]';
+            const gradient = 'linear-gradient(135deg, #ef404e 0%, #d21f2f 45%, #8e1326 100%)';
+            const shadow = 'shadow-[0_12px_40px_-8px_rgba(210,31,47,0.55)] hover:shadow-[0_18px_55px_-8px_rgba(210,31,47,0.75)]';
             return (
               <button
                 type="submit"
@@ -1520,7 +1515,7 @@ const Checkout = () => {
                   ) : (
                     <>
                       <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-white/40">
-                        {isWallet ? <Wallet size={16} className="text-violet-700" /> : <FileText size={16} className="text-indigo-700" />}
+                        {isWallet ? <Wallet size={16} className="text-[#8e1326]" /> : <FileText size={16} className="text-[#8e1326]" />}
                       </span>
                       <span className="tracking-wide">
                          {isWallet ? 'ওয়ালেট দিয়ে পরিশোধ করুন' : paymentMethod === 'cod' ? checkoutCfg.codButtonText : 'অর্ডার কনফার্ম করুন'}
