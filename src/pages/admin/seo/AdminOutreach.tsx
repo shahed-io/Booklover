@@ -468,7 +468,7 @@ const AdminOutreach = () => {
                         </a>
                       )}
                     </td>
-                    <td className="px-3 py-3 text-muted-foreground capitalize">{p.category.replace('_', ' ')}</td>
+                    <td className="px-3 py-3 text-muted-foreground capitalize">{(p.category ?? '').replace('_', ' ')}</td>
                     <td className="px-3 py-3">
                       {p.contact_name && <div className="text-foreground">{p.contact_name}</div>}
                       {p.contact_email && <div className="text-[11px] text-muted-foreground break-all">{p.contact_email}</div>}

@@ -23,7 +23,7 @@ interface Transaction {
   balance_after: number;
   note: string | null;
   reference_id: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   profiles?: { display_name: string | null; email: string | null } | undefined;
 
