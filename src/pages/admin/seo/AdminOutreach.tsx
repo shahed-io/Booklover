@@ -118,7 +118,7 @@ const AdminOutreach = () => {
       .select('*')
       .order('created_at', { ascending: false });
     if (error) toast.error(error.message);
-    setList(data || []);
+    setList((data || []).map(d => ({ ...d, pitch_template: d.pitch_template ?? 'guest_post', status: d.status ?? 'prospect' })));
     setLoading(false);
   };
 
