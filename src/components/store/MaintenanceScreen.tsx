@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Clock, Mail, Phone, MapPin, Globe, ShieldCheck, Sparkles, Facebook } from 'lucide-react';
 import type { MaintenanceSettings } from '@/hooks/useMaintenanceMode';
-import mascot from '@/assets/maintenance-mascot.png';
+import mascot from '@/assets/maintenance-mascot.webp';
 import CustomMaintenanceScreen from './CustomMaintenanceScreen';
 
 const WhatsAppIcon = ({ size = 20 }: { size?: number | undefined }) => (

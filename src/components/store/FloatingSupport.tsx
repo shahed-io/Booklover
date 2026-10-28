@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Loader2, Minimize2, MessageCircle, MessageCircleMore, Facebook, Send as TelegramIcon, Link as LinkIcon, Phone, Mail, Instagram, Twitter, Youtube, Video, Headphones, LifeBuoy, HelpCircle, Globe } from 'lucide-react';
-import aiLogo from '@/assets/ai-support-agent.png';
+import aiLogo from '@/assets/ai-support-agent.webp';
 
 /** Professional AI support agent avatar — used across header, message avatars, and pill button */
 const AiLogo = ({ size = 20, className = '', glow = false }: { size?: number | undefined; className?: string | undefined; glow?: boolean | undefined }) => (
