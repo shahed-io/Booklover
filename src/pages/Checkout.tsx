@@ -171,7 +171,7 @@ const Checkout = () => {
   const [submitError, setSubmitError] = useState('');
   const [summaryOpen, setSummaryOpen] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const abandonedTimer = useRef<ReturnType<typeof setTimeout>>();
+  const abandonedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [walletBalance, setWalletBalance] = useState(0);
   const [refCreditBalance, setRefCreditBalance] = useState(0);
   const [refCreditApplied, setRefCreditApplied] = useState(0);

@@ -110,7 +110,7 @@ const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOr
 
   // Persistent session token for abandoned-checkout tracking (Quick Order)
   const sessionTokenRef = useRef<string>('');
-  const abandonedTimer = useRef<ReturnType<typeof setTimeout>>();
+  const abandonedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const orderPlacedRef = useRef(false);
   if (!sessionTokenRef.current) {
     let tok = '';

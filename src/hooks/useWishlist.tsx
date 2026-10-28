@@ -45,7 +45,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
       product_id: item.product_id,
       product_name: item.product_name,
       product_price: item.product_price,
-      product_image: item.product_image,
+      product_image: item.product_image ?? null,
     }));
     await supabase.from('wishlists').upsert(rows, { onConflict: 'user_id,product_id', ignoreDuplicates: true });
   };

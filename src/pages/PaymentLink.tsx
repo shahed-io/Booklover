@@ -40,7 +40,7 @@ export default function PaymentLink() {
       const { data, error } = await supabase.from('payment_links').select('*').eq('slug', slug).maybeSingle();
       if (error || !data) { setLoading(false); return; }
       setLink(data);
-      setForm(f => ({ ...f, quantity: data.quantity || 1, payment_method: (data.payment_methods?.[0]?.name) || '' }));
+      setForm(f => ({ ...f, quantity: data.quantity || 1, payment_method: ((data.payment_methods as Array<{ name?: string }> | null)?.[0]?.name) || '' }));
       // Restore any pending form data (e.g. after login redirect)
       let hadPending = false;
       try {

@@ -203,7 +203,7 @@ const useGoogleSearch = () => {
         if (data) {
           setCategories(data.slice(0, 8));
           const map: Record<string, string> = {};
-          data.forEach((c: Category) => { map[c.id] = c.name; });
+          data.forEach((c: Pick<Category, "id" | "name">) => { map[c.id] = c.name; });
           setCategoryMap(map);
         }
       });
@@ -258,7 +258,7 @@ const useGoogleSearch = () => {
         if (error || !data) return { products: [], didYouMean: '' };
         matchedIds = Array.isArray(data.matchedIds) ? data.matchedIds : [];
         dym = typeof data.didYouMean === 'string' ? data.didYouMean : '';
-        aiCacheRef.current.set(cacheKey, { ids: matchedIds, didYouMean: dym });
+        aiCacheRef.current.set(cacheKey, { ids: matchedIds ?? [], didYouMean: dym });
       } catch {
         return { products: [], didYouMean: '' };
       }
@@ -1033,7 +1033,7 @@ const SearchBar = ({ className = '', variant = 'standalone', onClose }: SearchBa
   };
 
   const showRecent = !query.trim() && recent.length > 0;
-  const showEmpty = !loading && query.trim() && results.length === 0;
+  const showEmpty = !loading && !!query.trim() && results.length === 0;
   const showResults = !loading && results.length > 0;
 
   if (variant === 'standalone') {

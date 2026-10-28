@@ -833,7 +833,7 @@ const UserDashboard = () => {
     }
     setUsernameStatus('checking'); setUsernameError('');
     const timer = setTimeout(async () => {
-      const { data, error } = await supabase.rpc('is_username_available', { p_username: trimmed, p_user_id: user?.id || null });
+      const { data, error } = await supabase.rpc('is_username_available', { p_username: trimmed, p_user_id: user?.id });
       if (error) { setUsernameStatus('invalid'); setUsernameError('চেক করতে সমস্যা হয়েছে'); return; }
       setUsernameStatus(data ? 'available' : 'taken');
       setUsernameError(data ? '' : 'এই ইউজারনেমটি ইতিমধ্যে নেওয়া হয়েছে');
