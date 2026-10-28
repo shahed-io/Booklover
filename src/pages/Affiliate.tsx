@@ -131,9 +131,9 @@ const Affiliate = () => {
       if (!accRes.data && profileRes.data) {
         setForm(f => ({
           ...f,
-          applicant_name: f.applicant_name || profileRes.data.display_name || '',
-          applicant_email: f.applicant_email || profileRes.data.email || user.email || '',
-          applicant_phone: f.applicant_phone || profileRes.data.phone || '',
+          applicant_name: f.applicant_name || profileRes.data!.display_name || '',
+          applicant_email: f.applicant_email || profileRes.data!.email || user.email || '',
+          applicant_phone: f.applicant_phone || profileRes.data!.phone || '',
         }));
       }
 
@@ -243,7 +243,7 @@ const Affiliate = () => {
     } finally {
       setApplying(false);
     }
-  };
+   return undefined; };
 
   const referralLink = account ? `${window.location.origin}/?ref=${account.referral_code}` : '';
 

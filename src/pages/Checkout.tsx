@@ -239,7 +239,7 @@ const Checkout = () => {
         availablePaymentMethods.find(pm => pm.id === 'bkash_online') ||
         availablePaymentMethods.find(pm => pm.id !== 'wallet') ||
         availablePaymentMethods[0];
-      setPaymentMethod(preferred.id);
+      setPaymentMethod(preferred!.id);
     }
   }, [availablePaymentMethods, paymentMethod]);
 
@@ -1217,7 +1217,7 @@ const Checkout = () => {
                 placeholder="1XXXXXXXXX"
                 inputClassName="py-3"
               />
-              {errors.phone && <p className="text-destructive text-xs mt-1">{errors.phone}</p>}
+              {errors['phone'] && <p className="text-destructive text-xs mt-1">{errors['phone']}</p>}
             </div>
 
             {/* Admin-defined extra fields (delivery location, address, etc.) */}

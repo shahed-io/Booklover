@@ -321,16 +321,16 @@ const AdminProducts = () => {
     for (let i = 0; i < targets.length; i++) {
       if (autoSeoCancelRef.current) break;
       const p = targets[i];
-      setAutoSeoProgress({ done: i, total: targets.length, current: p.name });
+      setAutoSeoProgress({ done: i, total: targets.length, current: p!.name });
       try {
-        const catName = categories.find(c => c.id === p.category_id)?.name || '';
+        const catName = categories.find(c => c.id === p!.category_id)?.name || '';
         const { data, error } = await supabase.functions.invoke('generate-product-content', {
           body: {
-            productName: p.name,
+            productName: p!.name,
             category: catName,
             brand: (p as any).brand || '',
             productType: (p as any).product_type || '',
-            price: p.price ? String(p.price) : '',
+            price: p!.price ? String(p!.price) : '',
             durationPlans: '',
             accountType: (p as any).account_type || '',
             subtitle: (p as any).subtitle || '',
@@ -346,13 +346,13 @@ const AdminProducts = () => {
         const { error: upErr } = await supabase
           .from('products')
           .update({ seo_title, seo_description })
-          .eq('id', p.id);
+          .eq('id', p!.id);
         if (upErr) throw upErr;
         success++;
         // Optimistic local update
-        setProducts(prev => prev.map(x => x.id === p.id ? { ...x, seo_title, seo_description } : x));
+        setProducts(prev => prev.map(x => x.id === p!.id ? { ...x, seo_title, seo_description } : x));
       } catch (err: any) {
-        console.error('Auto SEO failed for', p.name, err);
+        console.error('Auto SEO failed for', p!.name, err);
         failed++;
       }
       // Small delay to respect rate limits
@@ -513,7 +513,7 @@ const AdminProducts = () => {
       discount_percent: form.discount_percent,
     });
     if (!validation.success) {
-      toast.error(validation.error.errors[0].message);
+      toast.error(validation.error.errors[0]!.message);
       return;
     }
 
@@ -541,9 +541,9 @@ const AdminProducts = () => {
     const finalAttrs = [...hiddenAttrs, ...cleanAttrs];
 
     // Use first duration plan price as default price if plans exist and no manual price
-    const firstPlanPrice = validPlans.length ? parseFloat(validPlans[0].price) : null;
+    const firstPlanPrice = validPlans.length ? parseFloat(validPlans[0]!.price) : null;
     const mainPrice = parseFloat(form.price) || firstPlanPrice || 0;
-    const mainOriginalPrice = form.original_price ? parseFloat(form.original_price) : (validPlans.length && validPlans[0].original_price ? parseFloat(validPlans[0].original_price) : null);
+    const mainOriginalPrice = form.original_price ? parseFloat(form.original_price) : (validPlans.length && validPlans[0]!.original_price ? parseFloat(validPlans[0]!.original_price) : null);
 
     const payload: any = {
       name: form.name,

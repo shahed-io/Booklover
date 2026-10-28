@@ -156,12 +156,12 @@ const AdminBlog = () => {
     setAiMode('bulk');
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseUrl = import.meta.env['VITE_SUPABASE_URL'];
       const res = await fetch(`${supabaseUrl}/functions/v1/generate-product-blog`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Authorization': `Bearer ${session?.access_token || import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY']}`,
         },
         body: JSON.stringify({ product_ids: targetIds, auto_publish: autoPublish, ai_model: aiModel }),
       });
@@ -191,12 +191,12 @@ const AdminBlog = () => {
     setAiMode('single');
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseUrl = import.meta.env['VITE_SUPABASE_URL'];
       const res = await fetch(`${supabaseUrl}/functions/v1/generate-product-blog`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Authorization': `Bearer ${session?.access_token || import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY']}`,
         },
         body: JSON.stringify({ product_id: productId, bulk: false, auto_publish: autoPublish, ai_model: aiModel }),
       });

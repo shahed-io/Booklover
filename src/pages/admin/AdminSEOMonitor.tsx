@@ -64,7 +64,7 @@ const AdminSEOMonitor = () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
       const r = await fetch(
         `https://${projectId}.supabase.co/functions/v1/seo-monitor-check`,
         {
@@ -130,7 +130,7 @@ const AdminSEOMonitor = () => {
     try {
       const r = await fetch(`https://tzkmjdcpgkbztxlchdpu.supabase.co/functions/v1/prerender-page?path=/`, { cache: 'no-store' });
       const html = await r.text();
-      const scripts = Array.from(html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map(m => m[1].trim());
+      const scripts = Array.from(html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map(m => m[1]!.trim());
       const types = new Set<string>();
       let validCount = 0;
       let totalCount = scripts.length;

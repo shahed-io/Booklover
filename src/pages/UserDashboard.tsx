@@ -469,7 +469,7 @@ const UserDashboard = () => {
       setTotalPointsRedeemed((data as any).total_points_redeemed || 0);
     } else {
       if (lastErr) console.warn('fetchProfile failed after retries:', lastErr.message);
-      setProfile({ display_name: user.user_metadata?.display_name || '', username: null, email: user.email || '', phone: '', avatar_url: null, referral_code: null, referral_earnings: 0, referral_credit: 0, referral_discount: 0 });
+      setProfile({ display_name: user.user_metadata?.['display_name'] || '', username: null, email: user.email || '', phone: '', avatar_url: null, referral_code: null, referral_earnings: 0, referral_credit: 0, referral_discount: 0 });
     }
   };
 
@@ -980,7 +980,7 @@ const UserDashboard = () => {
 
   const handleLogout = async () => { await signOut(); navigate('/'); };
 
-  const displayName = profile.display_name || user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
+  const displayName = profile.display_name || user?.user_metadata?.['display_name'] || user?.email?.split('@')[0] || 'User';
   const initials = displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
   const completedOrders = orders.filter(o => o.status === 'completed').length;
   const totalSpent = orders.filter(o => o.status === 'completed').reduce((s, o) => s + o.total, 0);

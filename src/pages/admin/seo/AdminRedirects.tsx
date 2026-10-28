@@ -28,7 +28,7 @@ const AdminRedirects = () => {
     const updated = [...redirects, { ...newR, id: crypto.randomUUID() }];
     setRedirects(updated); await persist(updated);
     setNewR({ from_path: '', to_path: '', type: '301' });
-  };
+   return undefined; };
 
   const remove = async (id: string) => { const updated = redirects.filter(r => r.id !== id); setRedirects(updated); await persist(updated); };
 

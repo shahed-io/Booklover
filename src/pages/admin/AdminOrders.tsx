@@ -196,7 +196,7 @@ const OrderInvoice = ({ order, onClose }: { order: any; onClose: () => void }) =
                 <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.9 }}><span style={{ display: 'inline-block', minWidth: '62px' }}>Method:</span> <strong style={{ color: '#1a1a2e' }}>{PM_LABELS[order.payment_method] || order.payment_method}</strong></div>
                 {order.transaction_id && <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.9, marginTop: '6px' }}><span style={{ display: 'inline-block', minWidth: '62px' }}>TrxID:</span> <span style={{ color: '#1a1a2e', fontFamily: 'monospace', background: '#e8e5f7', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', display: 'inline-block', lineHeight: 1.4 }}>{order.transaction_id}</span></div>}
                 <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.9, marginTop: '6px' }}>
-                  <span style={{ display: 'inline-block', minWidth: '62px' }}>Status:</span> <span style={{ background: brandColor, color: '#fff', padding: '3px 12px', borderRadius: '999px', fontSize: '11px', fontWeight: 600, display: 'inline-block', lineHeight: 1.4 }}>{statusCfg.label}</span>
+                  <span style={{ display: 'inline-block', minWidth: '62px' }}>Status:</span> <span style={{ background: brandColor, color: '#fff', padding: '3px 12px', borderRadius: '999px', fontSize: '11px', fontWeight: 600, display: 'inline-block', lineHeight: 1.4 }}>{statusCfg!.label}</span>
                 </div>
                 {order.coupon_code && <div style={{ fontSize: '12px', color: '#059669', marginTop: '6px' }}>🎟️ Coupon: <strong>{order.coupon_code}</strong></div>}
               </div>
@@ -280,17 +280,17 @@ const OrderTimeline = ({ timeline }: { timeline: any[] }) => {
     <div className="space-y-0">
       {timeline.map((event, idx) => {
         const cfg = STATUS_CONFIG[event.status] || STATUS_CONFIG['pending'];
-        const Icon = cfg.icon;
+        const Icon = cfg!.icon;
         const isLast = idx === timeline.length - 1;
         return (
           <div key={event.id} className="flex gap-3 relative">
             {!isLast && <div className="absolute left-3.5 top-7 w-px bg-border h-full" />}
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${cfg.dot} bg-opacity-20 border border-current`} style={{ color: `hsl(var(--${cfg.dot.replace('bg-','')}))` }}>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${cfg!.dot} bg-opacity-20 border border-current`} style={{ color: `hsl(var(--${cfg!.dot.replace('bg-','')}))` }}>
               <Icon size={12} />
             </div>
             <div className="flex-1 pb-4">
               <div className="flex items-center justify-between">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${cfg.color}`}>{cfg.label}</span>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${cfg!.color}`}>{cfg!.label}</span>
                 <span className="text-[10px] text-muted-foreground">{new Date(event.created_at).toLocaleString('en-BD', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
               </div>
               {event.note && <p className="text-xs text-muted-foreground mt-1">{event.note}</p>}
@@ -532,7 +532,7 @@ const OrderDetailModal = ({
             <div className="min-w-0 flex-1">
               <h2 className="text-base sm:text-lg font-bold text-foreground truncate">অর্ডার #{order.order_number}</h2>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${cfg.color}`}>{cfg.label}</span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${cfg!.color}`}>{cfg!.label}</span>
                 <p className="text-[11px] text-muted-foreground">{new Date(order.created_at).toLocaleString('en-BD')}</p>
               </div>
             </div>

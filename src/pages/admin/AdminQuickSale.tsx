@@ -260,7 +260,7 @@ const AdminQuickSale = () => {
   const addEntry = () => setEntries(prev => [...prev, emptyEntry()]);
 
   const openLicensePicker = async (idx: number) => {
-    const product = entries[idx].product;
+    const product = entries[idx]!.product;
     if (!product) return toast.error('আগে প্রোডাক্ট সিলেক্ট করুন');
     setLicensePickerIdx(idx);
     setLicensesLoading(true);
@@ -272,7 +272,7 @@ const AdminQuickSale = () => {
       .order('created_at', { ascending: true });
     setAvailableLicenses(data || []);
     setLicensesLoading(false);
-  };
+   return undefined; };
 
   const selectLicense = (idx: number, lic: LicenseKey) => {
     updateEntry(idx, { license: lic, manual_key: lic.key_value, manual_extra: lic.extra_info || '' });
@@ -386,7 +386,7 @@ const AdminQuickSale = () => {
       toast.error('ত্রুটি: ' + (err?.message || 'Unknown'));
     }
     setSaving(false);
-  };
+   return undefined; };
 
   if (loading) {
     return (

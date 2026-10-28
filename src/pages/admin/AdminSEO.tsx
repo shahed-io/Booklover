@@ -110,7 +110,7 @@ const AdminSEO = () => {
     await saveRedirects(updated);
     setNewRedirect({ from_path: '', to_path: '', type: '301' });
     toast.success('রিডাইরেক্ট যোগ হয়েছে!');
-  };
+   return undefined; };
   const removeRedirect = async (id: string) => {
     const updated = redirects.filter(r => r.id !== id);
     setRedirects(updated);
@@ -120,11 +120,11 @@ const AdminSEO = () => {
 
   /* ─── Checklist items ─── */
   const checklist = [
-    { label: 'Google Analytics কানেক্ট করা হয়েছে', done: !!settings.google_analytics, section: 'google' },
-    { label: 'Google Search Console ভেরিফাই করা হয়েছে', done: !!settings.google_site_verification, section: 'google' },
+    { label: 'Google Analytics কানেক্ট করা হয়েছে', done: !!settings['google_analytics'], section: 'google' },
+    { label: 'Google Search Console ভেরিফাই করা হয়েছে', done: !!settings['google_site_verification'], section: 'google' },
     { label: 'Sitemap.xml সাবমিট করা হয়েছে', done: true, section: 'sitemap' },
     { label: 'Robots.txt কনফিগার করা হয়েছে', done: true, section: 'sitemap' },
-    { label: 'OG Image সেট করা হয়েছে', done: !!settings.og_image, section: 'meta' },
+    { label: 'OG Image সেট করা হয়েছে', done: !!settings['og_image'], section: 'meta' },
     { label: `প্রোডাক্ট SEO (${stats.withSeo}/${stats.products})`, done: stats.withSeo >= stats.products && stats.products > 0, section: 'products' },
     { label: 'Schema Markup (Organization, Product, FAQ)', done: true, section: 'schema' },
   ];
@@ -205,7 +205,7 @@ const AdminSEO = () => {
       </div>
 
       {/* ═══ QUICK SETUP (Google) ═══ */}
-      <SectionHeader id="google" icon={BarChart2} title="🔗 Google কানেক্ট করুন" subtitle="Analytics ও Search Console সেটআপ" badge={settings.google_analytics ? '✓ সক্রিয়' : 'সেটআপ করুন'} />
+      <SectionHeader id="google" icon={BarChart2} title="🔗 Google কানেক্ট করুন" subtitle="Analytics ও Search Console সেটআপ" badge={settings['google_analytics'] ? '✓ সক্রিয়' : 'সেটআপ করুন'} />
       {activeSection === 'google' && (
         <div className="glass-card rounded-2xl p-6 space-y-5 border-t-2 border-primary/30">
           {/* Guide Steps */}
@@ -229,17 +229,17 @@ const AdminSEO = () => {
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                 Google Analytics ID <span className="opacity-60">(G-XXXXXXXXXX)</span>
               </label>
-              <input value={settings.google_analytics || ''} onChange={e => setSettings(p => ({ ...p, google_analytics: e.target.value.toUpperCase() }))}
+              <input value={settings['google_analytics'] || ''} onChange={e => setSettings(p => ({ ...p, google_analytics: e.target.value.toUpperCase() }))}
                 placeholder="G-XXXXXXXXXX" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary" />
-              {settings.google_analytics && <p className="text-xs text-green-400 mt-1">✓ অটোমেটিক সকল পেজে যোগ হবে</p>}
+              {settings['google_analytics'] && <p className="text-xs text-green-400 mt-1">✓ অটোমেটিক সকল পেজে যোগ হবে</p>}
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                 Search Console Verification Code
               </label>
-              <input value={settings.google_site_verification || ''} onChange={e => setSettings(p => ({ ...p, google_site_verification: e.target.value }))}
+              <input value={settings['google_site_verification'] || ''} onChange={e => setSettings(p => ({ ...p, google_site_verification: e.target.value }))}
                 placeholder="content= এর ভ্যালু পেস্ট করুন" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary" />
-              {settings.google_site_verification && <p className="text-xs text-green-400 mt-1">✓ ভেরিফিকেশন ট্যাগ অটো-ইনজেক্ট হবে</p>}
+              {settings['google_site_verification'] && <p className="text-xs text-green-400 mt-1">✓ ভেরিফিকেশন ট্যাগ অটো-ইনজেক্ট হবে</p>}
             </div>
           </div>
 
@@ -257,7 +257,7 @@ const AdminSEO = () => {
       )}
 
       {/* ═══ META & OG SETTINGS ═══ */}
-      <SectionHeader id="meta" icon={FileText} title="📝 মেটা ট্যাগ ও OG ইমেজ" subtitle="সোশ্যাল শেয়ার ও সার্চ রেজাল্টে কি দেখাবে" badge={settings.og_image ? '✓ সেট' : 'সেটআপ করুন'} />
+      <SectionHeader id="meta" icon={FileText} title="📝 মেটা ট্যাগ ও OG ইমেজ" subtitle="সোশ্যাল শেয়ার ও সার্চ রেজাল্টে কি দেখাবে" badge={settings['og_image'] ? '✓ সেট' : 'সেটআপ করুন'} />
       {activeSection === 'meta' && (
         <div className="glass-card rounded-2xl p-6 space-y-4 border-t-2 border-primary/30">
           <div className="bg-muted/10 rounded-xl p-4 border border-border/50 text-xs text-muted-foreground leading-relaxed">
@@ -266,19 +266,19 @@ const AdminSEO = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">ডিফল্ট OG Image URL</label>
-              <input value={settings.og_image || ''} onChange={e => setSettings(p => ({ ...p, og_image: e.target.value }))}
+              <input value={settings['og_image'] || ''} onChange={e => setSettings(p => ({ ...p, og_image: e.target.value }))}
                 placeholder="https://booklover.com.bd/og-image.png"
                 className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Twitter / X হ্যান্ডেল</label>
-              <input value={settings.twitter_site || ''} onChange={e => setSettings(p => ({ ...p, twitter_site: e.target.value }))}
+              <input value={settings['twitter_site'] || ''} onChange={e => setSettings(p => ({ ...p, twitter_site: e.target.value }))}
                 placeholder="@booklover"
                 className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
             </div>
             <div className="md:col-span-2">
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">ডিফল্ট মেটা ডেসক্রিপশন <span className="opacity-60">(160 অক্ষর)</span></label>
-              <textarea value={settings.meta_description_default || ''} onChange={e => setSettings(p => ({ ...p, meta_description_default: e.target.value }))}
+              <textarea value={settings['meta_description_default'] || ''} onChange={e => setSettings(p => ({ ...p, meta_description_default: e.target.value }))}
                 placeholder="Booklover – Bangladesh's most trusted digital software shop..."
                 rows={2}
                 className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary resize-none" />
@@ -293,7 +293,7 @@ const AdminSEO = () => {
               {SITE_NAME} – Buy Digital Software at Best Price in Bangladesh
             </p>
             <p className="text-xs text-gray-600 leading-relaxed mt-0.5">
-              {settings.meta_description_default || 'Booklover – Bangladesh\'s most trusted digital software shop. Buy Windows 11, Microsoft Office 365, Adobe Creative Cloud at lowest price.'}
+              {settings['meta_description_default'] || 'Booklover – Bangladesh\'s most trusted digital software shop. Buy Windows 11, Microsoft Office 365, Adobe Creative Cloud at lowest price.'}
             </p>
           </div>
         </div>

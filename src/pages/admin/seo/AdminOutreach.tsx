@@ -78,13 +78,13 @@ const toTSV = (rows: Prospect[]) => {
 
 const Pill = ({ status }: { status: string }) => {
   const s = STATUSES.find(x => x.value === status) || STATUSES[0];
-  const Icon = s.icon;
+  const Icon = s!.icon;
   return (
     <span
       className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
-      style={{ background: `${s.color}22`, color: s.color, border: `1px solid ${s.color}55` }}
+      style={{ background: `${s!.color}22`, color: s!.color, border: `1px solid ${s!.color}55` }}
     >
-      <Icon size={10} /> {s.label}
+      <Icon size={10} /> {s!.label}
     </span>
   );
 };
@@ -171,7 +171,7 @@ const AdminOutreach = () => {
     if (error) return toast.error(error.message);
     toast.success(`Snoozed ${days} day${days > 1 ? 's' : ''}`);
     load();
-  };
+   return undefined; };
 
   const markDone = async (id: string) => {
     const { error } = await supabase
@@ -181,7 +181,7 @@ const AdminOutreach = () => {
     if (error) return toast.error(error.message);
     toast.success('Marked done for today');
     load();
-  };
+   return undefined; };
 
   const save = async () => {
     if (!editing?.site_name?.trim()) { toast.error('Site name is required'); return; }
@@ -197,7 +197,7 @@ const AdminOutreach = () => {
     }
     setEditing(null);
     load();
-  };
+   return undefined; };
 
   const remove = async (id: string) => {
     if (!confirm('Delete this prospect?')) return;
@@ -205,7 +205,7 @@ const AdminOutreach = () => {
     if (error) return toast.error(error.message);
     toast.success('Deleted');
     load();
-  };
+   return undefined; };
 
   const setStatus = async (id: string, status: string) => {
     const patch: any = { status };
@@ -213,7 +213,7 @@ const AdminOutreach = () => {
     const { error } = await supabase.from('outreach_prospects').update(patch).eq('id', id);
     if (error) return toast.error(error.message);
     load();
-  };
+   return undefined; };
 
   const filtered = list.filter(p => {
     if (filter !== 'all' && p.status !== filter) return false;

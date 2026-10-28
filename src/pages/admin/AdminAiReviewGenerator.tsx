@@ -177,7 +177,7 @@ const AdminAiReviewGenerator = () => {
         await saveReviews(p, reviews);
         success++;
       } catch (e: any) {
-        console.error(p.name, e);
+        console.error(p!.name, e);
         failed++;
       }
       setBulkProgress({ done: i + 1, total: list.length });

@@ -14,7 +14,7 @@ function parseOS(ua: string): string {
 
   // iOS / iPadOS
   const iosMatch = ua.match(/(?:iPhone OS|CPU OS|iPad; CPU OS) ([\d_]+)/);
-  if (iosMatch) return `iOS ${iosMatch[1].replace(/_/g, '.')}`;
+  if (iosMatch) return `iOS ${iosMatch[1]!.replace(/_/g, '.')}`;
   if (/Mac OS X/.test(ua) && /Mobile/.test(ua)) return 'iPadOS';
 
   // Android
@@ -24,7 +24,7 @@ function parseOS(ua: string): string {
 
   // macOS
   const macMatch = ua.match(/Mac OS X ([\d_\.]+)/);
-  if (macMatch) return `macOS ${macMatch[1].replace(/_/g, '.')}`;
+  if (macMatch) return `macOS ${macMatch[1]!.replace(/_/g, '.')}`;
 
   // Linux distros
   if (/Ubuntu/.test(ua)) return 'Ubuntu Linux';
@@ -79,7 +79,7 @@ function parseBrowser(ua: string): string {
 function parseAndroidModel(ua: string): string | null {
   const m = ua.match(/Android\s+[\d\.]+;\s*([^;)]+?)(?:\s+Build\/[^)]*)?\)/i);
   if (!m) return null;
-  let model = m[1].trim();
+  let model = m[1]!.trim();
   // Strip locale tokens like `en-us` or `wv` (WebView marker) at start
   model = model.replace(/^[a-z]{2}-[a-z]{2};?\s*/i, '').trim();
   if (model.toLowerCase() === 'wv') return null;

@@ -35,7 +35,7 @@ export default function AdminEmailDashboard() {
     setLoading(true);
     try {
       const since = new Date();
-      since.setDate(since.getDate() - RANGES[range]);
+      since.setDate(since.getDate() - RANGES[range]!);
       const { data, error } = await supabase
         .from("email_send_log")
         .select("id, message_id, template_name, recipient_email, status, error_message, created_at")

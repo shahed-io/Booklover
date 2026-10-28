@@ -151,7 +151,7 @@ export default function WalletCustomerDetailModal({ customer, onClose }: Props) 
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-lg font-bold flex-shrink-0">
-                {(customer.display_name || customer.email || '?')[0].toUpperCase()}
+                {(customer.display_name || customer.email || '?')[0]!.toUpperCase()}
               </div>
               <div className="min-w-0">
                 <h2 className="text-lg font-bold truncate flex items-center gap-2">

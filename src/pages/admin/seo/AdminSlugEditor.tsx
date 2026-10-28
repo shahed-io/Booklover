@@ -34,7 +34,7 @@ const AdminSlugEditor = () => {
     setSaving(null); setSaved(product.id);
     setTimeout(() => setSaved(null), 2000);
     toast.success('Slug updated! Remember to add a redirect for the old URL.');
-  };
+   return undefined; };
 
   const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.slug.toLowerCase().includes(search.toLowerCase()));
 

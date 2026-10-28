@@ -159,7 +159,7 @@ const ChatHistoryPanel = () => {
       const grouped: Record<string, ChatConversation[]> = {};
       for (const c of convos) {
         if (!grouped[c.session_id]) grouped[c.session_id] = [];
-        grouped[c.session_id].push(c);
+        grouped[c.session_id]!.push(c);
       }
 
       const sessionList: GroupedSession[] = Object.entries(grouped).map(([sid, msgs]) => {
@@ -167,9 +167,9 @@ const ChatHistoryPanel = () => {
         return {
           session_id: sid,
           messages: sorted,
-          first_at: sorted[0].created_at,
-          last_at: sorted[sorted.length - 1].created_at,
-          device: getDeviceFromUA(sorted[0].user_agent),
+          first_at: sorted[0]!.created_at,
+          last_at: sorted[sorted.length - 1]!.created_at,
+          device: getDeviceFromUA(sorted[0]!.user_agent),
         };
       });
 
@@ -264,7 +264,7 @@ const ChatHistoryPanel = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
-                {sessions.length > 0 ? formatTime(sessions[0].last_at) : '—'}
+                {sessions.length > 0 ? formatTime(sessions[0]!.last_at) : '—'}
               </p>
               <p className="text-xs text-muted-foreground">সর্বশেষ চ্যাট</p>
             </div>
@@ -309,7 +309,7 @@ const ChatHistoryPanel = () => {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">
-                      {firstMsg.user_message.length > 60 ? firstMsg.user_message.slice(0, 60) + '...' : firstMsg.user_message}
+                      {firstMsg!.user_message.length > 60 ? firstMsg!.user_message.slice(0, 60) + '...' : firstMsg!.user_message}
                     </p>
                     <div className="flex items-center gap-3 mt-0.5">
                       <span className="text-xs text-muted-foreground flex items-center gap-2">

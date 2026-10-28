@@ -70,7 +70,7 @@ const Ga4RealtimeWidget = ({ gaId }: { gaId: string }) => {
     orders24.forEach((o) => {
       const t = new Date(o.created_at).getTime();
       const idx = 23 - Math.floor((now - t) / (60 * 60 * 1000));
-      if (idx >= 0 && idx < 24) buckets[idx].count += 1;
+      if (idx >= 0 && idx < 24) buckets[idx]!.count += 1;
     });
 
     setM({

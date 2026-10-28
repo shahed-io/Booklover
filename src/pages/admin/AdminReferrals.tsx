@@ -334,7 +334,7 @@ const AdminReferrals = () => {
                             value={r.status}
                             disabled={updatingId === r.id}
                             onChange={e => handleStatusChange(r.id, e.target.value)}
-                            className={`text-xs font-bold px-3 py-1.5 rounded-xl border cursor-pointer outline-hidden transition-all appearance-none pr-7 ${st.color}`}
+                            className={`text-xs font-bold px-3 py-1.5 rounded-xl border cursor-pointer outline-hidden transition-all appearance-none pr-7 ${st!.color}`}
                             style={{ background: 'transparent' }}
                           >
                             {STATUS_OPTIONS.map(opt => (

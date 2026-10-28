@@ -35,7 +35,7 @@ const AdminCategories = () => {
   const [uploading, setUploading] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [showAiPanel, setShowAiPanel] = useState(false);
-  const [aiStyle, setAiStyle] = useState(STYLE_PRESETS[0].value);
+  const [aiStyle, setAiStyle] = useState(STYLE_PRESETS[0]!.value);
   const [aiCustomPrompt, setAiCustomPrompt] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,7 +130,7 @@ const AdminCategories = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validation = categorySchema.safeParse(form);
-    if (!validation.success) { toast.error(validation.error.errors[0].message); return; }
+    if (!validation.success) { toast.error(validation.error.errors[0]!.message); return; }
     setSaving(true);
     const sanitized = validation.data;
     const uploadedUrl = await uploadImage();

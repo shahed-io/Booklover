@@ -237,8 +237,8 @@ export function installCopyDeterrents(opts: CopyDeterrentOptions = {}): () => vo
               </svg>
             </div>
             <div class="__cp_text">
-              <div class="__cp_title">${msg.icon} ${msg.title}</div>
-              <div class="__cp_sub">${msg.sub}</div>
+              <div class="__cp_title">${msg!.icon} ${msg!.title}</div>
+              <div class="__cp_sub">${msg!.sub}</div>
             </div>
           </div>
           <div class="__cp_bar"></div>

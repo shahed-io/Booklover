@@ -118,7 +118,7 @@ export default function AdminGoogleIndexing() {
     } finally {
       setSaving(false);
     }
-  };
+   return undefined; };
 
   const deleteKey = async () => {
     if (!confirm("Remove stored Google service account key?")) return;

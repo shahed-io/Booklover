@@ -66,7 +66,7 @@ const AdminProductSeo = () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
       const res = await fetch(`https://${projectId}.supabase.co/functions/v1/generate-product-content`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -113,7 +113,7 @@ const AdminProductSeo = () => {
 
     const { data: { session } } = await supabase.auth.getSession();
     const token = session?.access_token;
-    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
 
     let done = 0;
     for (const product of targets) {

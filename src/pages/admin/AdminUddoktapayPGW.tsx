@@ -72,7 +72,7 @@ export default function AdminUddoktapayPGW() {
     onError: (e: any) => toast.error(e.message || 'Save failed'),
   });
 
-  const webhookUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/uddoktapay-webhook`;
+  const webhookUrl = `${import.meta.env['VITE_SUPABASE_URL']}/functions/v1/uddoktapay-webhook`;
   const returnUrl = `${window.location.origin}/uddoktapay/return`;
   const cancelUrl = `${window.location.origin}/checkout?uddoktapay=cancelled`;
 

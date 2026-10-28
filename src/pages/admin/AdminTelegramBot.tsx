@@ -205,17 +205,17 @@ const AdminTelegramBot = () => {
             <label className="text-xs text-muted-foreground mb-1.5 block">বট স্ট্যাটাস</label>
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setSettings(s => ({ ...s, telegram_shop_bot_enabled: s.telegram_shop_bot_enabled === 'true' ? 'false' : 'true' }))}
+                onClick={() => setSettings(s => ({ ...s, telegram_shop_bot_enabled: s['telegram_shop_bot_enabled'] === 'true' ? 'false' : 'true' }))}
                 className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
-                  settings.telegram_shop_bot_enabled === 'true' ? 'bg-green-500' : 'bg-muted'
+                  settings['telegram_shop_bot_enabled'] === 'true' ? 'bg-green-500' : 'bg-muted'
                 }`}
               >
                 <span className={`inline-block h-5 w-5 rounded-full bg-white transition-transform ${
-                  settings.telegram_shop_bot_enabled === 'true' ? 'translate-x-6' : 'translate-x-1'
+                  settings['telegram_shop_bot_enabled'] === 'true' ? 'translate-x-6' : 'translate-x-1'
                 }`} />
               </button>
-              <span className={`text-sm font-medium ${settings.telegram_shop_bot_enabled === 'true' ? 'text-green-500' : 'text-muted-foreground'}`}>
-                {settings.telegram_shop_bot_enabled === 'true' ? '✅ সক্রিয়' : '⏸️ নিষ্ক্রিয়'}
+              <span className={`text-sm font-medium ${settings['telegram_shop_bot_enabled'] === 'true' ? 'text-green-500' : 'text-muted-foreground'}`}>
+                {settings['telegram_shop_bot_enabled'] === 'true' ? '✅ সক্রিয়' : '⏸️ নিষ্ক্রিয়'}
               </span>
             </div>
           </div>
@@ -224,7 +224,7 @@ const AdminTelegramBot = () => {
           <div>
             <label className="text-xs text-muted-foreground mb-1.5 block">বট ইউজারনেম</label>
             <input
-              value={settings.telegram_shop_bot_username || ''}
+              value={settings['telegram_shop_bot_username'] || ''}
               onChange={e => setSettings(s => ({ ...s, telegram_shop_bot_username: e.target.value }))}
               placeholder="Configured shop bot"
               className={inputCls}
@@ -235,7 +235,7 @@ const AdminTelegramBot = () => {
           <div>
             <label className="text-xs text-muted-foreground mb-1.5 block">Admin Chat ID (নোটিফিকেশন)</label>
             <input
-              value={settings.telegram_chat_id || ''}
+              value={settings['telegram_chat_id'] || ''}
               onChange={e => setSettings(s => ({ ...s, telegram_chat_id: e.target.value }))}
               placeholder="123456789"
               className={inputCls}
@@ -276,7 +276,7 @@ const AdminTelegramBot = () => {
           <div>
             <label className="text-xs text-muted-foreground mb-1.5 block">ওয়েলকাম মেসেজ (/start কমান্ডে)</label>
             <textarea
-              value={settings.telegram_shop_bot_welcome || ''}
+              value={settings['telegram_shop_bot_welcome'] || ''}
               onChange={e => setSettings(s => ({ ...s, telegram_shop_bot_welcome: e.target.value }))}
               rows={3}
               placeholder="🛍️ Booklover আপনাকে স্বাগতম জানাচ্ছে!"
@@ -287,7 +287,7 @@ const AdminTelegramBot = () => {
           <div>
             <label className="text-xs text-muted-foreground mb-1.5 block">ফুটার মেসেজ (হেল্প টেক্সট)</label>
             <textarea
-              value={settings.telegram_shop_bot_footer || ''}
+              value={settings['telegram_shop_bot_footer'] || ''}
               onChange={e => setSettings(s => ({ ...s, telegram_shop_bot_footer: e.target.value }))}
               rows={2}
               placeholder="📞 সমস্যা? /start দিয়ে শুরু করুন।"
@@ -383,10 +383,10 @@ const AdminTelegramBot = () => {
           <Bot size={24} className="text-[#229ED9]" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-foreground">বটটি টেস্ট করুন</p>
-            <p className="text-xs text-muted-foreground">Telegram-এ {settings.telegram_shop_bot_username || ''} সার্চ করে /start দিন</p>
+            <p className="text-xs text-muted-foreground">Telegram-এ {settings['telegram_shop_bot_username'] || ''} সার্চ করে /start দিন</p>
           </div>
           <a
-            href={settings.telegram_shop_bot_username ? `https://t.me/${settings.telegram_shop_bot_username.replace('@', '')}` : undefined}
+            href={settings['telegram_shop_bot_username'] ? `https://t.me/${settings['telegram_shop_bot_username'].replace('@', '')}` : undefined}
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#229ED9] text-white hover:bg-[#229ED9]/80 transition-colors flex items-center gap-2"

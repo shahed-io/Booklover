@@ -188,7 +188,7 @@ const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOr
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [user]);
+   return undefined; }, [user]);
 
   const applyCoupon = async () => {
     if (!couponCode.trim()) return;
@@ -454,7 +454,7 @@ const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOr
         allMethods.find(pm => pm.id === 'cod') ||
         allMethods.find(pm => pm.id !== 'wallet') ||
         allMethods[0];
-      setPaymentMethod(preferred.id);
+      setPaymentMethod(preferred!.id);
       setTransactionId('');
       setSubmitError('');
     }
@@ -573,7 +573,7 @@ const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOr
                     onChange={v => setForm(p => ({ ...p, phone: v }))}
                     placeholder="1XXXXXXXXX"
                   />
-                  {errors.phone && <p className="text-destructive text-xs mt-1">{errors.phone}</p>}
+                  {errors['phone'] && <p className="text-destructive text-xs mt-1">{errors['phone']}</p>}
                 </div>
               </div>
 

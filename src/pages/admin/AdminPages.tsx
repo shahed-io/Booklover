@@ -234,7 +234,7 @@ const AdminPages = () => {
   const qc = useQueryClient();
 
   const [activeTab, setActiveTab] = useState<'content' | 'menu'>('menu');
-  const [selectedPage, setSelectedPage] = useState(EDITABLE_PAGES[0].key);
+  const [selectedPage, setSelectedPage] = useState(EDITABLE_PAGES[0]!.key);
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [addingLinkTo, setAddingLinkTo] = useState<string | null>(null);
   const [editingLink, setEditingLink] = useState<string | null>(null);
@@ -276,7 +276,7 @@ const AdminPages = () => {
     const maxOrder = sections.reduce((m, s) => Math.max(m, s.sort_order), 0);
     persist([...sections, {
       id: genId('sec'), title: 'New Section', icon: 'Info',
-      accent: COLOR_OPTIONS[0].value, is_active: true, sort_order: maxOrder + 1, links: [],
+      accent: COLOR_OPTIONS[0]!.value, is_active: true, sort_order: maxOrder + 1, links: [],
     }]);
   };
   const updateSection = (id: string, patch: Partial<FooterSection>) =>
@@ -304,14 +304,14 @@ const AdminPages = () => {
       }],
     } : s));
     setAddingLinkTo(null);
-  };
+   return undefined; };
   const editLink = (sectionId: string, linkId: string, data: Partial<FooterLink>) => {
     if (!data.label?.trim() || !data.href?.trim()) return toast.error('Label and URL are required.');
     persist(sections.map(s => s.id === sectionId ? {
       ...s, links: s.links.map(l => l.id === linkId ? { ...l, ...data } : l),
     } : s));
     setEditingLink(null);
-  };
+   return undefined; };
   const deleteLink = (sectionId: string, linkId: string) => {
     if (!confirm('Delete this link?')) return;
     persist(sections.map(s => s.id === sectionId ? { ...s, links: s.links.filter(l => l.id !== linkId) } : s));

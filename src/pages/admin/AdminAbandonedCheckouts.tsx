@@ -110,7 +110,7 @@ export default function AdminAbandonedCheckouts() {
     toast.success('Deleted');
     setRows(prev => prev.filter(r => r.id !== id));
     if (selected?.id === id) setSelected(null);
-  };
+   return undefined; };
 
   const markContacted = async (id: string, contacted: boolean) => {
     const { error } = await supabase
@@ -121,13 +121,13 @@ export default function AdminAbandonedCheckouts() {
     setRows(prev => prev.map(r => r.id === id ? { ...r, contacted, contacted_at: contacted ? new Date().toISOString() : null } : r));
     if (selected?.id === id) setSelected(s => s ? { ...s, contacted, contacted_at: contacted ? new Date().toISOString() : null } : s);
     toast.success(contacted ? 'Marked as contacted' : 'Unmarked');
-  };
+   return undefined; };
 
   const saveAdminNotes = async (id: string, notes: string) => {
     const { error } = await supabase.from('abandoned_checkouts').update({ admin_notes: notes }).eq('id', id);
     if (error) return toast.error(error.message);
     toast.success('Notes saved');
-  };
+   return undefined; };
 
   const convertToOrder = async (
     row: AbandonedRow,

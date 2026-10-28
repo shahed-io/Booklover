@@ -24,7 +24,7 @@ const AdminGoogleAnalytics = () => {
     setSaving(false); setSaved(true);
     setTimeout(() => setSaved(false), 2500);
     toast.success('Google Analytics ID saved!');
-  };
+   return undefined; };
 
   const snippet = gaId ? `<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>

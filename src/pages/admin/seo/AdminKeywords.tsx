@@ -31,7 +31,7 @@ const AdminKeywords = () => {
     const updated = [...keywords, { ...newKw, id: crypto.randomUUID() }];
     setKeywords(updated); saveAll(updated);
     setNewKw({ keyword: '', volume: '', difficulty: 'medium', target_page: '' });
-  };
+   return undefined; };
 
   const remove = (id: string) => { const updated = keywords.filter(k => k.id !== id); setKeywords(updated); saveAll(updated); };
 

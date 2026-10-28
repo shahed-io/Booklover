@@ -276,7 +276,7 @@ const Navbar = () => {
     deferredPrompt.current = null;
   };
 
-  const displayName = profileName || profileUsername || user?.user_metadata?.display_name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'User';
+  const displayName = profileName || profileUsername || user?.user_metadata?.['display_name'] || user?.user_metadata?.['full_name'] || user?.user_metadata?.['name'] || user?.email?.split('@')[0] || 'User';
   const initials    = displayName[0].toUpperCase();
 
   return (
@@ -910,7 +910,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-1 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
                       {navCategories.slice(0, 8).map(cat => {
-                        const meta = CAT_ICON_MAP[cat.name] || CAT_ICON_MAP.default;
+                        const meta = CAT_ICON_MAP[cat.name] || CAT_ICON_MAP['default'];
                         return (
                           <button
                             key={cat.id}
@@ -923,7 +923,7 @@ const Navbar = () => {
                               backdropFilter: 'blur(10px)',
                               boxShadow: '0 2px 6px hsla(258,40%,40%,0.06)',
                             }}>
-                            <span className="text-[13px]">{meta.icon}</span>
+                            <span className="text-[13px]">{meta!.icon}</span>
                             <span>{cat.name}</span>
                             <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full" style={{ background: 'hsla(258,78%,55%,0.12)', color: 'hsl(258,78%,45%)' }}>{cat.count}</span>
                           </button>
@@ -1170,7 +1170,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-1 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
                       {navCategories.slice(0, 8).map(cat => {
-                        const meta = CAT_ICON_MAP[cat.name] || CAT_ICON_MAP.default;
+                        const meta = CAT_ICON_MAP[cat.name] || CAT_ICON_MAP['default'];
                         return (
                           <button
                             key={cat.id}
@@ -1183,7 +1183,7 @@ const Navbar = () => {
                               backdropFilter: 'blur(10px)',
                               boxShadow: '0 2px 6px hsla(258,40%,40%,0.06)',
                             }}>
-                            <span className="text-[13px]">{meta.icon}</span>
+                            <span className="text-[13px]">{meta!.icon}</span>
                             <span>{cat.name}</span>
                             <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full" style={{ background: 'hsla(258,78%,55%,0.12)', color: 'hsl(258,78%,45%)' }}>{cat.count}</span>
                           </button>

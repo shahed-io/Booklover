@@ -112,13 +112,13 @@ export const SupportTicketModal = ({ open, onClose }: Props) => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1 block">নাম *</label>
-                <Input placeholder="আপনার নাম" value={form.customer_name} onChange={e => set('customer_name', e.target.value)} className={errors.customer_name ? 'border-red-500' : ''} />
-                {errors.customer_name && <p className="text-xs text-red-500 mt-1">{errors.customer_name}</p>}
+                <Input placeholder="আপনার নাম" value={form.customer_name} onChange={e => set('customer_name', e.target.value)} className={errors['customer_name'] ? 'border-red-500' : ''} />
+                {errors['customer_name'] && <p className="text-xs text-red-500 mt-1">{errors['customer_name']}</p>}
               </div>
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1 block">ইমেইল *</label>
-                <Input type="email" placeholder="email@example.com" value={form.customer_email} onChange={e => set('customer_email', e.target.value)} className={errors.customer_email ? 'border-red-500' : ''} />
-                {errors.customer_email && <p className="text-xs text-red-500 mt-1">{errors.customer_email}</p>}
+                <Input type="email" placeholder="email@example.com" value={form.customer_email} onChange={e => set('customer_email', e.target.value)} className={errors['customer_email'] ? 'border-red-500' : ''} />
+                {errors['customer_email'] && <p className="text-xs text-red-500 mt-1">{errors['customer_email']}</p>}
               </div>
             </div>
 
@@ -135,8 +135,8 @@ export const SupportTicketModal = ({ open, onClose }: Props) => {
 
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">বিষয় *</label>
-              <Input placeholder="সমস্যার সংক্ষিপ্ত বিবরণ" value={form.subject} onChange={e => set('subject', e.target.value)} className={errors.subject ? 'border-red-500' : ''} />
-              {errors.subject && <p className="text-xs text-red-500 mt-1">{errors.subject}</p>}
+              <Input placeholder="সমস্যার সংক্ষিপ্ত বিবরণ" value={form.subject} onChange={e => set('subject', e.target.value)} className={errors['subject'] ? 'border-red-500' : ''} />
+              {errors['subject'] && <p className="text-xs text-red-500 mt-1">{errors['subject']}</p>}
             </div>
 
             <div>
@@ -156,8 +156,8 @@ export const SupportTicketModal = ({ open, onClose }: Props) => {
 
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">বিস্তারিত বার্তা *</label>
-              <Textarea placeholder="আপনার সমস্যা বিস্তারিত জানান..." value={form.message} onChange={e => set('message', e.target.value)} rows={4} className={`resize-none ${errors.message ? 'border-red-500' : ''}`} />
-              {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message}</p>}
+              <Textarea placeholder="আপনার সমস্যা বিস্তারিত জানান..." value={form.message} onChange={e => set('message', e.target.value)} rows={4} className={`resize-none ${errors['message'] ? 'border-red-500' : ''}`} />
+              {errors['message'] && <p className="text-xs text-red-500 mt-1">{errors['message']}</p>}
               <p className="text-xs text-muted-foreground mt-1 text-right">{form.message.length}/2000</p>
             </div>
 

@@ -230,9 +230,9 @@ const MobileBottomNav = () => {
                 <div
                   className="w-full h-full rounded-2xl"
                   style={{
-                    background: navItems[activeIndex].gradient,
+                    background: navItems[activeIndex]!.gradient,
                     boxShadow: `0 10px 28px -6px ${
-                      navItems[activeIndex].gradient
+                      navItems[activeIndex]!.gradient
                         .match(/hsl\([^)]+\)/)?.[0] || 'hsla(258,78%,55%,0.55)'
                     }, 0 4px 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.12)`,
                     opacity: 1,

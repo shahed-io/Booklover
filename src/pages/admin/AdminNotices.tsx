@@ -168,7 +168,7 @@ export default function AdminNotices() {
     if (error) return toast.error(error.message);
     toast.success(next === 'published' ? 'Published' : 'Unpublished');
     load();
-  };
+   return undefined; };
 
   const remove = async (n: Notice) => {
     if (!confirm(`"${n.title}" delete করবেন?`)) return;
@@ -176,7 +176,7 @@ export default function AdminNotices() {
     if (error) return toast.error(error.message);
     toast.success('Deleted');
     load();
-  };
+   return undefined; };
 
   const printPreview = () => {
     if (!previewing) return;
@@ -354,13 +354,13 @@ export default function AdminNotices() {
                     </td>
                     <td className="py-3 px-4 text-xs font-mono text-muted-foreground whitespace-nowrap">{n.reference_no || '—'}</td>
                     <td className="py-3 px-4">
-                      <Badge className={`capitalize border ${audienceStyle[n.audience] || audienceStyle.public}`}>
+                      <Badge className={`capitalize border ${audienceStyle[n.audience] || audienceStyle['public']}`}>
                         <Users className="w-3 h-3 mr-1" />{n.audience}
                       </Badge>
                     </td>
 
                     <td className="py-3 px-4">
-                      <Badge className={`capitalize border ${statusStyle[n.status] || statusStyle.draft}`}>{n.status}</Badge>
+                      <Badge className={`capitalize border ${statusStyle[n.status] || statusStyle['draft']}`}>{n.status}</Badge>
                     </td>
                     <td className="py-3 px-4 text-xs text-muted-foreground whitespace-nowrap">{new Date(n.updated_at).toLocaleDateString()}</td>
                     <td className="py-3 px-4 text-right">

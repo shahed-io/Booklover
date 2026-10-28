@@ -145,10 +145,10 @@ export default function AdminCustomers() {
       (orders ?? []).forEach(o => {
         if (!o.user_id) return;
         if (!orderMap[o.user_id]) orderMap[o.user_id] = { count: 0, total: 0, last: '' };
-        orderMap[o.user_id].count++;
-        orderMap[o.user_id].total += Number(o.total);
-        if (!orderMap[o.user_id].last || o.created_at > orderMap[o.user_id].last)
-          orderMap[o.user_id].last = o.created_at;
+        orderMap[o.user_id]!.count++;
+        orderMap[o.user_id]!.total += Number(o.total);
+        if (!orderMap[o.user_id]!.last || o.created_at > orderMap[o.user_id]!.last)
+          orderMap[o.user_id]!.last = o.created_at;
       });
 
       return (profiles ?? []).map(p => ({
@@ -425,7 +425,7 @@ export default function AdminCustomers() {
       const lines = text.split(/\r?\n/).filter(l => l.trim());
       if (lines.length < 2) { toast.error('CSV ফাইলে কমপক্ষে ১টি ডেটা সারি দরকার'); return; }
 
-      const headerLine = lines[0].toLowerCase();
+      const headerLine = lines[0]!.toLowerCase();
       const hasEmail = headerLine.includes('email') || headerLine.includes('ইমেইল');
       if (!hasEmail) { toast.error('CSV ফাইলে "email" বা "ইমেইল" কলাম থাকা আবশ্যক'); return; }
 
@@ -1023,7 +1023,7 @@ export default function AdminCustomers() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0">
-                          {(c.display_name ?? c.email ?? '?')[0].toUpperCase()}
+                          {(c.display_name ?? c.email ?? '?')[0]!.toUpperCase()}
                         </div>
                         <div>
                           <div className="font-medium text-foreground text-xs flex items-center gap-1.5">

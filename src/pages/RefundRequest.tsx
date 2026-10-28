@@ -103,9 +103,9 @@ export default function RefundRequest() {
     if (user) {
       setForm(p => ({
         ...p,
-        customer_name: p.customer_name || user.user_metadata?.display_name || user.user_metadata?.full_name || '',
+        customer_name: p.customer_name || user.user_metadata?.['display_name'] || user.user_metadata?.['full_name'] || '',
         customer_email: p.customer_email || user.email || '',
-        customer_phone: p.customer_phone || user.user_metadata?.phone || '',
+        customer_phone: p.customer_phone || user.user_metadata?.['phone'] || '',
       }));
     }
   }, [user]);
@@ -159,7 +159,7 @@ export default function RefundRequest() {
 
   const removeScreenshot = (idx: number) => {
     setScreenshots(p => {
-      URL.revokeObjectURL(p[idx].preview);
+      URL.revokeObjectURL(p[idx]!.preview);
       return p.filter((_, i) => i !== idx);
     });
   };

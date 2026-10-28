@@ -403,10 +403,10 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
       e.preventDefault();
       if (s.activeIdx >= 0 && allItems[s.activeIdx]) {
         const item = allItems[s.activeIdx];
-        if (item.type === 'product' && item.product) {
-          s.handleSelect(item.product, close);
+        if (item!.type === 'product' && item!.product) {
+          s.handleSelect(item!.product, close);
         } else {
-          s.handleSuggestionSelect(item.value, close);
+          s.handleSuggestionSelect(item!.value, close);
         }
       } else {
         s.handleSubmit(close);

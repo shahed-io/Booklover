@@ -221,7 +221,7 @@ const AdminAffiliates = () => {
     if (error) return toast.error('Update failed: ' + error.message);
     toast.success(`Account ${status}`);
     fetchAll();
-  };
+   return undefined; };
 
   const saveEditAccount = async () => {
     if (!editingAccount) return;
@@ -238,7 +238,7 @@ const AdminAffiliates = () => {
     toast.success('Account updated');
     setEditingAccount(null);
     fetchAll();
-  };
+   return undefined; };
 
   const handleConversion = async (id: string, action: 'approve' | 'reject') => {
     const fn = action === 'approve' ? 'approve_affiliate_conversion' : 'reject_affiliate_conversion';
@@ -247,7 +247,7 @@ const AdminAffiliates = () => {
     if (error || !data?.success) return toast.error(data?.error || error?.message || 'Failed');
     toast.success(`Conversion ${action}d`);
     fetchAll();
-  };
+   return undefined; };
 
   const submitWithdrawalAction = async () => {
     if (!withdrawalAction) return;
@@ -263,7 +263,7 @@ const AdminAffiliates = () => {
     setWithdrawalTxId('');
     setWithdrawalNotes('');
     fetchAll();
-  };
+   return undefined; };
 
   const addProductCommission = async () => {
     if (!newProductCommission.product_id) return toast.error('Select a product');
@@ -279,7 +279,7 @@ const AdminAffiliates = () => {
     toast.success('Product commission saved');
     setNewProductCommission({ product_id: '', commission_percent: 10, customer_discount_percent: 0 });
     fetchAll();
-  };
+   return undefined; };
 
   const toggleProductCommission = async (id: string, is_active: boolean) => {
     await supabase.from('affiliate_product_commissions').update({ is_active }).eq('id', id);

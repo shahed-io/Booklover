@@ -104,7 +104,7 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
     toast.success('Deleted');
     load();
     onLogChanged?.();
-  };
+   return undefined; };
 
   const localInput = (iso?: string) => {
     const d = iso ? new Date(iso) : new Date();
@@ -197,12 +197,12 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
             <div className="space-y-3">
               {logs.map(log => {
                 const t = EVENT_TYPES.find(x => x.value === log.event_type) || EVENT_TYPES[4];
-                const Icon = t.icon;
+                const Icon = t!.icon;
                 return (
                   <div key={log.id} className="relative">
                     <div
                       className="absolute -left-[18px] top-2 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center"
-                      style={{ background: t.color }}
+                      style={{ background: t!.color }}
                     >
                       <Icon size={8} className="text-white" />
                     </div>
@@ -211,9 +211,9 @@ const OutreachTimelineModal = ({ prospectId, prospectName, onClose, onLogChanged
                         <div className="flex items-center gap-2 flex-wrap">
                           <span
                             className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium"
-                            style={{ background: `${t.color}22`, color: t.color, border: `1px solid ${t.color}55` }}
+                            style={{ background: `${t!.color}22`, color: t!.color, border: `1px solid ${t!.color}55` }}
                           >
-                            {t.label}
+                            {t!.label}
                           </span>
                           {log.channel && (
                             <span className="text-[10px] uppercase text-muted-foreground/70">via {log.channel}</span>

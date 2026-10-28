@@ -121,14 +121,14 @@ const setEnhancedUserData = async (userData?: UserData) => {
   if (!cachedConfig?.enhanced_conversions_enabled || !userData) return;
   if (typeof window === 'undefined' || !window.gtag) return;
   const payload: Record<string, string> = {};
-  if (userData.email) payload.sha256_email_address = await sha256(userData.email);
+  if (userData.email) payload['sha256_email_address'] = await sha256(userData.email);
   if (userData.phone) {
     // Normalize BD phone to E.164: +880XXXXXXXXXX
     let p = userData.phone.replace(/\D/g, '');
     if (p.startsWith('880')) p = '+' + p;
     else if (p.startsWith('0')) p = '+880' + p.slice(1);
     else if (!p.startsWith('+')) p = '+' + p;
-    payload.sha256_phone_number = await sha256(p);
+    payload['sha256_phone_number'] = await sha256(p);
   }
   window.gtag('set', 'user_data', payload);
 };

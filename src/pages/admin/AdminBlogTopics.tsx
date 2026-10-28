@@ -48,7 +48,7 @@ const AdminBlogTopics = () => {
   const generate = async (title: string, intent: string): Promise<QueueItem> => {
     const { data: { session } } = await supabase.auth.getSession();
     const token = session?.access_token;
-    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
     try {
       const res = await fetch(`https://${projectId}.supabase.co/functions/v1/generate-topic-blog`, {
         method: 'POST',

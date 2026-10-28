@@ -96,7 +96,7 @@ export default function OAuthConsent() {
     if (err) return toast.error(err.message || "Sign-in failed");
     setHasSession(true);
     await loadDetails();
-  }
+   return undefined; }
 
   async function signInGoogle() {
     // After Google round-trip the browser must land back on THIS consent URL.

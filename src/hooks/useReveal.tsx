@@ -42,7 +42,7 @@ export const useReveal = (options: UseRevealOptions = {}) => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry!.isIntersecting) {
           clearTimeout(fallback);
           setVisible(true);
           if (once) observer.unobserve(el);

@@ -36,8 +36,8 @@ export default function AdminSSLCommerzPGW() {
   const [showSecrets, setShowSecrets] = useState(false);
 
   const projectRef =
-    (import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefined) ||
-    ((import.meta.env.VITE_SUPABASE_URL as string | undefined)?.match(/https:\/\/([^.]+)/)?.[1] ?? '');
+    (import.meta.env['VITE_SUPABASE_PROJECT_ID'] as string | undefined) ||
+    ((import.meta.env['VITE_SUPABASE_URL'] as string | undefined)?.match(/https:\/\/([^.]+)/)?.[1] ?? '');
   const fnBase = projectRef ? `https://${projectRef}.functions.supabase.co` : '';
   const ipnUrl = `${fnBase}/sslcommerz-ipn?type=ipn`;
   const successUrl = `${fnBase}/sslcommerz-ipn?type=success`;

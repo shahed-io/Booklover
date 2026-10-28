@@ -91,7 +91,7 @@ const DEFAULTS: LiveChatConfig = {
   live_sets: [],
 };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-support-chat`;
+const CHAT_URL = `${import.meta.env['VITE_SUPABASE_URL']}/functions/v1/ai-support-chat`;
 
 const FloatingSupport = () => {
   const [config, setConfig] = useState<LiveChatConfig>(DEFAULTS);
@@ -234,7 +234,7 @@ const FloatingSupport = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY']}`,
         },
         body: JSON.stringify({ messages: newMessages, pageContext, language: language || 'bn' }),
       });

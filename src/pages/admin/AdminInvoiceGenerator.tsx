@@ -123,7 +123,7 @@ const AdminInvoiceGenerator = () => {
     if (!customerName.trim()) return toast.error('গ্রাহকের নাম দিন');
     if (items.some(i => !i.name.trim() || i.price <= 0)) return toast.error('সকল আইটেমের নাম ও দাম দিন');
     setShowPreview(true);
-  };
+   return undefined; };
 
   const handlePrint = () => {
     const content = printRef.current?.innerHTML;
@@ -156,7 +156,7 @@ const AdminInvoiceGenerator = () => {
     } catch (e: any) {
       toast.error('সমস্যা: ' + (e?.message || 'Unknown'), { id: tid });
     }
-  };
+   return undefined; };
 
   const handleSaveAsOrder = async () => {
     if (!customerName.trim()) return toast.error('গ্রাহকের নাম দিন');
@@ -209,7 +209,7 @@ const AdminInvoiceGenerator = () => {
     } finally {
       setSaving(false);
     }
-  };
+   return undefined; };
 
   const handleReset = () => {
     fetchNextInvoiceNumber().then(setInvoiceNumber);

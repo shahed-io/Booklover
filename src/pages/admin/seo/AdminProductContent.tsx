@@ -98,7 +98,7 @@ const AdminProductContent = () => {
       //    → produces the standard 9-section markdown matching existing products
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
       const res = await fetch(
         `https://${projectId}.supabase.co/functions/v1/generate-product-content`,
         {
@@ -204,7 +204,7 @@ const AdminProductContent = () => {
       // 2) Call AI with type "faq" — uses the existing description as the source of truth
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const projectId = import.meta.env['VITE_SUPABASE_PROJECT_ID'];
       const res = await fetch(
         `https://${projectId}.supabase.co/functions/v1/generate-product-content`,
         {
@@ -513,7 +513,7 @@ const AdminProductContent = () => {
                               disabled={restoring === p.id || bulkRunning}
                               onClick={() => handleRestoreSingle(p)}
                               className="p-2 rounded-lg border border-amber-500/40 text-amber-600 hover:bg-amber-500/10 disabled:opacity-50"
-                              title={`Restore previous (${backupMap[p.id]} backup${backupMap[p.id] > 1 ? 's' : ''})`}
+                              title={`Restore previous (${backupMap[p.id]} backup${backupMap[p.id]! > 1 ? 's' : ''})`}
                             >
                               {restoring === p.id ? <Loader2 className="animate-spin" size={14} /> : <Undo2 size={14} />}
                             </button>

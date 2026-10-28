@@ -148,20 +148,20 @@ const ProductOptionsBuilder = ({ productId, basePrice }: Props) => {
       for (let gi = 0; gi < groups.length; gi++) {
         const g = groups[gi];
         
-        if (g._deleted && g.id) {
+        if (g!._deleted && g!.id) {
           // Delete existing group (cascade deletes values)
-          await supabase.from('product_option_groups' as any).delete().eq('id', g.id);
+          await supabase.from('product_option_groups' as any).delete().eq('id', g!.id);
           continue;
         }
-        if (g._deleted) continue;
+        if (g!._deleted) continue;
 
-        let groupId = g.id;
+        let groupId = g!.id;
 
         if (!groupId) {
           // Insert new group
           const { data, error } = await supabase
             .from('product_option_groups' as any)
-            .insert({ product_id: productId, name: g.name.trim(), display_type: g.display_type, is_required: g.is_required, allow_multiple: g.allow_multiple, sort_order: gi })
+            .insert({ product_id: productId, name: g!.name.trim(), display_type: g!.display_type, is_required: g!.is_required, allow_multiple: g!.allow_multiple, sort_order: gi })
             .select('id')
             .single();
           if (error) throw error;
@@ -169,35 +169,35 @@ const ProductOptionsBuilder = ({ productId, basePrice }: Props) => {
         } else {
           // Update existing group
           await supabase.from('product_option_groups' as any)
-            .update({ name: g.name.trim(), display_type: g.display_type, is_required: g.is_required, allow_multiple: g.allow_multiple, sort_order: gi })
+            .update({ name: g!.name.trim(), display_type: g!.display_type, is_required: g!.is_required, allow_multiple: g!.allow_multiple, sort_order: gi })
             .eq('id', groupId);
         }
 
         // Process values for this group
-        for (let vi = 0; vi < g.values.length; vi++) {
-          const v = g.values[vi];
+        for (let vi = 0; vi < g!.values.length; vi++) {
+          const v = g!.values[vi];
 
-          if (v._deleted && v.id) {
-            await supabase.from('product_option_values' as any).delete().eq('id', v.id);
+          if (v!._deleted && v!.id) {
+            await supabase.from('product_option_values' as any).delete().eq('id', v!.id);
             continue;
           }
-          if (v._deleted) continue;
+          if (v!._deleted) continue;
 
-          if (!v.id) {
+          if (!v!.id) {
             // Insert new value
             await supabase.from('product_option_values' as any).insert({
               group_id: groupId,
               product_id: productId,
-              label: v.label.trim(),
-              price_adjustment: v.price_adjustment,
-              is_default: v.is_default,
+              label: v!.label.trim(),
+              price_adjustment: v!.price_adjustment,
+              is_default: v!.is_default,
               sort_order: vi,
             });
           } else {
             // Update existing value
             await supabase.from('product_option_values' as any)
-              .update({ label: v.label.trim(), price_adjustment: v.price_adjustment, is_default: v.is_default, sort_order: vi })
-              .eq('id', v.id);
+              .update({ label: v!.label.trim(), price_adjustment: v!.price_adjustment, is_default: v!.is_default, sort_order: vi })
+              .eq('id', v!.id);
           }
         }
       }

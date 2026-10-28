@@ -121,7 +121,7 @@ const AdminBackup = () => {
       TABLES.map(({ table }) => supabase.from(table as any).select('id', { count: 'exact', head: true }))
     );
     const s: Record<string, number> = {};
-    TABLES.forEach(({ table }, i) => { s[table] = results[i].count || 0; });
+    TABLES.forEach(({ table }, i) => { s[table] = results[i]!.count || 0; });
     setStats(s);
     setLoading(false);
   };
@@ -341,7 +341,7 @@ Restore:
       } else if (files.length === 1) {
         const parsed = JSON.parse(await readText(files[0]));
         if (!Array.isArray(parsed)) throw new Error('Invalid backup format — expected JSON array');
-        setImportPreview({ table: guessTable(files[0].name), data: parsed, file: JSON.stringify(parsed) });
+        setImportPreview({ table: guessTable(files[0]!.name), data: parsed, file: JSON.stringify(parsed) });
         toast.info(`${parsed.length} রেকর্ড লোড হয়েছে`);
       } else {
         // Multiple table JSON files at once → build a manifest and restore in FK-safe order
@@ -358,7 +358,7 @@ Restore:
         if (unknown.length) toast.warning(`${unknown.length}টি ফাইল শনাক্ত হয়নি: ${unknown.slice(0, 3).join(', ')}`);
         setImportPreview({
           table: '__multi__',
-          data: Object.keys(tables).map(t => ({ table: t, count: tables[t].length })),
+          data: Object.keys(tables).map(t => ({ table: t, count: tables[t]!.length })),
           file: JSON.stringify({ tables }),
         });
         toast.info(`${Object.keys(tables).length}টি টেবিল লোড হয়েছে`);
@@ -1010,7 +1010,7 @@ Restore:
                     {Object.keys(zipPreview.tables).map(t => (
                       <div key={t} className="flex items-center justify-between px-3 py-2 text-xs">
                         <span className="text-muted-foreground font-mono">{TABLES.find(x => x.table === t)?.label || t}</span>
-                        <span className="text-foreground font-semibold">{zipPreview.tables[t].length} rows</span>
+                        <span className="text-foreground font-semibold">{zipPreview.tables[t]!.length} rows</span>
                       </div>
                     ))}
                   </div>

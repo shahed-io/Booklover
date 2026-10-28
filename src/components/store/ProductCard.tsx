@@ -39,7 +39,7 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
   useEffect(() => {
     if (isMobile) { setVisible(true); return; }
     const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+      if (e!.isIntersecting) { setVisible(true); obs.disconnect(); }
     }, { threshold: 0.05 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();

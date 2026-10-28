@@ -32,7 +32,7 @@ export default function AdminBookloverHome() {
     if (error) return toast.error('সেভ করতে সমস্যা হয়েছে');
     qc.invalidateQueries({ queryKey: ['site_settings', BOOKLOVER_HOME_KEY] });
     toast.success('হোমপেজ সেটিংস সেভ হয়েছে');
-  };
+   return undefined; };
 
   return (
     <div className="space-y-6 max-w-4xl">

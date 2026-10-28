@@ -19,8 +19,8 @@ const generateTOC = (content: string) => {
   const regex = /^(#{1,3})\s+(.+)$/gm;
   let match;
   while ((match = regex.exec(content)) !== null) {
-    const level = match[1].length;
-    const text = match[2].replace(/[*_`]/g, '');
+    const level = match[1]!.length;
+    const text = match[2]!.replace(/[*_`]/g, '');
     const id = text.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-');
     headings.push({ id, text, level });
   }

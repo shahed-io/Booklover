@@ -50,7 +50,7 @@ const AdminProductImportExport = () => {
     reader.onload = (ev) => {
       const text = ev.target?.result as string;
       const lines = text.trim().split('\n');
-      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+      const headers = lines[0]!.split(',').map(h => h.trim().replace(/^"|"$/g, ''));
       const errs: string[] = [];
       const rows: ImportRow[] = [];
       lines.slice(1).forEach((line, idx) => {

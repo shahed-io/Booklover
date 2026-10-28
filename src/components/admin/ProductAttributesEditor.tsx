@@ -172,25 +172,25 @@ const ProductAttributesEditor = ({ productId }: Props) => {
     try {
       for (let i = 0; i < assignments.length; i++) {
         const a = assignments[i];
-        if (a._deleted && a.id) {
-          await supabase.from('product_attribute_assignments' as any).delete().eq('id', a.id);
+        if (a!._deleted && a!.id) {
+          await supabase.from('product_attribute_assignments' as any).delete().eq('id', a!.id);
           continue;
         }
-        if (a._deleted) continue;
+        if (a!._deleted) continue;
 
         const payload = {
           product_id: productId,
-          attribute_id: a.attribute_id,
-          custom_name: a.attribute_type === 'custom' ? a.custom_name.trim() : null,
-          attribute_type: a.attribute_type,
-          selected_values: a.selected_values,
-          is_visible: a.is_visible,
-          use_in_variation: a.use_in_variation,
+          attribute_id: a!.attribute_id,
+          custom_name: a!.attribute_type === 'custom' ? a!.custom_name.trim() : null,
+          attribute_type: a!.attribute_type,
+          selected_values: a!.selected_values,
+          is_visible: a!.is_visible,
+          use_in_variation: a!.use_in_variation,
           sort_order: i,
         };
 
-        if (a.id) {
-          const { error } = await supabase.from('product_attribute_assignments' as any).update(payload).eq('id', a.id);
+        if (a!.id) {
+          const { error } = await supabase.from('product_attribute_assignments' as any).update(payload).eq('id', a!.id);
           if (error) throw error;
         } else {
           const { error } = await supabase.from('product_attribute_assignments' as any).insert(payload);

@@ -144,10 +144,10 @@ const AdminAiFaqGenerator = () => {
       const p = list[i];
       try {
         const faqs = await generateForProduct(p);
-        await saveFaqs(p.id, faqs, mode);
+        await saveFaqs(p!.id, faqs, mode);
         success++;
       } catch (e: any) {
-        console.error(p.name, e);
+        console.error(p!.name, e);
         failed++;
       }
       setBulkProgress({ done: i + 1, total: list.length });

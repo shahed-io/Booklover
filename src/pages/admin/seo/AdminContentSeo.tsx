@@ -101,7 +101,7 @@ const AdminContentSeo = () => {
       long: { color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300', label: '⚠️ Too Long' },
       empty: { color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300', label: '❌ Empty' },
     };
-    return <span className={`px-2 py-0.5 rounded-[0.25rem] text-[10px] font-bold ${map[status].color}`}>{map[status].label}</span>;
+    return <span className={`px-2 py-0.5 rounded-[0.25rem] text-[10px] font-bold ${map[status]!.color}`}>{map[status]!.label}</span>;
   };
 
   return (
