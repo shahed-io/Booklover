@@ -427,12 +427,22 @@ serve(async (req) => {
         const orFilter = terms
           .map((t) => `name.ilike.%${t}%,short_description.ilike.%${t}%,brand.ilike.%${t}%,tags.cs.{${t}}`)
           .join(",");
-        const { data: matches } = await supabase
-          .from("products")
-          .select(PRODUCT_FIELDS)
-          .eq("status", "active")
-          .or(orFilter)
-          .limit(6);
+        const nameTerms = terms.filter((t) => !["book", "books", "have", "you", "your", "does", "any", "available", "want", "need", "please", "there", "stock", "this", "that", "with"].includes(t));
+        // Prefer books whose name contains every term, then fall back to any-term matches.
+        let matches: any[] | null = null;
+        if (nameTerms.length) {
+          let q = supabase.from("products").select(PRODUCT_FIELDS).neq("status", "draft");
+          for (const t of nameTerms) q = q.ilike("name", `%${t}%`);
+          ({ data: matches } = await q.limit(6));
+        }
+        if (!matches?.length) {
+          ({ data: matches } = await supabase
+            .from("products")
+            .select(PRODUCT_FIELDS)
+            .eq("status", "active")
+            .or(orFilter)
+            .limit(6));
+        }
         if (matches && matches.length > 0) {
           matchedBlock =
             "\n\n🔍 গ্রাহকের প্রশ্নের সাথে সম্পর্কিত প্রোডাক্ট (সঠিক তথ্য — এখান থেকে উত্তর দিন):\n" +
@@ -540,7 +550,7 @@ serve(async (req) => {
 **১) প্রথমেই প্রোডাক্ট চেক করুন** — গ্রাহকের প্রশ্ন যদি কোনো প্রোডাক্ট, দাম, স্টক, ডেলিভারি, ছাড়, কুপন সম্পর্কিত হয়:
    - 🎯 (বর্তমান পেজ), 🔍 (কীওয়ার্ড ম্যাচ), 📚 (সম্পূর্ণ ক্যাটালগ), 🎁 (কুপন) — এই ডেটা থেকে **হুবহু সঠিক** তথ্য দিন
    - দাম, স্টক, কুপন কোড, ডেলিভারি সময় — কিছুই নিজে বানাবেন না; শুধু নিচের ডেটা থেকেই বলুন
-   - Stock Out হলে জানান এবং WhatsApp-এ প্রি-অর্ডারের কথা বলুন
+   - Stock Out হলে জানান এবং প্রি-অর্ডারের জন্য যোগাযোগ করতে বলুন
 
 **২) প্রোডাক্টের বাইরের সাধারণ প্রশ্ন হলে অনলাইন জ্ঞান ব্যবহার করুন** — যেমন বই, লেখক, পড়ার অভ্যাস ও সাধারণ জ্ঞানের প্রশ্ন:
    - আপনার general knowledge থেকে সহায়ক, সঠিক ও বিস্তারিত উত্তর দিন
@@ -558,9 +568,7 @@ serve(async (req) => {
 - বইয়ের তথ্য, দাম ও স্টক কেবল ক্যাটালগ থেকে বলুন।
 - যোগাযোগ, ডেলিভারি, রিফান্ড, ওয়ারেন্টি ও পেমেন্টের তথ্য সেটিংসে না থাকলে অনুমান করবেন না।
 
-${supportPhone} (সকাল ১০টা — রাত ১০টা)
-- 💬 WhatsApp: ${supportPhone} — https://wa.me/88${supportPhone}
-- ✉️ ইমেইল: 
+${supportPhone ? `📞 যোগাযোগ: ${supportPhone}` : "📞 যোগাযোগ নম্বর এখনো সেট করা নেই — কোনো ফোন/WhatsApp নম্বর বা লিংক বানাবেন না; প্রয়োজনে ওয়েবসাইটের Contact পেজের কথা বলুন।"}
 ${viewedProductBlock}${matchedBlock}${productContext}${couponContext}
 
 ✍️ উত্তরের ফরম্যাট:
@@ -570,7 +578,7 @@ ${viewedProductBlock}${matchedBlock}${productContext}${couponContext}
 - প্রাসঙ্গিক ইমোজি ব্যবহার করুন (💰 📦 🚚 ✅ 📞 🎁 💡)
 - প্রোডাক্ট-সম্পর্কিত হলে সংক্ষিপ্ত (৩–৭ লাইন), general knowledge হলে যতটুকু দরকার ততটুকু
 
-কোনো তথ্য একদমই না জানলে বিনয়ের সাথে বলুন এবং WhatsApp-এ যোগাযোগ করতে বলুন: ${supportPhone}`;
+কোনো তথ্য একদমই না জানলে বিনয়ের সাথে বলুন এবং Contact পেজের মাধ্যমে যোগাযোগ করতে বলুন।`;
 
     const aiMessages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
@@ -592,7 +600,7 @@ ${viewedProductBlock}${matchedBlock}${productContext}${couponContext}
       console.error("AI providers failed:", fallbackErr);
       return new Response(
         JSON.stringify({
-          error: `AI সাময়িকভাবে অনুপলব্ধ। সরাসরি WhatsApp-এ যোগাযোগ করুন: ${supportPhone}`,
+          error: `AI সাময়িকভাবে অনুপলব্ধ। একটু পরে আবার চেষ্টা করুন।`,
         }),
         { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );

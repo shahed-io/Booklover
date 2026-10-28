@@ -70,11 +70,11 @@ interface LiveChatConfig {
 
 const DEFAULTS: LiveChatConfig = {
   chat_enabled: true,
-  whatsapp_enabled: true,
+  whatsapp_enabled: false,
   whatsapp_number: '88',
   whatsapp_label: 'WhatsApp',
   whatsapp_subtitle: 'সরাসরি কথা বলুন',
-  phone_enabled: true,
+  phone_enabled: false,
   phone_number: '',
   phone_label: 'ফোন করুন',
   phone_subtitle: 'সরাসরি কল করুন',
@@ -154,6 +154,8 @@ const FloatingSupport = () => {
           try {
             const parsed = JSON.parse(data.value);
             merged = { ...DEFAULTS, ...parsed };
+            if (!String(merged.whatsapp_number || '').replace(/\D/g, '').slice(2)) merged.whatsapp_enabled = false;
+            if (!String(merged.phone_number || '').trim()) merged.phone_enabled = false;
             setConfig(merged);
           } catch {}
         }

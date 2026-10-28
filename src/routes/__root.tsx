@@ -38,6 +38,7 @@ import NotFound from "@/pages/NotFound";
 const RedirectEnforcer = lazy(() => import("@/components/seo/RedirectEnforcer"));
 const FacebookPixel = lazy(() => import("@/components/store/FacebookPixel"));
 const GoogleTracking = lazy(() => import("@/components/store/GoogleTracking"));
+const FloatingSupport = lazy(() => import("@/components/store/FloatingSupport").then((m) => ({ default: m.FloatingSupport })));
 const MarketingPixels = lazy(() => import("@/components/store/MarketingPixels"));
 const MobileBottomNav = lazy(() => import("@/components/store/MobileBottomNav"));
 const MaintenanceScreen = lazy(() => import("@/components/store/MaintenanceScreen"));
@@ -267,6 +268,7 @@ function AppShell() {
           <GoogleTracking />
           <MarketingPixels />
           {!isAdminArea && <BookloverCartDrawer />}
+          {!isAdminArea && <FloatingSupport />}
           <RedirectEnforcer />
         </Suspense>
       )}
