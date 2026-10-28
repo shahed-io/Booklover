@@ -64,3 +64,11 @@ export function useHomeData(rowCats:{title:string;collection:string}[],count:num
     const out={categories:categories||[],bestsellers:(b.data||[]) as unknown as Book[],rows};saveCache(key,out);return out;
   }});
 }
+
+/** Message a customer sends to order a book over WhatsApp (number comes from live-chat settings). */
+export function whatsappOrderMessage(p:{name:string;url:string;qty:number;price:string;labels?:string[]}){
+  const lines=['Hi Booklover! I would like to order this book:',`Book: ${p.name}`];
+  for(const l of p.labels||[])lines.push(`• ${l}`);
+  lines.push(`Quantity: ${p.qty}`,`Price: ${p.price}`,`Link: ${p.url}`);
+  return lines.join('\n');
+}
