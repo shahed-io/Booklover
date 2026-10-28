@@ -1,9 +1,9 @@
 # Roadmap
 
 ## Header icon buttons
-- [ ] Present button-style previews for the existing header icons and obtain the owner's choice.
-- [ ] Apply the selected treatment only to header icon controls; preserve navigation, logo, search placement and both themes.
-- [ ] Verify header controls and alignment at desktop and mobile sizes.
+- [x] Present button-style previews for the existing header icons and obtain the owner's choice: subtle border.
+- [x] Apply the selected treatment only to header icon controls; preserve navigation, logo, search placement and both themes.
+- [x] Verify desktop white/dark and mobile alignment, cart opening and theme switching; no overflow or runtime errors, build OK.
 
 ## Account sign-in design
 - [x] Match the account palette to Booklover white/red and its dark theme; other website colors unchanged.
