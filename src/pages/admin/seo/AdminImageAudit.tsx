@@ -159,7 +159,7 @@ export default function AdminImageAudit() {
     });
   };
 
-  const runScan = async (urlList?: string[]) => {
+  const runScan = async (urlList?: string[] | undefined) => {
     const targets = urlList ?? pages.map((p) => p.url);
     if (targets.length === 0) return;
     setScanning(true);

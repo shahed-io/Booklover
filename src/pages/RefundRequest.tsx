@@ -94,7 +94,7 @@ export default function RefundRequest() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [ticketNum, setTicketNum] = useState('');
-  const [screenshots, setScreenshots] = useState<{ file: File; preview: string; url?: string }[]>([]);
+  const [screenshots, setScreenshots] = useState<{ file: File; preview: string; url?: string | undefined }[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

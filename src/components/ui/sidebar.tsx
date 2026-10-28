@@ -357,7 +357,7 @@ const SidebarGroup = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"
 });
 SidebarGroup.displayName = "SidebarGroup";
 
-const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"> & { asChild?: boolean }>(
+const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"> & { asChild?: boolean | undefined }>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "div";
 
@@ -377,7 +377,7 @@ const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<
 );
 SidebarGroupLabel.displayName = "SidebarGroupLabel";
 
-const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & { asChild?: boolean }>(
+const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & { asChild?: boolean | undefined }>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
 

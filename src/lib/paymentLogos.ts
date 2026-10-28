@@ -19,8 +19,8 @@ export const PAYMENT_ASSET_LOGOS: Record<string, string> = {
 // `bkash` (personal) and `bkash_merchant` are independent — admin-configured logos win.
 export const getPaymentLogo = (
   methodId: string,
-  configuredLogo?: string | null,
-  sharedBkashLogo?: string | null,
+  configuredLogo?: string | null | undefined,
+  sharedBkashLogo?: string | null | undefined,
 ) => {
   const customLogo = (configuredLogo || '').trim();
   if (customLogo) return customLogo;

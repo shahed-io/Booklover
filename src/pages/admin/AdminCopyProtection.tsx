@@ -106,7 +106,7 @@ const AdminCopyProtection = () => {
 
   const masterOn = settings.copy_protection_enabled;
 
-  const Toggle = ({ checked, disabled, onChange, size = 'md' }: { checked: boolean; disabled?: boolean; onChange: () => void; size?: 'md' | 'lg' }) => {
+  const Toggle = ({ checked, disabled, onChange, size = 'md' }: { checked: boolean; disabled?: boolean | undefined; onChange: () => void; size?: 'md' | 'lg' | undefined }) => {
     const dim = size === 'lg' ? { h: 'h-9 w-16', knob: 'h-7 w-7', on: 'translate-x-8', off: 'translate-x-1' } : { h: 'h-6 w-11', knob: 'h-4 w-4', on: 'translate-x-6', off: 'translate-x-1' };
     return (
       <button

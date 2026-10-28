@@ -142,7 +142,7 @@ const shouldTrack = (eventKey: string): string[] => {
   return pixelConfigs.filter(p => p[key] === true && p.pixel_id).map(p => p.pixel_id);
 };
 
-export const fbTrack = (event: string, params?: Record<string, any>, trackKey?: string) => {
+export const fbTrack = (event: string, params?: Record<string, any>, trackKey?: string | undefined) => {
   if (typeof window !== 'undefined' && window.fbq) {
     if (trackKey) {
       const ids = shouldTrack(trackKey);
@@ -167,11 +167,11 @@ export const fbTrackPageView = () => {
   sendCAPI('PageView');
 };
 
-export const fbTrackViewContent = (params: { content_name: string; content_ids: string[]; value?: number; currency?: string }) =>
+export const fbTrackViewContent = (params: { content_name: string; content_ids: string[]; value?: number | undefined; currency?: string | undefined }) =>
   fbTrack('ViewContent', { ...params, currency: params.currency || 'BDT' }, 'view_content');
-export const fbTrackAddToCart = (params: { content_name: string; content_ids: string[]; value: number; currency?: string }) =>
+export const fbTrackAddToCart = (params: { content_name: string; content_ids: string[]; value: number; currency?: string | undefined }) =>
   fbTrack('AddToCart', { ...params, currency: params.currency || 'BDT' }, 'add_to_cart');
-export const fbTrackPurchase = (params: { value: number; currency?: string; content_ids?: string[]; num_items?: number }) =>
+export const fbTrackPurchase = (params: { value: number; currency?: string | undefined; content_ids?: string[] | undefined; num_items?: number | undefined }) =>
   fbTrack('Purchase', { ...params, currency: params.currency || 'BDT' }, 'purchase');
 export const fbTrackLead = () => fbTrack('Lead', undefined, 'lead');
 

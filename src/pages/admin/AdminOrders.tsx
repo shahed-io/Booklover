@@ -70,7 +70,7 @@ const PAYMENT_STATUS_COLORS: Record<string, string> = {
   failed:   'text-red-500 bg-red-500/10',
 };
 
-const isPaymentVerified = (status?: string | null) => status === 'verified' || status === 'paid';
+const isPaymentVerified = (status?: string | null | undefined) => status === 'verified' || status === 'paid';
 
 const PM_LABELS: Record<string, string> = {
   bkash_online: 'bKash (Online)',
@@ -504,7 +504,7 @@ const OrderDetailModal = ({
     setUpdatingId(false);
   };
 
-  const sendWhatsApp = (customNote?: string) => {
+  const sendWhatsApp = (customNote?: string | undefined) => {
     const items = order.order_items?.map((i: any) => `- ${i.product_name}`).join('\n') || '';
     const statusLabel = STATUS_CONFIG[order.status]?.label || order.status;
     const msg = encodeURIComponent(

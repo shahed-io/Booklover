@@ -55,7 +55,7 @@ interface Props {
 
 }
 
-const formatDate = (s?: string | null) => {
+const formatDate = (s?: string | null | undefined) => {
   if (!s) return '';
   try { return new Date(s).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }); }
   catch { return s; }

@@ -12,7 +12,7 @@ type LovableEvents = {
   captureException?: (
     error: unknown,
     context?: Record<string, unknown>,
-    options?: LovableErrorOptions,
+    options?: LovableErrorOptions | undefined,
   ) => void;
 };
 
@@ -66,7 +66,7 @@ function describeThrown(error: unknown): string {
   }
   if (error instanceof Error) return error.message;
   if (typeof error === "string") return error;
-  const { message } = (error ?? {}) as { message?: unknown };
+  const { message } = (error ?? {}) as { message?: unknown | undefined };
   if (typeof message === "string" && message.length > 0) return message;
   try {
     return JSON.stringify(error)?.slice(0, MAX_SERIALIZED_LENGTH) ?? String(error);

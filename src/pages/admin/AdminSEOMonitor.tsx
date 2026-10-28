@@ -30,7 +30,7 @@ interface SitemapStat {
 
 }
 interface PingLog { id: string; entity: 'product' | 'blog'; title: string; slug: string; updated_at: string; }
-interface SchemaCheck { type: string; present: boolean; valid: boolean; note?: string; }
+interface SchemaCheck { type: string; present: boolean; valid: boolean; note?: string | undefined; }
 
 const SITE = 'https://booklover.com.bd';
 

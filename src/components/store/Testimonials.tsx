@@ -63,7 +63,7 @@ const StarRating = ({ rating, color }: { rating: number; color: string }) => (
   </div>
 );
 
-const AvatarCircle = ({ initials, index, seed, name }: { initials: string; index: number; seed: string; name?: string }) => {
+const AvatarCircle = ({ initials, index, seed, name }: { initials: string; index: number; seed: string; name?: string | undefined }) => {
   const [a, b] = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length]!;
   const [failed, setFailed] = useState(false);
   // Real Facebook photo only — no AI-generated fallbacks. Missing photos show initials on gradient.

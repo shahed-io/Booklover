@@ -12,7 +12,7 @@ export type ChartConfig = {
 
     icon?: React.ComponentType | undefined;
 
-  } & ({ color?: string; theme?: never } | { color?: never; theme: Record<keyof typeof THEMES, string> });
+  } & ({ color?: string | undefined; theme?: never | undefined } | { color?: never | undefined; theme: Record<keyof typeof THEMES, string> });
 };
 
 type ChartContextProps = {

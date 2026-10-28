@@ -14,7 +14,7 @@ export interface WishlistItem {
 
 interface WishlistContextType {
   wishlistItems: WishlistItem[];
-  toggleWishlist: (item: { id: string; name: string; price: number; image?: string }) => void;
+  toggleWishlist: (item: { id: string; name: string; price: number; image?: string | undefined }) => void;
   isWishlisted: (productId: string) => boolean;
   wishlistCount: number;
   loading: boolean;
@@ -72,7 +72,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
-  const toggleWishlist = async (item: { id: string; name: string; price: number; image?: string }) => {
+  const toggleWishlist = async (item: { id: string; name: string; price: number; image?: string | undefined }) => {
     const productId = String(item.id);
     const exists = wishlistItems.some(w => w.product_id === productId);
 

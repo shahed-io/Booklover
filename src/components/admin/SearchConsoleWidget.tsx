@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Search, MousePointerClick, Eye, Percent, TrendingUp, RefreshCw, ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface Totals { clicks: number; impressions: number; ctr: number; position: number }
-interface Row { query?: string; page?: string; clicks: number; impressions: number; ctr: number; position: number }
+interface Row { query?: string | undefined; page?: string | undefined; clicks: number; impressions: number; ctr: number; position: number }
 interface Daily { date: string; clicks: number; impressions: number }
 interface Data { totals: Totals; daily: Daily[]; topQueries: Row[]; topPages: Row[]; siteUrl: string }
 

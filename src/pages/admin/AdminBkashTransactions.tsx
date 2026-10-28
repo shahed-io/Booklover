@@ -407,7 +407,7 @@ function SectionCard({ icon: Icon, title, tint, children }: { icon: any; title: 
   );
 }
 
-function CopyRow({ label, value, mono, highlight }: { label: string; value: string | null; mono?: boolean; highlight?: boolean }) {
+function CopyRow({ label, value, mono, highlight }: { label: string; value: string | null; mono?: boolean | undefined; highlight?: boolean | undefined }) {
   const copy = () => {
     if (!value) return;
     navigator.clipboard.writeText(value);
@@ -430,7 +430,7 @@ function CopyRow({ label, value, mono, highlight }: { label: string; value: stri
   );
 }
 
-function InfoRow({ icon: Icon, label, value, mono }: { icon?: any; label: string; value: string | null; mono?: boolean }) {
+function InfoRow({ icon: Icon, label, value, mono }: { icon?: any | undefined; label: string; value: string | null; mono?: boolean | undefined }) {
   return (
     <div className="flex items-center justify-between gap-3 px-4 py-2.5">
       <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold shrink-0">

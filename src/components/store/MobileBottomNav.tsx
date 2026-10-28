@@ -144,7 +144,7 @@ const MobileBottomNav = () => {
       gradient: 'linear-gradient(135deg, hsl(38 95% 55%), hsl(28 90% 50%))',
       isCurrency: true,
       currencySymbol: activeCurrency?.symbol || '৳',
-    } as NavItem & { isCurrency?: boolean; currencySymbol?: string },
+    } as NavItem & { isCurrency?: boolean | undefined; currencySymbol?: string | undefined },
     {
       label: 'Orders',
       icon: Package,

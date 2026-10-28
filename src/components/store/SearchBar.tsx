@@ -192,7 +192,7 @@ const useGoogleSearch = () => {
   const navigate = useNavigate();
 
   // Cache active product catalog (id+name) for AI fuzzy matching
-  const catalogRef = useRef<Array<{ id: string; name: string; category?: string | null }>>([]);
+  const catalogRef = useRef<Array<{ id: string; name: string; category?: string | null | undefined }>>([]);
   const aiAbortRef = useRef<AbortController | null>(null);
   const aiCacheRef = useRef<Map<string, { ids: string[]; didYouMean: string }>>(new Map());
   const reqIdRef = useRef(0);
@@ -383,7 +383,7 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
   const close = () => onClose();
 
   // Build the list of interactive items for keyboard navigation
-  const allItems: Array<{ type: 'suggestion' | 'recent' | 'popular' | 'product'; value: string; product?: Product }> = [];
+  const allItems: Array<{ type: 'suggestion' | 'recent' | 'popular' | 'product'; value: string; product?: Product | undefined }> = [];
 
   if (s.query.trim()) {
     // Text suggestions first

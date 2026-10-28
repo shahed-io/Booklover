@@ -36,7 +36,7 @@ interface AdminNotif {
 
 }
 
-type MenuItem = { icon: any; label: string; path: string; badge?: 'live' | 'new' };
+type MenuItem = { icon: any; label: string; path: string; badge?: 'live' | 'new' | undefined };
 type MenuSection = { title: string; items: MenuItem[] };
 
 // ─── Premium per-item color palette (filled gradient chips) ───

@@ -34,7 +34,7 @@ const slugify = (s: string) =>
    .replace(/-+/g, '-')
    .slice(0, 80) || `notice-${Date.now()}`;
 
-const blank = (sig?: { signedBy?: string; signedRole?: string }): Partial<Notice> => ({
+const blank = (sig?: { signedBy?: string | undefined; signedRole?: string | undefined }): Partial<Notice> => ({
   title: '',
   slug: '',
   summary: '',
@@ -123,7 +123,7 @@ export default function AdminNotices() {
     }
   };
 
-  const save = async (publish?: boolean) => {
+  const save = async (publish?: boolean | undefined) => {
     if (!editing) return;
     if (!editing.title || !editing.body) { toast.error('Title এবং body দরকার'); return; }
     setSaving(true);
@@ -183,7 +183,7 @@ export default function AdminNotices() {
     window.print();
   };
 
-  const downloadNotice = async (n: NoticeData & { id?: string; slug?: string }) => {
+  const downloadNotice = async (n: NoticeData & { id?: string | undefined; slug?: string | undefined }) => {
     try {
       setDownloadingId((n as any).id || 'preview');
       toast.info('PDF তৈরি হচ্ছে...');

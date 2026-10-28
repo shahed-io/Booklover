@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 declare global {
-  interface Window { turnstile?: any }
+  interface Window { turnstile?: any | undefined }
 }
 
 let siteKeyCache: string | null | undefined;

@@ -21,7 +21,7 @@ const slugify = (s: string) =>
     .slice(0, 60) || 'notice';
 
 export async function downloadNoticePdf(
-  notice: NoticeData & { slug?: string; reference_no?: string | null },
+  notice: NoticeData & { slug?: string | undefined; reference_no?: string | null | undefined },
   opts: DownloadNoticeOptions = {}
 ): Promise<void> {
   const host = document.createElement('div');

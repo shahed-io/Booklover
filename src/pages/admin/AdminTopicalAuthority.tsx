@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 // ===== Topical Authority Clusters =====
 // Furniture niches × pillar + supporting articles
 // Each cluster = 1 pillar (broad) + ~20 supporting (specific) — internal-link goldmine
-type Topic = { title: string; intent: string; pillar?: boolean };
+type Topic = { title: string; intent: string; pillar?: boolean | undefined };
 type Cluster = { id: string; niche: string; icon: any; color: string; topics: Topic[] };
 
 const CLUSTERS: Cluster[] = [];

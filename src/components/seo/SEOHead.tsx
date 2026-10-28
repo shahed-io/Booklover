@@ -53,7 +53,7 @@ const DEFAULT_OG = '/og-image.jpg';
 const DEFAULT_KEYWORDS = 'Booklover, books Bangladesh, online bookshop';
 
 // Cache for GA/GSC/Clarity settings so we only fetch once per session
-let _seoCache: { ga?: string; gsc?: string; clarity?: string; verification?: Record<string, string>; loaded?: boolean } = {};
+let _seoCache: { ga?: string | undefined; gsc?: string | undefined; clarity?: string | undefined; verification?: Record<string, string>; loaded?: boolean | undefined } = {};
 
 const VERIFICATION_META: Record<string, string> = {
   google: 'google-site-verification',
@@ -170,7 +170,7 @@ const SEOHead = ({
     }
   }, []);
 
-  function injectGA(gaId?: string) {
+  function injectGA(gaId?: string | undefined) {
     if (!gaId || gaInjected.current) return;
     if (document.querySelector(`script[src*="gtag/js?id=${gaId}"]`)) { gaInjected.current = true; return; }
     const s1 = document.createElement('script');
@@ -183,7 +183,7 @@ const SEOHead = ({
     gaInjected.current = true;
   }
 
-  function injectGSC(code?: string) {
+  function injectGSC(code?: string | undefined) {
     if (!code) return;
     if (document.querySelector('meta[name="google-site-verification"]')) return;
     const m = document.createElement('meta');
@@ -192,7 +192,7 @@ const SEOHead = ({
     document.head.appendChild(m);
   }
 
-  function injectClarity(projectId?: string) {
+  function injectClarity(projectId?: string | undefined) {
     if (!projectId) return;
     if (document.querySelector('script[data-clarity-id]')) return;
     const s = document.createElement('script');

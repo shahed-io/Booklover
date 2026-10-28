@@ -11,8 +11,8 @@ import { toast } from 'sonner';
 import { Loader2, Upload, CheckCircle2, AlertCircle, Copy } from 'lucide-react';
 import AuthModal from '@/components/store/AuthModal';
 
-type PaymentMethod = { name: string; number?: string; instructions?: string };
-type CustomField = { label: string; type?: 'text' | 'email' | 'number'; required?: boolean };
+type PaymentMethod = { name: string; number?: string | undefined; instructions?: string | undefined };
+type CustomField = { label: string; type?: 'text' | 'email' | 'number' | undefined; required?: boolean | undefined };
 
 export default function PaymentLink() {
   const { slug } = useParams<{ slug: string }>();

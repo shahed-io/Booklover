@@ -44,7 +44,7 @@ const renderMarkdown = (content: string): string => {
 };
 
 const HelpCenter = () => {
-  const { slug } = useParams<{ slug?: string }>();
+  const { slug } = useParams<{ slug?: string | undefined }>();
   const navigate = useNavigate();
   const [articles, setArticles] = useState<any[]>([]);
   const [currentArticle, setCurrentArticle] = useState<any>(null);

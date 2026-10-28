@@ -528,7 +528,7 @@ const AdminHeroBanner = () => {
 
 /* ═══════════════════ Mini Components ═══════════════════ */
 
-const SmartField = ({ label, value, onChange, small }: { label: string; value: string; onChange: (v: string) => void; small?: boolean }) => (
+const SmartField = ({ label, value, onChange, small }: { label: string; value: string; onChange: (v: string) => void; small?: boolean | undefined }) => (
   <div>
     <label className="text-[11px] font-semibold text-muted-foreground mb-1 block">{label}</label>
     <input value={value} onChange={e => onChange(e.target.value)}

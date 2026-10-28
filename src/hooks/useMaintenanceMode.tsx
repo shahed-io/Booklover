@@ -119,7 +119,7 @@ export const MAINTENANCE_DEFAULT: MaintenanceSettings = {
   customHtml: '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui;background:#0b1020;color:#fff">\n  <div style="text-align:center;max-width:560px;padding:40px">\n    <h1 style="font-size:34px;margin:0 0 12px">We\u2019ll be back soon</h1>\n    <p style="opacity:.75;line-height:1.7">Write anything you want here \u2014 full HTML &amp; CSS supported.</p>\n  </div>\n</div>',
 };
 
-export const parseMaintenance = (raw?: string | null): MaintenanceSettings => {
+export const parseMaintenance = (raw?: string | null | undefined): MaintenanceSettings => {
   if (!raw) return MAINTENANCE_DEFAULT;
   try {
     return { ...MAINTENANCE_DEFAULT, ...JSON.parse(raw) };

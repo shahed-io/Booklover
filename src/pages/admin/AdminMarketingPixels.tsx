@@ -4,7 +4,7 @@ import { Save, Plus, Trash2, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import { reloadMarketingPixelsCache, type Platform, type PixelAccount, type MarketingPixelsConfig } from '@/components/store/MarketingPixels';
 
-const PLATFORMS: { key: Platform; label: string; emoji: string; placeholder: string; supportsCAPI?: boolean; help: string; learn: string }[] = [
+const PLATFORMS: { key: Platform; label: string; emoji: string; placeholder: string; supportsCAPI?: boolean | undefined; help: string; learn: string }[] = [
   { key: 'tiktok',    label: 'TikTok',      emoji: '🎵', placeholder: 'C12ABC...XYZ',     supportsCAPI: true, help: 'TikTok Pixel ID (Events Manager → Connect Data Source → Web)', learn: 'https://ads.tiktok.com/help/article?aid=10028' },
   { key: 'snapchat',  label: 'Snapchat',    emoji: '👻', placeholder: 'xxxxxxxx-xxxx-xxxx', help: 'Snap Pixel ID (Snap Ads Manager → Events Manager)', learn: 'https://businesshelp.snapchat.com/s/article/snap-pixel-about' },
   { key: 'pinterest', label: 'Pinterest',   emoji: '📌', placeholder: '2612345678901',     help: 'Pinterest Tag ID (Pinterest Ads → Conversions)',  learn: 'https://help.pinterest.com/en/business/article/install-the-pinterest-tag' },

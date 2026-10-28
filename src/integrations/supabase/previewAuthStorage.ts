@@ -14,7 +14,7 @@ interface BrokerRequest {
   requestId: string;
   projectId: string;
   key: string;
-  value?: string;
+  value?: string | undefined;
 }
 
 interface BrokerReply {
@@ -70,7 +70,7 @@ export function brokeredPreviewStorage(): PreviewAuthStorage | undefined {
   const TIMEOUT = 2000;
   const newId = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
 
-  const request = (type: BrokerRequestType, key: string, value?: string): Promise<BrokerReply | null> =>
+  const request = (type: BrokerRequestType, key: string, value?: string | undefined): Promise<BrokerReply | null> =>
     new Promise((resolve) => {
       const requestId = newId();
       let done = false;

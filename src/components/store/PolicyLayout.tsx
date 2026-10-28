@@ -6,7 +6,7 @@ import { FloatingButtons } from '@/components/store/Extras';
 
 /* ─── Reusable primitives ─── */
 
-export const GlassCard = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+export const GlassCard = ({ children, className = '' }: { children: React.ReactNode; className?: string | undefined }) => (
   <div
     className={`relative rounded-3xl overflow-hidden ${className}`}
     style={{
@@ -58,7 +58,7 @@ export const SectionCard = ({
   </div>
 );
 
-export const Bullet = ({ children, color }: { children: React.ReactNode; color?: string }) => (
+export const Bullet = ({ children, color }: { children: React.ReactNode; color?: string | undefined }) => (
   <li className="flex items-start gap-2.5">
     <span className="mt-[7px] w-1.5 h-1.5 rounded-full flex-shrink-0"
       style={{ background: color || 'hsl(258,78%,55%)' }} />

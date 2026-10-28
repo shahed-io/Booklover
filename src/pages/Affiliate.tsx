@@ -647,7 +647,7 @@ const Section = ({ title, icon: Icon, children }: { title: string; icon: any; ch
   </div>
 );
 
-const Field = ({ label, required, icon: Icon, children }: { label: string; required?: boolean; icon?: any; children: React.ReactNode }) => (
+const Field = ({ label, required, icon: Icon, children }: { label: string; required?: boolean | undefined; icon?: any | undefined; children: React.ReactNode }) => (
   <div className="space-y-1.5">
     <Label className="text-xs flex items-center gap-1.5">
       {Icon && <Icon size={11} className="text-muted-foreground" />}

@@ -481,7 +481,7 @@ Restore:
   };
 
   // ─── Restore Full (ordered for FK) ────────────────────────────────
-  const restoreFull = async (tablesOverride?: Record<string, any[]>, opts?: { keepRestoring?: boolean; weight?: number }) => {
+  const restoreFull = async (tablesOverride?: Record<string, any[]>, opts?: { keepRestoring?: boolean | undefined; weight?: number | undefined }) => {
     if (!tablesOverride && !importPreview) return { added: 0, skipped: 0, failed: 0 };
     setRestoring(true);
     if (!opts?.keepRestoring) setRestoreLog([]);

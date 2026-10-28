@@ -435,7 +435,7 @@ export default function AdminAbandonedCheckouts() {
 }
 
 // ─── Stat Card ────────────────────────────────────────────────────────────
-function StatCard({ label, value, icon: Icon, color, isText, active, onClick }: { label: string; value: any; icon: any; color: string; isText?: boolean; active?: boolean; onClick?: () => void }) {
+function StatCard({ label, value, icon: Icon, color, isText, active, onClick }: { label: string; value: any; icon: any; color: string; isText?: boolean | undefined; active?: boolean | undefined; onClick?: () => void }) {
   return (
     <button
       type="button"
@@ -618,7 +618,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({
   icon: Icon, label, value, onCopy, copied, multiline, small,
 }: {
-  icon: any; label: string; value: any; onCopy?: () => void; copied?: boolean; multiline?: boolean; small?: boolean;
+  icon: any; label: string; value: any; onCopy?: () => void; copied?: boolean | undefined; multiline?: boolean | undefined; small?: boolean | undefined;
 }) {
   if (!value) {
     return (

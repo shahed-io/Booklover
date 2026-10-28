@@ -15,7 +15,7 @@ interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
   ({ className, activeClassName, pendingClassName, to, onMouseEnter, onTouchStart, onFocus, ...props }, ref) => {
     // Auto-prefetch the route chunk on hover/touch/focus
-    const targetPath = typeof to === "string" ? to : (to as { pathname?: string })?.pathname;
+    const targetPath = typeof to === "string" ? to : (to as { pathname?: string | undefined })?.pathname;
     const prefetch = usePrefetchHandlers(targetPath);
 
     return (

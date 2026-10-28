@@ -30,7 +30,7 @@ function wordCount(text: string | null | undefined): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
-function faqCount(faq: any, _description?: string | null): number {
+function faqCount(faq: any, _description?: string | null | undefined): number {
   if (Array.isArray(faq)) return faq.length;
   return 0;
 }
@@ -587,7 +587,7 @@ const AdminProductContent = () => {
   );
 };
 
-const StatCard = ({ label, value, tone }: { label: string; value: number; tone?: 'warn' | 'ok' }) => (
+const StatCard = ({ label, value, tone }: { label: string; value: number; tone?: 'warn' | 'ok' | undefined }) => (
   <div className="rounded-xl border border-border bg-card p-4">
     <div className="text-xs text-muted-foreground">{label}</div>
     <div className={`text-2xl font-bold mt-1 ${

@@ -2,7 +2,7 @@
  * Maps raw database errors to user-friendly messages.
  * Never exposes internal DB schema details to the UI.
  */
-export const handleDbError = (error: { message?: string } | null): string => {
+export const handleDbError = (error: { message?: string | undefined } | null): string => {
   if (!error?.message) return 'একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।';
   const msg = error.message.toLowerCase();
 

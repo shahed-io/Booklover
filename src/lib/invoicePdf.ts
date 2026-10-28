@@ -349,7 +349,7 @@ export async function buildInvoiceHtmlString(data: InvoiceData): Promise<string>
 /**
  * Normalize Bangladeshi phone to wa.me format (8801XXXXXXXXX).
  */
-export function normalizeWaPhone(raw?: string | null): string {
+export function normalizeWaPhone(raw?: string | null | undefined): string {
   if (!raw) return '';
   let p = String(raw).replace(/\D/g, '');
   if (p.startsWith('880')) return p;

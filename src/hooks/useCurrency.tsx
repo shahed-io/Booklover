@@ -24,7 +24,7 @@ interface CurrencyContextValue {
   /** Convert a BDT price into the active currency's numeric value */
   convert: (bdt: number) => number;
   /** Format a BDT price with the active currency's symbol */
-  format: (bdt: number, opts?: { compact?: boolean }) => string;
+  format: (bdt: number, opts?: { compact?: boolean | undefined }) => string;
   refresh: () => Promise<void>;
 }
 
@@ -114,7 +114,7 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const format = useCallback(
-    (bdt: number, opts?: { compact?: boolean }) => {
+    (bdt: number, opts?: { compact?: boolean | undefined }) => {
       const value = convert(bdt);
       const decimals = active.code === "BDT" ? 0 : active.decimals ?? 2;
       

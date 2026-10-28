@@ -52,7 +52,7 @@ const AdminFooterSettings = () => {
     </div>
   );
 
-  const Field = ({ label, k, placeholder, hint }: { label: string; k: keyof FooterSettings; placeholder?: string; hint?: string }) => (
+  const Field = ({ label, k, placeholder, hint }: { label: string; k: keyof FooterSettings; placeholder?: string | undefined; hint?: string | undefined }) => (
     <div>
       <label className="text-xs text-muted-foreground mb-1.5 block">{label}</label>
       <input

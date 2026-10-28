@@ -80,8 +80,8 @@ const pruneStale = (arr: CartItem[]): CartItem[] => arr.filter(isFresh);
 interface CartContextType {
   items: CartItem[];
   wishlist: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>, qty?: number) => void;
-  buyNow: (item: Omit<CartItem, 'quantity'>, qty?: number) => void;
+  addToCart: (item: Omit<CartItem, 'quantity'>, qty?: number | undefined) => void;
+  buyNow: (item: Omit<CartItem, 'quantity'>, qty?: number | undefined) => void;
   removeFromCart: (id: number | string, variant?: string | undefined) => void;
   updateQuantity: (id: number | string, quantity: number, variant?: string | undefined) => void;
   clearCart: () => void;

@@ -14,8 +14,8 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { toast } from 'sonner';
 import { Plus, Copy, Edit, Trash2, Eye, Check, X as XIcon, Pause, Play, QrCode, ExternalLink, Loader2, Link2, Inbox } from 'lucide-react';
 
-type PaymentMethod = { name: string; number?: string; instructions?: string };
-type CustomField = { label: string; type?: 'text' | 'email' | 'number'; required?: boolean };
+type PaymentMethod = { name: string; number?: string | undefined; instructions?: string | undefined };
+type CustomField = { label: string; type?: 'text' | 'email' | 'number' | undefined; required?: boolean | undefined };
 
 const emptyLink = {
   id: '' as string | undefined,

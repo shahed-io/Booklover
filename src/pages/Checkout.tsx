@@ -503,7 +503,7 @@ const Checkout = () => {
     return () => clearTimeout(abandonedTimer.current);
   }, [form.name, form.email, form.phone, items, subtotal, discountAmount, finalTotal, coupon.isApplied, coupon.code, paymentMethod, orderNotes, user?.id]);
 
-  const handleApplyCoupon = async (code?: string) => {
+  const handleApplyCoupon = async (code?: string | undefined) => {
     const c = (code || couponCode).trim().toUpperCase();
     if (!c) return;
     setCouponLoading(true);
