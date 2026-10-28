@@ -10,7 +10,8 @@ interface AdminHeroHeaderProps {
   section: string;
   Icon: LucideIcon;
   /** Optional decorative icons that drift in the background */
-  decorIcons?: LucideIcon[];
+  decorIcons?: LucideIcon[] | undefined;
+
 }
 
 interface LiveStats {

@@ -8,10 +8,14 @@ export interface SearchProduct {
 }
 
 export interface AiSearchRaw {
-  matchedIds?: unknown;
-  correctedQuery?: unknown;
-  didYouMean?: unknown;
-  keywords?: unknown;
+  matchedIds?: unknown | undefined;
+
+  correctedQuery?: unknown | undefined;
+
+  didYouMean?: unknown | undefined;
+
+  keywords?: unknown | undefined;
+
 }
 
 export interface AiSearchParsed {

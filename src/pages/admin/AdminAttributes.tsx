@@ -15,7 +15,8 @@ interface GlobalAttribute {
   order_by: string;
   has_archives: boolean;
   sort_order: number;
-  values?: GlobalAttributeValue[];
+  values?: GlobalAttributeValue[] | undefined;
+
 }
 
 interface GlobalAttributeValue {

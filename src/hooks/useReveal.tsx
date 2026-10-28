@@ -3,11 +3,16 @@ import { useEffect, useRef, useState } from 'react';
 export type RevealVariant = 'up' | 'down' | 'left' | 'right' | 'scale' | 'fade' | 'blur';
 
 interface UseRevealOptions {
-  threshold?: number;
-  rootMargin?: string;
-  once?: boolean;
-  variant?: RevealVariant;
-  delay?: number;
+  threshold?: number | undefined;
+
+  rootMargin?: string | undefined;
+
+  once?: boolean | undefined;
+
+  variant?: RevealVariant | undefined;
+
+  delay?: number | undefined;
+
 }
 
 export const useReveal = (options: UseRevealOptions = {}) => {

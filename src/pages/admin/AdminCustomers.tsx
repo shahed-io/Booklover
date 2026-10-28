@@ -27,15 +27,24 @@ type Customer = {
   phone: string | null;
   created_at: string;
   wallet_balance: number;
-  order_count?: number;
-  total_spent?: number;
-  last_order?: string | null;
-  points_balance?: number;
-  total_points_earned?: number;
-  total_points_redeemed?: number;
-  is_suspended?: boolean;
-  suspended_at?: string | null;
-  suspended_reason?: string | null;
+  order_count?: number | undefined;
+
+  total_spent?: number | undefined;
+
+  last_order?: string | null | undefined;
+
+  points_balance?: number | undefined;
+
+  total_points_earned?: number | undefined;
+
+  total_points_redeemed?: number | undefined;
+
+  is_suspended?: boolean | undefined;
+
+  suspended_at?: string | null | undefined;
+
+  suspended_reason?: string | null | undefined;
+
 };
 
 type OrderItem = {

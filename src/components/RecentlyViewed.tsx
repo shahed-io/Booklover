@@ -64,7 +64,8 @@ export const trackRecentlyViewed = async (
 };
 
 interface Props {
-  currentProductId?: string;
+  currentProductId?: string | undefined;
+
 }
 
 export const RecentlyViewed = ({ currentProductId }: Props) => {

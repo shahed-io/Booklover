@@ -19,12 +19,18 @@ import {
 
 interface StatusResp {
   configured: boolean;
-  service_account_email?: string | null;
-  project_id?: string | null;
-  last_tested_at?: string | null;
-  last_test_ok?: boolean | null;
-  last_test_message?: string | null;
-  updated_at?: string | null;
+  service_account_email?: string | null | undefined;
+
+  project_id?: string | null | undefined;
+
+  last_tested_at?: string | null | undefined;
+
+  last_test_ok?: boolean | null | undefined;
+
+  last_test_message?: string | null | undefined;
+
+  updated_at?: string | null | undefined;
+
 }
 
 interface LogRow {

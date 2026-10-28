@@ -32,10 +32,14 @@ interface LiveChatSettings {
   quick_suggestions: string[];
   // FAB
   fab_label: string;
-  fab_color_from?: string;
-  fab_color_mid?: string;
-  fab_color_to?: string;
-  fab_icon_color?: string;
+  fab_color_from?: string | undefined;
+
+  fab_color_mid?: string | undefined;
+
+  fab_color_to?: string | undefined;
+
+  fab_icon_color?: string | undefined;
+
   // Live Chat Sets (multiple support channels)
   live_sets: LiveSet[];
 }
@@ -50,7 +54,8 @@ interface LiveSet {
   icon_color: string;
   icon: string; // lucide icon name
   is_active: boolean;
-  sort_order?: number;
+  sort_order?: number | undefined;
+
 }
 
 const DEFAULT_SETTINGS: LiveChatSettings = {

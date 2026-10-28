@@ -5,7 +5,8 @@ export interface FooterLink {
   id: string;
   label: string;
   href: string;
-  external?: boolean;
+  external?: boolean | undefined;
+
   is_active: boolean;
   sort_order: number;
 }

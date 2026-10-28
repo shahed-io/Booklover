@@ -32,7 +32,8 @@ interface AdminNotif {
   title: string;
   message: string;
   time: string;
-  link?: string;
+  link?: string | undefined;
+
 }
 
 type MenuItem = { icon: any; label: string; path: string; badge?: 'live' | 'new' };

@@ -10,8 +10,9 @@ import { useCurrency } from '@/hooks/useCurrency';
 
 interface ProductCardProps {
   product: Product;
-  delay?: number;
-  priority?: boolean; // true for first ~4 cards (above fold)
+  delay?: number | undefined;
+
+  priority?: boolean | undefined; // true for first ~4 cards (above fold)
 }
 
 const WA = '88';

@@ -13,7 +13,8 @@ interface GlobalAttr {
 }
 
 interface Assignment {
-  id?: string;
+  id?: string | undefined;
+
   attribute_id: string | null;
   custom_name: string;
   attribute_type: 'global' | 'custom';
@@ -21,8 +22,10 @@ interface Assignment {
   is_visible: boolean;
   use_in_variation: boolean;
   sort_order: number;
-  _deleted?: boolean;
-  _tempId?: string;
+  _deleted?: boolean | undefined;
+
+  _tempId?: string | undefined;
+
 }
 
 interface Props {

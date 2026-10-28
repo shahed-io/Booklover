@@ -5,14 +5,22 @@ import { COUNTRIES, DEFAULT_COUNTRY, joinPhone, splitPhone, type Country } from 
 type Props = {
   value: string;
   onChange: (fullNumber: string) => void;
-  placeholder?: string;
-  className?: string;
-  inputClassName?: string;
-  id?: string;
-  name?: string;
-  required?: boolean;
-  disabled?: boolean;
-  autoFocus?: boolean;
+  placeholder?: string | undefined;
+
+  className?: string | undefined;
+
+  inputClassName?: string | undefined;
+
+  id?: string | undefined;
+
+  name?: string | undefined;
+
+  required?: boolean | undefined;
+
+  disabled?: boolean | undefined;
+
+  autoFocus?: boolean | undefined;
+
 };
 
 /**

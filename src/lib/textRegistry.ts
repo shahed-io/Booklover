@@ -6,7 +6,8 @@ export interface TextRegistryEntry {
   key: string;
   defaultValue: string;
   category: string;
-  description?: string;
+  description?: string | undefined;
+
 }
 
 export const TEXT_REGISTRY: TextRegistryEntry[] = [

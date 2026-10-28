@@ -7,11 +7,12 @@ export interface CartItem {
   name: string;
   category: string;
   price: number;
-  originalPrice?: number;
+  originalPrice?: number | undefined;
+
   image: string;
   quantity: number;
-  variant?: string; // selected variant label
-  addedAt?: string; // ISO timestamp – used to expire forgotten cart items
+  variant?: string | undefined; // selected variant label
+  addedAt?: string | undefined; // ISO timestamp – used to expire forgotten cart items
 }
 
 export interface CouponState {

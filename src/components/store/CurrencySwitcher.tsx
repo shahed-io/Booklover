@@ -11,8 +11,10 @@ import { Check, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 interface Props {
-  compact?: boolean;
-  className?: string;
+  compact?: boolean | undefined;
+
+  className?: string | undefined;
+
 }
 
 const CurrencySwitcher = ({ className }: Props) => {

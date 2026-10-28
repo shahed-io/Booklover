@@ -23,7 +23,8 @@ type BackupEntry = {
   records: number;
   type: 'export' | 'import';
   status: 'success' | 'error';
-  error?: string;
+  error?: string | undefined;
+
 };
 
 // Ordered so parents (categories, products, profiles) restore before children (order_items, license_keys)

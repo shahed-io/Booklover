@@ -44,24 +44,37 @@ interface Account {
   total_conversions: number;
   application_note: string | null;
   admin_note: string | null;
-  applicant_name?: string | null;
-  applicant_email?: string | null;
-  applicant_phone?: string | null;
-  website_url?: string | null;
-  facebook_url?: string | null;
-  youtube_url?: string | null;
-  other_social_url?: string | null;
-  audience_size?: string | null;
-  niche?: string | null;
-  why_join?: string | null;
-  promotion_strategy?: string | null;
+  applicant_name?: string | null | undefined;
+
+  applicant_email?: string | null | undefined;
+
+  applicant_phone?: string | null | undefined;
+
+  website_url?: string | null | undefined;
+
+  facebook_url?: string | null | undefined;
+
+  youtube_url?: string | null | undefined;
+
+  other_social_url?: string | null | undefined;
+
+  audience_size?: string | null | undefined;
+
+  niche?: string | null | undefined;
+
+  why_join?: string | null | undefined;
+
+  promotion_strategy?: string | null | undefined;
+
   payout_method: string | null;
   payout_account: string | null;
   payout_account_name: string | null;
   approved_at: string | null;
   created_at: string;
-  email?: string;
-  display_name?: string;
+  email?: string | undefined;
+
+  display_name?: string | undefined;
+
 }
 
 interface Conversion {
@@ -74,7 +87,8 @@ interface Conversion {
   status: string;
   rejection_reason: string | null;
   created_at: string;
-  referral_code?: string;
+  referral_code?: string | undefined;
+
 }
 
 interface Withdrawal {
@@ -89,7 +103,8 @@ interface Withdrawal {
   admin_notes: string | null;
   transaction_id: string | null;
   requested_at: string;
-  referral_code?: string;
+  referral_code?: string | undefined;
+
 }
 
 interface ProductCommission {
@@ -98,7 +113,8 @@ interface ProductCommission {
   commission_percent: number;
   customer_discount_percent: number | null;
   is_active: boolean;
-  product_name?: string;
+  product_name?: string | undefined;
+
 }
 
 const STATUS_BADGE: Record<string, string> = {

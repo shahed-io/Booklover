@@ -53,8 +53,10 @@ interface Order {
   created_at: string; payment_status: string | null;
   payment_method: string | null; transaction_id: string | null;
   notes: string | null; coupon_code: string | null;
-  items?: OrderItem[];
-  timeline?: TimelineEvent[];
+  items?: OrderItem[] | undefined;
+
+  timeline?: TimelineEvent[] | undefined;
+
 }
 interface Address {
   id: string; label: string; recipient_name: string; phone: string;
@@ -69,8 +71,10 @@ interface Referral {
   id: string; referral_code: string; status: string;
   reward_amount: number; created_at: string;
   referred_id: string | null;
-  referred_name?: string;
-  referred_email?: string;
+  referred_name?: string | undefined;
+
+  referred_email?: string | undefined;
+
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; icon: React.ReactNode }> = {

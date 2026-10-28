@@ -28,7 +28,8 @@ interface PageResult {
   status: "pending" | "loading" | "done" | "error";
   totalImages: number;
   issueCount: number;
-  error?: string;
+  error?: string | undefined;
+
 }
 
 const ISSUE_LABEL: Record<Issue, string> = {

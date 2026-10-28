@@ -17,7 +17,8 @@ interface Review {
   product: string;
   date: string;
   verified: boolean;
-  is_visible?: boolean;
+  is_visible?: boolean | undefined;
+
 }
 
 // Real customer reviews collected from Facebook page recommendations

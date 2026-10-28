@@ -6,35 +6,53 @@ const logoIcon = '/logo.png';
 
 export interface NoticeData {
   title: string;
-  summary?: string | null;
+  summary?: string | null | undefined;
+
   body: string;
-  reference_no?: string | null;
-  signed_by?: string | null;
-  signed_role?: string | null;
-  effective_date?: string | null;
-  published_at?: string | null;
-  created_at?: string | null;
-  audience?: string | null;
+  reference_no?: string | null | undefined;
+
+  signed_by?: string | null | undefined;
+
+  signed_role?: string | null | undefined;
+
+  effective_date?: string | null | undefined;
+
+  published_at?: string | null | undefined;
+
+  created_at?: string | null | undefined;
+
+  audience?: string | null | undefined;
+
 }
 
 export interface NoticeBrand {
-  name?: string;
-  tagline?: string;
-  website?: string;
-  email?: string;
-  phone?: string;
-  logoUrl?: string;
-  brandColor?: string;   // hex
-  brandLight?: string;   // hex tint
-  accentText?: string;
+  name?: string | undefined;
+
+  tagline?: string | undefined;
+
+  website?: string | undefined;
+
+  email?: string | undefined;
+
+  phone?: string | undefined;
+
+  logoUrl?: string | undefined;
+
+  brandColor?: string | undefined;   // hex
+  brandLight?: string | undefined;   // hex tint
+  accentText?: string | undefined;
+
 }
 
 interface Props {
   notice: NoticeData;
-  brand?: NoticeBrand;
+  brand?: NoticeBrand | undefined;
+
   /** Default signature image (data URL or http URL). Used when notice has no override. */
-  signatureUrl?: string;
-  className?: string;
+  signatureUrl?: string | undefined;
+
+  className?: string | undefined;
+
 }
 
 const formatDate = (s?: string | null) => {

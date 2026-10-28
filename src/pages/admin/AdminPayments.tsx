@@ -29,7 +29,8 @@ type PaymentProof = {
   id: string; order_id: string; transaction_id: string; payment_method: string;
   amount: number | null; status: string; screenshot_url: string | null;
   submitted_at: string; reviewed_at: string | null; admin_notes: string | null; user_id: string | null;
-  orders?: { order_number: string; customer_name: string; customer_email: string; total: number } | null;
+  orders?: { order_number: string; customer_name: string; customer_email: string; total: number } | null | undefined;
+
 };
 
 const statusConfig: Record<string, { label: string; color: string; icon: React.ElementType }> = {

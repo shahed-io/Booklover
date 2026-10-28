@@ -4,11 +4,14 @@ interface TProps {
   /** Unique registry key, e.g. "home.hero.title" */
   id: string;
   /** Optional inline default; falls back to TEXT_REGISTRY default if omitted. */
-  children?: string;
+  children?: string | undefined;
+
   /** Optional className passed through to wrapping <span>. */
-  className?: string;
+  className?: string | undefined;
+
   /** Render as a different element. Defaults to span. */
-  as?: 'span' | 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'strong' | 'em';
+  as?: 'span' | 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'strong' | 'em' | undefined;
+
 }
 
 /**

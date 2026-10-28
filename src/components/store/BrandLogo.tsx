@@ -1,6 +1,8 @@
 interface BrandLogoProps {
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
+  size?: 'sm' | 'md' | 'lg' | undefined;
+
+  className?: string | undefined;
+
 }
 
 const BrandLogo = ({ size = 'md', className = '' }: BrandLogoProps) => {

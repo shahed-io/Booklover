@@ -38,19 +38,26 @@ interface Category { id: string; name: string; parent_id: string | null; }
 
 interface Product {
   id: string; name: string; price: number; original_price: number | null;
-  cost_price?: number | null; discount_percent: number | null; status: string;
+  cost_price?: number | null; discount_percent: number | null; status: string | undefined;
+
   image_url: string | null; images?: string[] | null; video_url?: string | null;
   total_sales: number; created_at: string; is_featured: boolean; is_digital: boolean;
   tags: string[] | null; description: string | null; short_description: string | null;
   download_link: string | null; sku: string | null; category_id: string | null;
-  subcategory_id?: string | null; brand?: string | null; delivery_time: string | null;
-  delivery_type?: string | null; what_you_get: string[] | null;
+  subcategory_id?: string | null; brand?: string | null; delivery_time: string | null | undefined;
+
+  delivery_type?: string | null; what_you_get: string[] | null | undefined;
+
   faq: { q: string; a: string }[] | null; seo_title: string | null;
   seo_description: string | null; variants: { name: string; options: { label: string; price: string }[] }[] | null;
-  badge?: string | null; demo_url?: string | null; warranty_note?: string | null;
-  refund_note?: string | null; product_type?: string | null;
-  attributes?: { key: string; value: string }[] | null;
-  category?: { name: string } | null;
+  badge?: string | null; demo_url?: string | null; warranty_note?: string | null | undefined;
+
+  refund_note?: string | null; product_type?: string | null | undefined;
+
+  attributes?: { key: string; value: string }[] | null | undefined;
+
+  category?: { name: string } | null | undefined;
+
 }
 
 const DURATION_PRESETS = [

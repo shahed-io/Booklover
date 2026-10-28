@@ -22,10 +22,14 @@ interface Referral {
   status: string;
   reward_paid: boolean;
   created_at: string;
-  referrer_name?: string;
-  referrer_email?: string;
-  referred_email?: string;
-  referrer_total?: number;
+  referrer_name?: string | undefined;
+
+  referrer_email?: string | undefined;
+
+  referred_email?: string | undefined;
+
+  referrer_total?: number | undefined;
+
 }
 
 const AdminReferrals = () => {

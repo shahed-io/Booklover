@@ -5,25 +5,31 @@ import { toast } from 'sonner';
 
 // ── Types ─────────────────────────────────────────────────────
 interface OptionValue {
-  id?: string;
+  id?: string | undefined;
+
   label: string;
   price_adjustment: number;
   is_default: boolean;
   sort_order: number;
-  _deleted?: boolean;
-  _tempId?: string;
+  _deleted?: boolean | undefined;
+
+  _tempId?: string | undefined;
+
 }
 
 interface OptionGroup {
-  id?: string;
+  id?: string | undefined;
+
   name: string;
   display_type: 'button' | 'radio' | 'dropdown';
   is_required: boolean;
   allow_multiple: boolean;
   sort_order: number;
   values: OptionValue[];
-  _deleted?: boolean;
-  _tempId?: string;
+  _deleted?: boolean | undefined;
+
+  _tempId?: string | undefined;
+
 }
 
 interface Props {

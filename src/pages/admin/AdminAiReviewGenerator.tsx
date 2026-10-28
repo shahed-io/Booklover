@@ -12,7 +12,8 @@ interface ProductRow {
   description: string | null;
   delivery_time: string | null;
   category: { name: string } | null;
-  review_count?: number;
+  review_count?: number | undefined;
+
 }
 
 interface ReviewItem {

@@ -22,8 +22,10 @@ type QueueItem = {
   intent: string;
   niche: string;
   status: 'queued' | 'running' | 'success' | 'skipped' | 'error';
-  message?: string;
-  blog_slug?: string;
+  message?: string | undefined;
+
+  blog_slug?: string | undefined;
+
 };
 
 const AdminTopicalAuthority = () => {

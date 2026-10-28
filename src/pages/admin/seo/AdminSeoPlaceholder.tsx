@@ -4,7 +4,8 @@ interface Props {
   title: string;
   description: string;
   icon: LucideIcon;
-  color?: string;
+  color?: string | undefined;
+
 }
 
 const AdminSeoPlaceholder = ({ title, description, icon: Icon, color = 'hsl(258,78%,55%)' }: Props) => (

@@ -164,25 +164,41 @@ export function evaluateClientProtection(): ProtectionDecision {
  * stay fully usable for real users.
  */
 export interface CopyDeterrentOptions {
-  rightClick?: boolean;
-  copyCut?: boolean;
-  textSelection?: boolean;
-  imageDrag?: boolean;
-  devtoolsShortcuts?: boolean;
+  rightClick?: boolean | undefined;
+
+  copyCut?: boolean | undefined;
+
+  textSelection?: boolean | undefined;
+
+  imageDrag?: boolean | undefined;
+
+  devtoolsShortcuts?: boolean | undefined;
+
 }
 
 export interface CopyDeterrentOptions {
-  rightClick?: boolean;
-  copyCut?: boolean;
-  textSelection?: boolean;
-  imageDrag?: boolean;
-  devtoolsShortcuts?: boolean;
-  printBlock?: boolean;
-  devtoolsDetect?: boolean;
-  iframeBlock?: boolean;
-  consoleWarn?: boolean;
-  blurOnHide?: boolean;
-  mobileLongPress?: boolean;
+  rightClick?: boolean | undefined;
+
+  copyCut?: boolean | undefined;
+
+  textSelection?: boolean | undefined;
+
+  imageDrag?: boolean | undefined;
+
+  devtoolsShortcuts?: boolean | undefined;
+
+  printBlock?: boolean | undefined;
+
+  devtoolsDetect?: boolean | undefined;
+
+  iframeBlock?: boolean | undefined;
+
+  consoleWarn?: boolean | undefined;
+
+  blurOnHide?: boolean | undefined;
+
+  mobileLongPress?: boolean | undefined;
+
 }
 
 export function installCopyDeterrents(opts: CopyDeterrentOptions = {}): () => void {

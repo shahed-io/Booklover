@@ -116,9 +116,12 @@ export function useSearchParams(): [URLSearchParams, (init: URLSearchParams | Re
 
 type LinkProps = Omit<ComponentProps<typeof TSLink>, "to"> & {
   to: string;
-  replace?: boolean;
-  state?: unknown;
-  children?: ReactNode;
+  replace?: boolean | undefined;
+
+  state?: unknown | undefined;
+
+  children?: ReactNode | undefined;
+
 };
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
@@ -156,7 +159,8 @@ export const Outlet = TSOutlet;
 // ---------- NavLink ----------
 
 export type NavLinkProps = Omit<LinkProps, "className" | "style" | "children"> & {
-  end?: boolean;
+  end?: boolean | undefined;
+
   className?: string | ((state: { isActive: boolean; isPending: boolean }) => string | undefined);
   style?: CSSProperties | ((state: { isActive: boolean; isPending: boolean }) => CSSProperties | undefined);
   children?: ReactNode | ((state: { isActive: boolean; isPending: boolean }) => ReactNode);

@@ -40,9 +40,11 @@ interface LiveSet {
   label: string;
   subtitle: string;
   icon_color: string;
-  icon?: string;
+  icon?: string | undefined;
+
   is_active: boolean;
-  sort_order?: number;
+  sort_order?: number | undefined;
+
 }
 
 interface LiveChatConfig {
@@ -61,10 +63,14 @@ interface LiveChatConfig {
   ai_placeholder: string;
   quick_suggestions: string[];
   fab_label: string;
-  fab_color_from?: string;
-  fab_color_mid?: string;
-  fab_color_to?: string;
-  fab_icon_color?: string;
+  fab_color_from?: string | undefined;
+
+  fab_color_mid?: string | undefined;
+
+  fab_color_to?: string | undefined;
+
+  fab_icon_color?: string | undefined;
+
   live_sets: LiveSet[];
 }
 

@@ -14,9 +14,12 @@ type Product = {
   description: string | null;
   faq: any;
   status: string;
-  category?: { name: string } | null;
-  brand?: string | null;
-  product_type?: string | null;
+  category?: { name: string } | null | undefined;
+
+  brand?: string | null | undefined;
+
+  product_type?: string | null | undefined;
+
 };
 
 const MIN_WORDS = 700;

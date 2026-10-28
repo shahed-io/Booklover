@@ -13,10 +13,13 @@ interface NavItem {
   icon: typeof Home;
   path: string;
   match: (path: string) => boolean;
-  badgeCount?: number;
-  requireAuth?: boolean;
+  badgeCount?: number | undefined;
+
+  requireAuth?: boolean | undefined;
+
   gradient: string;
-  srText?: string;
+  srText?: string | undefined;
+
 }
 
 /**

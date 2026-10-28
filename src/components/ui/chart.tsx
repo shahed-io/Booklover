@@ -8,8 +8,10 @@ const THEMES = { light: "", dark: ".dark" } as const;
 
 export type ChartConfig = {
   [k in string]: {
-    label?: React.ReactNode;
-    icon?: React.ComponentType;
+    label?: React.ReactNode | undefined;
+
+    icon?: React.ComponentType | undefined;
+
   } & ({ color?: string; theme?: never } | { color?: never; theme: Record<keyof typeof THEMES, string> });
 };
 
@@ -93,11 +95,16 @@ const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
     React.ComponentProps<"div"> & {
-      hideLabel?: boolean;
-      hideIndicator?: boolean;
-      indicator?: "line" | "dot" | "dashed";
-      nameKey?: string;
-      labelKey?: string;
+      hideLabel?: boolean | undefined;
+
+      hideIndicator?: boolean | undefined;
+
+      indicator?: "line" | "dot" | "dashed" | undefined;
+
+      nameKey?: string | undefined;
+
+      labelKey?: string | undefined;
+
     }
 >(
   (
@@ -230,10 +237,14 @@ const ChartLegend = RechartsPrimitive.Legend;
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
-    payload?: any;
-    verticalAlign?: "top" | "bottom" | "middle";
-    hideIcon?: boolean;
-    nameKey?: string;
+    payload?: any | undefined;
+
+    verticalAlign?: "top" | "bottom" | "middle" | undefined;
+
+    hideIcon?: boolean | undefined;
+
+    nameKey?: string | undefined;
+
   }
 >(({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
   const { config } = useChart();

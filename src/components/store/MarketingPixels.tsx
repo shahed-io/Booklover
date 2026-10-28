@@ -29,9 +29,9 @@ export interface PixelAccount {
   name: string;
   pixel_id: string;
   enabled: boolean;
-  capi_token?: string;       // TikTok Events API token
-  capi_test_code?: string;   // TikTok test event code
-  user_email?: string;       // Snapchat — required for advanced matching
+  capi_token?: string | undefined;       // TikTok Events API token
+  capi_test_code?: string | undefined;   // TikTok test event code
+  user_email?: string | undefined;       // Snapchat — required for advanced matching
 }
 
 export interface MarketingPixelsConfig {
