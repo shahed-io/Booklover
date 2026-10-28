@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/store/AuthModal';
-import { Layout } from './Layout';
+import Layout from './Layout';
 
 const UserDashboard = lazy(() => import('@/pages/UserDashboard'));
 
