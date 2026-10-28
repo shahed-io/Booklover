@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff, LogIn, KeyRound, ArrowLeft, Gift, Sparkles, ShieldCheck, CheckCircle2, AlertCircle, Zap, Lock as LockIcon, Award, Headphones } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable/index';
+import { signInWithGoogle } from './googleSignIn';
 import { toast } from 'sonner';
 import { useNavigate, useSearchParams } from '@/lib/router-compat';
 import BrandLogo from '@/components/store/BrandLogo';
@@ -229,34 +229,23 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
   };
 
   const handleGoogle = async () => {
+    if (loading) return;
     setLoading(true);
-    if (referralCode.trim()) {
-      localStorage.setItem('pending_google_referral', referralCode.trim().toUpperCase());
-    }
-    saveIntendedPath();
-    // IMPORTANT: use window.location.origin (public URL) as the OAuth broker
-    // rejects arbitrary same-origin paths and silently falls back to origin.
-    // The intended path is restored by PostLoginRedirect after the session lands.
-    const { error } = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: window.location.origin,
-    });
-    if (error) {
-      toast.error('Google লগইন ব্যর্থ হয়েছে');
-      setLoading(false);
-    }
-  };
-
-  const handleApple = async () => {
-    setLoading(true);
-    if (referralCode.trim()) {
-      localStorage.setItem('pending_google_referral', referralCode.trim().toUpperCase());
-    }
-    saveIntendedPath();
-    const { error } = await lovable.auth.signInWithOAuth('apple', {
-      redirect_uri: window.location.origin,
-    });
-    if (error) {
-      toast.error('Apple লগইন ব্যর্থ হয়েছে');
+    try {
+      saveIntendedPath();
+      if (window.location.pathname === '/' && !oauthRedirectTo) {
+        try {
+          sessionStorage.setItem('post_login_redirect', '/account');
+          localStorage.setItem('post_login_redirect', '/account');
+        } catch { /* storage may be unavailable */ }
+      }
+      const outcome = await signInWithGoogle();
+      if (outcome === 'redirected') return;
+      toast.success('সফলভাবে Google দিয়ে লগইন হয়েছে!');
+      onClose();
+    } catch {
+      toast.error('Google লগইন সম্পূর্ণ হয়নি। আবার চেষ্টা করুন।');
+    } finally {
       setLoading(false);
     }
   };
@@ -446,7 +435,7 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
             {/* Google Button — only for login/signup */}
             {mode !== 'forgot' && (
               <>
-                <div className="grid grid-cols-2 gap-3 mb-5">
+                <div className="grid grid-cols-1 gap-3 mb-5">
                   <button
                     onClick={handleGoogle}
                     disabled={loading}
@@ -468,24 +457,6 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
                       <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                     </svg>
                     Google
-                  </button>
-                  <button
-                    onClick={handleApple}
-                    disabled={loading}
-                    className="group relative rounded-xl py-3 px-3 flex items-center justify-center gap-2 text-[13px] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
-                    style={{
-                      background:
-                        'linear-gradient(160deg, hsl(226,40%,12%) 0%, hsl(226,40%,18%) 100%)',
-                      border: '1px solid hsla(0,0%,100%,0.10)',
-                      color: 'hsl(0,0%,100%)',
-                      boxShadow:
-                        '0 6px 18px -6px hsla(226,40%,8%,0.50), inset 0 1px 0 hsla(0,0%,100%,0.15)',
-                    }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-                    </svg>
-                    Apple
                   </button>
                 </div>
                 <div className="flex items-center gap-3 mb-5">
