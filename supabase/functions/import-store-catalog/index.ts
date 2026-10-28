@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
         for (let i = 0; i < src.length; i++) {
           try {
             if (src[i].startsWith(url)) { out.push(src[i]); continue }
-            const r = await fetch(src[i])
+            const fu = src[i].includes('cdn.shopify.com') ? src[i] + (src[i].includes('?') ? '&' : '?') + 'width=1200' : src[i]
+            const r = await fetch(fu)
             if (!r.ok) throw new Error(String(r.status))
             const type = r.headers.get('content-type') ?? 'image/jpeg'
             const ext = type.includes('png') ? 'png' : type.includes('webp') ? 'webp' : 'jpg'
