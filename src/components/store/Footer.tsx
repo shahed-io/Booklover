@@ -70,7 +70,7 @@ const highlightTagline = (text: string) => {
 const Footer = () => {
   const { settings } = useFooterSettings();
   const { sections } = useFooterMenu();
-  const paymentMethods = settings.payment_methods.split(',').map(s => s.trim()).filter(Boolean);
+  const paymentMethods = (settings.payment_methods || 'Cash on Delivery, bKash').split(',').map(s => s.trim()).filter(Boolean);
 
   const phone = settings.phone || '01755708708';
   const contacts = [
