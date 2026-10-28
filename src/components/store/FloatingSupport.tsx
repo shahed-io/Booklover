@@ -349,7 +349,7 @@ const FloatingSupport = () => {
             animation: 'slideUpIn 0.2s ease-out',
           }}>
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary to-primary/80">
+          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#d61f2c] to-[#a50f1c]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-white/95 flex items-center justify-center shadow-lg ring-1 ring-white/60 backdrop-blur">
                 <AiLogo size={26} />
@@ -367,14 +367,14 @@ const FloatingSupport = () => {
                 <button
                   onClick={() => switchLanguage('bn')}
                   title="বাংলায় কথা বলুন"
-                  className={`h-7 px-2 rounded-md text-[11px] font-semibold transition-colors ${language === 'bn' ? 'bg-white text-primary' : 'text-white/80 hover:text-white'}`}
+                  className={`h-7 px-2 rounded-md text-[11px] font-semibold transition-colors ${language === 'bn' ? 'bg-white text-[#b3121f]' : 'text-white/80 hover:text-white'}`}
                 >
                   বাং
                 </button>
                 <button
                   onClick={() => switchLanguage('en')}
                   title="Chat in English"
-                  className={`h-7 px-2 rounded-md text-[11px] font-semibold transition-colors ${language === 'en' ? 'bg-white text-primary' : 'text-white/80 hover:text-white'}`}
+                  className={`h-7 px-2 rounded-md text-[11px] font-semibold transition-colors ${language === 'en' ? 'bg-white text-[#b3121f]' : 'text-white/80 hover:text-white'}`}
                 >
                   EN
                 </button>
@@ -485,7 +485,7 @@ const FloatingSupport = () => {
           {/* Other ways to contact — inside AI chat panel */}
           {(config.whatsapp_enabled || config.phone_enabled || activeSets.length > 0) && (
             <div className="px-3 pb-2 pt-1 border-t border-border/40">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2 px-1">
+              <p className="text-[11.5px] uppercase tracking-wider text-foreground/70 font-semibold mb-2 px-1">
                 {language === 'en' ? 'Other ways to reach us' : 'অন্যান্য যোগাযোগের উপায়'}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -622,7 +622,7 @@ const FloatingSupport = () => {
                   </span>
                   <div className="flex-1 min-w-0 relative z-10">
                     <p className="fs-pill-title text-[14px] font-bold leading-tight tracking-tight">{label}</p>
-                    {subtitle && <p className="fs-pill-subtitle text-[11px] truncate mt-0.5">{subtitle}</p>}
+                    {subtitle && <p className="fs-pill-subtitle text-[12.5px] font-medium truncate mt-0.5">{subtitle}</p>}
                   </div>
                   <span className="fs-pill-arrow relative z-10">→</span>
                 </button>
