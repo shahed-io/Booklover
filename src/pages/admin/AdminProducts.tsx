@@ -756,7 +756,7 @@ const AdminProducts = () => {
       original_price: syncedPrices?.original_price ?? (product.original_price ? String(product.original_price) : ''),
       discount_percent: syncedPrices?.discount_percent ?? (product.discount_percent ? String(product.discount_percent) : ''),
       cost_price: product.cost_price ? String(product.cost_price) : '',
-      status: product.status,
+      status: product.status ?? 'active',
       sku: product.sku || '',
       stock_quantity: '',
       category_id: product.category_id || '',
@@ -2071,8 +2071,8 @@ const AdminProducts = () => {
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${product.status === 'active' ? 'translate-x-4' : 'translate-x-0.5'}`} />
                         </button>
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${statusColor[product.status] || 'bg-muted text-muted-foreground'}`}>
-                          {product.status.replace('_', ' ')}
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${statusColor[product.status ?? ''] || 'bg-muted text-muted-foreground'}`}>
+                          {(product.status ?? '').replace('_', ' ')}
                         </span>
                       </div>
                     </td>

@@ -14,8 +14,8 @@ interface Prospect {
   site_url: string | null;
   contact_name: string | null;
   contact_email: string | null;
-  contact_channel: string;
-  category: string;
+  contact_channel: string | null;
+  category: string | null;
   domain_authority: number | null;
   status: string;
   pitch_template: string;
@@ -614,7 +614,7 @@ const AdminOutreach = () => {
       {showTpl && (() => {
         const variants = TEMPLATE_VARIANTS[showTpl.pitch_template] || [{ label: 'Custom', subject: '', body: '' }];
         const safeIdx = Math.min(variantIdx, variants.length - 1);
-        const t = renderVariant(variants[safeIdx], showTpl);
+        const t = renderVariant(variants[safeIdx]!, showTpl);
         return (
           <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowTpl(null)}>
             <div className="glass-card rounded-2xl p-6 w-full max-w-2xl space-y-4" onClick={e => e.stopPropagation()}>

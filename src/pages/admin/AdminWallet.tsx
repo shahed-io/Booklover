@@ -88,7 +88,7 @@ const AdminWallet = () => {
         .select('user_id, display_name, email')
         .in('user_id', userIds);
       const profileMap = Object.fromEntries((profiles || []).map(p => [p.user_id, p]));
-      setTransactions(data.map(t => ({ ...t, profiles: profileMap[t.user_id] })));
+      setTransactions(data.map(t => { const pr = profileMap[t.user_id]; return pr ? { ...t, profiles: pr } : { ...t }; }));
     } else {
       setTransactions([]);
     }

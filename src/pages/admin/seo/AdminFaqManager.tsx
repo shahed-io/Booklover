@@ -19,7 +19,7 @@ const AdminFaqManager = () => {
   }, []);
 
   const getFaqs = (p: any): any[] => {
-    if (edits[p.id]) return edits[p.id];
+    const edited = edits[p.id]; if (edited) return edited;
     try { return Array.isArray(p.faq) ? p.faq : (p.faq ? JSON.parse(p.faq) : []); } catch { return []; }
   };
 

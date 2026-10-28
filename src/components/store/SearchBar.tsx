@@ -947,7 +947,7 @@ const SearchBar = ({ className = '', variant = 'standalone', onClose }: SearchBa
     supabase.from('categories').select('id, name').eq('is_active', true).then(({ data }) => {
       if (data) {
         const map: Record<string, string> = {};
-        data.forEach((c: Category) => { map[c.id] = c.name; });
+        data.forEach((c: Pick<Category, "id" | "name">) => { map[c.id] = c.name; });
         setCategories(map);
       }
     });

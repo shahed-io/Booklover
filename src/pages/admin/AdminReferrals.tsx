@@ -56,7 +56,7 @@ const AdminReferrals = () => {
 
     // Fetch referrer profiles in batch
     const referrerIds = [...new Set(refs.map(r => r.referrer_id).filter(Boolean))];
-    const referredIds = [...new Set(refs.map(r => r.referred_id).filter(Boolean))];
+    const referredIds = [...new Set(refs.map(r => r.referred_id).filter((x): x is string => !!x))];
 
     const [{ data: referrers }, { data: referred }] = await Promise.all([
       supabase.from('profiles').select('user_id, display_name, email').in('user_id', referrerIds),
