@@ -52,7 +52,7 @@ export default function Home() {
   const byCategory = useMemo(() => {
     const m = new Map<string, Book[]>();
     if (!data) return m;
-    const books = new Map(data.books.map(b => [b.id, b]));
+    const books = new Map<string, Book>(data.books.map(b => [b.id, b] as [string, Book]));
     for (const l of data.links) { const b = books.get(l.product_id); if (b) { const arr = m.get(l.category_id) || []; arr.push(b); m.set(l.category_id, arr); } }
     return m;
   }, [data]);
