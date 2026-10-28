@@ -268,3 +268,13 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 .bl-wa-buy:active{transform:translateY(0);}
 .bl-dark .bl-wa-buy{box-shadow:0 16px 30px -14px rgb(0 0 0/.7),inset 0 1px 0 rgb(255 255 255/.3),inset 0 -2px 6px rgb(0 0 0/.3);}
 @media(max-width:540px){.bl-product .grid.grid-cols-2{grid-template-columns:1fr;}}
+
+/* Premium rounded product actions */
+.bl-product-info .bl-buy-now{position:relative;overflow:hidden;height:62px!important;border-radius:999px!important;border:0;color:#fff;font-size:17px;letter-spacing:.6px;background:linear-gradient(180deg,#e2283a 0%,#c3101f 55%,#9c0b18 100%)!important;box-shadow:0 18px 34px -16px rgb(195 16 31/.75),0 4px 10px -4px rgb(195 16 31/.45),inset 0 1px 0 rgb(255 255 255/.4),inset 0 -3px 8px rgb(0 0 0/.18);transition:transform .2s ease,box-shadow .25s ease,filter .2s;}
+.bl-product-info .bl-buy-now::before{content:"";position:absolute;inset:2px 14px auto;height:45%;border-radius:999px;background:linear-gradient(180deg,rgb(255 255 255/.35),rgb(255 255 255/0));pointer-events:none;}
+.bl-product-info .bl-buy-now:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.06);box-shadow:0 24px 40px -16px rgb(195 16 31/.8),0 6px 14px -4px rgb(195 16 31/.5),inset 0 1px 0 rgb(255 255 255/.45),inset 0 -3px 8px rgb(0 0 0/.18);}
+.bl-product-info .bl-wa-buy{height:54px!important;border-radius:999px;font-size:15px;background:linear-gradient(180deg,#2fd06c 0%,#1fb35a 55%,#168a45 100%);}
+.bl-product-info .bl-wa-buy::before{inset:2px 12px auto;height:45%;border-radius:999px;background:linear-gradient(180deg,rgb(255 255 255/.32),rgb(255 255 255/0));}
+.bl-product-info .bl-cart-btn{height:54px!important;border-radius:999px!important;font-size:15px;color:#b3121f;background:linear-gradient(180deg,#fff 0%,#fff5f6 100%);border:1.5px solid rgb(195 16 31/.55);box-shadow:0 10px 22px -14px rgb(195 16 31/.5),inset 0 1px 0 #fff;transition:all .2s ease;}
+.bl-product-info .bl-cart-btn:hover:not(:disabled){color:#fff;background:linear-gradient(180deg,#e2283a,#a30d1a);border-color:transparent;transform:translateY(-2px);box-shadow:0 16px 28px -14px rgb(195 16 31/.7);}
+.bl-dark .bl-product-info .bl-cart-btn{background:transparent;color:#ff6b77;border-color:rgb(255 107 119/.6);}
