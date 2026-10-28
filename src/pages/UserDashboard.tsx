@@ -82,7 +82,7 @@ const STATUS_MAP: Record<string, { label: string; color: string; icon: React.Rea
   failed:     { label: 'Failed',     color: 'text-destructive bg-destructive/10 border-destructive/30', icon: <X size={11} /> },
 };
 
-type TabId = 'profile' | 'orders' | 'licenses' | 'downloads' | 'subscriptions' | 'wallet' | 'points' | 'wishlist' | 'addresses' | 'notifications' | 'referral' | 'security' | 'language' | 'install';
+type TabId = 'profile' | 'orders' | 'wallet' | 'points' | 'wishlist' | 'addresses' | 'notifications' | 'security' | 'language' | 'install';
 
 const TAB_IDS: { id: TabId; key: string; icon: any }[] = [
   { id: 'profile',       key: 'tab_profile',       icon: User },
@@ -955,12 +955,6 @@ const UserDashboard = () => {
     if (!code) return; navigator.clipboard.writeText(code); toast.success(t(selectedLang, 'copied'));
   };
 
-  const shareReferralLink = () => {
-    const code = profile.referral_code;
-    if (!code) return;
-    const msg = `${referralConfig.share_message}\n${window.location.origin}?ref=${code}`;
-    navigator.clipboard.writeText(msg); toast.success(t(selectedLang, 'link_copied'));
-  };
 
   const handleLogout = async () => { await signOut(); navigate('/'); };
 
