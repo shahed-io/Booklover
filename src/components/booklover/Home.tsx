@@ -31,7 +31,7 @@ function Row({ title, books, to, loading }: { title: string; books: Book[]; to: 
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState(1);
   if (!books.length && !loading) return null;
-  const step = () => { const el = ref.current; const card = el?.firstElementChild as HTMLElement | null; return card ? card.offsetWidth + 40 : 300; };
+  const step = () => { const el = ref.current; const card = el?.firstElementChild as HTMLElement | null; return el && card ? card.getBoundingClientRect().width + (parseFloat(getComputedStyle(el).columnGap) || 0) : 300; };
   const onScroll = () => { const el = ref.current; if (el) setPos(Math.min(books.length, Math.round(el.scrollLeft / step()) + 1)); };
   const go = (d: number) => ref.current?.scrollBy({ left: d * step(), behavior: 'smooth' });
   return (
