@@ -187,17 +187,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const syncedUserRef = useRef<string | null>(null);
 
   // Load saved cart after hydration so server and first client render match.
-  const localLoadedRef = useRef(false);
+  const [localLoaded, setLocalLoaded] = useState(false);
   useEffect(() => {
     setItems(loadInitialItems());
     try { setWishlist(sanitizeItems(JSON.parse(localStorage.getItem('wishlist') || '[]'))); } catch { /* ignore */ }
     try { setCouponState(JSON.parse(localStorage.getItem('cart_coupon') || 'null') || EMPTY_COUPON); } catch { /* ignore */ }
-    localLoadedRef.current = true;
+    setLocalLoaded(true);
   }, []);
 
   // Persist locally + keep a rolling backup so an abandoned checkout can be resumed later.
   useEffect(() => {
-    if (!localLoadedRef.current) return;
+    if (!localLoaded) return;
     localStorage.setItem(CART_KEY, JSON.stringify(items));
     if (items.length > 0) {
       writeBackup(items);
@@ -206,9 +206,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       // resurrect on next visit.
       try { localStorage.removeItem(CART_BACKUP_KEY); } catch { /* ignore */ }
     }
-  }, [items]);
-  useEffect(() => { if (localLoadedRef.current) localStorage.setItem('wishlist', JSON.stringify(wishlist)); }, [wishlist]);
-  useEffect(() => { if (localLoadedRef.current) localStorage.setItem('cart_coupon', JSON.stringify(coupon)); }, [coupon]);
+  }, [items, localLoaded]);
+  useEffect(() => { if (localLoaded) localStorage.setItem('wishlist', JSON.stringify(wishlist)); }, [wishlist, localLoaded]);
+  useEffect(() => { if (localLoaded) localStorage.setItem('cart_coupon', JSON.stringify(coupon)); }, [coupon, localLoaded]);
 
 
   // === DB sync helpers ===
