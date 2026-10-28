@@ -394,13 +394,13 @@ const FloatingSupport = () => {
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} items-end gap-2`}>
                 {msg.role === 'assistant' && (
-                  <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0 mb-1 shadow-md ring-1 ring-primary/15">
+                  <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0 mb-1 shadow-md ring-1 ring-[#c8102e]/15">
                     <AiLogo size={18} />
                   </div>
                 )}
                 <div className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                   msg.role === 'user'
-                    ? 'bg-primary text-primary-foreground rounded-br-none whitespace-pre-wrap'
+                    ? 'bg-[#c8102e] text-white rounded-br-none whitespace-pre-wrap'
                     : 'bg-background border border-border/60 rounded-bl-none text-foreground shadow-xs'
                 }`}>
                   {msg.role === 'user' ? (
@@ -414,19 +414,19 @@ const FloatingSupport = () => {
                           ul: ({ children }) => <ul className="my-1.5 ml-1 space-y-1 list-none">{children}</ul>,
                           ol: ({ children }) => <ol className="my-1.5 ml-4 space-y-1 list-decimal">{children}</ol>,
                           li: ({ children }) => (
-                            <li className="flex gap-2 leading-relaxed before:content-['•'] before:text-primary before:font-bold before:flex-shrink-0">
+                            <li className="flex gap-2 leading-relaxed before:content-['•'] before:text-[#c8102e] before:font-bold before:flex-shrink-0">
                               <span className="flex-1">{children}</span>
                             </li>
                           ),
-                          strong: ({ children }) => <strong className="font-semibold text-primary">{children}</strong>,
+                          strong: ({ children }) => <strong className="font-semibold text-[#c8102e]">{children}</strong>,
                           em: ({ children }) => <em className="italic">{children}</em>,
                           code: ({ children }) => <code className="px-1 py-0.5 rounded-[0.25rem] bg-muted text-[0.85em] font-mono">{children}</code>,
-                          a: ({ children, href }) => <a href={href} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-2 break-all">{children}</a>,
+                          a: ({ children, href }) => <a href={href} target="_blank" rel="noreferrer" className="text-[#c8102e] underline underline-offset-2 break-all">{children}</a>,
                           h1: ({ children }) => <h1 className="text-base font-bold mt-2 mb-1">{children}</h1>,
                           h2: ({ children }) => <h2 className="text-sm font-bold mt-2 mb-1">{children}</h2>,
                           h3: ({ children }) => <h3 className="text-sm font-semibold mt-2 mb-1">{children}</h3>,
                           hr: () => <hr className="my-2 border-border/50" />,
-                          blockquote: ({ children }) => <blockquote className="border-l-2 border-primary/40 pl-2 my-1.5 italic text-muted-foreground">{children}</blockquote>,
+                          blockquote: ({ children }) => <blockquote className="border-l-2 border-[#c8102e]/40 pl-2 my-1.5 italic text-muted-foreground">{children}</blockquote>,
                         }}
                       >
                         {msg.content}
@@ -435,9 +435,9 @@ const FloatingSupport = () => {
                   ) : loading && i === messages.length - 1 ? (
                     <span className="flex items-center gap-2">
                       <span className="flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <span className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <span className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <span className="w-1.5 h-1.5 bg-[#c8102e]/70 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1.5 h-1.5 bg-[#c8102e]/70 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-1.5 h-1.5 bg-[#c8102e]/70 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </span>
                       <span className="text-xs text-muted-foreground animate-pulse">{language === 'en' ? 'AI is typing…' : 'AI উত্তর লিখছে…'}</span>
                     </span>
@@ -467,7 +467,7 @@ const FloatingSupport = () => {
                   <button
                     key={`${q}-${i}`}
                     onClick={() => { setInput(q); setTimeout(() => inputRef.current?.focus(), 50); }}
-                    className="shrink-0 text-xs px-2.5 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors whitespace-nowrap"
+                    className="shrink-0 text-xs px-2.5 py-1.5 rounded-full bg-[#c8102e]/10 text-[#c8102e] border border-[#c8102e]/20 hover:bg-[#c8102e]/20 transition-colors whitespace-nowrap"
                   >
                     {q}
                   </button>
@@ -551,11 +551,11 @@ const FloatingSupport = () => {
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
               placeholder={language === 'en' ? PLACEHOLDER_EN : config.ai_placeholder}
-              className="flex-1 text-sm bg-muted/40 border border-border rounded-xl px-3 py-2 outline-hidden focus:border-primary transition-colors text-foreground placeholder:text-muted-foreground"
+              className="flex-1 text-sm bg-muted/40 border border-border rounded-xl px-3 py-2 outline-hidden focus:border-[#c8102e] transition-colors text-foreground placeholder:text-muted-foreground"
               disabled={loading}
             />
             <button onClick={send} disabled={loading || !input.trim()}
-              className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary text-primary-foreground disabled:opacity-40 hover:opacity-90 transition-all">
+              className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#c8102e] text-white disabled:opacity-40 hover:opacity-90 transition-all">
               {loading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
             </button>
           </div>
@@ -863,8 +863,8 @@ const FloatingSupport = () => {
         .fs-pill:active { transform: translateX(-2px) scale(0.98); }
 
         /* Text colors for white glass */
-        .fs-pill .fs-pill-title { color: hsl(356,40%,18%); }
-        .fs-pill .fs-pill-subtitle { color: hsl(356,15%,45%); }
+        .fs-pill .fs-pill-title { color: hsl(0,0%,10%); }
+        .fs-pill .fs-pill-subtitle { color: hsl(356,12%,32%); }
 
         .fs-pill-arrow {
           font-size: 16px;
