@@ -100,7 +100,7 @@ const Footer = () => {
     `}</style>
 
     {/* ── Top: Navy gloss CTA band (mirrors header utility strip) ── */}
-    <div className="relative footer-sheen bl-footer-band overflow-hidden"
+    <div className="relative footer-sheen overflow-hidden"
       style={{
         background: NAVY_PANEL,
         boxShadow: '0 12px 30px -18px hsla(352,70%,22%,0.6), inset 0 1px 0 hsla(0,0%,100%,0.12)',
@@ -114,15 +114,15 @@ const Footer = () => {
               style={{
                 background: 'var(--ft-cta-bg)',
                 boxShadow: '0 8px 20px -8px hsla(0,0%,0%,0.35), inset 0 1px 0 hsla(0,0%,100%,0.45)',
-                color: 'var(--ft-cta-text)',
+                color: 'var(--ft-red)',
               }}>
               <Zap size={18} />
             </div>
             <div className="text-center sm:text-left">
-              <h3 className="font-sora font-black text-lg sm:text-xl tracking-tight" style={{ color: 'var(--ft-band-text)' }}>
+              <h3 className="font-sora font-black text-lg sm:text-xl tracking-tight" style={{ color: 'hsl(0,0%,100%)' }}>
                 বই হোক আপনার নিত্যসঙ্গী।
               </h3>
-              <p className="text-[13px] mt-0.5" style={{ color: 'var(--ft-band-soft)' }}>
+              <p className="text-[13px] mt-0.5" style={{ color: 'hsla(0,0%,100%,0.88)' }}>
                 পছন্দের গল্প, নতুন ভাবনা—সবই বুকলাভারে।
               </p>
             </div>
@@ -131,9 +131,9 @@ const Footer = () => {
             <a href={`https://wa.me/${settings.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5"
               style={{
-                color: 'var(--ft-band-text)',
-                background: 'var(--ft-band-border)',
-                border: '1px solid var(--ft-band-border)',
+                color: 'hsl(0,0%,100%)',
+                background: 'hsla(0,0%,100%,0.10)',
+                border: '1px solid hsla(0,0%,100%,0.20)',
                 backdropFilter: 'blur(10px)',
                 boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.18)',
               }}>
@@ -298,7 +298,7 @@ const Footer = () => {
     </div>
 
     {/* ── Bottom: Navy gloss bar (payments + status + copyright) ── */}
-    <div className="relative footer-sheen bl-footer-band overflow-hidden"
+    <div className="relative footer-sheen overflow-hidden"
       style={{
         background: NAVY_PANEL,
         boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.10)',
@@ -310,14 +310,14 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Payments */}
           <div className="flex items-center gap-2 flex-wrap justify-center">
-            <span className="text-[10px] font-fira font-bold tracking-widest mr-1" style={{ color: 'var(--ft-band-text)' }}>WE ACCEPT</span>
+            <span className="text-[10px] font-fira font-bold tracking-widest mr-1" style={{ color: 'hsla(0,0%,100%,0.9)' }}>WE ACCEPT</span>
             {paymentMethods.map(pm => (
               <span key={pm}
                 className="px-3 py-1.5 rounded-lg text-[10.5px] font-bold font-fira cursor-default transition-all hover:-translate-y-0.5"
                 style={{
-                  background: 'var(--ft-band-chip)',
-                  border: '1px solid var(--ft-band-border)',
-                  color: 'var(--ft-band-soft)',
+                  background: 'hsla(0,0%,100%,0.08)',
+                  border: '1px solid hsla(0,0%,100%,0.16)',
+                  color: 'hsla(0,0%,100%,0.88)',
                   boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.14)',
                 }}>
                 {pm}
@@ -333,26 +333,26 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="h-px" style={{ background: 'var(--ft-band-border)' }} />
+        <div className="h-px" style={{ background: 'hsla(0,0%,100%,0.10)' }} />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
 <p className="text-[12px] font-fira font-semibold text-center sm:text-left flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 py-2 rounded-full"
             style={{
-              background: 'var(--ft-band-chip)',
-              border: '1px solid var(--ft-band-border)',
+              background: 'hsla(0,0%,0%,0.18)',
+              border: '1px solid hsla(0,0%,100%,0.18)',
               boxShadow: '0 6px 18px -8px hsla(0,0%,0%,0.3), inset 0 1px 0 hsla(0,0%,100%,0.20)',
             }}>
-            <span style={{ color: 'var(--ft-band-text)', fontWeight: 700 }}>© {new Date().getFullYear()}</span>
-            <span style={{ color: 'var(--ft-band-soft)' }}>·</span>
+            <span style={{ color: 'hsl(0,0%,100%)', fontWeight: 700 }}>© {new Date().getFullYear()}</span>
+            <span style={{ color: 'hsla(0,0%,100%,0.30)' }}>·</span>
             <strong style={{ fontWeight: 700 }}>
-              <span style={{ color: 'var(--ft-band-text)' }}>{settings.store_name.split(' ')[0]}</span>
+              <span style={{ color: 'hsl(0,0%,100%)' }}>{settings.store_name.split(' ')[0]}</span>
               {settings.store_name.split(' ').length > 1 && (
-                <span style={{ color: 'var(--ft-band-text)' }}> {settings.store_name.split(' ').slice(1).join(' ')}</span>
+                <span style={{ color: 'hsl(0,0%,100%)' }}> {settings.store_name.split(' ').slice(1).join(' ')}</span>
               )}
             </strong>
-            <span style={{ color: 'var(--ft-band-soft)' }}>·</span>
-            <span style={{ color: 'var(--ft-band-text)', fontWeight: 600 }}>All Rights Reserved</span>
-            <span style={{ color: 'var(--ft-band-soft)' }}>·</span>
+            <span style={{ color: 'hsla(0,0%,100%,0.30)' }}>·</span>
+            <span style={{ color: 'hsl(0,0%,100%)', fontWeight: 600 }}>All Rights Reserved</span>
+            <span style={{ color: 'hsla(0,0%,100%,0.30)' }}>·</span>
             
 
           </p>
@@ -360,14 +360,14 @@ const Footer = () => {
           <a href={settings.website_url} target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all hover:-translate-y-0.5"
             style={{
-              background: 'var(--ft-band-chip)',
-              border: '1px solid var(--ft-band-border)',
+              background: 'hsla(0,0%,100%,0.08)',
+              border: '1px solid hsla(0,0%,100%,0.16)',
               boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.14)',
             }}>
-            <span className="text-[11px] font-fira tracking-wide font-semibold" style={{ color: 'var(--ft-band-text)' }}>
+            <span className="text-[11px] font-fira tracking-wide font-semibold" style={{ color: AMBER }}>
               {settings.website_url.replace('https://','').replace('http://','')}
             </span>
-            <ExternalLink size={10} style={{ color: 'var(--ft-band-text)' }} />
+            <ExternalLink size={10} style={{ color: AMBER }} />
           </a>
         </div>
       </div>
