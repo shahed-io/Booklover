@@ -110,7 +110,7 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 .bl-hrow::-webkit-scrollbar {display:none;}
 .bl-hcard {min-width:0;scroll-snap-align:start;text-align:center;}
 .bl-hcard-img {position:relative;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;background:hsl(var(--muted));}
-.bl-hcard-img img {width:100%;height:100%;object-fit:cover;}
+.bl-hcard-img img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 .bl-badge {position:absolute;left:10px;bottom:10px;background:hsl(var(--sale));color:hsl(var(--sale-foreground));border-radius:999px;padding:3px 14px;font-size:12px;}
 .bl-hcard h3 {font-size:15px;line-height:1.5;margin:14px 0 8px;}
 .bl-hcard:hover h3 {text-decoration:underline;}
