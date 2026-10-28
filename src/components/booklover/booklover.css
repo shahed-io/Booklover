@@ -375,3 +375,8 @@ background:linear-gradient(180deg,var(--fn-bg),var(--fn-bg2));color:var(--fn-tex
 .bl-fn-site{color:#e7c27a;font-weight:600;}
 @media(max-width:1000px){.bl-fn-main{grid-template-columns:1fr 1fr;}.bl-fn-brand{grid-column:1/-1;}}
 @media(max-width:560px){.bl-fn-main{grid-template-columns:1fr;gap:30px;text-align:left;}.bl-fn-bottom-in{flex-direction:column;text-align:center;}}
+
+.bl-fn-pay{flex-wrap:nowrap;min-width:0;}
+.bl-fn-pay span{white-space:nowrap;}
+.bl-fn-payimg{display:block;height:30px;width:auto;max-width:min(560px,100%);object-fit:contain;background:#fff;border-radius:6px;padding:2px 4px;}
+@media(max-width:560px){.bl-fn-pay{flex-direction:column;}.bl-fn-payimg{height:auto;width:100%;}}
