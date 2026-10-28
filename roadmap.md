@@ -1,5 +1,10 @@
 # Roadmap
 
+## Account sign-in design
+- [ ] Present premium design choices for the /account sign-in shown in the supplied screenshot and get approval.
+- [ ] Redesign only the account sign-in presentation; preserve Google/email functionality, storefront header/footer, admin and signed-in dashboard.
+- [ ] Verify both themes and account sign-in interactions.
+
 ## Account login methods
 - [x] Remove Apple sign-in and request provider disabling; managed configuration succeeded and Google remains enabled, existing email login unchanged.
 - [x] Verify Google-only dialog, managed OAuth initiation, successful-session validation and failure handling; five tests passed and build OK.
