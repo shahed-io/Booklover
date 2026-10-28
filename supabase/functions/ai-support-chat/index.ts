@@ -323,7 +323,7 @@ const formatProductBlock = (p: any, full = false) => {
   if (full) {
     if (desc) lines.push(`   বিবরণ: ${truncate(desc, 900)}`);
     if (wyg) lines.push(`   যা পাবেন: ${truncate(wyg, 400)}`);
-    lines.push(`   লিংক: https://booklover.com.bd/product/${p.slug}`);
+    lines.push(`   লিংক: https://booklover.com.bd/products/${p.slug}`);
   }
   return lines.filter(Boolean).join("\n");
 };
