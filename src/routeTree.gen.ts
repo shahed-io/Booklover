@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AntivirusPriceInBdRouteImport } from './routes/antivirus-price-in-bd'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -104,8 +103,6 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as CollectionsIndexRouteImport } from './routes/collections.index'
 import { Route as CollectionsSlugRouteImport } from './routes/collections.$slug'
-import { Route as FreeToolsIndexRouteImport } from './routes/free-tools.index'
-import { Route as FreeToolsToolIdRouteImport } from './routes/free-tools.$toolId'
 import { Route as LinkIndexRouteImport } from './routes/link.index'
 import { Route as LinkSlugRouteImport } from './routes/link.$slug'
 import { Route as NoticesIndexRouteImport } from './routes/notices.index'
@@ -164,11 +161,6 @@ const AccountRoute = AccountRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AntivirusPriceInBdRoute = AntivirusPriceInBdRouteImport.update({
-  id: '/antivirus-price-in-bd',
-  path: '/antivirus-price-in-bd',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
@@ -621,16 +613,6 @@ const CollectionsSlugRoute = CollectionsSlugRouteImport.update({
   path: '/collections/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FreeToolsIndexRoute = FreeToolsIndexRouteImport.update({
-  id: '/free-tools/',
-  path: '/free-tools/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FreeToolsToolIdRoute = FreeToolsToolIdRouteImport.update({
-  id: '/free-tools/$toolId',
-  path: '/free-tools/$toolId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LinkIndexRoute = LinkIndexRouteImport.update({
   id: '/link/',
   path: '/link/',
@@ -834,7 +816,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
-  '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
@@ -922,7 +903,6 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
-  '/free-tools/$toolId': typeof FreeToolsToolIdRoute
   '/link/$slug': typeof LinkSlugRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/pay/$slug': typeof PaySlugRoute
@@ -932,7 +912,6 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/collections/': typeof CollectionsIndexRoute
-  '/free-tools/': typeof FreeToolsIndexRoute
   '/link/': typeof LinkIndexRoute
   '/notices/': typeof NoticesIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -971,7 +950,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
-  '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
@@ -1059,7 +1037,6 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
-  '/free-tools/$toolId': typeof FreeToolsToolIdRoute
   '/link/$slug': typeof LinkSlugRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/pay/$slug': typeof PaySlugRoute
@@ -1069,7 +1046,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/collections': typeof CollectionsIndexRoute
-  '/free-tools': typeof FreeToolsIndexRoute
   '/link': typeof LinkIndexRoute
   '/notices': typeof NoticesIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1110,7 +1086,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
-  '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
@@ -1198,7 +1173,6 @@ export interface FileRoutesById {
   '/admin_/login': typeof AdminLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
-  '/free-tools/$toolId': typeof FreeToolsToolIdRoute
   '/link/$slug': typeof LinkSlugRoute
   '/notices/$slug': typeof NoticesSlugRoute
   '/pay/$slug': typeof PaySlugRoute
@@ -1208,7 +1182,6 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/collections/': typeof CollectionsIndexRoute
-  '/free-tools/': typeof FreeToolsIndexRoute
   '/link/': typeof LinkIndexRoute
   '/notices/': typeof NoticesIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -1250,7 +1223,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/admin'
-    | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
     | '/checkout'
@@ -1338,7 +1310,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/blog/$slug'
     | '/collections/$slug'
-    | '/free-tools/$toolId'
     | '/link/$slug'
     | '/notices/$slug'
     | '/pay/$slug'
@@ -1348,7 +1319,6 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/blog/'
     | '/collections/'
-    | '/free-tools/'
     | '/link/'
     | '/notices/'
     | '/.lovable/oauth/consent'
@@ -1387,7 +1357,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/account'
-    | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
     | '/checkout'
@@ -1475,7 +1444,6 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/blog/$slug'
     | '/collections/$slug'
-    | '/free-tools/$toolId'
     | '/link/$slug'
     | '/notices/$slug'
     | '/pay/$slug'
@@ -1485,7 +1453,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog'
     | '/collections'
-    | '/free-tools'
     | '/link'
     | '/notices'
     | '/.lovable/oauth/consent'
@@ -1525,7 +1492,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/admin'
-    | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
     | '/checkout'
@@ -1613,7 +1579,6 @@ export interface FileRouteTypes {
     | '/admin_/login'
     | '/blog/$slug'
     | '/collections/$slug'
-    | '/free-tools/$toolId'
     | '/link/$slug'
     | '/notices/$slug'
     | '/pay/$slug'
@@ -1623,7 +1588,6 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/blog/'
     | '/collections/'
-    | '/free-tools/'
     | '/link/'
     | '/notices/'
     | '/.lovable/oauth/consent'
@@ -1664,7 +1628,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AntivirusPriceInBdRoute: typeof AntivirusPriceInBdRoute
   AtomDotxmlRoute: typeof AtomDotxmlRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -1692,7 +1655,6 @@ export interface RootRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CollectionsSlugRoute: typeof CollectionsSlugRoute
-  FreeToolsToolIdRoute: typeof FreeToolsToolIdRoute
   LinkSlugRoute: typeof LinkSlugRoute
   NoticesSlugRoute: typeof NoticesSlugRoute
   PaySlugRoute: typeof PaySlugRoute
@@ -1701,7 +1663,6 @@ export interface RootRouteChildren {
   UddoktapayReturnRoute: typeof UddoktapayReturnRoute
   BlogIndexRoute: typeof BlogIndexRoute
   CollectionsIndexRoute: typeof CollectionsIndexRoute
-  FreeToolsIndexRoute: typeof FreeToolsIndexRoute
   LinkIndexRoute: typeof LinkIndexRoute
   NoticesIndexRoute: typeof NoticesIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -1737,13 +1698,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/antivirus-price-in-bd': {
-      id: '/antivirus-price-in-bd'
-      path: '/antivirus-price-in-bd'
-      fullPath: '/antivirus-price-in-bd'
-      preLoaderRoute: typeof AntivirusPriceInBdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/atom.xml': {
@@ -2376,20 +2330,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CollectionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/free-tools/': {
-      id: '/free-tools/'
-      path: '/free-tools'
-      fullPath: '/free-tools/'
-      preLoaderRoute: typeof FreeToolsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/free-tools/$toolId': {
-      id: '/free-tools/$toolId'
-      path: '/free-tools/$toolId'
-      fullPath: '/free-tools/$toolId'
-      preLoaderRoute: typeof FreeToolsToolIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/link/': {
       id: '/link/'
       path: '/link'
@@ -2857,7 +2797,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
   AdminRoute: AdminRouteWithChildren,
-  AntivirusPriceInBdRoute: AntivirusPriceInBdRoute,
   AtomDotxmlRoute: AtomDotxmlRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
@@ -2885,7 +2824,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   BlogSlugRoute: BlogSlugRoute,
   CollectionsSlugRoute: CollectionsSlugRoute,
-  FreeToolsToolIdRoute: FreeToolsToolIdRoute,
   LinkSlugRoute: LinkSlugRoute,
   NoticesSlugRoute: NoticesSlugRoute,
   PaySlugRoute: PaySlugRoute,
@@ -2894,7 +2832,6 @@ const rootRouteChildren: RootRouteChildren = {
   UddoktapayReturnRoute: UddoktapayReturnRoute,
   BlogIndexRoute: BlogIndexRoute,
   CollectionsIndexRoute: CollectionsIndexRoute,
-  FreeToolsIndexRoute: FreeToolsIndexRoute,
   LinkIndexRoute: LinkIndexRoute,
   NoticesIndexRoute: NoticesIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
