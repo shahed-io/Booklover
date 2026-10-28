@@ -117,3 +117,6 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 .bl-hcard-price {font-size:15px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
 .bl-hcard-price s {opacity:.7;}
 @media (max-width:900px){.bl-cgrid{grid-template-columns:repeat(2,1fr);gap:20px}.bl-hwrap{padding:0 16px}.bl-hrow{grid-auto-columns:44vw;gap:16px;padding:0 16px}}
+.bl-hrow {max-width:1240px;margin:0 auto;padding:0 50px;grid-auto-columns:calc((100% - 160px)/5);gap:40px;scroll-snap-type:none;scroll-padding:0 50px;}
+.bl-hcard h3,.bl-ccard h3 {font-weight:400;}
+@media (max-width:900px){.bl-hrow{padding:0 16px;grid-auto-columns:44%;gap:16px}}
