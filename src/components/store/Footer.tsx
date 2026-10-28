@@ -7,7 +7,6 @@ import { useFooterMenu } from '@/hooks/useFooterMenu';
 const Footer = () => {
   const { settings } = useFooterSettings();
   const { sections } = useFooterMenu();
-  const paymentMethods = (settings.payment_methods || 'Cash on Delivery, bKash').split(',').map(s => s.trim()).filter(Boolean);
 
   const phone = settings.phone || '01755708708';
   const digits = phone.replace(/\D/g, '');
