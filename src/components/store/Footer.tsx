@@ -70,20 +70,22 @@ const highlightTagline = (text: string) => {
 const Footer = () => {
   const { settings } = useFooterSettings();
   const { sections } = useFooterMenu();
-  const paymentMethods = settings.payment_methods.split(',').map(s => s.trim()).filter(Boolean);
+  const paymentMethods = (settings.payment_methods || 'Cash on Delivery, bKash').split(',').map(s => s.trim()).filter(Boolean);
 
+  const phone = settings.phone || '01755708708';
   const contacts = [
-    { icon: <Phone size={14} />, href: `tel:${settings.phone.replace(/\D/g, '')}`, label: settings.phone },
+    { icon: <Phone size={14} />, href: `tel:${phone.replace(/\D/g, '')}`, label: `Call us: ${phone}` },
+    { icon: <MessageCircle size={14} />, href: `https://wa.me/88${phone.replace(/\D/g, '')}`, label: 'Order on WhatsApp' },
     { icon: <Mail size={14} />, href: `mailto:${settings.email}`, label: settings.email },
-    { icon: <MapPin size={14} />, href: '#', label: settings.address },
-  ];
+    { icon: <MapPin size={14} />, href: '#', label: settings.address || 'Home delivery all over Bangladesh' },
+  ].filter(c => c.label && !c.href.endsWith('mailto:'));
 
   const socials = [
     { icon: <Facebook size={16} />, href: settings.facebook_url, label: 'Facebook' },
     { icon: <MessageCircle size={16} />, href: settings.whatsapp_url, label: 'WhatsApp' },
     { icon: <Instagram size={16} />, href: settings.instagram_url, label: 'Instagram' },
     { icon: <Send size={16} />, href: settings.telegram_url, label: 'Telegram' },
-  ];
+  ].filter(s => s.href);
 
   return (
   <footer className="bl-ft relative overflow-hidden" style={{ background: 'var(--ft-bg)' }}>
@@ -168,7 +170,7 @@ const Footer = () => {
             <BrandLogo size="md" className="whitespace-nowrap" />
           </a>
           <p className="text-[13px] leading-relaxed footer-tagline-highlight" style={{ color: NAVY_SOFT }}
-            dangerouslySetInnerHTML={{ __html: highlightTagline(settings.tagline) }}
+            dangerouslySetInnerHTML={{ __html: highlightTagline(settings.tagline || 'Booklover — your trusted online bookshop in Bangladesh. Original books, fair prices and fast delivery to your door.') }}
           />
 
           <div className="flex flex-col gap-2 w-full items-center lg:items-start">
@@ -199,12 +201,12 @@ const Footer = () => {
                   }}>
                   {c.icon}
                 </span>
-                <span className="font-fira text-[12px] truncate">{c.label}</span>
+                <span className="text-[13.5px] font-semibold truncate" style={{ color: 'var(--ft-text)' }}>{c.label}</span>
               </a>
             ))}
           </div>
 
-          <div className="flex gap-2.5 justify-center lg:justify-start">
+          {socials.length > 0 && <div className="flex gap-2.5 justify-center lg:justify-start">
             {socials.map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                 aria-label={`Visit Booklover on ${s.label}`}
@@ -228,7 +230,7 @@ const Footer = () => {
                 {s.icon}
               </a>
             ))}
-          </div>
+          </div>}
         </div>
 
         {/* Nav columns — dynamic from admin */}
