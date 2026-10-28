@@ -14,8 +14,7 @@ export default function AccountGate() {
   if (user) return <Layout><Suspense fallback={<div className="min-h-screen" />}><UserDashboard /></Suspense></Layout>;
   return (
     <Layout>
-      <div className="bl-container bl-section min-h-[50vh]" />
-      <AuthModal isOpen onClose={() => navigate({ to: '/' })} redirectAfterLogin={false} />
+      <AuthModal presentation="account" isOpen onClose={() => navigate({ to: '/account' })} redirectAfterLogin={false} />
     </Layout>
   );
 }
