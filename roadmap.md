@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Full-width homepage book rows
-- [ ] Expand every product row below categories to desktop screen width, adapting visible book count while preserving category design.
-- [ ] Verify real book rows and arrow navigation across desktop widths and mobile.
+- [x] Expand every product row below categories to desktop screen width, adapting visible book count while preserving category design.
+- [x] Verify all five real book rows at 1024–2560px and mobile; next/previous navigation passed with no runtime errors and build OK.
 
 ## Legacy-brand cleanup
 - [x] Audit source, assets, configuration, public database functions/defaults, storage and schedules for inherited branding.
