@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Header icon buttons
-- [ ] Present button-style previews for the existing header icons and obtain the owner's choice.
-- [ ] Apply the selected treatment only to header icon controls; preserve navigation, logo, search placement and both themes.
+- [x] Present button-style previews for the existing header icons and obtain the owner's choice: subtle border.
+- [x] Apply the selected treatment only to header icon controls; preserve navigation, logo, search placement and both themes.
 - [ ] Verify header controls and alignment at desktop and mobile sizes.
 
 ## Account sign-in design
