@@ -56,3 +56,4 @@
 
 ## Action buttons (Oct 28)
 - [x] Make storefront action buttons thicker with brand white/red glossy styling (product page trio, cart/drawer and checkout CTAs). Verified in preview: Buy it now 68px, WhatsApp/Add to cart 60px, checkout order button red gradient, no console errors.
+- [x] Header menu redesign (editorial list + featured panel)
