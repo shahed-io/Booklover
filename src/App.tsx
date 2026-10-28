@@ -25,7 +25,7 @@ import Index from "./components/booklover/Home";
 import CatalogPage from "./components/booklover/CatalogPage";
 import BookloverProduct from "./components/booklover/ProductPage";
 import { CartPage, AccountPage, InformationPage } from "./components/booklover/CustomerPages";
-import { CartDrawer as BookloverCartDrawer, Header as BookloverHeader, Footer as BookloverFooter } from "./components/booklover/Layout";
+import { CartDrawer as BookloverCartDrawer, Header as BookloverHeader, Footer as BookloverFooter, ThemeShell as BookloverThemeShell } from "./components/booklover/Layout";
 const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 
 // Deferred non-critical components — lazy loaded
@@ -276,7 +276,7 @@ const AppContent = () => {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/wishlist" element={<CartPage />} />
           <Route path="/account" element={<AccountPage />} />
-          <Route path="/checkout" element={<div className="booklover bl-dark booklover-checkout"><BookloverHeader /><Checkout /><BookloverFooter /></div>} />
+          <Route path="/checkout" element={<BookloverThemeShell className="booklover-checkout"><BookloverHeader /><Checkout /><BookloverFooter /></BookloverThemeShell>} />
           <Route path="/product/:slug" element={<BookloverProduct />} />
           <Route path="/products/:slug" element={<BookloverProduct />} />
           <Route path="/blog" element={<Blog />} />
