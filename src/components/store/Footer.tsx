@@ -230,7 +230,7 @@ const Footer = () => {
                 {s.icon}
               </a>
             ))}
-          </div>
+          </div>}
         </div>
 
         {/* Nav columns — dynamic from admin */}
