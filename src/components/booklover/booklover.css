@@ -10,7 +10,7 @@
 .bl-container {max-width:1200px;margin-inline:auto;padding-inline:32px;}
 .bl-header {border-bottom:1px solid hsl(var(--border));position:relative;z-index:30;background:hsl(var(--background));}
 .bl-header-inner {height:76px;display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;gap:24px;max-width:1200px;margin:auto;padding:0 32px;}
-.bl-logo {width:82px;height:58px;object-fit:contain;}
+.bl-logo {width:96px;height:58px;object-fit:contain;}
 .bl-nav {display:flex;align-items:center;gap:19px;font-size:12px;white-space:nowrap;}
 .bl-nav a:hover {text-decoration:underline;text-underline-offset:6px;}
 .bl-actions {display:flex;align-items:center;justify-content:flex-end;gap:8px;}
