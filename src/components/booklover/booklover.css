@@ -71,3 +71,17 @@
 
 body:has(.booklover):not(.admin-page)::before,body:has(.booklover):not(.admin-page)::after {display:none;}
 body:has(.booklover):not(.admin-page) {padding-bottom:0;}
+/* Dark scheme matching the owner's original store (charcoal, cream text, red accents). */
+.booklover.bl-dark {
+  --background: 20 6% 20%; --foreground: 35 63% 90%; --card: 20 6% 20%; --card-foreground: 35 63% 90%;
+  --primary: 35 63% 90%; --primary-foreground: 20 6% 20%; --secondary: 20 6% 25%; --secondary-foreground: 35 63% 90%;
+  --muted: 20 6% 25%; --muted-foreground: 35 25% 72%; --border: 35 20% 40%; --input: 35 20% 45%; --ring: 35 63% 90%;
+  --accent: 20 6% 26%; --accent-foreground: 35 63% 90%; --popover: 20 6% 20%; --popover-foreground: 35 63% 90%;
+  --sale: 2 78% 44%; --sale-foreground: 0 0% 100%;
+  font-family: Assistant, Arial, sans-serif;
+}
+.bl-dark .bl-header {border-bottom-color:transparent;}
+.bl-announce {background:hsl(var(--sale,2 78% 44%));color:hsl(var(--sale-foreground,0 0% 100%));min-height:56px;display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:1px;padding:0 16px;}
+.bl-dark .bl-book .bg-primary {background:hsl(var(--sale));color:hsl(var(--sale-foreground));}
+.bl-row5 {grid-template-columns:repeat(5,minmax(0,1fr));}
+@media (max-width:900px){.bl-row5{grid-template-columns:repeat(2,minmax(0,1fr));}}
