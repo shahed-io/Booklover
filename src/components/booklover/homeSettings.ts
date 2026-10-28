@@ -60,7 +60,8 @@ export const HOME_DEFAULTS: HomeSettings = {
 export function mergeHome(raw: unknown): HomeSettings {
   if (!raw || typeof raw !== 'object') return HOME_DEFAULTS;
   const r = raw as Partial<HomeSettings>;
-  return { ...HOME_DEFAULTS, ...r, banners: (r.banners?.length ? r.banners : HOME_DEFAULTS.banners).map((b, i) => ({ ...b, image: b.image || DEFAULT_BANNER_IMAGES[i % DEFAULT_BANNER_IMAGES.length]! })) };
+  const isBundled = (u: string) => !u || /^\/(src\/)?assets\/|banner-\d/.test(u);
+  return { ...HOME_DEFAULTS, ...r, banners: (r.banners?.length ? r.banners : HOME_DEFAULTS.banners).map((b, i) => ({ ...b, image: isBundled(b.image) ? DEFAULT_BANNER_IMAGES[i % DEFAULT_BANNER_IMAGES.length]! : b.image })) };
 }
 
 export function useHomeSettings() {
