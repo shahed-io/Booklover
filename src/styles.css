@@ -13,59 +13,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Approved header icon treatment, isolated from navigation and admin controls. */
-.booklover .bl-header {
-  --header-icon-surface: oklch(1 0 0);
-  --header-icon-border: oklch(.90 .01 15);
-  --header-icon-ink: oklch(.28 0 0);
-  --header-icon-accent: oklch(.52 .19 20);
-  --header-icon-hover: oklch(.98 .008 15);
-  --header-icon-shadow: 0 2px 5px color-mix(in oklch, var(--header-icon-ink) 7%, transparent);
-}
-.booklover.bl-dark .bl-header {
-  --header-icon-surface: oklch(.29 .005 20);
-  --header-icon-border: oklch(.41 .008 20);
-  --header-icon-ink: oklch(.94 .015 80);
-  --header-icon-accent: oklch(.73 .14 20);
-  --header-icon-hover: oklch(.33 .01 20);
-  --header-icon-shadow: 0 2px 6px color-mix(in oklch, var(--header-icon-surface) 65%, transparent);
-}
-.booklover .bl-header .bl-actions > button,
-.booklover .bl-header .bl-actions > a {
-  position:relative;
-  width:38px;height:38px;min-width:38px;flex-shrink:0;padding:0;
-  border:1px solid var(--header-icon-border);border-radius:8px;
-  background:var(--header-icon-surface);color:var(--header-icon-ink);
-  box-shadow:var(--header-icon-shadow);
-  transition:background .18s,color .18s,border-color .18s,box-shadow .18s;
-}
-.booklover .bl-header .bl-actions > button:hover,
-.booklover .bl-header .bl-actions > a:hover {
-  background:var(--header-icon-hover);color:var(--header-icon-accent);
-  border-color:var(--header-icon-accent);
-}
-.booklover .bl-header .bl-actions > button:focus-visible,
-.booklover .bl-header .bl-actions > a:focus-visible {
-  outline:2px solid var(--header-icon-accent);outline-offset:3px;
-}
-.booklover .bl-header .bl-actions > button > svg,
-.booklover .bl-header .bl-actions > a > svg {width:18px;height:18px;}
-.booklover .bl-header .bl-actions > button > span {
-  position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 4px;
-  display:flex;align-items:center;justify-content:center;border-radius:999px;
-  background:var(--header-icon-accent);color:var(--header-icon-surface);
-  font-size:10px;font-weight:600;line-height:1;
-}
-@media(max-width:1100px){.booklover .bl-header .bl-actions{gap:4px;}}
-@media(max-width:540px){
-  .booklover .bl-header .bl-actions > button,
-  .booklover .bl-header .bl-actions > a {width:30px;height:34px;min-width:30px;}
-}
-@media(prefers-reduced-motion:reduce){
-  .booklover .bl-header .bl-actions > button,
-  .booklover .bl-header .bl-actions > a {transition:none;}
-}
-
 /* Account-only Booklover palette; shared and admin themes stay unchanged. */
 .booklover .bl-account-signin {
   --account-surface: oklch(1 0 0);
