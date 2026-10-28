@@ -34,3 +34,6 @@
 ## Blocked
 - [ ] Verify signed-in COD ownership — no matching signed-in test account is available in the preview session.
 
+
+## Action buttons (Oct 28)
+- [ ] Make storefront action buttons thicker with brand white/red glossy styling (product page trio, cart/drawer and checkout CTAs).
