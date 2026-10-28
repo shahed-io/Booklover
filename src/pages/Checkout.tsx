@@ -13,7 +13,6 @@ import AuthModal from '@/components/store/AuthModal';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { usePaymentSettings } from '@/hooks/usePaymentSettings';
-import { getStoredAffiliateRef, clearStoredAffiliateRef } from '@/hooks/useAffiliateTracking';
 import { gTrackBeginCheckout, gTrackPurchase } from '@/components/store/GoogleTracking';
 import SEOHead from '@/components/seo/SEOHead';
 import { useBkashPgwContent } from '@/hooks/useBkashPgwContent';
@@ -623,7 +622,7 @@ const Checkout = () => {
       }
 
       // Attach affiliate ref if present
-      const affRef = getStoredAffiliateRef();
+      const affRef: { code: string } | null = null;
 
       // Generate the order id client-side so we don't need a RETURNING clause.
       // (Guest checkout can INSERT but cannot SELECT its own row under current RLS,
@@ -899,19 +898,6 @@ const Checkout = () => {
       }
 
 
-      // Record affiliate conversion (non-blocking, server validates)
-      if (affRef?.code) {
-        (supabase as any).rpc('record_affiliate_conversion', {
-          p_order_id: order.id,
-          p_referral_code: affRef.code,
-        }).then(({ data, error }: any) => {
-          if (error) console.error('[Affiliate] conversion error:', error);
-          else if (data?.success) {
-            console.log('[Affiliate] conversion recorded:', data);
-            clearStoredAffiliateRef();
-          }
-        });
-      }
 
       // Increment coupon uses_count
       if (couponId) {
