@@ -39,7 +39,7 @@ export default function AccountSignInView(p: Props) {
           {p.mode === 'signup' && <label>আপনার নাম<input autoComplete="name" required minLength={2} value={p.name} onChange={e => p.setName(e.target.value)} placeholder="পুরো নাম" /></label>}
           <label>ইমেইল অ্যাড্রেস<input type="email" autoComplete="email" required value={p.email} onChange={e => p.setEmail(e.target.value)} placeholder="you@example.com" /></label>
           {p.mode !== 'forgot' && <label>পাসওয়ার্ড<div className="bl-account-password">
-            <input type={showPassword ? 'text' : 'password'} autoComplete={p.mode === 'signup' ? 'new-password' : 'current-password'} required value={p.password} onChange={e => p.setPassword(e.target.value)} placeholder="আপনার পাসওয়ার্ড" />
+            <input aria-label="পাসওয়ার্ড" type={showPassword ? 'text' : 'password'} autoComplete={p.mode === 'signup' ? 'new-password' : 'current-password'} required value={p.password} onChange={e => p.setPassword(e.target.value)} placeholder="আপনার পাসওয়ার্ড" />
             <Button type="button" variant="ghost" size="icon" aria-label={showPassword ? 'Hide password' : 'Show password'} title={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff /> : <Eye />}</Button>
           </div>{p.mode === 'signup' && <small>কমপক্ষে ৮ অক্ষর, অক্ষর ও সংখ্যা থাকতে হবে</small>}</label>}
           {p.mode === 'login' && <Button variant="link" type="button" className="bl-account-forgot bl-account-link" onClick={() => p.switchMode('forgot')}>পাসওয়ার্ড ভুলে গেছেন?</Button>}
