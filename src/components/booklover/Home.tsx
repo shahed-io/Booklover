@@ -5,7 +5,8 @@ import { Helmet } from 'react-helmet-async';
 import Layout from './Layout';
 import { useHomeData, slugify, money, variantsOf, type Book } from './catalog';
 import { useHomeSettings, HOME_DEFAULTS } from './homeSettings';
-import reading from '@/assets/booklover-reading.jpg';
+import reading from '@/assets/booklover-reading.webp';
+const HERO_LQIP = 'url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAARACADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDirn5bhwUKYY/KTnFNhdVvYWZSwU5wO5qxex/IAkUQlZiWKybsfj0qCC1uhcRusO/ac465rO+g+V8xtwyNa2slxI+GC+WgMh3I3r/nsK2dK1a3sPsrXLrEY2c4LZyTt5zjkHtWf4d03+1TcTXO+2QSFQIvly3fj0FWvEN3Y2unppNwGmZSFjcKPlA789+cVny62NL6HORf8fMf1roIP+PdPrRRSextE0fC/wDx4n/rrL/6Ga5LxH/yMjf7xoorSO5zz2P/2Q==)';
 
 /** Product card matching the owner's original store: cover, centred title, prices, red Sale badge. */
 function HomeCard({ book }: { book: Book }) {
@@ -65,8 +66,8 @@ export default function Home() {
     <Layout>
       <Helmet><title>{cfg.seoTitle}</title><meta name="description" content={cfg.seoDescription} /><link rel="canonical" href="https://booklover.com.bd/" /></Helmet>
 
-      <section className="bl-hero">
-        <img src={active!.image || reading} alt="Reading at Booklover" width={1920} height={1024} fetchPriority="high" />
+      <section className="bl-hero" style={{ backgroundImage: HERO_LQIP, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <img src={active!.image || reading} alt="Reading at Booklover" width={1920} height={1024} fetchPriority="high" loading="eager" decoding="sync" />
         <div className="bl-hero-copy">
           <span className="bl-eyebrow">{cfg.eyebrow}</span>
           <h1>{lines(active!.title)}</h1>
