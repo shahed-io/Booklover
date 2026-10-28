@@ -578,7 +578,7 @@ ${viewedProductBlock}${matchedBlock}${productContext}${couponContext}
 - প্রাসঙ্গিক ইমোজি ব্যবহার করুন (💰 📦 🚚 ✅ 📞 🎁 💡)
 - প্রোডাক্ট-সম্পর্কিত হলে সংক্ষিপ্ত (৩–৭ লাইন), general knowledge হলে যতটুকু দরকার ততটুকু
 
-কোনো তথ্য একদমই না জানলে বিনয়ের সাথে বলুন এবং WhatsApp-এ যোগাযোগ করতে বলুন: ${supportPhone}`;
+কোনো তথ্য একদমই না জানলে বিনয়ের সাথে বলুন এবং Contact পেজের মাধ্যমে যোগাযোগ করতে বলুন।`;
 
     const aiMessages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
@@ -600,7 +600,7 @@ ${viewedProductBlock}${matchedBlock}${productContext}${couponContext}
       console.error("AI providers failed:", fallbackErr);
       return new Response(
         JSON.stringify({
-          error: `AI সাময়িকভাবে অনুপলব্ধ। সরাসরি WhatsApp-এ যোগাযোগ করুন: ${supportPhone}`,
+          error: `AI সাময়িকভাবে অনুপলব্ধ। একটু পরে আবার চেষ্টা করুন।`,
         }),
         { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
