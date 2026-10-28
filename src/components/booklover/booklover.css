@@ -249,3 +249,9 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 .bl-zoom-tools span{min-width:48px;text-align:center;font-size:13px;font-weight:600;color:hsl(var(--foreground));}
 .bl-zoom-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:12px;color:hsl(var(--muted-foreground));pointer-events:none;}
 @media(max-width:640px){.bl-zoom-nav{display:none;}.bl-zoom-stage{padding:56px 10px 110px;}.bl-zoom-img{max-width:96vw;max-height:70vh;}.bl-zoom-hint{display:none;}}
+
+/* ---- Buy on WhatsApp ---- */
+.bl-wa-buy{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;font-weight:600;letter-spacing:.2px;border-radius:0;box-shadow:0 10px 22px -12px rgb(37 211 102/.55);transition:filter .2s ease,transform .2s ease;}
+.bl-wa-buy:hover{filter:brightness(1.06);transform:translateY(-1px);}
+.bl-wa-buy:active{transform:translateY(0);}
+.bl-dark .bl-wa-buy{box-shadow:0 10px 22px -12px rgb(0 0 0/.6);}
