@@ -31,7 +31,7 @@ const AdminProductSeo = () => {
   const set = (id: string, field: 'seo_title' | 'seo_description', value: string) =>
     setEdits(prev => ({
       ...prev,
-      [id]: { ...prev[id], seo_title: get(id, 'seo_title'), seo_description: get(id, 'seo_description'), [field]: value }
+      [id]: { ...prev[id]!, seo_title: get(id, 'seo_title'), seo_description: get(id, 'seo_description'), [field]: value }
     }));
 
   const save = async (product: any) => {

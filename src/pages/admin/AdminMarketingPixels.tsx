@@ -41,7 +41,7 @@ const AdminMarketingPixels = () => {
   const update = (platform: Platform, idx: number, patch: Partial<PixelAccount>) => {
     setCfg(prev => ({ ...prev, [platform]: prev[platform].map((a, i) => i === idx ? { ...a, ...patch } : a) }));
   };
-  const add = (platform: Platform) => setCfg(prev => ({ ...prev, [platform]: [...prev[platform], newAccount()] }));
+  const add = (platform: Platform) => setCfg(prev => ({ ...prev, [platform]: [...prev[platform]!, newAccount()] }));
   const remove = (platform: Platform, idx: number) => setCfg(prev => ({ ...prev, [platform]: prev[platform].filter((_, i) => i !== idx) }));
 
   const save = async () => {

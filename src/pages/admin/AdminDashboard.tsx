@@ -154,7 +154,7 @@ const AdminDashboard = () => {
       other:           { label: 'Other',           color: '#64748b', gradient: 'linear-gradient(90deg, #64748b, #cbd5e1)' },
     };
     orders.filter(o => o.status !== 'cancelled').forEach(o => {
-      const pm = normalizePM(o.payment_method);
+      const pm = normalizePM(o.payment_method ?? '');
       pmCounts[pm] = (pmCounts[pm] || 0) + 1;
     });
     const totalPm = Object.values(pmCounts).reduce((a, b) => a + b, 0) || 1;

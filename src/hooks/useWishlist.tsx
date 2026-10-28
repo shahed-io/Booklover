@@ -105,7 +105,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
             product_id: productId,
             product_name: item.name,
             product_price: item.price,
-            product_image: item.image,
+            product_image: item.image ?? null,
           }, { onConflict: 'user_id,product_id' })
           .select('id')
           .single();

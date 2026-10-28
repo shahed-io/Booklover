@@ -400,9 +400,9 @@ export default function AdminPaymentLinks() {
                 <div className="space-y-2">
                   {editor.payment_methods.map((m, i) => (
                     <div key={i} className="grid grid-cols-12 gap-2 items-center rounded-lg border border-border/60 bg-background/60 p-2">
-                      <Input className="col-span-3" placeholder="Name (bKash)" value={m.name} onChange={e => { const a = [...editor.payment_methods]; a[i] = { ...a[i], name: e.target.value }; setEditor({ ...editor, payment_methods: a }); }} />
-                      <Input className="col-span-3" placeholder="Number" value={m.number} onChange={e => { const a = [...editor.payment_methods]; a[i] = { ...a[i], number: e.target.value }; setEditor({ ...editor, payment_methods: a }); }} />
-                      <Input className="col-span-5" placeholder="Instructions" value={m.instructions} onChange={e => { const a = [...editor.payment_methods]; a[i] = { ...a[i], instructions: e.target.value }; setEditor({ ...editor, payment_methods: a }); }} />
+                      <Input className="col-span-3" placeholder="Name (bKash)" value={m.name} onChange={e => { const a = [...editor.payment_methods]; a[i] = { ...a[i]!, name: e.target.value }; setEditor({ ...editor, payment_methods: a }); }} />
+                      <Input className="col-span-3" placeholder="Number" value={m.number} onChange={e => { const a = [...editor.payment_methods]; a[i] = { ...a[i]!, number: e.target.value }; setEditor({ ...editor, payment_methods: a }); }} />
+                      <Input className="col-span-5" placeholder="Instructions" value={m.instructions} onChange={e => { const a = [...editor.payment_methods]; a[i] = { ...a[i]!, instructions: e.target.value }; setEditor({ ...editor, payment_methods: a }); }} />
                       <Button size="sm" variant="ghost" className="col-span-1" onClick={() => setEditor({ ...editor, payment_methods: editor.payment_methods.filter((_, j) => j !== i) })}><Trash2 className="w-4 h-4 text-destructive" /></Button>
                     </div>
                   ))}
@@ -419,12 +419,12 @@ export default function AdminPaymentLinks() {
                 <div className="space-y-2">
                   {editor.custom_fields.map((f, i) => (
                     <div key={i} className="grid grid-cols-12 gap-2 items-center rounded-lg border border-border/60 bg-background/60 p-2">
-                      <Input className="col-span-6" placeholder="Field label (e.g. PC Username)" value={f.label} onChange={e => { const a = [...editor.custom_fields]; a[i] = { ...a[i], label: e.target.value }; setEditor({ ...editor, custom_fields: a }); }} />
-                      <Select value={f.type || 'text'} onValueChange={v => { const a = [...editor.custom_fields]; a[i] = { ...a[i], type: v as any }; setEditor({ ...editor, custom_fields: a }); }}>
+                      <Input className="col-span-6" placeholder="Field label (e.g. PC Username)" value={f.label} onChange={e => { const a = [...editor.custom_fields]; a[i] = { ...a[i]!, label: e.target.value }; setEditor({ ...editor, custom_fields: a }); }} />
+                      <Select value={f.type || 'text'} onValueChange={v => { const a = [...editor.custom_fields]; a[i] = { ...a[i]!, type: v as any }; setEditor({ ...editor, custom_fields: a }); }}>
                         <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
                         <SelectContent><SelectItem value="text">Text</SelectItem><SelectItem value="email">Email</SelectItem><SelectItem value="number">Number</SelectItem></SelectContent>
                       </Select>
-                      <label className="col-span-2 flex items-center gap-1 text-xs"><Switch checked={!!f.required} onCheckedChange={v => { const a = [...editor.custom_fields]; a[i] = { ...a[i], required: v }; setEditor({ ...editor, custom_fields: a }); }} /> Req</label>
+                      <label className="col-span-2 flex items-center gap-1 text-xs"><Switch checked={!!f.required} onCheckedChange={v => { const a = [...editor.custom_fields]; a[i] = { ...a[i]!, required: v }; setEditor({ ...editor, custom_fields: a }); }} /> Req</label>
                       <Button size="sm" variant="ghost" className="col-span-1" onClick={() => setEditor({ ...editor, custom_fields: editor.custom_fields.filter((_, j) => j !== i) })}><Trash2 className="w-4 h-4 text-destructive" /></Button>
                     </div>
                   ))}
