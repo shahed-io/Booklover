@@ -23,7 +23,7 @@ import BrandLogo from '@/components/store/BrandLogo';
 import VerifiedBadge from '@/components/store/VerifiedBadge';
 import CustomerNoticesWidget from '@/components/store/CustomerNoticesWidget';
 import { LANGUAGES, LangCode, getStoredLang, setStoredLang, t, translateDbText, getLangLocale } from '@/lib/translations';
-import { downloadInvoicePdf, type InvoiceData } from '@/lib/invoicePdf';
+import type { InvoiceData } from '@/lib/invoicePdf';
 import PhoneInput from '@/components/store/PhoneInput';
 
 interface Profile {
@@ -559,7 +559,7 @@ const UserDashboard = () => {
         status: order.status,
         notes: order.notes || undefined,
       };
-      await downloadInvoicePdf(invoiceData);
+      const { downloadInvoicePdf } = await import('@/lib/invoicePdf'); await downloadInvoicePdf(invoiceData);
       toast.success('✅ Invoice ডাউনলোড হয়েছে');
     } catch (e) {
       console.error(e);
