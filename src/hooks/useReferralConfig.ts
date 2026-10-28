@@ -74,7 +74,7 @@ export const normalizeReferralConfig = (raw: any): ReferralConfig => {
 
 export const getReferralTier = (cfg: ReferralConfig, count: number): ReferralTier => {
   const sorted = [...cfg.tiers].sort((a, b) => a.min - b.min);
-  let current = sorted[0] || REFERRAL_CONFIG_DEFAULT.tiers[0];
+  let current: ReferralTier = sorted[0] ?? REFERRAL_CONFIG_DEFAULT.tiers[0]!;
   for (const t of sorted) if (count >= t.min) current = t;
   return current;
 };

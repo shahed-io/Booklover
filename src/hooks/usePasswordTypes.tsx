@@ -7,7 +7,6 @@ export type PasswordType = {
   emoji: string;     // emoji shown in delivery
   color: string;     // tailwind color hint, e.g. 'orange'
   description?: string | undefined;
-
 };
 
 const SETTING_KEY = 'license_password_types';

@@ -167,6 +167,7 @@ var mcp_default = defineMcp({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"
   }),
+  // @ts-expect-error mcp-js ToolDefinition sets outputSchema: undefined, which its own AnyToolDefinition rejects under exactOptionalPropertyTypes (upstream typing)
   tools: [get_my_profile_default, list_my_orders_default, list_my_licenses_default, search_products_default, list_my_wallet_transactions_default]
 });
 

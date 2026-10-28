@@ -6,21 +6,13 @@ type Props = {
   value: string;
   onChange: (fullNumber: string) => void;
   placeholder?: string | undefined;
-
   className?: string | undefined;
-
   inputClassName?: string | undefined;
-
   id?: string | undefined;
-
   name?: string | undefined;
-
   required?: boolean | undefined;
-
   disabled?: boolean | undefined;
-
   autoFocus?: boolean | undefined;
-
 };
 
 /**

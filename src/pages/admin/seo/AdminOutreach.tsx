@@ -14,8 +14,8 @@ interface Prospect {
   site_url: string | null;
   contact_name: string | null;
   contact_email: string | null;
-  contact_channel: string;
-  category: string;
+  contact_channel: string | null;
+  category: string | null;
   domain_authority: number | null;
   status: string;
   pitch_template: string;
@@ -118,7 +118,7 @@ const AdminOutreach = () => {
       .select('*')
       .order('created_at', { ascending: false });
     if (error) toast.error(error.message);
-    setList(data || []);
+    setList((data || []).map(d => ({ ...d, pitch_template: d.pitch_template ?? 'guest_post', status: d.status ?? 'prospect' })));
     setLoading(false);
   };
 
@@ -468,7 +468,7 @@ const AdminOutreach = () => {
                         </a>
                       )}
                     </td>
-                    <td className="px-3 py-3 text-muted-foreground capitalize">{p.category.replace('_', ' ')}</td>
+                    <td className="px-3 py-3 text-muted-foreground capitalize">{(p.category ?? '').replace('_', ' ')}</td>
                     <td className="px-3 py-3">
                       {p.contact_name && <div className="text-foreground">{p.contact_name}</div>}
                       {p.contact_email && <div className="text-[11px] text-muted-foreground break-all">{p.contact_email}</div>}
@@ -614,7 +614,7 @@ const AdminOutreach = () => {
       {showTpl && (() => {
         const variants = TEMPLATE_VARIANTS[showTpl.pitch_template] || [{ label: 'Custom', subject: '', body: '' }];
         const safeIdx = Math.min(variantIdx, variants.length - 1);
-        const t = renderVariant(variants[safeIdx], showTpl);
+        const t = renderVariant(variants[safeIdx]!, showTpl);
         return (
           <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowTpl(null)}>
             <div className="glass-card rounded-2xl p-6 w-full max-w-2xl space-y-4" onClick={e => e.stopPropagation()}>

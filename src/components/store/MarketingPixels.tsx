@@ -86,7 +86,7 @@ const injectTikTok = (accounts: PixelAccount[]) => {
     ttq.setAndDefer = function (e: any, t: string) { e[t] = function () { e.push([t].concat(Array.prototype.slice.call(arguments, 0))); }; };
     for (let i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
     ttq.instance = function (e: string) { const n = ttq._i[e] || []; for (let i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(n, ttq.methods[i]); return n; };
-    ttq.load = function (e: string, n?: any) {
+    ttq.load = function (e: string, n?: any | undefined) {
       const r = 'https://analytics.tiktok.com/i18n/pixel/events.js';
       ttq._i = ttq._i || {}; ttq._i[e] = []; ttq._i[e]._u = r; ttq._t = ttq._t || {}; ttq._t[e] = +new Date();
       ttq._o = ttq._o || {}; ttq._o[e] = n || {};
@@ -223,7 +223,7 @@ export const mTrackPageView = () => {
   });
 };
 
-export const mTrackViewContent = (params: { content_id: string; content_name?: string; value?: number; currency?: string }) => {
+export const mTrackViewContent = (params: { content_id: string; content_name?: string | undefined; value?: number | undefined; currency?: string | undefined }) => {
   if (!cachedConfig) return;
   const data = { ...params, currency: params.currency || 'BDT' };
   fireOnAll(cachedConfig, {
@@ -236,7 +236,7 @@ export const mTrackViewContent = (params: { content_id: string; content_name?: s
   sendTikTokCAPI('ViewContent', data);
 };
 
-export const mTrackAddToCart = (params: { content_id: string; content_name?: string; value: number; currency?: string }) => {
+export const mTrackAddToCart = (params: { content_id: string; content_name?: string | undefined; value: number; currency?: string | undefined }) => {
   if (!cachedConfig) return;
   const data = { ...params, currency: params.currency || 'BDT' };
   fireOnAll(cachedConfig, {
@@ -248,7 +248,7 @@ export const mTrackAddToCart = (params: { content_id: string; content_name?: str
   sendTikTokCAPI('AddToCart', data);
 };
 
-export const mTrackInitiateCheckout = (params: { value: number; currency?: string }) => {
+export const mTrackInitiateCheckout = (params: { value: number; currency?: string | undefined }) => {
   if (!cachedConfig) return;
   const data = { ...params, currency: params.currency || 'BDT' };
   fireOnAll(cachedConfig, {
@@ -260,7 +260,7 @@ export const mTrackInitiateCheckout = (params: { value: number; currency?: strin
   sendTikTokCAPI('InitiateCheckout', data);
 };
 
-export const mTrackPurchase = (params: { transaction_id: string; value: number; currency?: string; content_ids?: string[] }) => {
+export const mTrackPurchase = (params: { transaction_id: string; value: number; currency?: string | undefined; content_ids?: string[] | undefined }) => {
   if (!cachedConfig) return;
   const data = { ...params, currency: params.currency || 'BDT' };
   fireOnAll(cachedConfig, {
@@ -273,7 +273,7 @@ export const mTrackPurchase = (params: { transaction_id: string; value: number; 
   sendTikTokCAPI('CompletePayment', data);
 };
 
-export const mTrackLead = (params: { value?: number; method?: string } = {}) => {
+export const mTrackLead = (params: { value?: number | undefined; method?: string | undefined } = {}) => {
   if (!cachedConfig) return;
   fireOnAll(cachedConfig, {
     tiktok: () => window.ttq?.track('SubmitForm', { value: params.value || 0, currency: 'BDT' }),

@@ -44,9 +44,7 @@ const SidebarProvider = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     defaultOpen?: boolean | undefined;
-
     open?: boolean | undefined;
-
     onOpenChange?: (open: boolean) => void;
   }
 >(({ defaultOpen = true, open: openProp, onOpenChange: setOpenProp, className, style, children, ...props }, ref) => {
@@ -134,11 +132,8 @@ const Sidebar = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     side?: "left" | "right" | undefined;
-
     variant?: "sidebar" | "floating" | "inset" | undefined;
-
     collapsible?: "offcanvas" | "icon" | "none" | undefined;
-
   }
 >(({ side = "left", variant = "sidebar", collapsible = "offcanvas", className, children, ...props }, ref) => {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
@@ -357,7 +352,7 @@ const SidebarGroup = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"
 });
 SidebarGroup.displayName = "SidebarGroup";
 
-const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"> & { asChild?: boolean }>(
+const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"> & { asChild?: boolean | undefined }>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "div";
 
@@ -377,7 +372,7 @@ const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<
 );
 SidebarGroupLabel.displayName = "SidebarGroupLabel";
 
-const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & { asChild?: boolean }>(
+const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & { asChild?: boolean | undefined }>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
 
@@ -442,11 +437,8 @@ const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button"> & {
     asChild?: boolean | undefined;
-
     isActive?: boolean | undefined;
-
     tooltip?: string | React.ComponentProps<typeof TooltipContent> | undefined;
-
   } & VariantProps<typeof sidebarMenuButtonVariants>
 >(({ asChild = false, isActive = false, variant = "default", size = "default", tooltip, className, ...props }, ref) => {
   const Comp = asChild ? Slot : "button";
@@ -486,9 +478,7 @@ const SidebarMenuAction = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button"> & {
     asChild?: boolean | undefined;
-
     showOnHover?: boolean | undefined;
-
   }
 >(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
   const Comp = asChild ? Slot : "button";
@@ -539,7 +529,6 @@ const SidebarMenuSkeleton = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     showIcon?: boolean | undefined;
-
   }
 >(({ className, showIcon = false, ...props }, ref) => {
   // Random width between 50 to 90%.
@@ -594,11 +583,8 @@ const SidebarMenuSubButton = React.forwardRef<
   HTMLAnchorElement,
   React.ComponentProps<"a"> & {
     asChild?: boolean | undefined;
-
     size?: "sm" | "md" | undefined;
-
     isActive?: boolean | undefined;
-
   }
 >(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
   const Comp = asChild ? Slot : "a";

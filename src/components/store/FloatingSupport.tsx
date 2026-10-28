@@ -3,7 +3,7 @@ import { Bot, X, Send, Loader2, Minimize2, MessageCircle, MessageCircleMore, Fac
 import aiLogo from '@/assets/ai-support-agent.png';
 
 /** Professional AI support agent avatar — used across header, message avatars, and pill button */
-const AiLogo = ({ size = 20, className = '', glow = false }: { size?: number; className?: string; glow?: boolean }) => (
+const AiLogo = ({ size = 20, className = '', glow = false }: { size?: number | undefined; className?: string | undefined; glow?: boolean | undefined }) => (
   <img
     src={aiLogo}
     alt="AI Support Agent"
@@ -29,7 +29,7 @@ import remarkGfm from 'remark-gfm';
 const FS_ICON_MAP: Record<string, any> = {
   MessageCircle, Facebook, TelegramIcon, LinkIcon, Phone, Mail, Instagram, Twitter, Youtube, Video, Headphones, LifeBuoy, HelpCircle, Globe,
 };
-const getFsIcon = (name?: string) => FS_ICON_MAP[name || 'MessageCircle'] || MessageCircle;
+const getFsIcon = (name?: string | undefined) => FS_ICON_MAP[name || 'MessageCircle'] || MessageCircle;
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
@@ -41,10 +41,8 @@ interface LiveSet {
   subtitle: string;
   icon_color: string;
   icon?: string | undefined;
-
   is_active: boolean;
   sort_order?: number | undefined;
-
 }
 
 interface LiveChatConfig {
@@ -64,13 +62,9 @@ interface LiveChatConfig {
   quick_suggestions: string[];
   fab_label: string;
   fab_color_from?: string | undefined;
-
   fab_color_mid?: string | undefined;
-
   fab_color_to?: string | undefined;
-
   fab_icon_color?: string | undefined;
-
   live_sets: LiveSet[];
 }
 
@@ -592,7 +586,7 @@ const FloatingSupport = () => {
                 glowHsl: string,
                 Icon: any,
                 label: string,
-                subtitle?: string,
+                subtitle?: string | undefined,
               ) => (
                 <button
                   key={key}

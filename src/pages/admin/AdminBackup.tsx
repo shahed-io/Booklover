@@ -24,7 +24,6 @@ type BackupEntry = {
   type: 'export' | 'import';
   status: 'success' | 'error';
   error?: string | undefined;
-
 };
 
 // Ordered so parents (categories, products, profiles) restore before children (order_items, license_keys)
@@ -481,7 +480,7 @@ Restore:
   };
 
   // ─── Restore Full (ordered for FK) ────────────────────────────────
-  const restoreFull = async (tablesOverride?: Record<string, any[]>, opts?: { keepRestoring?: boolean; weight?: number }) => {
+  const restoreFull = async (tablesOverride?: Record<string, any[]>, opts?: { keepRestoring?: boolean | undefined; weight?: number | undefined }) => {
     if (!tablesOverride && !importPreview) return { added: 0, skipped: 0, failed: 0 };
     setRestoring(true);
     if (!opts?.keepRestoring) setRestoreLog([]);

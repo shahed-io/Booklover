@@ -4027,7 +4027,7 @@ export type Database = {
           quantity?: number
           updated_at?: string
           user_id: string
-          variant?: string
+          variant?: string | undefined
         }
         Update: {
           category?: string | null
@@ -4041,7 +4041,7 @@ export type Database = {
           quantity?: number
           updated_at?: string
           user_id?: string
-          variant?: string
+          variant?: string | undefined
         }
         Relationships: []
       }

@@ -44,7 +44,7 @@ const renderMarkdown = (content: string): string => {
 };
 
 const HelpCenter = () => {
-  const { slug } = useParams<{ slug?: string }>();
+  const { slug } = useParams<{ slug?: string | undefined }>();
   const navigate = useNavigate();
   const [articles, setArticles] = useState<any[]>([]);
   const [currentArticle, setCurrentArticle] = useState<any>(null);
@@ -101,7 +101,7 @@ const HelpCenter = () => {
 
   // ── Article Detail View ─────────────────────────────────────────────────
   if (currentArticle) {
-    const catCfg = CATEGORY_CONFIG[currentArticle.category] || CATEGORY_CONFIG['general'];
+    const catCfg = CATEGORY_CONFIG[currentArticle.category] || CATEGORY_CONFIG['general']!;
     const relatedArticles = articles.filter(a => a.category === currentArticle.category && a.id !== currentArticle.id).slice(0, 4);
     const schema = {
       "@context": "https://schema.org",
@@ -207,7 +207,7 @@ const HelpCenter = () => {
                   <h4 className="font-bold text-foreground text-sm mb-3">সম্পর্কিত আর্টিকেল</h4>
                   <ul className="space-y-2">
                     {relatedArticles.map(a => {
-                      const cfg = CATEGORY_CONFIG[a.category] || CATEGORY_CONFIG['general'];
+                      const cfg = CATEGORY_CONFIG[a.category] || CATEGORY_CONFIG['general']!;
                       return (
                         <li key={a.id}>
                           <Link to={`/link/${a.slug}`}
@@ -288,7 +288,7 @@ const HelpCenter = () => {
         {!search && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-10">
             {categories.map(cat => {
-              const cfg = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['general'];
+              const cfg = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['general']!;
               const count = articles.filter(a => a.category === cat).length;
               return (
                 <button
@@ -319,7 +319,7 @@ const HelpCenter = () => {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {featured.map(a => {
-                const cfg = CATEGORY_CONFIG[a.category] || CATEGORY_CONFIG['general'];
+                const cfg = CATEGORY_CONFIG[a.category] || CATEGORY_CONFIG['general']!;
                 return (
                   <Link key={a.id} to={`/link/${a.slug}`}
                     className="glass-card rounded-2xl p-4 hover:border-primary/30 transition-all hover:-translate-y-0.5 group">
@@ -345,7 +345,7 @@ const HelpCenter = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold text-foreground text-sm flex items-center gap-2">
                 {(() => {
-                  const cfg = CATEGORY_CONFIG[selectedCat] || CATEGORY_CONFIG['general'];
+                  const cfg = CATEGORY_CONFIG[selectedCat] || CATEGORY_CONFIG['general']!;
                   return <><cfg.icon size={14} style={{ color: cfg!.color }} /> {cfg!.label}</>;
                 })()}
               </h2>
@@ -370,7 +370,7 @@ const HelpCenter = () => {
           ) : (
             <div className="space-y-2">
               {filtered.map(a => {
-                const cfg = CATEGORY_CONFIG[a.category] || CATEGORY_CONFIG['general'];
+                const cfg = CATEGORY_CONFIG[a.category] || CATEGORY_CONFIG['general']!;
                 return (
                   <Link
                     key={a.id}

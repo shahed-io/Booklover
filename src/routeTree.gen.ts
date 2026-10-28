@@ -15,6 +15,7 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AffiliateRouteImport } from './routes/affiliate'
 import { Route as AntivirusPriceInBdRouteImport } from './routes/antivirus-price-in-bd'
+import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckKeyRouteImport } from './routes/check-key'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -24,14 +25,17 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DeliveryInfoRouteImport } from './routes/delivery-info'
 import { Route as DeveloperRouteImport } from './routes/developer'
 import { Route as FaqsRouteImport } from './routes/faqs'
+import { Route as FeedDotxmlRouteImport } from './routes/feed[.]xml'
 import { Route as GetCidRouteImport } from './routes/get-cid'
 import { Route as InstallRouteImport } from './routes/install'
 import { Route as OrderPolicyRouteImport } from './routes/order-policy'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as ProductFeedDotxmlRouteImport } from './routes/product-feed[.]xml'
 import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
 import { Route as RefundRequestRouteImport } from './routes/refund-request'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ReturnPolicyRouteImport } from './routes/return-policy'
+import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TermsConditionsRouteImport } from './routes/terms-conditions'
@@ -146,6 +150,7 @@ import { Route as AdminSeoSitemapRouteImport } from './routes/admin.seo.sitemap'
 import { Route as AdminSeoSlugsRouteImport } from './routes/admin.seo.slugs'
 import { Route as AdminSeoSpeedRouteImport } from './routes/admin.seo.speed'
 import { Route as PayTrackIdRouteImport } from './routes/pay.track.$id'
+import { Route as StorageV1ObjectPublicSplatRouteImport } from './routes/storage.v1.object.public.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -175,6 +180,11 @@ const AffiliateRoute = AffiliateRouteImport.update({
 const AntivirusPriceInBdRoute = AntivirusPriceInBdRouteImport.update({
   id: '/antivirus-price-in-bd',
   path: '/antivirus-price-in-bd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
+  id: '/atom.xml',
+  path: '/atom.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -222,6 +232,11 @@ const FaqsRoute = FaqsRouteImport.update({
   path: '/faqs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeedDotxmlRoute = FeedDotxmlRouteImport.update({
+  id: '/feed.xml',
+  path: '/feed.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GetCidRoute = GetCidRouteImport.update({
   id: '/get-cid',
   path: '/get-cid',
@@ -242,6 +257,11 @@ const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductFeedDotxmlRoute = ProductFeedDotxmlRouteImport.update({
+  id: '/product-feed.xml',
+  path: '/product-feed.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RefundPolicyRoute = RefundPolicyRouteImport.update({
   id: '/refund-policy',
   path: '/refund-policy',
@@ -260,6 +280,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const ReturnPolicyRoute = ReturnPolicyRouteImport.update({
   id: '/return-policy',
   path: '/return-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RssDotxmlRoute = RssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -833,6 +858,12 @@ const PayTrackIdRoute = PayTrackIdRouteImport.update({
   path: '/pay/track/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StorageV1ObjectPublicSplatRoute =
+  StorageV1ObjectPublicSplatRouteImport.update({
+    id: '/storage/v1/object/public/$',
+    path: '/storage/v1/object/public/$',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -841,6 +872,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRoute
   '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
+  '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/check-key': typeof CheckKeyRoute
   '/checkout': typeof CheckoutRoute
@@ -850,14 +882,17 @@ export interface FileRoutesByFullPath {
   '/delivery-info': typeof DeliveryInfoRoute
   '/developer': typeof DeveloperRoute
   '/faqs': typeof FaqsRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/get-cid': typeof GetCidRoute
   '/install': typeof InstallRoute
   '/order-policy': typeof OrderPolicyRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/product-feed.xml': typeof ProductFeedDotxmlRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/refund-request': typeof RefundRequestRoute
   '/reset-password': typeof ResetPasswordRoute
   '/return-policy': typeof ReturnPolicyRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/search': typeof SearchRoute
   '/shop': typeof ShopRoute
   '/terms-conditions': typeof TermsConditionsRoute
@@ -972,6 +1007,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
   '/admin/seo/': typeof AdminSeoIndexRoute
+  '/storage/v1/object/public/$': typeof StorageV1ObjectPublicSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -979,6 +1015,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/affiliate': typeof AffiliateRoute
   '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
+  '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/check-key': typeof CheckKeyRoute
   '/checkout': typeof CheckoutRoute
@@ -988,14 +1025,17 @@ export interface FileRoutesByTo {
   '/delivery-info': typeof DeliveryInfoRoute
   '/developer': typeof DeveloperRoute
   '/faqs': typeof FaqsRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/get-cid': typeof GetCidRoute
   '/install': typeof InstallRoute
   '/order-policy': typeof OrderPolicyRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/product-feed.xml': typeof ProductFeedDotxmlRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/refund-request': typeof RefundRequestRoute
   '/reset-password': typeof ResetPasswordRoute
   '/return-policy': typeof ReturnPolicyRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/search': typeof SearchRoute
   '/shop': typeof ShopRoute
   '/terms-conditions': typeof TermsConditionsRoute
@@ -1110,6 +1150,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/products': typeof AdminProductsIndexRoute
   '/admin/seo': typeof AdminSeoIndexRoute
+  '/storage/v1/object/public/$': typeof StorageV1ObjectPublicSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1119,6 +1160,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRoute
   '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
+  '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
   '/check-key': typeof CheckKeyRoute
   '/checkout': typeof CheckoutRoute
@@ -1128,14 +1170,17 @@ export interface FileRoutesById {
   '/delivery-info': typeof DeliveryInfoRoute
   '/developer': typeof DeveloperRoute
   '/faqs': typeof FaqsRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/get-cid': typeof GetCidRoute
   '/install': typeof InstallRoute
   '/order-policy': typeof OrderPolicyRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/product-feed.xml': typeof ProductFeedDotxmlRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/refund-request': typeof RefundRequestRoute
   '/reset-password': typeof ResetPasswordRoute
   '/return-policy': typeof ReturnPolicyRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/search': typeof SearchRoute
   '/shop': typeof ShopRoute
   '/terms-conditions': typeof TermsConditionsRoute
@@ -1250,6 +1295,7 @@ export interface FileRoutesById {
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
   '/admin/seo/': typeof AdminSeoIndexRoute
+  '/storage/v1/object/public/$': typeof StorageV1ObjectPublicSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1260,6 +1306,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliate'
     | '/antivirus-price-in-bd'
+    | '/atom.xml'
     | '/cart'
     | '/check-key'
     | '/checkout'
@@ -1269,14 +1316,17 @@ export interface FileRouteTypes {
     | '/delivery-info'
     | '/developer'
     | '/faqs'
+    | '/feed.xml'
     | '/get-cid'
     | '/install'
     | '/order-policy'
     | '/privacy-policy'
+    | '/product-feed.xml'
     | '/refund-policy'
     | '/refund-request'
     | '/reset-password'
     | '/return-policy'
+    | '/rss.xml'
     | '/search'
     | '/shop'
     | '/terms-conditions'
@@ -1391,6 +1441,7 @@ export interface FileRouteTypes {
     | '/admin/categories/'
     | '/admin/products/'
     | '/admin/seo/'
+    | '/storage/v1/object/public/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1398,6 +1449,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/affiliate'
     | '/antivirus-price-in-bd'
+    | '/atom.xml'
     | '/cart'
     | '/check-key'
     | '/checkout'
@@ -1407,14 +1459,17 @@ export interface FileRouteTypes {
     | '/delivery-info'
     | '/developer'
     | '/faqs'
+    | '/feed.xml'
     | '/get-cid'
     | '/install'
     | '/order-policy'
     | '/privacy-policy'
+    | '/product-feed.xml'
     | '/refund-policy'
     | '/refund-request'
     | '/reset-password'
     | '/return-policy'
+    | '/rss.xml'
     | '/search'
     | '/shop'
     | '/terms-conditions'
@@ -1529,6 +1584,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/products'
     | '/admin/seo'
+    | '/storage/v1/object/public/$'
   id:
     | '__root__'
     | '/'
@@ -1537,6 +1593,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliate'
     | '/antivirus-price-in-bd'
+    | '/atom.xml'
     | '/cart'
     | '/check-key'
     | '/checkout'
@@ -1546,14 +1603,17 @@ export interface FileRouteTypes {
     | '/delivery-info'
     | '/developer'
     | '/faqs'
+    | '/feed.xml'
     | '/get-cid'
     | '/install'
     | '/order-policy'
     | '/privacy-policy'
+    | '/product-feed.xml'
     | '/refund-policy'
     | '/refund-request'
     | '/reset-password'
     | '/return-policy'
+    | '/rss.xml'
     | '/search'
     | '/shop'
     | '/terms-conditions'
@@ -1668,6 +1728,7 @@ export interface FileRouteTypes {
     | '/admin/categories/'
     | '/admin/products/'
     | '/admin/seo/'
+    | '/storage/v1/object/public/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1677,6 +1738,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AffiliateRoute: typeof AffiliateRoute
   AntivirusPriceInBdRoute: typeof AntivirusPriceInBdRoute
+  AtomDotxmlRoute: typeof AtomDotxmlRoute
   CartRoute: typeof CartRoute
   CheckKeyRoute: typeof CheckKeyRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -1686,14 +1748,17 @@ export interface RootRouteChildren {
   DeliveryInfoRoute: typeof DeliveryInfoRoute
   DeveloperRoute: typeof DeveloperRoute
   FaqsRoute: typeof FaqsRoute
+  FeedDotxmlRoute: typeof FeedDotxmlRoute
   GetCidRoute: typeof GetCidRoute
   InstallRoute: typeof InstallRoute
   OrderPolicyRoute: typeof OrderPolicyRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  ProductFeedDotxmlRoute: typeof ProductFeedDotxmlRoute
   RefundPolicyRoute: typeof RefundPolicyRoute
   RefundRequestRoute: typeof RefundRequestRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ReturnPolicyRoute: typeof ReturnPolicyRoute
+  RssDotxmlRoute: typeof RssDotxmlRoute
   SearchRoute: typeof SearchRoute
   ShopRoute: typeof ShopRoute
   TermsConditionsRoute: typeof TermsConditionsRoute
@@ -1716,6 +1781,7 @@ export interface RootRouteChildren {
   NoticesIndexRoute: typeof NoticesIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   PayTrackIdRoute: typeof PayTrackIdRoute
+  StorageV1ObjectPublicSplatRoute: typeof StorageV1ObjectPublicSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1760,6 +1826,13 @@ declare module '@tanstack/react-router' {
       path: '/antivirus-price-in-bd'
       fullPath: '/antivirus-price-in-bd'
       preLoaderRoute: typeof AntivirusPriceInBdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atom.xml': {
+      id: '/atom.xml'
+      path: '/atom.xml'
+      fullPath: '/atom.xml'
+      preLoaderRoute: typeof AtomDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -1825,6 +1898,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/feed.xml': {
+      id: '/feed.xml'
+      path: '/feed.xml'
+      fullPath: '/feed.xml'
+      preLoaderRoute: typeof FeedDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/get-cid': {
       id: '/get-cid'
       path: '/get-cid'
@@ -1853,6 +1933,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product-feed.xml': {
+      id: '/product-feed.xml'
+      path: '/product-feed.xml'
+      fullPath: '/product-feed.xml'
+      preLoaderRoute: typeof ProductFeedDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/refund-policy': {
       id: '/refund-policy'
       path: '/refund-policy'
@@ -1879,6 +1966,13 @@ declare module '@tanstack/react-router' {
       path: '/return-policy'
       fullPath: '/return-policy'
       preLoaderRoute: typeof ReturnPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rss.xml': {
+      id: '/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/rss.xml'
+      preLoaderRoute: typeof RssDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -2679,6 +2773,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PayTrackIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/storage/v1/object/public/$': {
+      id: '/storage/v1/object/public/$'
+      path: '/storage/v1/object/public/$'
+      fullPath: '/storage/v1/object/public/$'
+      preLoaderRoute: typeof StorageV1ObjectPublicSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -2881,6 +2982,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AffiliateRoute: AffiliateRoute,
   AntivirusPriceInBdRoute: AntivirusPriceInBdRoute,
+  AtomDotxmlRoute: AtomDotxmlRoute,
   CartRoute: CartRoute,
   CheckKeyRoute: CheckKeyRoute,
   CheckoutRoute: CheckoutRoute,
@@ -2890,14 +2992,17 @@ const rootRouteChildren: RootRouteChildren = {
   DeliveryInfoRoute: DeliveryInfoRoute,
   DeveloperRoute: DeveloperRoute,
   FaqsRoute: FaqsRoute,
+  FeedDotxmlRoute: FeedDotxmlRoute,
   GetCidRoute: GetCidRoute,
   InstallRoute: InstallRoute,
   OrderPolicyRoute: OrderPolicyRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  ProductFeedDotxmlRoute: ProductFeedDotxmlRoute,
   RefundPolicyRoute: RefundPolicyRoute,
   RefundRequestRoute: RefundRequestRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ReturnPolicyRoute: ReturnPolicyRoute,
+  RssDotxmlRoute: RssDotxmlRoute,
   SearchRoute: SearchRoute,
   ShopRoute: ShopRoute,
   TermsConditionsRoute: TermsConditionsRoute,
@@ -2920,6 +3025,7 @@ const rootRouteChildren: RootRouteChildren = {
   NoticesIndexRoute: NoticesIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   PayTrackIdRoute: PayTrackIdRoute,
+  StorageV1ObjectPublicSplatRoute: StorageV1ObjectPublicSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

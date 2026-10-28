@@ -31,7 +31,6 @@ interface OrderInfo {
   status: string | null;
   created_at: string;
   items?: Array<{ product_name: string | null; quantity: number; price: number }> | undefined;
-
 }
 
 interface Props {
@@ -299,7 +298,7 @@ export default function WalletCustomerDetailModal({ customer, onClose }: Props) 
   );
 }
 
-function Stat({ icon: Icon, label, value, color, sub }: { icon: any; label: string; value: string; color: string; sub?: string }) {
+function Stat({ icon: Icon, label, value, color, sub }: { icon: any; label: string; value: string; color: string; sub?: string | undefined }) {
   return (
     <div className="rounded-xl border border-border bg-background/60 p-2.5">
       <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">

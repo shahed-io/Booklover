@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from '@/lib/router-compat';
 import { useMemo } from 'react';
 
-type TickerItem = { label: string; price: string; off: string; slug?: string };
+type TickerItem = { label: string; price: string; off: string; slug?: string | undefined };
 
 type AnnouncementSettings = {
   enabled: boolean;

@@ -38,26 +38,19 @@ interface Category { id: string; name: string; parent_id: string | null; }
 
 interface Product {
   id: string; name: string; price: number; original_price: number | null;
-  cost_price?: number | null; discount_percent: number | null; status: string | undefined;
-
-  image_url: string | null; images?: string[] | null; video_url?: string | null;
+  cost_price?: number | null | undefined; discount_percent: number | null; status: string | undefined;
+  image_url: string | null; images?: string[] | null | undefined; video_url?: string | null | undefined;
   total_sales: number; created_at: string; is_featured: boolean; is_digital: boolean;
   tags: string[] | null; description: string | null; short_description: string | null;
   download_link: string | null; sku: string | null; category_id: string | null;
-  subcategory_id?: string | null; brand?: string | null; delivery_time: string | null | undefined;
-
-  delivery_type?: string | null; what_you_get: string[] | null | undefined;
-
+  subcategory_id?: string | null | undefined; brand?: string | null | undefined; delivery_time: string | null | undefined;
+  delivery_type?: string | null | undefined; what_you_get: string[] | null | undefined;
   faq: { q: string; a: string }[] | null; seo_title: string | null;
   seo_description: string | null; variants: { name: string; options: { label: string; price: string }[] }[] | null;
-  badge?: string | null; demo_url?: string | null; warranty_note?: string | null | undefined;
-
-  refund_note?: string | null; product_type?: string | null | undefined;
-
+  badge?: string | null | undefined; demo_url?: string | null | undefined; warranty_note?: string | null | undefined;
+  refund_note?: string | null | undefined; product_type?: string | null | undefined;
   attributes?: { key: string; value: string }[] | null | undefined;
-
   category?: { name: string } | null | undefined;
-
 }
 
 const DURATION_PRESETS = [
@@ -756,7 +749,7 @@ const AdminProducts = () => {
       original_price: syncedPrices?.original_price ?? (product.original_price ? String(product.original_price) : ''),
       discount_percent: syncedPrices?.discount_percent ?? (product.discount_percent ? String(product.discount_percent) : ''),
       cost_price: product.cost_price ? String(product.cost_price) : '',
-      status: product.status,
+      status: product.status ?? 'active',
       sku: product.sku || '',
       stock_quantity: '',
       category_id: product.category_id || '',
@@ -2071,8 +2064,8 @@ const AdminProducts = () => {
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${product.status === 'active' ? 'translate-x-4' : 'translate-x-0.5'}`} />
                         </button>
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${statusColor[product.status] || 'bg-muted text-muted-foreground'}`}>
-                          {product.status.replace('_', ' ')}
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${statusColor[product.status ?? ''] || 'bg-muted text-muted-foreground'}`}>
+                          {(product.status ?? '').replace('_', ' ')}
                         </span>
                       </div>
                     </td>

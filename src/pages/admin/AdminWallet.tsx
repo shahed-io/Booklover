@@ -23,10 +23,9 @@ interface Transaction {
   balance_after: number;
   note: string | null;
   reference_id: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   profiles?: { display_name: string | null; email: string | null } | undefined;
-
 }
 
 interface TopupRequest {
@@ -40,7 +39,6 @@ interface TopupRequest {
   admin_notes: string | null;
   created_at: string;
   profiles?: { display_name: string | null; email: string | null } | undefined;
-
 }
 
 const AdminWallet = () => {
@@ -88,7 +86,7 @@ const AdminWallet = () => {
         .select('user_id, display_name, email')
         .in('user_id', userIds);
       const profileMap = Object.fromEntries((profiles || []).map(p => [p.user_id, p]));
-      setTransactions(data.map(t => ({ ...t, profiles: profileMap[t.user_id] })));
+      setTransactions(data.map(t => { const pr = profileMap[t.user_id]; return pr ? { ...t, profiles: pr } : { ...t }; }));
     } else {
       setTransactions([]);
     }

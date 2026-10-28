@@ -171,7 +171,7 @@ const Checkout = () => {
   const [submitError, setSubmitError] = useState('');
   const [summaryOpen, setSummaryOpen] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const abandonedTimer = useRef<ReturnType<typeof setTimeout>>();
+  const abandonedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [walletBalance, setWalletBalance] = useState(0);
   const [refCreditBalance, setRefCreditBalance] = useState(0);
   const [refCreditApplied, setRefCreditApplied] = useState(0);
@@ -503,7 +503,7 @@ const Checkout = () => {
     return () => clearTimeout(abandonedTimer.current);
   }, [form.name, form.email, form.phone, items, subtotal, discountAmount, finalTotal, coupon.isApplied, coupon.code, paymentMethod, orderNotes, user?.id]);
 
-  const handleApplyCoupon = async (code?: string) => {
+  const handleApplyCoupon = async (code?: string | undefined) => {
     const c = (code || couponCode).trim().toUpperCase();
     if (!c) return;
     setCouponLoading(true);

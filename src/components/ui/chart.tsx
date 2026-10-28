@@ -9,10 +9,8 @@ const THEMES = { light: "", dark: ".dark" } as const;
 export type ChartConfig = {
   [k in string]: {
     label?: React.ReactNode | undefined;
-
     icon?: React.ComponentType | undefined;
-
-  } & ({ color?: string; theme?: never } | { color?: never; theme: Record<keyof typeof THEMES, string> });
+  } & ({ color?: string | undefined; theme?: never | undefined } | { color?: never | undefined; theme: Record<keyof typeof THEMES, string> });
 };
 
 type ChartContextProps = {
@@ -96,15 +94,10 @@ const ChartTooltipContent = React.forwardRef<
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
     React.ComponentProps<"div"> & {
       hideLabel?: boolean | undefined;
-
       hideIndicator?: boolean | undefined;
-
       indicator?: "line" | "dot" | "dashed" | undefined;
-
       nameKey?: string | undefined;
-
       labelKey?: string | undefined;
-
     }
 >(
   (
@@ -167,7 +160,7 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
-          {payload.map((item, index) => {
+          {payload.map((item: any, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
             const indicatorColor = color || item.payload.fill || item.color;
@@ -238,13 +231,9 @@ const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     payload?: any | undefined;
-
     verticalAlign?: "top" | "bottom" | "middle" | undefined;
-
     hideIcon?: boolean | undefined;
-
     nameKey?: string | undefined;
-
   }
 >(({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
   const { config } = useChart();

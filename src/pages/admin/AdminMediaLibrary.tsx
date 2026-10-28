@@ -149,7 +149,7 @@ const AdminMediaLibrary = () => {
         try {
           const match = url.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)/);
           if (match) {
-            await supabase.storage.from(match[1]!).remove([match[2]]);
+            await supabase.storage.from(match[1]!).remove([match[2]!]);
           }
         } catch { /* ignore */ }
       }

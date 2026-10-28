@@ -85,9 +85,9 @@ export function useAdmin2FA() {
   const disable       = useCallback((code: string) => call2FA('disable', { code }), []);
   const logout        = useCallback((token: string) => call2FA('logout', { token }), []);
   const sendEmailOtp  = useCallback(() => call2FA('send-email-otp'), []);
-  const reset         = useCallback((opts: { token?: string; code?: string }) =>
+  const reset         = useCallback((opts: { token?: string | undefined; code?: string | undefined }) =>
     call2FA('reset', opts), []);
-  const regenerateBackupCodes = useCallback((opts: { token?: string; code?: string }) =>
+  const regenerateBackupCodes = useCallback((opts: { token?: string | undefined; code?: string | undefined }) =>
     call2FA('regenerate-backup-codes', opts), []);
   const getConfig     = useCallback(() =>
     call2FA('get-config') as Promise<Admin2FAConfig>, []);

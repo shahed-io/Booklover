@@ -41,9 +41,9 @@ const ROUTE_LOADERS: Record<string, () => Promise<unknown>> = {
 function getLoader(path: string): (() => Promise<unknown>) | null {
   if (ROUTE_LOADERS[path]) return ROUTE_LOADERS[path];
   // Dynamic match
-  if (path.startsWith('/product/')) return ROUTE_LOADERS['/product/'];
-  if (path.startsWith('/blog/'))    return ROUTE_LOADERS['/blog/'];
-  if (path.startsWith('/link'))     return ROUTE_LOADERS['/link'];
+  if (path.startsWith('/product/')) return ROUTE_LOADERS['/product/'] ?? null;
+  if (path.startsWith('/blog/'))    return ROUTE_LOADERS['/blog/'] ?? null;
+  if (path.startsWith('/link'))     return ROUTE_LOADERS['/link'] ?? null;
   return null;
 }
 

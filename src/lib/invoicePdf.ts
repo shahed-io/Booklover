@@ -26,9 +26,7 @@ export interface InvoiceItem {
   quantity: number;
   price: number;
   total?: number | undefined;
-
   license_key?: string | null | undefined;
-
 }
 
 export interface InvoiceData {
@@ -37,26 +35,17 @@ export interface InvoiceData {
   customer: {
     name: string;
     phone?: string | undefined;
-
     email?: string | undefined;
-
     address?: string | undefined;
-
   };
   items: InvoiceItem[];
   subtotal?: number | undefined;
-
   discount?: number | undefined;
-
   total: number;
   paymentMethod?: string | undefined;
-
   transactionId?: string | undefined;
-
   status?: string | undefined;
-
   notes?: string | undefined;
-
 }
 
 const PM_LABELS: Record<string, string> = {
@@ -349,7 +338,7 @@ export async function buildInvoiceHtmlString(data: InvoiceData): Promise<string>
 /**
  * Normalize Bangladeshi phone to wa.me format (8801XXXXXXXXX).
  */
-export function normalizeWaPhone(raw?: string | null): string {
+export function normalizeWaPhone(raw?: string | null | undefined): string {
   if (!raw) return '';
   let p = String(raw).replace(/\D/g, '');
   if (p.startsWith('880')) return p;

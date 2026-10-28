@@ -6,7 +6,7 @@ type Slide = {
   tag: string; tagIcon: string; title: string; titleAccent: string; subtitle: string; desc: string;
   price: string; original: string; off: string; badge: string;
   accentFrom: string; accentTo: string;
-  emoji: string; logoImg?: string; bgImage?: string; features: string[]; productSlug?: string;
+  emoji: string; logoImg?: string | undefined; bgImage?: string | undefined; features: string[]; productSlug?: string | undefined;
 };
 
 const FALLBACK_BANNERS: string[] = [];

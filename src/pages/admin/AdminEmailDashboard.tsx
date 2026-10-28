@@ -91,7 +91,7 @@ export default function AdminEmailDashboard() {
 
   // Per-template summary
   const perTemplate = useMemo(() => {
-    const map = new Map<string, { name: string; total: number; sent: number; failed: number; pending: number; lastSent?: string; lastError?: string }>();
+    const map = new Map<string, { name: string; total: number; sent: number; failed: number; pending: number; lastSent?: string | undefined; lastError?: string | undefined }>();
     for (const r of deduped) {
       const name = r.template_name || "(unknown)";
       const cur = map.get(name) || { name, total: 0, sent: 0, failed: 0, pending: 0 };
@@ -121,7 +121,7 @@ export default function AdminEmailDashboard() {
     return <Badge variant="outline">{s || "—"}</Badge>;
   };
 
-  const fmt = (iso?: string) => iso ? new Date(iso).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" }) : "—";
+  const fmt = (iso?: string | undefined) => iso ? new Date(iso).toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" }) : "—";
 
   return (
     <div className="p-4 md:p-6 space-y-6">

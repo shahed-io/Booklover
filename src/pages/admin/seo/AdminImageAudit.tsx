@@ -29,7 +29,6 @@ interface PageResult {
   totalImages: number;
   issueCount: number;
   error?: string | undefined;
-
 }
 
 const ISSUE_LABEL: Record<Issue, string> = {
@@ -159,7 +158,7 @@ export default function AdminImageAudit() {
     });
   };
 
-  const runScan = async (urlList?: string[]) => {
+  const runScan = async (urlList?: string[] | undefined) => {
     const targets = urlList ?? pages.map((p) => p.url);
     if (targets.length === 0) return;
     setScanning(true);
@@ -172,7 +171,7 @@ export default function AdminImageAudit() {
     for (let i = 0; i < targets.length; i++) {
       const url = targets[i];
       const idx = updated.findIndex((p) => p.url === url);
-      if (idx >= 0) updated[idx] = { ...updated[idx], status: "loading" };
+      if (idx >= 0) updated[idx] = { ...updated[idx]!, status: "loading" };
       setPages([...updated]);
 
       try {
@@ -180,7 +179,7 @@ export default function AdminImageAudit() {
         allIssues.push(...images);
         if (idx >= 0) {
           updated[idx] = {
-            ...updated[idx],
+            ...updated[idx]!,
             status: "done",
             totalImages: total,
             issueCount: images.length,
@@ -188,7 +187,7 @@ export default function AdminImageAudit() {
         }
       } catch (e: any) {
         if (idx >= 0) {
-          updated[idx] = { ...updated[idx], status: "error", error: e.message };
+          updated[idx] = { ...updated[idx]!, status: "error", error: e.message };
         }
       }
       setPages([...updated]);

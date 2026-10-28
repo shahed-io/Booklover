@@ -20,18 +20,15 @@ interface Product {
   name: string;
   price: number;
   originalPrice?: number | undefined;
-
   image: string;
   category: string;
   customFields?: CustomField[] | undefined;
-
 }
 
 interface QuickOrderModalProps {
   product: Product;
   onClose: () => void;
   quantity?: number | undefined;
-
 }
 
 const schema = z.object({
@@ -47,9 +44,7 @@ interface PaymentOption {
   label: string;
   color: string;
   logo?: string | undefined;
-
   isWallet?: boolean | undefined;
-
 }
 
 const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-hidden focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all";
@@ -110,7 +105,7 @@ const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOr
 
   // Persistent session token for abandoned-checkout tracking (Quick Order)
   const sessionTokenRef = useRef<string>('');
-  const abandonedTimer = useRef<ReturnType<typeof setTimeout>>();
+  const abandonedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const orderPlacedRef = useRef(false);
   if (!sessionTokenRef.current) {
     let tok = '';

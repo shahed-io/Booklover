@@ -1,4 +1,4 @@
-const BrandLoader = ({ size = 'md', className = '' }: { size?: 'sm' | 'md' | 'lg'; className?: string }) => {
+const BrandLoader = ({ size = 'md', className = '' }: { size?: 'sm' | 'md' | 'lg' | undefined; className?: string | undefined }) => {
   const w = { sm: 90, md: 150, lg: 190 }[size];
   return (
     <div className={`flex items-center justify-center ${className}`}>

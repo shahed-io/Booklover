@@ -26,7 +26,7 @@ function HomeCard({ book }: { book: Book }) {
   );
 }
 
-function Row({ title, books, to, loading }: { title: string; books: Book[]; to: string; loading?: boolean }) {
+function Row({ title, books, to, loading }: { title: string; books: Book[]; to: string; loading?: boolean | undefined }) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState(1);
   if (!books.length && !loading) return null;

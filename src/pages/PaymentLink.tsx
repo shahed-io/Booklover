@@ -11,9 +11,8 @@ import { toast } from 'sonner';
 import { Loader2, Upload, CheckCircle2, AlertCircle, Copy } from 'lucide-react';
 import AuthModal from '@/components/store/AuthModal';
 
-type PaymentMethod = { name: string; number?: string; instructions?: string };
-type CustomField = { label: string; type?: 'text' | 'email' | 'number'; required?: boolean };
-
+type PaymentMethod = { name: string; number?: string | undefined; instructions?: string | undefined };
+type CustomField = { label: string; type?: 'text' | 'email' | 'number' | undefined; required?: boolean | undefined };
 export default function PaymentLink() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ export default function PaymentLink() {
       const { data, error } = await supabase.from('payment_links').select('*').eq('slug', slug).maybeSingle();
       if (error || !data) { setLoading(false); return; }
       setLink(data);
-      setForm(f => ({ ...f, quantity: data.quantity || 1, payment_method: (data.payment_methods?.[0]?.name) || '' }));
+      setForm(f => ({ ...f, quantity: data.quantity || 1, payment_method: ((data.payment_methods as Array<{ name?: string }> | null)?.[0]?.name) || '' }));
       // Restore any pending form data (e.g. after login redirect)
       let hadPending = false;
       try {

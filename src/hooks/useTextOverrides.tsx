@@ -41,7 +41,7 @@ export const useTextOverrides = () => {
 /**
  * Hook to read a single text by key. Falls back to registry default.
  */
-export const useText = (key: string, fallback?: string) => {
+export const useText = (key: string, fallback?: string | undefined) => {
   const { overrides } = useTextOverrides();
   const override = overrides.get(key);
   if (override) return override;

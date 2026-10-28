@@ -14,12 +14,9 @@ interface NavItem {
   path: string;
   match: (path: string) => boolean;
   badgeCount?: number | undefined;
-
   requireAuth?: boolean | undefined;
-
   gradient: string;
   srText?: string | undefined;
-
 }
 
 /**
@@ -144,7 +141,7 @@ const MobileBottomNav = () => {
       gradient: 'linear-gradient(135deg, hsl(38 95% 55%), hsl(28 90% 50%))',
       isCurrency: true,
       currencySymbol: activeCurrency?.symbol || '৳',
-    } as NavItem & { isCurrency?: boolean; currencySymbol?: string },
+    } as NavItem & { isCurrency?: boolean | undefined; currencySymbol?: string | undefined },
     {
       label: 'Orders',
       icon: Package,

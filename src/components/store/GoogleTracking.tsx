@@ -115,9 +115,8 @@ const sha256 = async (input: string): Promise<string> => {
   return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
 };
 
-interface UserData { email?: string; phone?: string; name?: string; }
-
-const setEnhancedUserData = async (userData?: UserData) => {
+interface UserData { email?: string | undefined; phone?: string | undefined; name?: string | undefined; }
+const setEnhancedUserData = async (userData?: UserData | undefined) => {
   if (!cachedConfig?.enhanced_conversions_enabled || !userData) return;
   if (typeof window === 'undefined' || !window.gtag) return;
   const payload: Record<string, string> = {};
@@ -154,7 +153,7 @@ const fireConversion = (eventLabelKey: keyof GoogleAdsAccount, params: Record<st
     });
 };
 
-export const gTrackPageView = (path?: string) => {
+export const gTrackPageView = (path?: string | undefined) => {
   if (!cachedConfig) return;
   const url = path || (typeof window !== 'undefined' ? window.location.pathname + window.location.search : '');
   if (cachedConfig.ga4_enabled && cachedConfig.ga4_id) {
@@ -163,8 +162,8 @@ export const gTrackPageView = (path?: string) => {
 };
 
 export const gTrackAddToCart = async (
-  params: { value: number; currency?: string; items?: any[] },
-  userData?: UserData,
+  params: { value: number; currency?: string | undefined; items?: any[] | undefined },
+  userData?: UserData | undefined,
 ) => {
   if (!cachedConfig) await loadConfig();
   await setEnhancedUserData(userData);
@@ -174,8 +173,8 @@ export const gTrackAddToCart = async (
 };
 
 export const gTrackBeginCheckout = async (
-  params: { value: number; currency?: string; items?: any[] },
-  userData?: UserData,
+  params: { value: number; currency?: string | undefined; items?: any[] | undefined },
+  userData?: UserData | undefined,
 ) => {
   if (!cachedConfig) await loadConfig();
   await setEnhancedUserData(userData);
@@ -185,8 +184,8 @@ export const gTrackBeginCheckout = async (
 };
 
 export const gTrackPurchase = async (
-  params: { transaction_id: string; value: number; currency?: string; items?: any[]; coupon?: string },
-  userData?: UserData,
+  params: { transaction_id: string; value: number; currency?: string | undefined; items?: any[] | undefined; coupon?: string | undefined },
+  userData?: UserData | undefined,
 ) => {
   if (!cachedConfig) await loadConfig();
   await setEnhancedUserData(userData);
@@ -205,7 +204,7 @@ export const gTrackPurchase = async (
   });
 };
 
-export const gTrackLead = async (params: { value?: number; method?: string } = {}, userData?: UserData) => {
+export const gTrackLead = async (params: { value?: number | undefined; method?: string | undefined } = {}, userData?: UserData | undefined) => {
   if (!cachedConfig) await loadConfig();
   await setEnhancedUserData(userData);
   fireGtagEvent('sign_up', { method: params.method || 'email' });

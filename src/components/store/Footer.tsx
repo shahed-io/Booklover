@@ -26,11 +26,10 @@ const GLASS_SHADOW = '0 18px 40px -26px hsla(222,60%,15%,0.45), inset 0 1px 0 hs
 
 // Two-color highlight on tagline keywords
 const HIGHLIGHT_GREEN = [
-  'বিশ্বস্ত', 'সাশ্রয়ী মূল্যে', 'সেরা দামে', 'ফ্রি ডেলিভারি',
-  '', '', 'গ্রাহকদের',
+  'বিশ্বস্ত', 'সাশ্রয়ী মূল্যে', 'সেরা দামে', 'ফ্রি ডেলিভারি', 'গ্রাহকদের',
 ];
 const HIGHLIGHT_ORANGE = [
-  '', 'হাই-কোয়ালিটি ফেব্রিক', 'অরিজিনাল', '',
+  'হাই-কোয়ালিটি ফেব্রিক', 'অরিজিনাল',
 ];
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]!));
 const highlightTagline = (text: string) => {
@@ -38,6 +37,7 @@ const highlightTagline = (text: string) => {
   const hits: Hit[] = [];
   const scan = (list: string[], cls: string) => {
     for (const kw of list) {
+      if (!kw) continue; // an empty keyword would match forever
       let from = 0;
       while (from <= text.length - kw.length) {
         const idx = text.indexOf(kw, from);

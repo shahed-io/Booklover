@@ -23,7 +23,6 @@ interface Review {
   date: string;
   verified: boolean;
   is_visible?: boolean | undefined;
-
 }
 
 const emptyReview = (): Review => ({

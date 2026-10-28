@@ -30,7 +30,7 @@ const EMPTY_REVIEW = (): Review => ({
 });
 
 const Field = ({ label, value, onChange, textarea = false, placeholder = '' }: {
-  label: string; value: string; onChange: (v: string) => void; textarea?: boolean; placeholder?: string;
+  label: string; value: string; onChange: (v: string) => void; textarea?: boolean | undefined; placeholder?: string | undefined;
 }) => (
   <div>
     <label className="text-xs text-muted-foreground mb-1.5 block">{label}</label>

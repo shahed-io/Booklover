@@ -15,9 +15,7 @@ type QueueItem = {
   intent: string;
   status: 'queued' | 'running' | 'success' | 'skipped' | 'error';
   message?: string | undefined;
-
   blog_slug?: string | undefined;
-
 };
 
 const AdminBlogTopics = () => {

@@ -34,7 +34,7 @@ const writeLocal = (items: RecentItem[]) => {
 /** Call from product detail page to record a view. */
 export const trackRecentlyViewed = async (
   item: Omit<RecentItem, 'viewed_at'>,
-  userId?: string | null
+  userId?: string | null | undefined
 ) => {
   if (!item.product_id || !item.product_name) return;
   const now = new Date().toISOString();
@@ -65,7 +65,6 @@ export const trackRecentlyViewed = async (
 
 interface Props {
   currentProductId?: string | undefined;
-
 }
 
 export const RecentlyViewed = ({ currentProductId }: Props) => {

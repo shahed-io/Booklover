@@ -6,7 +6,6 @@ export interface FooterLink {
   label: string;
   href: string;
   external?: boolean | undefined;
-
   is_active: boolean;
   sort_order: number;
 }

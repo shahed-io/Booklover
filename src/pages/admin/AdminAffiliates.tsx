@@ -45,36 +45,23 @@ interface Account {
   application_note: string | null;
   admin_note: string | null;
   applicant_name?: string | null | undefined;
-
   applicant_email?: string | null | undefined;
-
   applicant_phone?: string | null | undefined;
-
   website_url?: string | null | undefined;
-
   facebook_url?: string | null | undefined;
-
   youtube_url?: string | null | undefined;
-
   other_social_url?: string | null | undefined;
-
   audience_size?: string | null | undefined;
-
   niche?: string | null | undefined;
-
   why_join?: string | null | undefined;
-
   promotion_strategy?: string | null | undefined;
-
   payout_method: string | null;
   payout_account: string | null;
   payout_account_name: string | null;
   approved_at: string | null;
   created_at: string;
   email?: string | undefined;
-
   display_name?: string | undefined;
-
 }
 
 interface Conversion {
@@ -88,7 +75,6 @@ interface Conversion {
   rejection_reason: string | null;
   created_at: string;
   referral_code?: string | undefined;
-
 }
 
 interface Withdrawal {
@@ -104,7 +90,6 @@ interface Withdrawal {
   transaction_id: string | null;
   requested_at: string;
   referral_code?: string | undefined;
-
 }
 
 interface ProductCommission {
@@ -114,7 +99,6 @@ interface ProductCommission {
   customer_discount_percent: number | null;
   is_active: boolean;
   product_name?: string | undefined;
-
 }
 
 const STATUS_BADGE: Record<string, string> = {

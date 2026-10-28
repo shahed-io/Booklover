@@ -22,7 +22,6 @@ const Field = ({
   label: string;
   children: React.ReactNode;
   hint?: string | undefined;
-
 }) => (
   <div>
     <label className="text-xs font-medium text-muted-foreground mb-1 block">{label}</label>
@@ -41,7 +40,6 @@ const ColorField = ({
   value: string;
   onChange: (v: string) => void;
   allowAuto?: boolean | undefined;
-
 }) => {
   const isAuto = value === 'auto';
   return (

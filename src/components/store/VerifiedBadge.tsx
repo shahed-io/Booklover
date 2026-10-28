@@ -4,11 +4,8 @@
  */
 interface VerifiedBadgeProps {
   size?: number | undefined;
-
   className?: string | undefined;
-
   title?: string | undefined;
-
 }
 
 const VerifiedBadge = ({ size = 14, className = '', title = 'Verified' }: VerifiedBadgeProps) => (

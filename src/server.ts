@@ -8,7 +8,6 @@ type ServerEntry = {
 };
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
-
 async function getServerEntry(): Promise<ServerEntry> {
   if (!serverEntryPromise) {
     serverEntryPromise = import("@tanstack/react-start/server-entry").then(
@@ -37,7 +36,7 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 
 function isH3SwallowedErrorBody(body: string): boolean {
   try {
-    const payload = JSON.parse(body) as { unhandled?: unknown; message?: unknown };
+    const payload = JSON.parse(body) as { unhandled?: unknown | undefined; message?: unknown | undefined };
     return payload.unhandled === true && payload.message === "HTTPError";
   } catch {
     return false;

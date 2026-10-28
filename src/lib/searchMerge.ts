@@ -9,13 +9,9 @@ export interface SearchProduct {
 
 export interface AiSearchRaw {
   matchedIds?: unknown | undefined;
-
   correctedQuery?: unknown | undefined;
-
   didYouMean?: unknown | undefined;
-
   keywords?: unknown | undefined;
-
 }
 
 export interface AiSearchParsed {

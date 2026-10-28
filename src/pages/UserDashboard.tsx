@@ -54,9 +54,7 @@ interface Order {
   payment_method: string | null; transaction_id: string | null;
   notes: string | null; coupon_code: string | null;
   items?: OrderItem[] | undefined;
-
   timeline?: TimelineEvent[] | undefined;
-
 }
 interface Address {
   id: string; label: string; recipient_name: string; phone: string;
@@ -72,9 +70,7 @@ interface Referral {
   reward_amount: number; created_at: string;
   referred_id: string | null;
   referred_name?: string | undefined;
-
   referred_email?: string | undefined;
-
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
@@ -833,7 +829,7 @@ const UserDashboard = () => {
     }
     setUsernameStatus('checking'); setUsernameError('');
     const timer = setTimeout(async () => {
-      const { data, error } = await supabase.rpc('is_username_available', { p_username: trimmed, p_user_id: user?.id || null });
+      const { data, error } = await supabase.rpc('is_username_available', { p_username: trimmed, ...(user?.id ? { p_user_id: user.id } : {}) });
       if (error) { setUsernameStatus('invalid'); setUsernameError('চেক করতে সমস্যা হয়েছে'); return; }
       setUsernameStatus(data ? 'available' : 'taken');
       setUsernameError(data ? '' : 'এই ইউজারনেমটি ইতিমধ্যে নেওয়া হয়েছে');

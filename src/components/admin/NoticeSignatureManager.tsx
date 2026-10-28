@@ -30,7 +30,7 @@ export default function NoticeSignatureManager({ onChanged }: Props) {
     loadNoticeSignature(true).then((s) => { setSig(s); setLoading(false); });
   }, []);
 
-  const handleUpload = async (file?: File | null) => {
+  const handleUpload = async (file?: File | null | undefined) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) { toast.error('শুধু image upload করুন'); return; }
     try {

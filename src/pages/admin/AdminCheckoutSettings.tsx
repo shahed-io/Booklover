@@ -64,7 +64,7 @@ const AdminCheckoutSettings = () => {
         toast.error('At least one payment method must stay enabled');
         return p;
       }
-      const defaultPaymentMethod = next.includes(p.defaultPaymentMethod) ? p.defaultPaymentMethod : next[0];
+      const defaultPaymentMethod = next.includes(p.defaultPaymentMethod) ? p.defaultPaymentMethod : next[0]!;
       return { ...p, enabledPaymentMethods: next, defaultPaymentMethod };
     });
   };

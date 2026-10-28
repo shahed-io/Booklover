@@ -10,8 +10,7 @@ import { toast } from 'sonner';
 import { SITE_URL, SITE_NAME } from '@/components/seo/SEOHead';
 
 /* ───────────── types ───────────── */
-interface Redirect { id?: string; from_path: string; to_path: string; type: '301' | '302'; }
-
+interface Redirect { id?: string | undefined; from_path: string; to_path: string; type: '301' | '302'; }
 /* ───────────── component ───────────── */
 const AdminSEO = () => {
   const [loading, setLoading] = useState(true);
@@ -134,7 +133,7 @@ const AdminSEO = () => {
   /* ─── Accordion toggle ─── */
   const toggle = (s: string) => setActiveSection(prev => prev === s ? null : s);
 
-  const SectionHeader = ({ id, icon: Icon, title, subtitle, badge }: { id: string; icon: any; title: string; subtitle: string; badge?: string }) => (
+  const SectionHeader = ({ id, icon: Icon, title, subtitle, badge }: { id: string; icon: any; title: string; subtitle: string; badge?: string | undefined }) => (
     <button onClick={() => toggle(id)} className="w-full glass-card rounded-2xl p-5 flex items-center gap-4 hover:border-primary/30 transition-all group">
       <div className="w-10 h-10 rounded-xl btn-glow flex items-center justify-center flex-shrink-0">
         <Icon size={18} className="text-white" />

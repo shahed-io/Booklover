@@ -17,7 +17,7 @@ interface NoticeRow extends NoticeData {
 }
 
 export default function PublicNotices() {
-  const { slug } = useParams<{ slug?: string }>();
+  const { slug } = useParams<{ slug?: string | undefined }>();
   const [list, setList] = useState<NoticeRow[]>([]);
   const [one, setOne] = useState<NoticeRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -115,7 +115,7 @@ export default function PublicNotices() {
   );
 }
 
-function NoticeActions({ targetRef, notice }: { targetRef: React.RefObject<HTMLDivElement>; notice: { title: string; slug: string } }) {
+function NoticeActions({ targetRef, notice }: { targetRef: React.RefObject<HTMLDivElement | null>; notice: { title: string; slug: string } }) {
   const [busy, setBusy] = useState<'save' | 'share' | null>(null);
 
   const capture = async (): Promise<Blob | null> => {

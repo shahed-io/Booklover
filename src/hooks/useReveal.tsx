@@ -4,15 +4,10 @@ export type RevealVariant = 'up' | 'down' | 'left' | 'right' | 'scale' | 'fade' 
 
 interface UseRevealOptions {
   threshold?: number | undefined;
-
   rootMargin?: string | undefined;
-
   once?: boolean | undefined;
-
   variant?: RevealVariant | undefined;
-
   delay?: number | undefined;
-
 }
 
 export const useReveal = (options: UseRevealOptions = {}) => {

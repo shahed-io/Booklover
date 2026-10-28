@@ -113,7 +113,7 @@ function parseDevice(ua: string): string {
  * Use modern User-Agent Client Hints API when available (Chromium on Android).
  * Returns enriched device/browser info — falls back gracefully.
  */
-async function getClientHints(): Promise<{ model?: string; platform?: string; platformVersion?: string; browserBrand?: string; browserVersion?: string; mobile?: boolean }> {
+async function getClientHints(): Promise<{ model?: string | undefined; platform?: string | undefined; platformVersion?: string | undefined; browserBrand?: string | undefined; browserVersion?: string | undefined; mobile?: boolean | undefined }> {
   try {
     const uaData = (navigator as any).userAgentData;
     if (!uaData?.getHighEntropyValues) return {};
@@ -166,9 +166,7 @@ const SENT_KEY = 'login_notify_sent_at';
 export async function sendLoginNotification(opts: {
   email: string;
   customerName?: string | undefined;
-
   isAdmin?: boolean | undefined;
-
 }) {
   if (!opts?.email) return;
   try {
@@ -237,7 +235,7 @@ export async function sendLoginNotification(opts: {
   }
 }
 
-export async function sendWelcomeEmail(email: string, customerName?: string) {
+export async function sendWelcomeEmail(email: string, customerName?: string | undefined) {
   if (!email) return;
   try {
     await supabase.functions.invoke('send-transactional-email', {

@@ -22,7 +22,7 @@ const fireFbCustom = (eventName: string, params?: Record<string, any>) => {
  * Hook into route changes and selectively fire FB Pixel custom events
  * based on admin-defined audience rules.
  */
-export const useCustomAudiences = (extra?: { cartValue?: number }) => {
+export const useCustomAudiences = (extra?: { cartValue?: number | undefined }) => {
   const location = useLocation();
 
   useEffect(() => {

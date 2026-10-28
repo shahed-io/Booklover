@@ -15,7 +15,6 @@ interface Product {
   short_description: string | null;
   category_id: string | null;
   total_sales?: number | null | undefined;
-
 }
 
 interface Category {
@@ -52,11 +51,9 @@ const SuggestionItem = ({
   text: string;
   query: string;
   rightAction?: React.ReactNode | undefined;
-
   onClick: () => void;
   onFill?: () => void;
   isActive?: boolean | undefined;
-
 }) => {
   const highlight = (t: string, q: string) => {
     if (!q.trim()) return <span className="font-medium">{t}</span>;
@@ -112,10 +109,8 @@ const ProductResultItem = ({
   product: Product;
   query: string;
   categoryName?: string | null | undefined;
-
   onClick: () => void;
   isActive?: boolean | undefined;
-
 }) => {
   const { format: fmtPrice } = useCurrency();
   const highlight = (t: string, q: string) => {
@@ -192,7 +187,7 @@ const useGoogleSearch = () => {
   const navigate = useNavigate();
 
   // Cache active product catalog (id+name) for AI fuzzy matching
-  const catalogRef = useRef<Array<{ id: string; name: string; category?: string | null }>>([]);
+  const catalogRef = useRef<Array<{ id: string; name: string; category?: string | null | undefined }>>([]);
   const aiAbortRef = useRef<AbortController | null>(null);
   const aiCacheRef = useRef<Map<string, { ids: string[]; didYouMean: string }>>(new Map());
   const reqIdRef = useRef(0);
@@ -203,7 +198,7 @@ const useGoogleSearch = () => {
         if (data) {
           setCategories(data.slice(0, 8));
           const map: Record<string, string> = {};
-          data.forEach((c: Category) => { map[c.id] = c.name; });
+          data.forEach((c: Pick<Category, "id" | "name">) => { map[c.id] = c.name; });
           setCategoryMap(map);
         }
       });
@@ -258,7 +253,7 @@ const useGoogleSearch = () => {
         if (error || !data) return { products: [], didYouMean: '' };
         matchedIds = Array.isArray(data.matchedIds) ? data.matchedIds : [];
         dym = typeof data.didYouMean === 'string' ? data.didYouMean : '';
-        aiCacheRef.current.set(cacheKey, { ids: matchedIds, didYouMean: dym });
+        aiCacheRef.current.set(cacheKey, { ids: matchedIds ?? [], didYouMean: dym });
       } catch {
         return { products: [], didYouMean: '' };
       }
@@ -383,7 +378,7 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
   const close = () => onClose();
 
   // Build the list of interactive items for keyboard navigation
-  const allItems: Array<{ type: 'suggestion' | 'recent' | 'popular' | 'product'; value: string; product?: Product }> = [];
+  const allItems: Array<{ type: 'suggestion' | 'recent' | 'popular' | 'product'; value: string; product?: Product | undefined }> = [];
 
   if (s.query.trim()) {
     // Text suggestions first
@@ -913,9 +908,7 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
 // ══════════════════════════════════════════════════════════════════════
 interface SearchBarProps {
   className?: string | undefined;
-
   variant?: 'navbar' | 'standalone' | undefined;
-
   onClose?: () => void;
 }
 
@@ -947,7 +940,7 @@ const SearchBar = ({ className = '', variant = 'standalone', onClose }: SearchBa
     supabase.from('categories').select('id, name').eq('is_active', true).then(({ data }) => {
       if (data) {
         const map: Record<string, string> = {};
-        data.forEach((c: Category) => { map[c.id] = c.name; });
+        data.forEach((c: Pick<Category, "id" | "name">) => { map[c.id] = c.name; });
         setCategories(map);
       }
     });
@@ -1033,7 +1026,7 @@ const SearchBar = ({ className = '', variant = 'standalone', onClose }: SearchBa
   };
 
   const showRecent = !query.trim() && recent.length > 0;
-  const showEmpty = !loading && query.trim() && results.length === 0;
+  const showEmpty = !loading && !!query.trim() && results.length === 0;
   const showResults = !loading && results.length > 0;
 
   if (variant === 'standalone') {

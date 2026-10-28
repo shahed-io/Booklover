@@ -12,9 +12,7 @@ import { useState } from "react";
 
 interface Props {
   compact?: boolean | undefined;
-
   className?: string | undefined;
-
 }
 
 const CurrencySwitcher = ({ className }: Props) => {

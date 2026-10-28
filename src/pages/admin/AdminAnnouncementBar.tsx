@@ -100,7 +100,7 @@ const AdminAnnouncementBar = () => {
   };
 
   const updateItem = (i: number, field: keyof TickerItem, v: string) =>
-    setSettings(p => { const items = [...p.items]; items[i] = { ...items[i], [field]: v }; return { ...p, items }; });
+    setSettings(p => { const items = [...p.items]; items[i] = { ...items[i]!, [field]: v }; return { ...p, items }; });
 
   const addItem = () =>
     setSettings(p => ({ ...p, items: [...p.items, { label: 'নতুন আইটেম', price: '৳000', off: '-00%' }] }));

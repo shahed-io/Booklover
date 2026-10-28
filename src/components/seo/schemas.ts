@@ -5,7 +5,7 @@ const BD_AREA_CODE = 'BD';
 const SUPABASE_STORAGE_ORIGIN = 'https://tzkmjdcpgkbztxlchdpu.supabase.co';
 const SUPABASE_STORAGE_PUBLIC_PATH = '/storage/v1/object/public/';
 
-const seoImageUrl = (url?: string | null, fallback = `${SITE_URL}/favicon.png`) => {
+const seoImageUrl = (url?: string | null | undefined, fallback = `${SITE_URL}/favicon.png`) => {
   const clean = (url || '').trim();
   if (!clean) return fallback;
   if (clean.startsWith(`${SUPABASE_STORAGE_ORIGIN}${SUPABASE_STORAGE_PUBLIC_PATH}`)) {
@@ -20,25 +20,16 @@ const seoImageUrl = (url?: string | null, fallback = `${SITE_URL}/favicon.png`) 
 export const productSchema = (p: {
   name: string;
   description?: string | null | undefined;
-
   image?: string | null | undefined;
-
   images?: string[] | undefined;
-
   price: number;
   slug: string;
   rating?: number | undefined;
-
   reviewCount?: number | undefined;
-
   category?: string | undefined;
-
   sku?: string | undefined;
-
   originalPrice?: number | null | undefined;
-
   inStock?: boolean | undefined;
-
 }) => {
   // Build full image array for Google Image indexing
   const allImages: string[] = [];
@@ -123,16 +114,11 @@ export const breadcrumbSchema = (
 export const articleSchema = (post: {
   title: string;
   description?: string | null | undefined;
-
   image?: string | null | undefined;
-
   slug: string;
   publishedAt?: string | null | undefined;
-
   updatedAt?: string | undefined;
-
   authorName?: string | null | undefined;
-
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'Article',
@@ -186,7 +172,7 @@ export const websiteSchema = () => ({
 });
 
 /** ItemList schema for shop/category pages — helps Google show product grid in search */
-export const itemListSchema = (items: { name: string; slug: string; image?: string | null; price: number }[]) => ({
+export const itemListSchema = (items: { name: string; slug: string; image?: string | null | undefined; price: number }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: `Books — ${SITE_NAME}`,
@@ -209,7 +195,7 @@ export const itemListSchema = (items: { name: string; slug: string; image?: stri
 export const reviewSchema = (
   productName: string,
   productSlug: string,
-  reviews: { author: string; rating: number; body: string; date?: string }[]
+  reviews: { author: string; rating: number; body: string; date?: string | undefined }[]
 ) => reviews.slice(0, 10).map(r => ({
   '@context': 'https://schema.org',
   '@type': 'Review',
@@ -253,10 +239,8 @@ export const howToSchema = (h: {
   name: string;
   description: string;
   image?: string | undefined;
-
   totalTime?: string | undefined;
-
-  steps: { name: string; text: string; image?: string }[];
+  steps: { name: string; text: string; image?: string | undefined }[];
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'HowTo',
@@ -276,8 +260,7 @@ export const howToSchema = (h: {
 /** VideoObject — for any video embed */
 export const videoObjectSchema = (v: {
   name: string; description: string; thumbnailUrl: string;
-  uploadDate?: string; contentUrl?: string; embedUrl?: string; duration?: string | undefined;
-
+  uploadDate?: string | undefined; contentUrl?: string | undefined; embedUrl?: string | undefined; duration?: string | undefined;
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'VideoObject',
@@ -293,7 +276,7 @@ export const videoObjectSchema = (v: {
 
 /** SaleEvent — for flash sales / promotions */
 export const eventSchema = (e: {
-  name: string; description: string; startDate: string; endDate: string; url?: string;
+  name: string; description: string; startDate: string; endDate: string; url?: string | undefined;
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'SaleEvent',

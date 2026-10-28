@@ -17,31 +17,29 @@ import { useMemo, useCallback, forwardRef, type ComponentProps, type CSSProperti
 
 // ---------- shared URL parsing ----------
 
-function parseTo(to: string): { pathname: string; search?: Record<string, string>; hash?: string } {
+function parseTo(to: string): { pathname: string; search?: Record<string, string>; hash?: string | undefined } {
   const [beforeHash, hashStr] = (to ?? "").split("#");
   const [pathname, searchStr] = beforeHash!.split("?");
-  return {
-    // react-router keeps the current path for search-only ("?a=1") and
-    // hash-only ("#section") targets; TanStack's "." means current route.
-    pathname: pathname || ".",
-    search: searchStr ? Object.fromEntries(new URLSearchParams(searchStr)) : undefined,
-    hash: hashStr || undefined,
-  };
+  // react-router keeps the current path for search-only ("?a=1") and
+  // hash-only ("#section") targets; TanStack's "." means current route.
+  const out: { pathname: string; search?: Record<string, string>; hash?: string | undefined } = { pathname: pathname || "." };
+  if (searchStr) out.search = Object.fromEntries(new URLSearchParams(searchStr));
+  if (hashStr) out.hash = hashStr;
+  return out;
 }
 
 // ---------- useNavigate ----------
 
-type NavigateOptions = { replace?: boolean; state?: unknown };
-
+type NavigateOptions = { replace?: boolean | undefined; state?: unknown | undefined };
 type NavigateFn = {
-  (to: string | number, options?: NavigateOptions): void;
+  (to: string | number, options?: NavigateOptions | undefined): void;
   (delta: number): void;
 };
 
 export function useNavigate(): NavigateFn {
   const tsNav = tsNavigate();
   const router = useRouter();
-  return useCallback((to: string | number, options?: NavigateOptions) => {
+  return useCallback((to: string | number, options?: NavigateOptions | undefined) => {
     if (typeof to === "number") {
       router.history.go(to);
       return;
@@ -82,7 +80,7 @@ export function useParams<T extends Record<string, string | undefined> = Record<
 
 // ---------- useSearchParams (@/lib/router-compat compat) ----------
 
-export function useSearchParams(): [URLSearchParams, (init: URLSearchParams | Record<string, string> | ((prev: URLSearchParams) => URLSearchParams), opts?: { replace?: boolean }) => void] {
+export function useSearchParams(): [URLSearchParams, (init: URLSearchParams | Record<string, string> | ((prev: URLSearchParams) => URLSearchParams), opts?: { replace?: boolean | undefined }) => void] {
   const loc = tsLocation();
   const nav = tsNavigate();
   const router = useRouter();
@@ -90,7 +88,7 @@ export function useSearchParams(): [URLSearchParams, (init: URLSearchParams | Re
   const setParams = useCallback(
     (
       init: URLSearchParams | Record<string, string> | ((prev: URLSearchParams) => URLSearchParams),
-      opts?: { replace?: boolean },
+      opts?: { replace?: boolean | undefined },
     ) => {
       // Functional updaters read the router's live location, not the render
       // snapshot — react-router passes call-time params, and chained updates
@@ -117,11 +115,8 @@ export function useSearchParams(): [URLSearchParams, (init: URLSearchParams | Re
 type LinkProps = Omit<ComponentProps<typeof TSLink>, "to"> & {
   to: string;
   replace?: boolean | undefined;
-
   state?: unknown | undefined;
-
   children?: ReactNode | undefined;
-
 };
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
@@ -147,7 +142,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
 
 // ---------- Navigate ----------
 
-export function Navigate({ to, replace, state }: { to: string; replace?: boolean; state?: unknown }) {
+export function Navigate({ to, replace, state }: { to: string; replace?: boolean | undefined; state?: unknown | undefined }) {
   const { pathname, search, hash } = parseTo(to);
   return <TSNavigate to={pathname as never} search={search as never} hash={hash!} state={state as never} replace={replace!} />;
 }
@@ -160,7 +155,6 @@ export const Outlet = TSOutlet;
 
 export type NavLinkProps = Omit<LinkProps, "className" | "style" | "children"> & {
   end?: boolean | undefined;
-
   className?: string | ((state: { isActive: boolean; isPending: boolean }) => string | undefined);
   style?: CSSProperties | ((state: { isActive: boolean; isPending: boolean }) => CSSProperties | undefined);
   children?: ReactNode | ((state: { isActive: boolean; isPending: boolean }) => ReactNode);

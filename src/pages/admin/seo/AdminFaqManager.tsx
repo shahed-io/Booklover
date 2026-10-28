@@ -19,7 +19,7 @@ const AdminFaqManager = () => {
   }, []);
 
   const getFaqs = (p: any): any[] => {
-    if (edits[p.id]) return edits[p.id];
+    const edited = edits[p.id]; if (edited) return edited;
     try { return Array.isArray(p.faq) ? p.faq : (p.faq ? JSON.parse(p.faq) : []); } catch { return []; }
   };
 
@@ -28,7 +28,7 @@ const AdminFaqManager = () => {
   const addFaq = (id: string) => setFaqs(id, [...getFaqs({ id, faq: null }), { q: '', a: '' }]);
   const removeFaq = (id: string, i: number) => setFaqs(id, getFaqs({ id, faq: null }).filter((_, j) => j !== i));
   const updateFaq = (id: string, i: number, field: 'q' | 'a', val: string) => {
-    const f = [...getFaqs({ id, faq: null })]; f[i] = { ...f[i], [field]: val }; setFaqs(id, f);
+    const f = [...getFaqs({ id, faq: null })]; f[i] = { ...f[i]!, [field]: val }; setFaqs(id, f);
   };
 
   const save = async (product: any) => {

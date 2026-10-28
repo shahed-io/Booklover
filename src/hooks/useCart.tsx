@@ -8,7 +8,6 @@ export interface CartItem {
   category: string;
   price: number;
   originalPrice?: number | undefined;
-
   image: string;
   quantity: number;
   variant?: string | undefined; // selected variant label
@@ -28,7 +27,7 @@ export const TAX_RATE = 0;
 export const DEFAULT_SERVICE_FEE = 0;
 
 // Unique key for an item (id + variant)
-const itemKey = (i: { id: number | string; variant?: string }) =>
+const itemKey = (i: { id: number | string; variant?: string | undefined }) =>
   `${i.id}__${i.variant || ''}`;
 
 // Guard against phantom / corrupt cart entries that occasionally sneak in from
@@ -80,10 +79,10 @@ const pruneStale = (arr: CartItem[]): CartItem[] => arr.filter(isFresh);
 interface CartContextType {
   items: CartItem[];
   wishlist: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>, qty?: number) => void;
-  buyNow: (item: Omit<CartItem, 'quantity'>, qty?: number) => void;
-  removeFromCart: (id: number | string, variant?: string) => void;
-  updateQuantity: (id: number | string, quantity: number, variant?: string) => void;
+  addToCart: (item: Omit<CartItem, 'quantity'>, qty?: number | undefined) => void;
+  buyNow: (item: Omit<CartItem, 'quantity'>, qty?: number | undefined) => void;
+  removeFromCart: (id: number | string, variant?: string | undefined) => void;
+  updateQuantity: (id: number | string, quantity: number, variant?: string | undefined) => void;
   clearCart: () => void;
   removeItems: (keys: string[]) => void; // remove a batch (after payment)
   toggleWishlist: (item: Omit<CartItem, 'quantity'>) => void;
@@ -103,7 +102,7 @@ interface CartContextType {
   clearSelected: () => void;
   isSelected: (key: string) => boolean;
   selectedItems: CartItem[];
-  itemKey: (i: { id: number | string; variant?: string }) => string;
+  itemKey: (i: { id: number | string; variant?: string | undefined }) => string;
   // Coupon
   coupon: CouponState;
   setCoupon: (c: CouponState) => void;
@@ -405,13 +404,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
 
-  const removeFromCart = (id: number | string, variant?: string) => {
+  const removeFromCart = (id: number | string, variant?: string | undefined) => {
     setItems(prev => prev.filter(i => !(i.id === id && (i.variant || '') === (variant || ''))));
     setSelectedKeys(prev => prev.filter(k => k !== itemKey({ id, variant: variant! })));
     if (userId) dbDeleteItems(userId, [{ product_id: String(id), variant: variant || null }]);
   };
 
-  const updateQuantity = (id: number | string, quantity: number, variant?: string) => {
+  const updateQuantity = (id: number | string, quantity: number, variant?: string | undefined) => {
     if (quantity <= 0) { removeFromCart(id, variant); return; }
     let updated: CartItem | null = null;
     setItems(prev => prev.map(i => {

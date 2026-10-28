@@ -84,13 +84,13 @@ describe('parseAiSearchResponse', () => {
 
 describe('orderProductsByIds', () => {
   it('orders products by AI-supplied relevance ranking', () => {
-    const subset = [catalog[1], catalog[0], catalog[2]]; // out of order
+    const subset = [catalog[1]!, catalog[0]!, catalog[2]!]; // out of order
     const ordered = orderProductsByIds(subset, ['p3', 'p1', 'p2']);
     expect(ordered.map((p) => p.id)).toEqual(['p3', 'p1', 'p2']);
   });
 
   it('puts unranked items at the end without dropping them', () => {
-    const subset = [catalog[0], catalog[1], catalog[2]];
+    const subset = [catalog[0]!, catalog[1]!, catalog[2]!];
     const ordered = orderProductsByIds(subset, ['p2']);
     expect(ordered[0]!.id).toBe('p2');
     expect(ordered.map((p) => p.id).sort()).toEqual(['p1', 'p2', 'p3']);
@@ -99,19 +99,19 @@ describe('orderProductsByIds', () => {
 
 describe('mergeSearchResults', () => {
   it('keeps DB results first, appends unique AI results', () => {
-    const db = [catalog[0]]; // Office
-    const ai = [catalog[1], catalog[0], catalog[2]]; // Windows + dup Office + Netflix
+    const db = [catalog[0]!]; // Office
+    const ai = [catalog[1]!, catalog[0]!, catalog[2]!]; // Windows + dup Office + Netflix
     const merged = mergeSearchResults(db, ai);
     expect(merged.map((p) => p.id)).toEqual(['p1', 'p2', 'p3']);
   });
 
   it('returns DB results untouched when AI returns nothing', () => {
-    const db = [catalog[0], catalog[1]];
+    const db = [catalog[0]!, catalog[1]!];
     expect(mergeSearchResults(db, [])).toEqual(db);
   });
 
   it('promotes AI-only results when DB is empty (typo / Banglish case)', () => {
-    const ai = [catalog[2], catalog[3]];
+    const ai = [catalog[2]!, catalog[3]!];
     expect(mergeSearchResults([], ai).map((p) => p.id)).toEqual(['p3', 'p4']);
   });
 
@@ -286,7 +286,7 @@ describe('Shop page AI fallback (integration)', () => {
 
   it('marks results as AI-assisted only when DB returned nothing', () => {
     const dbResults: SearchProduct[] = [];
-    const aiResults = [catalog[0], catalog[1]];
+    const aiResults = [catalog[0]!, catalog[1]!];
     const merged = mergeSearchResults(dbResults, aiResults);
     const aiAssisted = dbResults.length === 0 && merged.length > 0;
     expect(aiAssisted).toBe(true);
@@ -294,8 +294,8 @@ describe('Shop page AI fallback (integration)', () => {
   });
 
   it('does NOT mark as AI-assisted when DB had some results', () => {
-    const dbResults = [catalog[0]];
-    const aiResults = [catalog[1]];
+    const dbResults = [catalog[0]!];
+    const aiResults = [catalog[1]!];
     const merged = mergeSearchResults(dbResults, aiResults);
     const aiAssisted = dbResults.length === 0 && merged.length > 0;
     expect(aiAssisted).toBe(false);

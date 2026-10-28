@@ -8,7 +8,6 @@ interface Props {
   paymentMethodId: string;
   amount: number;
   amountLabel?: string | undefined;
-
 }
 
 const PaymentInstructions = ({ paymentMethodId, amount, amountLabel = 'মোট পরিমাণ' }: Props) => {

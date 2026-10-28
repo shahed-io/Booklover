@@ -8,10 +8,9 @@ interface ApiKeyEntry {
   value: string;
   category: string;
   isNew?: boolean | undefined;
-
 }
 
-const KNOWN_PROVIDERS: Record<string, { name: string; icon: string; color: string; bgColor: string; borderColor: string; testType?: string; link?: string; description?: string }> = {
+const KNOWN_PROVIDERS: Record<string, { name: string; icon: string; color: string; bgColor: string; borderColor: string; testType?: string | undefined; link?: string | undefined; description?: string | undefined }> = {
   'gemini': { name: 'Google Gemini', icon: '🤖', color: '#4285F4', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/20', testType: 'gemini', link: 'https://aistudio.google.com/apikey', description: 'Google AI Studio থেকে API Key নিন' },
   'openai': { name: 'OpenAI (ChatGPT)', icon: '💬', color: '#10A37F', bgColor: 'bg-emerald-500/10', borderColor: 'border-emerald-500/20', testType: 'openai', link: 'https://platform.openai.com/api-keys', description: 'OpenAI Dashboard থেকে API Key নিন' },
   'anthropic': { name: 'Anthropic Claude', icon: '🧠', color: '#D97757', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/20', testType: 'anthropic', link: 'https://console.anthropic.com/settings/keys', description: 'Anthropic Console থেকে API Key নিন' },
