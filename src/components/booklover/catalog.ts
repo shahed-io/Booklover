@@ -6,7 +6,7 @@ export const collectionNames = ['All Books','Autobiography','Best Sellers','Biog
 export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 export const money = (n: number) => `Tk ${Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} BDT`;
 // Only the light fields lists need; the product page loads the full record separately.
-const LIST_COLS='id,name,slug,price,original_price,image_url,variants,status,stock_quantity,total_sales,created_at,short_description,tags,category_id,sort_order';
+export const LIST_COLS='id,name,slug,price,original_price,image_url,variants,status,stock_quantity,total_sales,created_at,short_description,tags,category_id,sort_order';
 export function useProductDetail(slug?:string){return useQuery({queryKey:['booklover-product',slug],enabled:!!slug,staleTime:5*60_000,queryFn:async()=>{const {data,error}=await supabase.from('products').select('*').or(`slug.eq.${slug},id.eq.${/^[0-9a-f-]{36}$/i.test(slug||'')?slug:'00000000-0000-0000-0000-000000000000'}`).maybeSingle();if(error)throw error;return data as Book|null;}});}
 export function useCatalog() {
   return useQuery({queryKey:['booklover-catalog'],staleTime:10*60_000,gcTime:60*60_000,queryFn:async()=>{
@@ -44,4 +44,23 @@ export function variantsOf(raw: Book['variants']): VariantGroup[] {
     }):[];
     return options.length?[{name:typeof v.name==='string'?v.name:'Book Cover Type',options}]:[];
   });
+}
+
+/** Saves query results on the device so repeat visits render instantly. */
+export function cached<T>(key:string){try{const v=localStorage.getItem('blc:'+key);return v?JSON.parse(v) as T:undefined;}catch{return undefined;}}
+export function saveCache(key:string,v:unknown){try{localStorage.setItem('blc:'+key,JSON.stringify(v));}catch{/* storage full */}}
+type HomeData={categories:Tables<'categories'>[];bestsellers:Book[];rows:Record<string,Book[]>};
+/** Small parallel queries for just what the homepage shows (no full catalog download). */
+export function useHomeData(rowCats:{title:string;collection:string}[],count:number){
+  const key='home-data';
+  return useQuery({queryKey:['booklover-home',rowCats,count],staleTime:5*60_000,initialData:()=>cached<HomeData>(key),initialDataUpdatedAt:0,queryFn:async()=>{
+    const {data:categories,error}=await supabase.from('categories').select('*').eq('is_active',true).order('sort_order');if(error)throw error;
+    const live=['active','out_of_stock'] as const;
+    const best=supabase.from('products').select(LIST_COLS).in('status',live as never).order('total_sales',{ascending:false}).limit(count);
+    const found=rowCats.map(r=>categories!.find(c=>c.name===r.title)||categories!.find(c=>c.slug===r.collection));
+    const rowQs=found.map(c=>c?supabase.from('products').select(`${LIST_COLS},product_categories!inner(category_id)`).eq('product_categories.category_id',c.id).in('status',live as never).order('sort_order').limit(25):Promise.resolve({data:[],error:null}));
+    const [b,...rs]=await Promise.all([best,...rowQs]);if(b.error)throw b.error;
+    const rows:Record<string,Book[]>={};rowCats.forEach((r,i)=>{rows[r.title]=((rs[i] as {data:unknown[]|null}).data||[]) as Book[];});
+    const out={categories:categories||[],bestsellers:(b.data||[]) as unknown as Book[],rows};saveCache(key,out);return out;
+  }});
 }

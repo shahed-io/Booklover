@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Pause, Play, ArrowRight, BookOpen } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import Layout from './Layout';
-import { useCatalog, slugify, money, variantsOf, type Book } from './catalog';
+import { useHomeData, slugify, money, variantsOf, type Book } from './catalog';
 import { useHomeSettings, HOME_DEFAULTS } from './homeSettings';
 import reading from '@/assets/booklover-reading.jpg';
 import collectionsImg from '@/assets/booklover-collections.jpg';
@@ -39,7 +39,6 @@ function Row({ title, books, to }: { title: string; books: Book[]; to: string })
 }
 
 export default function Home() {
-  const { data } = useCatalog();
   const { data: hs } = useHomeSettings();
   const cfg = hs || HOME_DEFAULTS;
   const [slide, setSlide] = useState(0);
@@ -49,16 +48,9 @@ export default function Home() {
   const lines = (t: string) => t.split('\n').map((l, i, a) => <span key={i}>{l}{i < a.length - 1 && <br />}</span>);
   const active = cfg.banners[slide % n];
 
-  const byCategory = useMemo(() => {
-    const m = new Map<string, Book[]>();
-    if (!data) return m;
-    const books = new Map<string, Book>(data.books.map(b => [b.id, b] as [string, Book]));
-    for (const l of data.links) { const b = books.get(l.product_id); if (b) { const arr = m.get(l.category_id) || []; arr.push(b); m.set(l.category_id, arr); } }
-    return m;
-  }, [data]);
+  const { data } = useHomeData(cfg.collectionRows, cfg.bestsellerCount);
   const catOf = (name: string, slug = '') => data?.categories.find(c => c.name === name) || data?.categories.find(c => c.slug === slug);
-  const booksOf = (name: string, slug = '') => { const c = catOf(name, slug); return c ? (byCategory.get(c.id) || []) : []; };
-  const bestsellers = data ? [...data.books].sort((a, b) => (b.total_sales || 0) - (a.total_sales || 0)).slice(0, cfg.bestsellerCount) : [];
+  const bestsellers = data?.bestsellers || [];
 
   return (
     <Layout>
@@ -88,10 +80,10 @@ export default function Home() {
         <div className="bl-hwrap bl-cgrid">
           {cfg.featuredCollections.slice(0, 4).map(name => {
             const c = catOf(name);
-            const cover = name === 'All Books' ? bestsellers[0]?.image_url : (c?.image_url || booksOf(name)[0]?.image_url);
+            const cover = name === 'All Books' ? bestsellers[0]?.image_url : c?.image_url;
             return (
               <Link key={name} className="bl-ccard" to={`/collections/${name === 'All Books' ? 'all-products' : c?.slug || slugify(name)}`}>
-                <div className="bl-ccard-img"><img src={cover || collectionsImg} alt={name} loading="lazy" /></div>
+                <div className="bl-ccard-img">{cover ? <img src={cover} alt={name} loading="lazy" /> : <div className="bl-skel" />}</div>
                 <h3>{name} <ArrowRight size={16} /></h3>
               </Link>
             );
@@ -103,7 +95,7 @@ export default function Home() {
       <Row title={cfg.bestsellerTitle} books={bestsellers} to="/collections/best-sellers" />
       {cfg.collectionRows.map(r => {
         const c = catOf(r.title, r.collection);
-        return <Row key={r.title} title={r.title} books={booksOf(r.title, r.collection).slice(0, 25)} to={`/collections/${c?.slug || r.collection}`} />;
+        return <Row key={r.title} title={r.title} books={data?.rows[r.title] || []} to={`/collections/${c?.slug || r.collection}`} />;
       })}
     </Layout>
   );

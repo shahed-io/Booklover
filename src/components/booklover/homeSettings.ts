@@ -63,9 +63,11 @@ export function useHomeSettings() {
   return useQuery({
     queryKey: ['site_settings', BOOKLOVER_HOME_KEY],
     staleTime: 60_000,
+    initialData: () => { try { const v = localStorage.getItem('blc:home-settings'); return v ? mergeHome(JSON.parse(v)) : undefined; } catch { return undefined; } },
+    initialDataUpdatedAt: 0,
     queryFn: async () => {
       const { data } = await supabase.from('site_settings').select('value').eq('key', BOOKLOVER_HOME_KEY).maybeSingle();
-      try { return mergeHome(data?.value ? JSON.parse(data.value) : null); } catch { return HOME_DEFAULTS; }
+      try { const v = data?.value ? JSON.parse(data.value) : null; try { localStorage.setItem('blc:home-settings', JSON.stringify(v)); } catch { /* full */ } return mergeHome(v); } catch { return HOME_DEFAULTS; }
     },
   });
 }
