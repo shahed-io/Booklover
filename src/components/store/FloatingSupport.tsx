@@ -17,7 +17,7 @@ const AiLogo = ({ size = 20, className = '', glow = false }: { size?: number | u
       objectFit: 'cover',
       borderRadius: '9999px',
       background: '#fff',
-      filter: glow ? 'drop-shadow(0 2px 8px rgba(24,115,239,0.45))' : undefined,
+      filter: glow ? 'drop-shadow(0 2px 8px rgba(214,31,44,0.45))' : undefined,
     }}
   />
 );
@@ -84,9 +84,9 @@ const DEFAULTS: LiveChatConfig = {
   ai_placeholder: 'আপনার প্রশ্ন লিখুন...',
   quick_suggestions: [],
   fab_label: 'কোনটি পছন্দ করবেন?',
-  fab_color_from: '#7d3df0',
-  fab_color_mid: '#3540e3',
-  fab_color_to: '#1873ef',
+  fab_color_from: '#ef3340',
+  fab_color_mid: '#d61f2c',
+  fab_color_to: '#a50f1c',
   fab_icon_color: '#ffffff',
   live_sets: [],
 };
@@ -492,12 +492,12 @@ const FloatingSupport = () => {
                 {config.phone_enabled && (
                   <button
                     onClick={openPhoneCall}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:border-blue-500/50 hover:shadow-xs transition-all group"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-card border border-border/60 hover:border-red-500/50 hover:shadow-xs transition-all group"
                     title={config.phone_label}
                   >
                     <span
                       className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' }}
+                      style={{ background: 'linear-gradient(135deg, #e11d2e, #a50f1c)' }}
                     >
                       <Phone size={12} className="text-white" />
                     </span>
@@ -631,8 +631,8 @@ const FloatingSupport = () => {
               if (config.chat_enabled) {
                 items.push(renderPill(
                   'ai', openChat,
-                  'linear-gradient(135deg, hsl(271,91%,65%), hsl(185,90%,52%))',
-                  'hsla(271,91%,60%,0.55)',
+                  'linear-gradient(135deg, hsl(350,91%,65%), hsl(356,90%,52%))',
+                  'hsla(350,91%,60%,0.55)',
                   AiLogo, config.ai_label, config.ai_subtitle,
                 ));
               }
@@ -640,8 +640,8 @@ const FloatingSupport = () => {
               if (config.phone_enabled) {
                 items.push(renderPill(
                   'phone', openPhoneCall,
-                  'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                  'hsla(217,91%,60%,0.55)',
+                  'linear-gradient(135deg, #e11d2e, #a50f1c)',
+                  'hsla(356,91%,60%,0.55)',
                   Phone, config.phone_label, config.phone_subtitle,
                 ));
               }
@@ -667,7 +667,7 @@ const FloatingSupport = () => {
 
               if (items.length === 0) {
                 return (
-                  <div className="fs-pill w-full px-4 py-3 rounded-full text-center text-xs" style={{ color: 'hsl(226,15%,45%)' }}>
+                  <div className="fs-pill w-full px-4 py-3 rounded-full text-center text-xs" style={{ color: 'hsl(356,15%,45%)' }}>
                     কোনো সাপোর্ট চ্যানেল কনফিগার করা নেই
                   </div>
                 );
@@ -732,22 +732,22 @@ const FloatingSupport = () => {
             aria-label="সাপোর্ট"
           >
 {/* Outer halo / glow */}
-            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[#1d4ed8] to-[#3b82f6] opacity-40 blur-xl group-hover:opacity-60 transition-opacity" />
+            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[#a50f1c] to-[#e11d2e] opacity-40 blur-xl group-hover:opacity-60 transition-opacity" />
 
             {/* Main glass body */}
-            <span className="relative w-full h-full flex items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(59,130,246,0.40)] overflow-hidden">
+            <span className="relative w-full h-full flex items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(225,29,46,0.40)] overflow-hidden">
               {/* Internal gradient mesh */}
               <span
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background: (chatOpen || menuOpen)
-                    ? 'linear-gradient(45deg, hsla(224,76%,48%,0.85), hsla(217,91%,60%,0.80))'
-                    : 'linear-gradient(45deg, rgba(29,78,216,0.85), rgba(59,130,246,0.75), rgba(29,78,216,0.85))'
+                    ? 'linear-gradient(45deg, hsla(356,76%,48%,0.85), hsla(356,91%,60%,0.80))'
+                    : 'linear-gradient(45deg, rgba(165,15,28,0.85), rgba(225,29,46,0.75), rgba(165,15,28,0.85))'
                 }}
               />
               {/* Icon */}
               {(chatOpen || menuOpen)
-                ? <X size={26} strokeWidth={2.4} className="fs-x-rotate relative z-10" style={{ color: '#3b82f6' }} />
+                ? <X size={26} strokeWidth={2.4} className="fs-x-rotate relative z-10" style={{ color: '#e11d2e' }} />
                 : <MessageCircleMore size={28} strokeWidth={2} className="relative z-10 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.28)]" />
               }
               {/* Premium highlight rim */}
@@ -756,7 +756,7 @@ const FloatingSupport = () => {
 
             {/* Gold notification accent */}
             {!chatOpen && !menuOpen && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-lg bg-[#3b82f6] fab-lum-badge z-20" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-lg bg-[#e11d2e] fab-lum-badge z-20" />
             )}
           </button>
         </div>
@@ -774,8 +774,8 @@ const FloatingSupport = () => {
 
         /* Luminous glass orb — breathing badge + gentle idle float */
         @keyframes fabLumBadgePulse {
-          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,130,246,0.60); }
-          50%      { transform: scale(1.15); box-shadow: 0 0 0 6px rgba(59,130,246,0); }
+          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(225,29,46,0.60); }
+          50%      { transform: scale(1.15); box-shadow: 0 0 0 6px rgba(225,29,46,0); }
         }
         .fab-lum-badge { animation: fabLumBadgePulse 2.2s ease-in-out infinite; }
         @keyframes fabLumFloat {
@@ -789,16 +789,16 @@ const FloatingSupport = () => {
         .fs-pill {
           position: relative;
           background:
-            linear-gradient(135deg, hsla(258,85%,98%,0.78) 0%, hsla(271,80%,95%,0.72) 45%, hsla(220,85%,97%,0.78) 100%);
-          border: 1.5px solid hsla(258,70%,75%,0.55);
+            linear-gradient(135deg, hsla(350,85%,98%,0.78) 0%, hsla(350,80%,95%,0.72) 45%, hsla(356,85%,97%,0.78) 100%);
+          border: 1.5px solid hsla(350,70%,75%,0.55);
           backdrop-filter: blur(44px) saturate(220%);
           -webkit-backdrop-filter: blur(44px) saturate(220%);
           box-shadow:
-            0 22px 48px -12px hsla(258,70%,35%,0.32),
-            0 8px 18px -6px hsla(258,60%,40%,0.18),
-            0 0 0 1px hsla(258,60%,80%,0.22),
+            0 22px 48px -12px hsla(350,70%,35%,0.32),
+            0 8px 18px -6px hsla(350,60%,40%,0.18),
+            0 0 0 1px hsla(350,60%,80%,0.22),
             inset 0 1.5px 0 hsla(0,0%,100%,0.9),
-            inset 0 -1px 0 hsla(258,40%,85%,0.4);
+            inset 0 -1px 0 hsla(350,40%,85%,0.4);
           transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.3s ease;
           overflow: hidden;
           isolation: isolate;
@@ -822,11 +822,11 @@ const FloatingSupport = () => {
           border-radius: 9999px;
           padding: 1px;
           background: linear-gradient(120deg,
-            var(--pill-glow, hsla(271,91%,65%,0.55)),
+            var(--pill-glow, hsla(350,91%,65%,0.55)),
             hsla(0,0%,100%,0.4),
-            var(--pill-glow, hsla(185,90%,52%,0.45)),
+            var(--pill-glow, hsla(356,90%,52%,0.45)),
             hsla(0,0%,100%,0.3),
-            var(--pill-glow, hsla(271,91%,65%,0.55)));
+            var(--pill-glow, hsla(350,91%,65%,0.55)));
           background-size: 280% 280%;
           -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
           -webkit-mask-composite: xor;
@@ -853,26 +853,26 @@ const FloatingSupport = () => {
         }
         .fs-pill:hover {
           transform: translateX(-4px) translateY(-2px);
-          border-color: hsla(258,60%,65%,0.5);
+          border-color: hsla(350,60%,65%,0.5);
           box-shadow:
-            0 24px 56px -12px hsla(258,40%,30%,0.28),
-            0 0 28px -4px var(--pill-glow, hsla(258,60%,60%,0.2)),
+            0 24px 56px -12px hsla(350,40%,30%,0.28),
+            0 0 28px -4px var(--pill-glow, hsla(350,60%,60%,0.2)),
             inset 0 1px 0 hsla(0,0%,100%,1);
         }
         .fs-pill:hover::before { opacity: 1; }
         .fs-pill:active { transform: translateX(-2px) scale(0.98); }
 
         /* Text colors for white glass */
-        .fs-pill .fs-pill-title { color: hsl(226,40%,18%); }
-        .fs-pill .fs-pill-subtitle { color: hsl(226,15%,45%); }
+        .fs-pill .fs-pill-title { color: hsl(356,40%,18%); }
+        .fs-pill .fs-pill-subtitle { color: hsl(356,15%,45%); }
 
         .fs-pill-arrow {
           font-size: 16px;
-          color: hsl(226,15%,55%);
+          color: hsl(356,15%,55%);
           transform: translateX(-2px);
           transition: transform 0.3s ease, color 0.3s ease;
         }
-        .fs-pill:hover .fs-pill-arrow { transform: translateX(2px); color: hsl(258,78%,55%); }
+        .fs-pill:hover .fs-pill-arrow { transform: translateX(2px); color: hsl(350,78%,55%); }
 
         /* Icon container with conic-gradient halo ring */
         .fs-icon-wrap { display: inline-flex; padding: 2px; }
@@ -905,15 +905,15 @@ const FloatingSupport = () => {
         /* Premium menu heading pill — sits above stacked options */
         .fs-menu-heading {
           position: relative;
-          background: linear-gradient(135deg, hsla(258,85%,98%,0.85), hsla(271,80%,95%,0.78) 50%, hsla(220,85%,97%,0.85));
-          border: 1.5px solid hsla(258,70%,75%,0.6);
+          background: linear-gradient(135deg, hsla(350,85%,98%,0.85), hsla(350,80%,95%,0.78) 50%, hsla(356,85%,97%,0.85));
+          border: 1.5px solid hsla(350,70%,75%,0.6);
           backdrop-filter: blur(44px) saturate(220%);
           -webkit-backdrop-filter: blur(44px) saturate(220%);
           box-shadow:
-            0 12px 28px -8px hsla(258,70%,35%,0.28),
-            0 0 22px -6px hsla(271,91%,60%,0.35),
+            0 12px 28px -8px hsla(350,70%,35%,0.28),
+            0 0 22px -6px hsla(350,91%,60%,0.35),
             inset 0 1.5px 0 hsla(0,0%,100%,0.95),
-            inset 0 -1px 0 hsla(258,40%,85%,0.4);
+            inset 0 -1px 0 hsla(350,40%,85%,0.4);
           overflow: hidden;
         }
         .fs-menu-heading::before {
@@ -923,11 +923,11 @@ const FloatingSupport = () => {
           border-radius: 9999px;
           padding: 1.5px;
           background: linear-gradient(120deg,
-            hsla(271,91%,65%,0.7),
+            hsla(350,91%,65%,0.7),
             hsla(0,0%,100%,0.5),
-            hsla(185,90%,55%,0.6),
+            hsla(356,90%,55%,0.6),
             hsla(320,90%,65%,0.55),
-            hsla(271,91%,65%,0.7));
+            hsla(350,91%,65%,0.7));
           background-size: 280% 280%;
           -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
           -webkit-mask-composite: xor;
@@ -939,8 +939,8 @@ const FloatingSupport = () => {
         .fs-menu-heading-dot {
           width: 6px; height: 6px;
           border-radius: 50%;
-          background: linear-gradient(135deg, hsl(271,91%,65%), hsl(185,90%,55%));
-          box-shadow: 0 0 10px hsla(271,91%,60%,0.7);
+          background: linear-gradient(135deg, hsl(350,91%,65%), hsl(356,90%,55%));
+          box-shadow: 0 0 10px hsla(350,91%,60%,0.7);
           animation: fsHeadingDotPulse 2s ease-in-out infinite;
         }
         @keyframes fsHeadingDotPulse {
@@ -948,7 +948,7 @@ const FloatingSupport = () => {
           50%       { transform: scale(1.35); opacity: 0.75; }
         }
         .fs-menu-heading-text {
-          background: linear-gradient(120deg, hsl(258,78%,32%), hsl(271,85%,42%), hsl(210,85%,38%));
+          background: linear-gradient(120deg, hsl(350,78%,32%), hsl(350,85%,42%), hsl(356,85%,38%));
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -957,14 +957,14 @@ const FloatingSupport = () => {
         /* Side help-pill next to FAB — premium violet-tinted glass with shine */
         .fs-help-pill {
           position: relative;
-          background: linear-gradient(135deg, hsla(258,80%,98%,0.95), hsla(271,75%,94%,0.92) 50%, hsla(220,80%,96%,0.95));
-          border: 1.5px solid hsla(258,70%,72%,0.55);
+          background: linear-gradient(135deg, hsla(350,80%,98%,0.95), hsla(350,75%,94%,0.92) 50%, hsla(356,80%,96%,0.95));
+          border: 1.5px solid hsla(350,70%,72%,0.55);
           backdrop-filter: blur(40px) saturate(200%);
           -webkit-backdrop-filter: blur(40px) saturate(200%);
           box-shadow:
-            0 18px 44px -10px hsla(258,70%,40%,0.3),
-            0 0 26px -6px hsla(271,91%,60%,0.4),
-            0 0 0 1px hsla(258,60%,75%,0.2),
+            0 18px 44px -10px hsla(350,70%,40%,0.3),
+            0 0 26px -6px hsla(350,91%,60%,0.4),
+            0 0 0 1px hsla(350,60%,75%,0.2),
             inset 0 1px 0 hsla(0,0%,100%,0.9);
           animation: fsHelpIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both, fsHelpBob 4s ease-in-out 0.6s infinite;
           overflow: hidden;
@@ -978,11 +978,11 @@ const FloatingSupport = () => {
           border-radius: 9999px;
           padding: 1.5px;
           background: linear-gradient(120deg,
-            hsla(271,91%,65%,0.65),
+            hsla(350,91%,65%,0.65),
             hsla(0,0%,100%,0.5),
-            hsla(185,90%,55%,0.55),
+            hsla(356,90%,55%,0.55),
             hsla(320,90%,65%,0.5),
-            hsla(271,91%,65%,0.65));
+            hsla(350,91%,65%,0.65));
           background-size: 280% 280%;
           -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
           -webkit-mask-composite: xor;
@@ -1008,26 +1008,26 @@ const FloatingSupport = () => {
         .fs-help-pill:hover {
           transform: translateX(-3px) translateY(-2px) scale(1.03);
           box-shadow:
-            0 24px 56px -12px hsla(258,40%,30%,0.32),
-            0 0 32px -4px hsla(271,91%,60%,0.5),
+            0 24px 56px -12px hsla(350,40%,30%,0.32),
+            0 0 32px -4px hsla(350,91%,60%,0.5),
             inset 0 1px 0 hsla(0,0%,100%,1);
         }
         .fs-help-pill:active { transform: translateX(-1px) scale(0.97); }
         .fs-help-pill--active {
-          border-color: hsla(258,70%,60%,0.7);
+          border-color: hsla(350,70%,60%,0.7);
           box-shadow:
-            0 24px 56px -12px hsla(258,60%,40%,0.4),
-            0 0 32px -4px hsla(271,91%,60%,0.55),
+            0 24px 56px -12px hsla(350,60%,40%,0.4),
+            0 0 32px -4px hsla(350,91%,60%,0.55),
             inset 0 1px 0 hsla(0,0%,100%,1);
         }
         .fs-help-pill .fs-help-title {
-          color: hsl(258,78%,28%);
-          background: linear-gradient(120deg, hsl(258,78%,32%), hsl(271,85%,42%), hsl(210,85%,40%));
+          color: hsl(350,78%,28%);
+          background: linear-gradient(120deg, hsl(350,78%,32%), hsl(350,85%,42%), hsl(356,85%,40%));
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
         }
-        .fs-help-pill .fs-help-sub { color: hsl(226,18%,42%); }
+        .fs-help-pill .fs-help-sub { color: hsl(356,18%,42%); }
         @keyframes fsHelpIn {
           from { opacity: 0; transform: translateX(20px) scale(0.85); }
           to   { opacity: 1; transform: translateX(0) scale(1); }
@@ -1069,8 +1069,8 @@ const FloatingSupport = () => {
           width: 96px; height: 96px;
           border-radius: 9999px;
 background: radial-gradient(circle,
-            hsla(217,91%,62%,0.55) 0%,
-            hsla(224,76%,45%,0.40) 45%,
+            hsla(356,91%,62%,0.55) 0%,
+            hsla(356,76%,45%,0.40) 45%,
             transparent 72%);
           filter: blur(6px);
           animation: fabHaloPulse 3.5s ease-in-out infinite;
@@ -1088,11 +1088,11 @@ background: radial-gradient(circle,
           border-radius: 9999px;
           padding: 2px;
           background: conic-gradient(from 0deg,
-            hsla(271,91%,75%,0.9),
+            hsla(350,91%,75%,0.9),
             hsla(320,90%,70%,0.6),
-            hsla(185,90%,65%,0.9),
-            hsla(210,90%,70%,0.5),
-            hsla(271,91%,75%,0.9));
+            hsla(356,90%,65%,0.9),
+            hsla(356,90%,70%,0.5),
+            hsla(350,91%,75%,0.9));
           -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
           -webkit-mask-composite: xor;
                   mask-composite: exclude;
@@ -1119,12 +1119,12 @@ background: radial-gradient(circle,
         .fab-ring {
           position: absolute;
           border-radius: 9999px;
-border: 1.5px solid hsla(217,91%,58%,0.55);
+border: 1.5px solid hsla(356,91%,58%,0.55);
           animation: fab-ring-out 2.4s cubic-bezier(0.2,0.8,0.4,1) infinite;
           pointer-events: none;
         }
-        .fab-ring-1 { width: 56px; height: 56px; animation-delay: 0s; border-color: hsla(217,91%,60%,0.6); }
-        .fab-ring-2 { width: 56px; height: 56px; animation-delay: 1.2s; border-color: hsla(224,76%,50%,0.6); }
+        .fab-ring-1 { width: 56px; height: 56px; animation-delay: 0s; border-color: hsla(356,91%,60%,0.6); }
+        .fab-ring-2 { width: 56px; height: 56px; animation-delay: 1.2s; border-color: hsla(356,76%,50%,0.6); }
         @keyframes fab-ring-out {
           0%   { transform: scale(1);   opacity: 0.9; }
           100% { transform: scale(2.4); opacity: 0; }
@@ -1138,18 +1138,18 @@ border: 1.5px solid hsla(217,91%,58%,0.55);
         }
 .fab-soft-ring-1 {
           width: 78px; height: 78px;
-          background: radial-gradient(circle, hsla(217,91%,62%,0.55) 0%, hsla(217,91%,64%,0) 75%);
+          background: radial-gradient(circle, hsla(356,91%,62%,0.55) 0%, hsla(356,91%,64%,0) 75%);
         }
         .fab-soft-ring-2 {
           width: 100px; height: 100px;
-          background: radial-gradient(circle, hsla(224,76%,55%,0.45) 0%, hsla(224,76%,57%,0) 72%);
+          background: radial-gradient(circle, hsla(356,76%,55%,0.45) 0%, hsla(356,76%,57%,0) 72%);
         }
         .fab-soft-ring-3 {
           width: 124px; height: 124px;
-          background: radial-gradient(circle, hsla(217,91%,58%,0.40) 0%, hsla(217,91%,60%,0) 70%);
+          background: radial-gradient(circle, hsla(356,91%,58%,0.40) 0%, hsla(356,91%,60%,0) 70%);
         }
         .fab-pulse-inner {
-          background: radial-gradient(circle, hsla(217,91%,58%,0.38) 0%, transparent 70%);
+          background: radial-gradient(circle, hsla(356,91%,58%,0.38) 0%, transparent 70%);
           animation: fab-inner-pulse 2s ease-in-out infinite;
         }
         @keyframes fab-inner-pulse {
@@ -1159,16 +1159,16 @@ border: 1.5px solid hsla(217,91%,58%,0.55);
 
         /* Close (X) button on the help pill */
         .fs-help-close {
-          background: hsla(258,40%,92%,0.65);
-          color: hsl(258,40%,38%);
-          border: 1px solid hsla(258,50%,75%,0.5);
+          background: hsla(350,40%,92%,0.65);
+          color: hsl(350,40%,38%);
+          border: 1px solid hsla(350,50%,75%,0.5);
           transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
         }
         .fs-help-close:hover {
-          background: hsla(258,80%,55%,0.92);
+          background: hsla(350,80%,55%,0.92);
           color: #fff;
           transform: scale(1.08);
-          border-color: hsla(258,80%,55%,0.92);
+          border-color: hsla(350,80%,55%,0.92);
         }
         .fs-help-close:active { transform: scale(0.92); }
         .fab-comet {
@@ -1176,8 +1176,8 @@ border: 1.5px solid hsla(217,91%,58%,0.55);
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background: hsl(185,90%,62%);
-          box-shadow: 0 0 10px hsl(185,90%,62%), 0 0 20px hsl(271,91%,65%);
+          background: hsl(356,90%,62%);
+          box-shadow: 0 0 10px hsl(356,90%,62%), 0 0 20px hsl(350,91%,65%);
           transform-origin: 38px 38px;
           animation: fab-orbit 3s linear infinite;
           pointer-events: none;
@@ -1186,7 +1186,7 @@ border: 1.5px solid hsla(217,91%,58%,0.55);
         }
         .fab-comet-2 {
           background: hsl(320,90%,68%);
-          box-shadow: 0 0 10px hsl(320,90%,68%), 0 0 20px hsl(271,91%,65%);
+          box-shadow: 0 0 10px hsl(320,90%,68%), 0 0 20px hsl(350,91%,65%);
           animation-duration: 4.5s;
           animation-direction: reverse;
         }
