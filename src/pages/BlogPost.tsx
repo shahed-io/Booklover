@@ -236,7 +236,7 @@ const BlogPost = () => {
       <div className="max-w-4xl mx-auto px-4 pt-24 pb-16 space-y-4">
         <div className="h-10 w-1/3 bg-muted/30 rounded-xl animate-pulse" />
         <div className="h-64 bg-muted/20 rounded-2xl animate-pulse" />
-        <div className="space-y-2">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-4 bg-muted/20 rounded-[0.25rem] animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />)}</div>
+        <div className="space-y-2">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-4 bg-muted/20 rounded-[0.25rem] animate-pulse" style={{ width: `${60 + ((i * 37) % 40)}%` }} />)}</div>
       </div>
       <Footer />
     </div>
