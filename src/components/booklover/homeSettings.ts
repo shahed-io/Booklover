@@ -32,7 +32,7 @@ export const HOME_DEFAULTS: HomeSettings = {
   collectionsTitle: 'Explore Our Book Collections',
   featuredCollections: ['All Books', 'Crime Fiction', 'Biography & Memoir', 'Romance Books', 'Self-Help & Psychology', 'Fantasy', 'Timeless Classics', 'Young Adult (YA)'],
   bestsellerTitle: 'Bestselling Books',
-  bestsellerCount: 16,
+  bestsellerCount: 25,
   spotlightTitle: 'Timeless Classics',
   spotlightCollection: 'timeless-classics',
   spotlightImage: '',
@@ -40,7 +40,7 @@ export const HOME_DEFAULTS: HomeSettings = {
     { label: 'Fiction', collections: ['Fiction', 'Romance Books', 'Mystery & Thriller', 'Fantasy', 'Crime Fiction', 'Science Fiction', 'Horror', 'Historical Fiction', 'Dark Romance', 'Young Adult (YA)'] },
     { label: 'Non-Fiction', collections: ['Autobiography', 'Biography & Memoir', 'Business, Finance & Economics', 'History & War', 'Philosophy & Religion', 'Self-Help & Psychology'] },
   ],
-  announcement: '',
+  announcement: '🎁 FREE Bookmark with Every Book | 🚚 Cash on Delivery Across Bangladesh!',
   collectionRows: [
     { title: 'Timeless Classics', collection: 'timeless-classics' },
     { title: 'History & War', collection: 'history-war' },
