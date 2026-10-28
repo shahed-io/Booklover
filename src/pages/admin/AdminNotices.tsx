@@ -354,7 +354,7 @@ export default function AdminNotices() {
                     </td>
                     <td className="py-3 px-4 text-xs font-mono text-muted-foreground whitespace-nowrap">{n.reference_no || '—'}</td>
                     <td className="py-3 px-4">
-                      <Badge className={`capitalize border ${audienceStyle[n.audience] || audienceStyle['public']}`}>
+                      <Badge className={`capitalize border ${audienceStyle[n.audience!] || audienceStyle['public']}`}>
                         <Users className="w-3 h-3 mr-1" />{n.audience}
                       </Badge>
                     </td>

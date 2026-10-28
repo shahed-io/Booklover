@@ -263,7 +263,7 @@ const AdminProductContent = () => {
     let failed = 0;
     for (let i = 0; i < targets.length; i++) {
       if (bulkCancelRef.current) break;
-      const ok = await generateOne(targets[i]);
+      const ok = await generateOne(targets[i]!);
       if (!ok) failed++;
       setBulkProgress({ done: i + 1, total: targets.length, failed });
       if (i < targets.length - 1) await new Promise((r) => setTimeout(r, 1200));
@@ -284,7 +284,7 @@ const AdminProductContent = () => {
     let failed = 0;
     for (let i = 0; i < targets.length; i++) {
       if (bulkCancelRef.current) break;
-      const ok = await restoreOne(targets[i]);
+      const ok = await restoreOne(targets[i]!);
       if (!ok) failed++;
       setBulkProgress({ done: i + 1, total: targets.length, failed });
     }
@@ -304,7 +304,7 @@ const AdminProductContent = () => {
     let failed = 0;
     for (let i = 0; i < targets.length; i++) {
       if (bulkCancelRef.current) break;
-      const ok = await generateFaqOne(targets[i]);
+      const ok = await generateFaqOne(targets[i]!);
       if (!ok) failed++;
       setBulkProgress({ done: i + 1, total: targets.length, failed });
       if (i < targets.length - 1) await new Promise((r) => setTimeout(r, 1000));

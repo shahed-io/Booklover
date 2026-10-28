@@ -143,7 +143,7 @@ const AdminAiFaqGenerator = () => {
     for (let i = 0; i < list.length; i++) {
       const p = list[i];
       try {
-        const faqs = await generateForProduct(p);
+        const faqs = await generateForProduct(p!);
         await saveFaqs(p!.id, faqs, mode);
         success++;
       } catch (e: any) {

@@ -50,7 +50,7 @@ export const SupportTicketModal = ({ open, onClose }: Props) => {
     const result = schema.safeParse(form);
     if (!result.success) {
       const errs: Record<string, string> = {};
-      result.error.errors.forEach(e => { errs[e.path[0]] = e.message; });
+      result.error.errors.forEach(e => { errs[e.path[0]!] = e.message; });
       setErrors(errs);
       return;
     }

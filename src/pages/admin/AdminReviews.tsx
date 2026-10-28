@@ -117,7 +117,7 @@ const AdminReviews = () => {
     const j = i + dir;
     if (j < 0 || j >= reviews.length) return;
     const next = [...reviews];
-    [next[i], next[j]] = [next[j], next[i]];
+    [next[i]!, next[j]!] = [next[j], next[i]];
     await persist(next);
   };
 

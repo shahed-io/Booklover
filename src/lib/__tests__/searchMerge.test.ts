@@ -239,7 +239,7 @@ describe('SearchBar AI fallback flow (integration)', () => {
   });
 
   it('merges DB hits with AI-suggested extras when DB results are sparse', async () => {
-    const r = await runSearch('ofice', [catalog[2]]);
+    const r = await runSearch('ofice', [catalog[2]!]);
     expect(r.products.map((p) => p.id)).toEqual(['p3', 'p1']);
     expect(r.usedAi).toBe(false);
   });

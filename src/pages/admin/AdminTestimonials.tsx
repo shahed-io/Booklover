@@ -27,7 +27,7 @@ const EMPTY = (): Testimonial => ({
   product: 'Windows 11 Pro',
   date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
   enabled: true,
-  color: COLORS[0],
+  color: COLORS[0]!,
 });
 
 const AdminTestimonials = () => {
@@ -72,7 +72,7 @@ const AdminTestimonials = () => {
       const nIdx = idx + dir;
       if (nIdx < 0 || nIdx >= prev.length) return prev;
       const a = [...prev];
-      [a[idx], a[nIdx]] = [a[nIdx], a[idx]];
+      [a[idx]!, a[nIdx]!] = [a[nIdx], a[idx]];
       return a;
     });
   };

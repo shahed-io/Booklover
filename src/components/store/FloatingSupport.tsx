@@ -226,7 +226,7 @@ const FloatingSupport = () => {
       const productMatch = path.match(/^\/product\/([^/?#]+)/);
       const pageContext = {
         path,
-        productSlug: productMatch ? decodeURIComponent(productMatch[1]) : null,
+        productSlug: productMatch ? decodeURIComponent(productMatch[1]!) : null,
         referrer: typeof document !== 'undefined' ? document.referrer : '',
       };
 

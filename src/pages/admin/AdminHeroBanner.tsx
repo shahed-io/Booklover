@@ -117,7 +117,7 @@ const AdminHeroBanner = () => {
       if (idx < 0) return prev;
       const newIdx = idx + dir;
       if (newIdx < 0 || newIdx >= prev.length) return prev;
-      const arr = [...prev]; [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]]; return arr;
+      const arr = [...prev]; [arr[idx]!, arr[newIdx]!] = [arr[newIdx], arr[idx]]; return arr;
     });
   };
   const updateSlide = useCallback((id: string, field: keyof Slide, value: unknown) => {
@@ -621,7 +621,7 @@ function hslToHex(hsl: string): string {
   try {
     const match = hsl.match(/hsl\((\d+(?:\.\d+)?),\s*(\d+(?:\.\d+)?)%,\s*(\d+(?:\.\d+)?)%\)/);
     if (!match) return '#7c3aed';
-    const h = parseFloat(match[1]) / 360, s = parseFloat(match[2]) / 100, l = parseFloat(match[3]) / 100;
+    const h = parseFloat(match[1]!) / 360, s = parseFloat(match[2]!) / 100, l = parseFloat(match[3]!) / 100;
     const a = s * Math.min(l, 1 - l);
     const f = (n: number) => { const k = (n + h * 12) % 12; return l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1); };
     const toHex = (x: number) => Math.round(x * 255).toString(16).padStart(2, '0');

@@ -56,7 +56,7 @@ const ITEM_PALETTE: Array<[string, string]> = [
 function getItemAccent(path: string): { from: string; to: string } {
   let h = 0;
   for (let i = 0; i < path.length; i++) h = (h * 31 + path.charCodeAt(i)) >>> 0;
-  const [from, to] = ITEM_PALETTE[h % ITEM_PALETTE.length];
+  const [from, to] = ITEM_PALETTE[h % ITEM_PALETTE.length]!;
   return { from, to };
 }
 

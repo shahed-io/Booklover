@@ -133,7 +133,7 @@ const PageContentEditor = ({ pageInfo }: { pageInfo: typeof EDITABLE_PAGES[0] })
     const next = [...working.sections];
     const target = idx + dir;
     if (target < 0 || target >= next.length) return;
-    [next[idx], next[target]] = [next[target], next[idx]];
+    [next[idx]!, next[target]!] = [next[target], next[idx]];
     setLocal({ ...working, sections: next });
   };
 
@@ -289,7 +289,7 @@ const AdminPages = () => {
     const sorted = [...sections].sort((a, b) => a.sort_order - b.sort_order);
     const target = idx + dir;
     if (target < 0 || target >= sorted.length) return;
-    [sorted[idx], sorted[target]] = [sorted[target], sorted[idx]];
+    [sorted[idx]!, sorted[target]!] = [sorted[target], sorted[idx]];
     persist(sorted.map((s, i) => ({ ...s, sort_order: i + 1 })));
   };
 

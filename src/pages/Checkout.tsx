@@ -577,7 +577,7 @@ const Checkout = () => {
     const parsed = checkoutSchema.safeParse(form);
     if (!parsed.success) {
       const fieldErrors: Record<string, string> = {};
-      parsed.error.errors.forEach(err => { fieldErrors[err.path[0]] = err.message; });
+      parsed.error.errors.forEach(err => { fieldErrors[err.path[0]!] = err.message; });
       setErrors(fieldErrors);
       return;
     }

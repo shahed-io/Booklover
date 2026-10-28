@@ -69,7 +69,7 @@ async function runPool<T, R>(items: T[], limit: number, worker: (item: T, i: num
   const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
     while (idx < items.length) {
       const i = idx++;
-      try { results[i] = await worker(items[i], i); }
+      try { results[i] = await worker(items[i]!, i); }
       catch (e) { results[i] = e as any; }
     }
   });
@@ -333,13 +333,13 @@ Restore:
     if (!files.length) return;
     try {
       if (mode === 'full') {
-        const parsed = JSON.parse(await readText(files[0]));
+        const parsed = JSON.parse(await readText(files[0]!));
         if (!parsed.tables) throw new Error('Invalid full backup format — missing "tables" key');
         const totalRecords = Object.values(parsed.tables as Record<string, any[]>).reduce((s: number, v: any) => s + v.length, 0);
         setImportPreview({ table: '__full__', data: Object.keys(parsed.tables).map(t => ({ table: t, count: (parsed.tables[t] as any[]).length })), file: JSON.stringify(parsed) });
         toast.info(`Full backup loaded: ${Object.keys(parsed.tables).length} tables, ${totalRecords} records`);
       } else if (files.length === 1) {
-        const parsed = JSON.parse(await readText(files[0]));
+        const parsed = JSON.parse(await readText(files[0]!));
         if (!Array.isArray(parsed)) throw new Error('Invalid backup format — expected JSON array');
         setImportPreview({ table: guessTable(files[0]!.name), data: parsed, file: JSON.stringify(parsed) });
         toast.info(`${parsed.length} রেকর্ড লোড হয়েছে`);

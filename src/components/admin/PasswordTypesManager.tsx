@@ -60,7 +60,7 @@ export default function PasswordTypesManager({ open, onOpenChange }: Props) {
     const next = [...draft];
     const target = idx + dir;
     if (target < 0 || target >= next.length) return;
-    [next[idx], next[target]] = [next[target], next[idx]];
+    [next[idx]!, next[target]!] = [next[target], next[idx]];
     setDraft(next);
     setDirty(true);
   }

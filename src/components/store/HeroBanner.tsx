@@ -72,7 +72,7 @@ const HeroBanner = () => {
   };
 
   const slide = SLIDES[active] ?? SLIDES[0];
-  const bgUrl = pickBannerBg(slide, active);
+  const bgUrl = pickBannerBg(slide!, active);
   const href = slide!.productSlug ? `/product/${slide!.productSlug}` : '/shop';
 
   // Text layer is only mounted when the admin has actually written something.

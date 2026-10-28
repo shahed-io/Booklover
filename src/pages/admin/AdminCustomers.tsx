@@ -441,7 +441,7 @@ export default function AdminCustomers() {
         return result;
       };
 
-      const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().replace(/['"]/g, ''));
+      const headers = parseCSVLine(lines[0]!).map(h => h.toLowerCase().replace(/['"]/g, ''));
       const emailIdx = headers.findIndex(h => h.includes('email') || h.includes('ইমেইল'));
       const nameIdx = headers.findIndex(h => h.includes('name') || h.includes('নাম'));
       const phoneIdx = headers.findIndex(h => h.includes('phone') || h.includes('ফোন'));
@@ -449,7 +449,7 @@ export default function AdminCustomers() {
 
       let successCount = 0, failCount = 0;
       for (let i = 1; i < lines.length; i++) {
-        const cols = parseCSVLine(lines[i]);
+        const cols = parseCSVLine(lines[i]!);
         const email = cols[emailIdx]?.replace(/['"]/g, '').trim();
         if (!email || !email.includes('@')) { failCount++; continue; }
         const displayName = nameIdx >= 0 ? cols[nameIdx]?.replace(/['"]/g, '').trim() : '';
@@ -551,7 +551,7 @@ export default function AdminCustomers() {
               <Trash2 size={13} /> ডিলিট
             </button>
             {selected.phone && (
-              <button onClick={() => sendWhatsApp(selected.phone, selected.display_name ?? '', custOrders[0])}
+              <button onClick={() => sendWhatsApp(selected.phone, selected.display_name ?? '', custOrders[0]!)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors border border-emerald-500/20">
                 <MessageCircle size={13} /> WhatsApp
               </button>

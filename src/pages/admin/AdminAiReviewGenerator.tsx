@@ -173,8 +173,8 @@ const AdminAiReviewGenerator = () => {
     for (let i = 0; i < list.length; i++) {
       const p = list[i];
       try {
-        const reviews = await generateForProduct(p);
-        await saveReviews(p, reviews);
+        const reviews = await generateForProduct(p!);
+        await saveReviews(p!, reviews);
         success++;
       } catch (e: any) {
         console.error(p!.name, e);

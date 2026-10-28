@@ -175,7 +175,7 @@ export default function AdminImageAudit() {
       setPages([...updated]);
 
       try {
-        const { images, total } = await scanPage(url);
+        const { images, total } = await scanPage(url!);
         allIssues.push(...images);
         if (idx >= 0) {
           updated[idx] = {

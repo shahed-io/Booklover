@@ -491,7 +491,7 @@ const AdminLiveChat = () => {
       const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
       if (targetIdx < 0 || targetIdx >= prev.live_sets.length) return prev;
       const next = [...prev.live_sets];
-      [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
+      [next[idx]!, next[targetIdx]!] = [next[targetIdx], next[idx]];
       return { ...prev, live_sets: next.map((s, i) => ({ ...s, sort_order: i })) };
     });
   };

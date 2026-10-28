@@ -113,7 +113,7 @@ const AdminAnnouncementBar = () => {
       const items = [...p.items];
       const ni = i + dir;
       if (ni < 0 || ni >= items.length) return p;
-      [items[i], items[ni]] = [items[ni], items[i]];
+      [items[i]!, items[ni]!] = [items[ni], items[i]];
       return { ...p, items };
     });
   };
