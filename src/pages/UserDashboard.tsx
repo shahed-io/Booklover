@@ -54,6 +54,8 @@ interface Order {
   notes: string | null; coupon_code: string | null;
   items?: OrderItem[] | undefined;
   timeline?: TimelineEvent[] | undefined;
+  book_names?: string[];
+  shipped_at?: string | null;
 }
 interface Address {
   id: string; label: string; recipient_name: string; phone: string;
@@ -499,7 +501,19 @@ const UserDashboard = () => {
   const fetchOrders = async () => {
     if (!user) return; setOrdersLoading(true);
     const { data } = await supabase.from('orders').select('id, order_number, status, total, subtotal, discount_amount, created_at, payment_status, payment_method, transaction_id, notes, coupon_code').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50);
-    setOrders((data || []) as Order[]); setOrdersLoading(false);
+    const list = (data || []) as Order[];
+    const ids = list.map(o => o.id);
+    if (ids.length) {
+      const [itemsRes, tlRes] = await Promise.all([
+        supabase.from('order_items').select('order_id, product_name').in('order_id', ids),
+        supabase.from('order_timeline').select('order_id, status, created_at').in('order_id', ids).in('status', ['shipped', 'delivered', 'completed']).order('created_at', { ascending: true }),
+      ]);
+      for (const o of list) {
+        o.book_names = (itemsRes.data || []).filter(i => i.order_id === o.id).map(i => i.product_name);
+        o.shipped_at = (tlRes.data || []).find(t => t.order_id === o.id)?.created_at ?? null;
+      }
+    }
+    setOrders(list); setOrdersLoading(false);
   };
 
   const fetchOrderItems = async (orderId: string) => {
@@ -1466,6 +1480,12 @@ const UserDashboard = () => {
                                     )}
                                   </div>
                                   <div className="text-xs mt-0.5 text-muted-foreground">{new Date(order.created_at).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                  {!!order.book_names?.length && (
+                                    <div className="text-xs mt-1 font-medium text-foreground/80 line-clamp-2">📚 {order.book_names.join(', ')}</div>
+                                  )}
+                                  <div className="text-[11px] mt-0.5 text-muted-foreground">
+                                    🚚 {order.shipped_at ? `পাঠানো হয়েছে: ${new Date(order.shipped_at).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' })}` : 'এখনো পাঠানো হয়নি'}
+                                  </div>
                                 </div>
                               </div>
                               <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
