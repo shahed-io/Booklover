@@ -1,3 +1,4 @@
+import paymentMethodsImg from "@/assets/payment-methods.webp";
 import { Phone, Mail, MapPin, Facebook, Instagram, MessageCircle, ArrowUpRight, Send, BookOpen } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
@@ -81,7 +82,7 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} <strong>{settings.store_name}</strong> · All Rights Reserved</p>
           <div className="bl-fn-pay">
             <span>We accept</span>
-            {paymentMethods.map(pm => <em key={pm}>{pm}</em>)}
+            <img src={paymentMethodsImg} alt="Visa, Mastercard, American Express, DBBL Nexus, Cellfin, Rocket, bKash, Tap, Meghna Pay, Nagad, M Cash, Upay, OK Wallet" className="bl-fn-payimg" loading="lazy" width={960} height={51} />
           </div>
           {site && <a href={settings.website_url} target="_blank" rel="noopener noreferrer" className="bl-fn-site">{site}</a>}
         </div>
