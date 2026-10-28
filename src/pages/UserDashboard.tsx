@@ -1150,7 +1150,7 @@ const UserDashboard = () => {
               const SECTIONS: { title: string; ids: TabId[] }[] = [
                 { title: 'Account', ids: ['profile', 'security', 'addresses'] },
                 { title: 'Activity', ids: ['orders', 'wishlist', 'notifications'] },
-                { title: 'Rewards', ids: ['wallet', 'points', 'referral'] },
+                { title: 'Rewards', ids: ['wallet', 'points'] },
                 { title: 'Preferences', ids: ['language', 'install'] },
               ];
               const renderItem = ({ id, label, icon: Icon, badge }: typeof tabsWithBadges[number]) => {
