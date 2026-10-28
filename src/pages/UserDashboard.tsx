@@ -1002,7 +1002,7 @@ const UserDashboard = () => {
 
       <div className="relative z-10">
       {/* Header */}
-      <header className="sticky top-0 z-50" style={{ ...glassCard, borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}>
+      <header className="relative z-10" style={{ ...glassCard, borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <a href="/" className="flex items-center group"><BrandLogo size="sm" /></a>
           <div className="flex items-center gap-2 sm:gap-3">
