@@ -41,7 +41,7 @@ export const HOME_DEFAULTS: HomeSettings = {
     { label: 'Fiction', collections: ['Fiction', 'Romance Books', 'Mystery & Thriller', 'Fantasy', 'Crime Fiction', 'Science Fiction', 'Horror', 'Historical Fiction', 'Dark Romance', 'Young Adult (YA)'] },
     { label: 'Non-Fiction', collections: ['Autobiography', 'Biography & Memoir', 'Business, Finance & Economics', 'History & War', 'Philosophy & Religion', 'Self-Help & Psychology'] },
   ],
-  theme: 'dark',
+  theme: 'white',
   announcement: '🎁 FREE Bookmark with Every Book | 🚚 Cash on Delivery Across Bangladesh!',
   collectionRows: [
     { title: 'Timeless Classics', collection: 'timeless-classics' },
