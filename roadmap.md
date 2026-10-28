@@ -1,10 +1,10 @@
 # Roadmap
 
 ## Account sign-in design
-- [ ] Match the account palette to Booklover white/red and its dark theme; do not change other website colors.
-- [ ] Present premium design choices for the /account sign-in shown in the supplied screenshot and get approval.
-- [ ] Redesign only the account sign-in presentation; preserve Google/email functionality, storefront header/footer, admin and signed-in dashboard.
-- [ ] Verify both themes and account sign-in interactions.
+- [x] Match the account palette to Booklover white/red and its dark theme; other website colors unchanged.
+- [x] Present premium design choices; user delegated brand matching and skipped the choice, so use the clean white/red account form.
+- [x] Redesign only the account sign-in presentation; preserve Google/email handlers, storefront header/footer, admin and signed-in dashboard.
+- [x] Verify login/signup/forgot mode changes, password visibility, input validation state, both themes and mobile with no runtime errors; five existing auth/routing tests and build passed. No credentials or signup submissions used.
 
 ## Account login methods
 - [x] Remove Apple sign-in and request provider disabling; managed configuration succeeded and Google remains enabled, existing email login unchanged.

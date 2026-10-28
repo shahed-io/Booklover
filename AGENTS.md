@@ -1,6 +1,7 @@
 # Architecture rules
 
 - Storefront Google sign-in uses the managed OAuth helper and validates the returned user before closing the login dialog; this keeps preview popups and published redirects on the same session flow.
+- The account route uses its own sign-in presentation with shared AuthModal handlers and account-scoped theme tokens; checkout modals, admin screens and the signed-in dashboard remain independent.
 
 - Keep the Booklover storefront in a dedicated module with scoped theme tokens; preserve the existing admin UI and shared commerce providers so storefront styling cannot alter admin pages.
 - Render catalog and purchasing data from the existing managed backend, never from competitor examples or invented prices, so admin-managed products remain authoritative.

@@ -5,6 +5,7 @@ import { signInWithGoogle } from './googleSignIn';
 import { toast } from 'sonner';
 import { useNavigate, useSearchParams } from '@/lib/router-compat';
 import BrandLogo from '@/components/store/BrandLogo';
+import AccountSignInView from '@/components/booklover/AccountSignInView';
 import { sendWelcomeEmail } from '@/lib/loginNotifier';
 import TurnstileWidget, { useTurnstileSiteKey } from '@/components/store/TurnstileWidget';
 
@@ -14,11 +15,12 @@ interface AuthModalProps {
   onClose: () => void;
   redirectAfterLogin?: boolean | undefined;
   oauthRedirectTo?: string | undefined;
+  presentation?: 'modal' | 'account';
 }
 
 type Mode = 'login' | 'signup' | 'forgot';
 
-const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo }: AuthModalProps) => {
+const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo, presentation = 'modal' }: AuthModalProps) => {
   const [mode, setMode] = useState<Mode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -256,6 +258,15 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
     setPassword('');
     setReferralCode('');
   };
+
+  if (presentation === 'account') return <AccountSignInView
+    mode={mode} email={email} password={password} name={name} loading={loading}
+    canSubmit={canSubmit} forgotSent={forgotSent} agreeTerms={agreeTerms}
+    honeypot={honeypot} siteKey={turnstileSiteKey}
+    setEmail={setEmail} setPassword={setPassword} setName={setName}
+    setAgreeTerms={setAgreeTerms} setHoneypot={setHoneypot} setCaptchaToken={setCaptchaToken}
+    switchMode={resetAndSwitch} onGoogle={handleGoogle} onSubmit={handleSubmit}
+  />;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
