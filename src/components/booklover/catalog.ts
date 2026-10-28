@@ -12,7 +12,8 @@ export function useCatalog() {
   return useQuery({queryKey:['booklover-catalog'],staleTime:10*60_000,gcTime:60*60_000,queryFn:async()=>{
     // The backend returns at most 1000 rows per request: count first, then fetch every page in parallel.
     const all = async <T,>(table:string,cols:string,filter:(q:any)=>any,order:string[]) => {
-      const head=await filter((supabase.from(table as never) as any).select('id',{count:'exact',head:true}).limit(1)).catch?.(()=>null) ?? await filter((supabase.from(table as never) as any).select(cols,{count:'exact',head:true}));
+      const head=await filter((supabase.from(table as never) as any).select(cols.split(',')[0],{count:'estimated',head:true}));
+      if(head.error) return {data:null,error:head.error};
       const total=head?.count ?? 0;
       const pages=Math.max(1,Math.ceil(total/1000));
       const res=await Promise.all(Array.from({length:pages},(_,i)=>{let q=filter((supabase.from(table as never) as any).select(cols));for(const o of order)q=q.order(o);return q.range(i*1000,i*1000+999);}));
