@@ -6,7 +6,6 @@ import Layout from './Layout';
 import { useHomeData, slugify, money, variantsOf, type Book } from './catalog';
 import { useHomeSettings, HOME_DEFAULTS } from './homeSettings';
 import reading from '@/assets/booklover-reading.jpg';
-import collectionsImg from '@/assets/booklover-collections.jpg';
 
 /** Product card matching the owner's original store: cover, centred title, prices, red Sale badge. */
 function HomeCard({ book }: { book: Book }) {
@@ -67,7 +66,7 @@ export default function Home() {
       <Helmet><title>{cfg.seoTitle}</title><meta name="description" content={cfg.seoDescription} /><link rel="canonical" href="https://booklover.com.bd/" /></Helmet>
 
       <section className="bl-hero">
-        <img src={active.image || (slide % 2 ? collectionsImg : reading)} alt="Reading at Booklover" width={1920} height={1024} fetchPriority="high" />
+        <img src={active.image || reading} alt="Reading at Booklover" width={1920} height={1024} fetchPriority="high" />
         <div className="bl-hero-copy">
           <span className="bl-eyebrow">{cfg.eyebrow}</span>
           <h1>{lines(active.title)}</h1>
