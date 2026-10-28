@@ -120,10 +120,10 @@ const Footer = () => {
             </div>
             <div className="text-center sm:text-left">
               <h3 className="font-sora font-black text-lg sm:text-xl tracking-tight" style={{ color: 'hsl(0,0%,100%)' }}>
-                Looking for your next great read?
+                বই হোক আপনার নিত্যসঙ্গী।
               </h3>
               <p className="text-[13px] mt-0.5" style={{ color: 'hsla(0,0%,100%,0.88)' }}>
-                Message us anytime — we'll help you find the perfect book
+                পছন্দের গল্প, নতুন ভাবনা—সবই বুকলাভারে।
               </p>
             </div>
           </div>
