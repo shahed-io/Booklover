@@ -27,6 +27,10 @@
 - [ ] Configure owner credentials/providers — 23 inherited provider secrets removed during cleanup; retained admin/security/AI secrets require owner replacement through secure forms.
 - [ ] Replace remaining legacy email calls with managed feature-specific sending — waiting for the user to configure an owned sender domain.
 
+## Support button emblem
+- [x] Show three premium emblem concepts, apply the user's choice (glossy red chat bubble with gold ribbon) to the floating support button only; chat-window avatar left untouched.
+- [x] Verify white and dark themes plus the open (red disc + white X) state in the browser with no clipping; build OK.
+
 ## Done
 - [x] Make cart "Pay Selected / Checkout Now" button visually clickable (`.btn-glow` CSS + button markup in CartDrawer.tsx).
 - [x] Support agent memory: update `ai-support-chat` system prompt to physical furniture business; deployed.

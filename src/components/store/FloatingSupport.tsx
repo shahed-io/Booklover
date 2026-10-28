@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Loader2, Minimize2, MessageCircle, MessageCircleMore, Facebook, Send as TelegramIcon, Link as LinkIcon, Phone, Mail, Instagram, Twitter, Youtube, Video, Headphones, LifeBuoy, HelpCircle, Globe } from 'lucide-react';
+import { Bot, X, Send, Loader2, Minimize2, MessageCircle, Facebook, Send as TelegramIcon, Link as LinkIcon, Phone, Mail, Instagram, Twitter, Youtube, Video, Headphones, LifeBuoy, HelpCircle, Globe } from 'lucide-react';
 import aiLogo from '@/assets/ai-support-agent.webp';
+import supportEmblem from '@/assets/support-emblem.png';
 
 /** Professional AI support agent avatar — used across header, message avatars, and pill button */
 const AiLogo = ({ size = 20, className = '', glow = false }: { size?: number | undefined; className?: string | undefined; glow?: boolean | undefined }) => (
@@ -734,25 +735,32 @@ const FloatingSupport = () => {
 {/* Outer halo / glow */}
             <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[#a50f1c] to-[#e11d2e] opacity-40 blur-xl group-hover:opacity-60 transition-opacity" />
 
-            {/* Main glass body */}
-            <span className="relative w-full h-full flex items-center justify-center rounded-full border border-white/30 bg-white/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(225,29,46,0.40)] overflow-hidden">
-              {/* Internal gradient mesh */}
-              <span
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: (chatOpen || menuOpen)
-                    ? 'linear-gradient(45deg, hsla(356,76%,48%,0.85), hsla(356,91%,60%,0.80))'
-                    : 'linear-gradient(45deg, rgba(165,15,28,0.85), rgba(225,29,46,0.75), rgba(165,15,28,0.85))'
-                }}
+            {/* Closed: the glossy emblem itself is the button, so nothing is clipped */}
+            {!(chatOpen || menuOpen) && (
+              <img
+                src={supportEmblem}
+                alt=""
+                aria-hidden="true"
+                width={64}
+                height={64}
+                loading="lazy"
+                className="pointer-events-none relative z-10 h-full w-full select-none object-contain"
+                style={{ filter: 'drop-shadow(0 6px 14px rgba(150,10,25,0.35))' }}
               />
-              {/* Icon */}
-              {(chatOpen || menuOpen)
-                ? <X size={26} strokeWidth={2.4} className="fs-x-rotate relative z-10" style={{ color: '#e11d2e' }} />
-                : <MessageCircleMore size={28} strokeWidth={2} className="relative z-10 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.28)]" />
-              }
-              {/* Premium highlight rim */}
-              <span className="absolute inset-0 rounded-full border-t border-l border-white/50 pointer-events-none" />
-            </span>
+            )}
+
+            {/* Open: glossy red disc with a white X — legible on both themes */}
+            {(chatOpen || menuOpen) && (
+              <span
+                className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full"
+                style={{
+                  background: 'radial-gradient(120% 120% at 30% 22%, #ff5566 0%, #e11d2e 45%, #8f0b18 100%)',
+                  boxShadow: '0 10px 26px -6px rgba(140,10,22,0.55), inset 0 1px 0 rgba(255,255,255,0.55), inset 0 0 0 1px rgba(255,255,255,0.22)',
+                }}
+              >
+                <X size={26} strokeWidth={2.4} className="fs-x-rotate relative z-10 text-white" />
+              </span>
+            )}
 
             {/* Gold notification accent */}
             {!chatOpen && !menuOpen && (
