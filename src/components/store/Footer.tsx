@@ -265,7 +265,7 @@ const Footer = () => {
                       <a href={link.href}
                         target={link.external ? '_blank' : undefined}
                         rel={link.external ? 'noopener noreferrer' : undefined}
-                        className="group flex items-center gap-2 px-2.5 py-2 rounded-lg text-[12.5px] font-medium transition-all"
+                        className="group flex items-center gap-2 px-2.5 py-2 rounded-lg text-[14px] font-medium transition-all"
                         style={{ color: NAVY_SOFT, background: 'transparent', border: '1px solid transparent' }}
                         onMouseEnter={e => {
                           const el = e.currentTarget as HTMLElement;
