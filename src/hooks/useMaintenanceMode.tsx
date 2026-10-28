@@ -56,7 +56,6 @@ export const MAINTENANCE_AREAS: { key: string; label: string; hint: string; pref
   { key: 'checkout', label: 'Cart & Checkout', hint: '/checkout, /cart', prefixes: ['/checkout', '/cart'] },
   { key: 'dashboard', label: 'Customer Dashboard', hint: '/dashboard', prefixes: ['/dashboard'] },
   { key: 'blog', label: 'Blog', hint: '/blog', prefixes: ['/blog'] },
-  { key: 'affiliate', label: 'Affiliate Portal', hint: '/affiliate', prefixes: ['/affiliate'] },
   { key: 'support', label: 'Support & Contact', hint: '/contact, /help, /refund-request', prefixes: ['/contact', '/help', '/refund-request'] },
   { key: 'pages', label: 'Info & Policy Pages', hint: '/about, /faqs, /privacy...', prefixes: ['/about', '/faqs', '/privacy', '/terms', '/refund-policy', '/return-policy', '/order-policy', '/delivery'] },
   { key: 'payments', label: 'Payment Links', hint: '/pay/...', prefixes: ['/pay', '/payment'] },

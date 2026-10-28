@@ -131,8 +131,6 @@ const MENU_SECTIONS: MenuSection[] = [
       { icon: Percent, label: 'Coupons', path: '/admin/coupons' },
       
       
-      { icon: Gift, label: 'Referrals', path: '/admin/referrals' },
-      { icon: TrendingUp, label: 'Affiliates', path: '/admin/affiliates' },
       { icon: Megaphone, label: 'Marketing Hub', path: '/admin/marketing' },
       { icon: Facebook, label: 'Facebook Pixel', path: '/admin/facebook-pixel' },
       { icon: Users, label: 'FB Custom Audiences', path: '/admin/custom-audiences' },
@@ -168,7 +166,6 @@ const MENU_SECTIONS: MenuSection[] = [
   {
     title: 'Integrations',
     items: [
-      { icon: Bot, label: 'Telegram Shop Bot', path: '/admin/telegram-bot' },
     ],
   },
   {

@@ -56,8 +56,6 @@ export function useAdminPrefetch() {
       safeImport('live-chat', () => import('@/pages/admin/AdminLiveChat'));
       safeImport('newsletter', () => import('@/pages/admin/AdminNewsletterSubscribers'));
       safeImport('coupons', () => import('@/pages/admin/AdminCoupons'));
-      safeImport('referrals', () => import('@/pages/admin/AdminReferrals'));
-      safeImport('affiliates', () => import('@/pages/admin/AdminAffiliates'));
       safeImport('marketing', () => import('@/pages/admin/AdminMarketing'));
     }, 800);
 
@@ -80,7 +78,6 @@ export function useAdminPrefetch() {
 
     // ── Wave 4: Integrations + System + Pixels + SEO sub-pages ───────────────
     idle(() => {
-      safeImport('telegram-bot', () => import('@/pages/admin/AdminTelegramBot'));
       safeImport('staff', () => import('@/pages/admin/AdminStaffManagement'));
       safeImport('roles', () => import('@/pages/admin/AdminRoles'));
       safeImport('backup', () => import('@/pages/admin/AdminBackup'));
@@ -146,8 +143,6 @@ const HOVER_LOADERS: Record<string, () => Promise<unknown>> = {
   '/admin/footer-settings':       () => import('@/pages/admin/AdminFooterSettings'),
   '/admin/themes':                () => import('@/pages/admin/AdminThemes'),
   '/admin/coupons':               () => import('@/pages/admin/AdminCoupons'),
-  '/admin/referrals':             () => import('@/pages/admin/AdminReferrals'),
-  '/admin/affiliates':            () => import('@/pages/admin/AdminAffiliates'),
   '/admin/marketing':             () => import('@/pages/admin/AdminMarketing'),
   '/admin/facebook-pixel':        () => import('@/pages/admin/AdminFacebookPixel'),
   '/admin/custom-audiences':      () => import('@/pages/admin/AdminCustomAudiences'),
@@ -159,7 +154,6 @@ const HOVER_LOADERS: Record<string, () => Promise<unknown>> = {
   '/admin/seo':                   () => import('@/pages/admin/AdminSEO'),
   '/admin/site-verification':     () => import('@/pages/admin/AdminSiteVerification'),
   '/admin/reports':               () => import('@/pages/admin/AdminReports'),
-  '/admin/telegram-bot':          () => import('@/pages/admin/AdminTelegramBot'),
   '/admin/ai-config':             () => import('@/pages/admin/AdminAiConfig'),
   '/admin/staff':                 () => import('@/pages/admin/AdminStaffManagement'),
   '/admin/roles':                 () => import('@/pages/admin/AdminRoles'),
