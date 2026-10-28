@@ -222,7 +222,7 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 @media(max-width:900px){.bl-photo-wrap .bl-product-photo{height:auto!important;max-height:480px;}}
 @media(max-width:540px){.bl-photo-wrap .bl-product-photo{height:auto!important;max-height:420px;}}
 
-.bl-photo-btn,.bl-photo-btn:hover,.bl-white .bl-photo-btn:hover,.bl-dark .bl-photo-btn:hover{background:transparent!important;box-shadow:none!important;transform:none!important;}
+.bl-photo-btn,.bl-photo-btn:hover,.bl-white .bl-photo-btn:hover,.bl-dark .bl-photo-btn:hover{background:none!important;box-shadow:none!important;transform:none!important;}
 .bl-photo-wrap{transition:box-shadow .3s ease;}
 .bl-photo-wrap::after{transition:opacity .3s ease;opacity:.85;}
 .bl-photo-btn:hover .bl-photo-wrap{box-shadow:0 26px 50px -18px rgb(0 0 0/.5),0 8px 16px -6px rgb(0 0 0/.28);}
