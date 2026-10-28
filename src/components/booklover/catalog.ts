@@ -1,5 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
@@ -49,17 +47,13 @@ export function variantsOf(raw: Book['variants']): VariantGroup[] {
 }
 
 /** Saves query results on the device so repeat visits render instantly. */
-/** Seed a query from localStorage only after hydration, so SSR and first client render match. */
-export function useSeedFromCache<T>(queryKey:unknown[],read:()=>T|undefined){const qc=useQueryClient();const k=JSON.stringify(queryKey);useEffect(()=>{if(qc.getQueryData(queryKey)!==undefined)return;const v=read();if(v!==undefined)qc.setQueryData(queryKey,v,{updatedAt:0});// eslint-disable-next-line react-hooks/exhaustive-deps
-},[k]);}
 export function cached<T>(key:string){try{const v=localStorage.getItem('blc:'+key);return v?JSON.parse(v) as T:undefined;}catch{return undefined;}}
 export function saveCache(key:string,v:unknown){try{localStorage.setItem('blc:'+key,JSON.stringify(v));}catch{/* storage full */}}
 type HomeData={categories:Tables<'categories'>[];bestsellers:Book[];rows:Record<string,Book[]>};
 /** Small parallel queries for just what the homepage shows (no full catalog download). */
 export function useHomeData(rowCats:{title:string;collection:string}[],count:number){
   const key='home-data';
-  useSeedFromCache(['booklover-home',rowCats,count],()=>cached<HomeData>(key));
-  return useQuery({queryKey:['booklover-home',rowCats,count],staleTime:5*60_000,queryFn:async()=>{
+  return useQuery({queryKey:['booklover-home',rowCats,count],staleTime:5*60_000,initialData:()=>cached<HomeData>(key),initialDataUpdatedAt:0,queryFn:async()=>{
     const {data:categories,error}=await supabase.from('categories').select('*').eq('is_active',true).order('sort_order');if(error)throw error;
     const live=['active','out_of_stock'] as const;
     const best=supabase.from('products').select(LIST_COLS).in('status',live as never).order('total_sales',{ascending:false}).limit(count);
