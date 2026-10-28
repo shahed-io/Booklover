@@ -138,7 +138,7 @@ const HelpCenter = () => {
                 <div className="flex items-center gap-2 mb-4">
                   <span className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5"
                     style={{ background: `${catCfg!.color}20`, color: catCfg!.color }}>
-                    <catCfg!.icon size={11} /> {catCfg!.label}
+                    <catCfg.icon size={11} /> {catCfg!.label}
                   </span>
                   {currentArticle.is_featured && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-500">⭐ Featured</span>
@@ -301,7 +301,7 @@ const HelpCenter = () => {
                 >
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center"
                     style={{ background: `${cfg!.color}20` }}>
-                    <cfg!.icon size={18} style={{ color: cfg!.color }} />
+                    <cfg.icon size={18} style={{ color: cfg!.color }} />
                   </div>
                   <span className="text-xs font-semibold text-foreground">{cfg!.label}</span>
                   <span className="text-[10px] text-muted-foreground">{count} আর্টিকেল</span>
@@ -326,7 +326,7 @@ const HelpCenter = () => {
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
                         style={{ background: `${cfg!.color}20` }}>
-                        <cfg!.icon size={15} style={{ color: cfg!.color }} />
+                        <cfg.icon size={15} style={{ color: cfg!.color }} />
                       </div>
                       <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: cfg!.color }}>{cfg!.label}</span>
                     </div>
@@ -346,7 +346,7 @@ const HelpCenter = () => {
               <h2 className="font-bold text-foreground text-sm flex items-center gap-2">
                 {(() => {
                   const cfg = CATEGORY_CONFIG[selectedCat] || CATEGORY_CONFIG['general'];
-                  return <><cfg!.icon size={14} style={{ color: cfg!.color }} /> {cfg!.label}</>;
+                  return <><cfg.icon size={14} style={{ color: cfg!.color }} /> {cfg!.label}</>;
                 })()}
               </h2>
               <button onClick={() => setSelectedCat('all')} className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -379,7 +379,7 @@ const HelpCenter = () => {
                   >
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                       style={{ background: `${cfg!.color}15` }}>
-                      <cfg!.icon size={16} style={{ color: cfg!.color }} />
+                      <cfg.icon size={16} style={{ color: cfg!.color }} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{a.title}</p>
