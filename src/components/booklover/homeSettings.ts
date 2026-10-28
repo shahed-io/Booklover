@@ -18,6 +18,8 @@ export type HomeSettings = {
   menuGroups: MenuGroup[];
   seoTitle: string;
   seoDescription: string;
+  announcement: string;
+  collectionRows: { title: string; collection: string }[];
 };
 
 export const HOME_DEFAULTS: HomeSettings = {
@@ -37,6 +39,13 @@ export const HOME_DEFAULTS: HomeSettings = {
   menuGroups: [
     { label: 'Fiction', collections: ['Fiction', 'Romance Books', 'Mystery & Thriller', 'Fantasy', 'Crime Fiction', 'Science Fiction', 'Horror', 'Historical Fiction', 'Dark Romance', 'Young Adult (YA)'] },
     { label: 'Non-Fiction', collections: ['Autobiography', 'Biography & Memoir', 'Business, Finance & Economics', 'History & War', 'Philosophy & Religion', 'Self-Help & Psychology'] },
+  ],
+  announcement: '',
+  collectionRows: [
+    { title: 'Timeless Classics', collection: 'timeless-classics' },
+    { title: 'History & War', collection: 'history-war' },
+    { title: 'Philosophy & Religion', collection: 'philosophy-religion' },
+    { title: 'Crime Fiction', collection: 'crime-fiction' },
   ],
   seoTitle: 'Booklover | Online Bookshop Bangladesh',
   seoDescription: 'Browse books, explore collections and find your next favourite read at Booklover Bangladesh.',
