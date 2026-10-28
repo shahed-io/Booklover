@@ -383,7 +383,7 @@ background:linear-gradient(180deg,var(--fn-bg),var(--fn-bg2));color:var(--fn-tex
 /* premium icon-card header menu */
 .bl-menu-wrap{position:absolute;top:76px;left:0;right:0;z-index:60}
 .bl-menu-backdrop{position:fixed;inset:76px 0 0 0;background:hsl(var(--overlay)/.18);backdrop-filter:blur(2px);animation:blFade .2s ease}
-.bl-menu-wrap .bl-menu{position:relative;top:0;display:block;max-width:1180px;margin:10px auto 0;padding:22px 24px 26px;border:1px solid hsl(var(--border));border-top:3px solid hsl(var(--primary));border-radius:18px;background:linear-gradient(180deg,hsl(var(--background)),hsl(var(--muted)/.5));box-shadow:0 24px 60px -18px hsl(var(--overlay)/.35);animation:blDrop .25s cubic-bezier(.2,.8,.2,1)}
+.bl-menu-wrap .bl-menu{position:relative;top:0;display:block;max-width:1180px;margin:10px auto 0;padding:22px 24px 26px;border:1px solid hsl(var(--border));border-top:3px solid hsl(var(--primary));border-radius:18px;background:hsl(var(--background));box-shadow:0 24px 60px -18px hsl(var(--overlay)/.35);animation:blDrop .25s cubic-bezier(.2,.8,.2,1)}
 .bl-menu-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid hsl(var(--border))}
 .bl-menu-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:hsl(var(--primary));font-weight:600}
 .bl-menu-head h3{font-size:20px;font-weight:700;margin-top:2px}
