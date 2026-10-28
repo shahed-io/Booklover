@@ -326,3 +326,14 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 .bl-hero img.bl-hero-slide.on{opacity:1;}
 /* Keep each book rail inside its heading's available content width. */
 .bl-hwrap > .bl-hrow{max-width:100%;padding-inline:0;scroll-padding-inline:0;}
+/* Full-width desktop product rails; category wrappers remain unchanged. */
+@media(min-width:901px){
+  .bl-product-row{--bl-visible-books:4;}
+  .bl-product-row > .bl-hwrap{max-width:none;width:100%;min-width:0;padding-inline:32px;}
+  .bl-product-row .bl-hrow{grid-auto-columns:calc((100% - (var(--bl-visible-books) - 1)*40px)/var(--bl-visible-books));}
+}
+@media(min-width:1200px){.bl-product-row{--bl-visible-books:5;}}
+@media(min-width:1440px){.bl-product-row{--bl-visible-books:6;}}
+@media(min-width:1680px){.bl-product-row{--bl-visible-books:7;}}
+@media(min-width:1920px){.bl-product-row{--bl-visible-books:8;}}
+@media(min-width:2400px){.bl-product-row{--bl-visible-books:10;}}

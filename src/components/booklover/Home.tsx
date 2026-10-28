@@ -35,7 +35,7 @@ function Row({ title, books, to, loading }: { title: string; books: Book[]; to: 
   const onScroll = () => { const el = ref.current; if (el) setPos(Math.min(books.length, Math.round(el.scrollLeft / step()) + 1)); };
   const go = (d: number) => ref.current?.scrollBy({ left: d * step(), behavior: 'smooth' });
   return (
-    <section className="bl-hsection">
+    <section className="bl-hsection bl-product-row">
       <div className="bl-hwrap"><h2>{title}</h2></div>
       <div className="bl-hwrap"><div className="bl-hrow" ref={ref} onScroll={onScroll}>{books.length ? books.map(b => <HomeCard key={b.id} book={b} />) : Array.from({ length: 5 }, (_, i) => <div key={i} className="bl-skel" />)}</div></div>
       {books.length > 1 && <div className="bl-rownav">
