@@ -1001,46 +1001,6 @@ const UserDashboard = () => {
       </div>
 
       <div className="relative z-10">
-      {/* Header */}
-      <header className="relative z-10" style={{ ...glassCard, borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <a href="/" className="flex items-center group"><BrandLogo size="sm" /></a>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <a
-              href="/"
-              aria-label="Home"
-              className="group relative flex items-center gap-2 h-9 px-3 rounded-full transition-all duration-300 active:scale-[0.97]"
-              style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid hsla(258,78%,75%,0.25)', boxShadow: '0 2px 8px hsla(243,75%,59%,0.08)' }}
-            >
-              <span className="flex items-center justify-center w-6 h-6 rounded-full text-white shadow-[0_0_10px_hsla(243,75%,59%,0.35)] group-hover:shadow-[0_0_14px_hsla(243,75%,59%,0.55)] transition-shadow"
-                style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>
-                <Home size={13} strokeWidth={2.5} />
-              </span>
-              <span className="hidden sm:inline text-[13px] font-semibold tracking-wide text-foreground/80 group-hover:text-foreground transition-colors">Home</span>
-            </a>
-
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid hsla(258,78%,75%,0.25)' }}>
-              <div className="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>
-                {profile.avatar_url ? <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" /> : initials}
-              </div>
-              <span className="text-sm font-semibold max-w-[120px] truncate hidden sm:flex items-center gap-1 text-foreground">
-                <span className="truncate">{displayName}</span>
-                <VerifiedBadge size={13} />
-              </span>
-              {unreadCount > 0 && <span className="w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center" style={{ background: 'hsl(var(--destructive))' }}>{unreadCount}</span>}
-            </div>
-            {isAdmin && (
-              <button onClick={() => navigate('/admin')} className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-xl transition-all" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(263,70%,58%))', color: 'white', boxShadow: '0 2px 8px hsla(243,75%,59%,0.4)' }}>
-                <ShieldCheck size={14} /><span className="hidden sm:inline">Admin Panel</span>
-              </button>
-            )}
-            <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-xl transition-all hover:bg-destructive/10 text-muted-foreground">
-              <LogOut size={14} /><span className="hidden sm:inline">{t(selectedLang, 'tab_logout')}</span>
-            </button>
-          </div>
-        </div>
-      </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
 
