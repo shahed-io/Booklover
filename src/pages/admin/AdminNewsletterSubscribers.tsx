@@ -96,7 +96,7 @@ const AdminNewsletterSubscribers = () => {
         <div className="relative flex-1 min-w-[200px]">
           <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="ইমেইল বা নাম খুঁজুন..."
-            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
         </div>
         {(['all', 'active', 'unsubscribed'] as const).map(f => (
           <button key={f} onClick={() => setFilter(f)}
@@ -141,7 +141,7 @@ const AdminNewsletterSubscribers = () => {
                     <td className="px-5 py-3.5 text-muted-foreground hidden md:table-cell">{sub.name || '—'}</td>
                     <td className="px-5 py-3.5">
                       <select value={sub.status} onChange={e => updateStatus(sub.id, e.target.value)}
-                        className={`text-xs font-semibold px-3 py-1 rounded-full border-0 cursor-pointer outline-none ${sub.status === 'active' ? 'bg-green-400/15 text-green-400' : 'bg-red-400/15 text-red-400'}`}>
+                        className={`text-xs font-semibold px-3 py-1 rounded-full border-0 cursor-pointer outline-hidden ${sub.status === 'active' ? 'bg-green-400/15 text-green-400' : 'bg-red-400/15 text-red-400'}`}>
                         <option value="active">সক্রিয়</option>
                         <option value="unsubscribed">আনসাবস্ক্রাইবড</option>
                       </select>

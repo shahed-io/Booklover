@@ -101,7 +101,7 @@ const AdminContentSeo = () => {
       long: { color: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300', label: '⚠️ Too Long' },
       empty: { color: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300', label: '❌ Empty' },
     };
-    return <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${map[status].color}`}>{map[status].label}</span>;
+    return <span className={`px-2 py-0.5 rounded-[0.25rem] text-[10px] font-bold ${map[status].color}`}>{map[status].label}</span>;
   };
 
   return (
@@ -196,27 +196,27 @@ const AdminContentSeo = () => {
             <div className="glass-card rounded-xl p-4 border border-border">
               <h3 className="font-bold text-sm">HTML Structure</h3>
               <div className="grid grid-cols-3 gap-2 mt-3 text-center">
-                <div className={`p-2 rounded ${structure.h1 === 1 ? 'bg-green-50 dark:bg-green-950/30' : 'bg-amber-50 dark:bg-amber-950/30'}`}>
+                <div className={`p-2 rounded-[0.25rem] ${structure.h1 === 1 ? 'bg-green-50 dark:bg-green-950/30' : 'bg-amber-50 dark:bg-amber-950/30'}`}>
                   <div className="text-lg font-bold">{structure.h1}</div>
                   <div className="text-[10px]">H1 (need 1)</div>
                 </div>
-                <div className="p-2 rounded bg-muted/40">
+                <div className="p-2 rounded-[0.25rem] bg-muted/40">
                   <div className="text-lg font-bold">{structure.h2}</div>
                   <div className="text-[10px]">H2</div>
                 </div>
-                <div className="p-2 rounded bg-muted/40">
+                <div className="p-2 rounded-[0.25rem] bg-muted/40">
                   <div className="text-lg font-bold">{structure.h3}</div>
                   <div className="text-[10px]">H3</div>
                 </div>
-                <div className="p-2 rounded bg-muted/40">
+                <div className="p-2 rounded-[0.25rem] bg-muted/40">
                   <div className="text-lg font-bold">{structure.links}</div>
                   <div className="text-[10px]">Links</div>
                 </div>
-                <div className="p-2 rounded bg-muted/40">
+                <div className="p-2 rounded-[0.25rem] bg-muted/40">
                   <div className="text-lg font-bold">{structure.images}</div>
                   <div className="text-[10px]">Images</div>
                 </div>
-                <div className={`p-2 rounded ${structure.imagesNoAlt === 0 ? 'bg-green-50 dark:bg-green-950/30' : 'bg-red-50 dark:bg-red-950/30'}`}>
+                <div className={`p-2 rounded-[0.25rem] ${structure.imagesNoAlt === 0 ? 'bg-green-50 dark:bg-green-950/30' : 'bg-red-50 dark:bg-red-950/30'}`}>
                   <div className="text-lg font-bold">{structure.imagesNoAlt}</div>
                   <div className="text-[10px]">No Alt</div>
                 </div>

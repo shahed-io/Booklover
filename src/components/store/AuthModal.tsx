@@ -787,7 +787,7 @@ const GlassField = ({ icon, type, placeholder, value, onChange, onBlur, onKeyDow
           onBlur={() => { setFocused(false); onBlur?.(); }}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
-          className={`flex-1 bg-transparent border-0 outline-none px-3 py-3 text-sm placeholder:text-muted-foreground ${uppercase ? 'uppercase tracking-wider' : ''}`}
+          className={`flex-1 bg-transparent border-0 outline-hidden px-3 py-3 text-sm placeholder:text-muted-foreground ${uppercase ? 'uppercase tracking-wider' : ''}`}
           style={{ color: 'hsl(226,40%,18%)' }}
         />
         <span className="pr-3.5 flex items-center gap-2">

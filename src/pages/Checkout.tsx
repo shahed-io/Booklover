@@ -1204,7 +1204,7 @@ const Checkout = () => {
                   value={form[key as keyof typeof form]}
                   onChange={e => setForm(prev => ({ ...prev, [key]: e.target.value }))}
                   placeholder={placeholder}
-                   className={`w-full bg-muted/50 border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground/50 focus:bg-card focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm ${errors[key] ? 'border-destructive/60' : 'border-transparent'}`}
+                   className={`w-full bg-muted/50 border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground/50 focus:bg-card focus:outline-hidden focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm ${errors[key] ? 'border-destructive/60' : 'border-transparent'}`}
                 />
                 {errors[key] && <p className="text-destructive text-xs mt-1">{errors[key]}</p>}
               </div>
@@ -1230,7 +1230,7 @@ const Checkout = () => {
                   <select
                     value={customValues[f.id] || ''}
                     onChange={e => setCustomValues(p => ({ ...p, [f.id]: e.target.value }))}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all text-sm"
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-all text-sm"
                   >
                     <option value="">{f.placeholder || 'সিলেক্ট করুন'}</option>
                     {f.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -1242,7 +1242,7 @@ const Checkout = () => {
                     placeholder={f.placeholder}
                     rows={3}
                     maxLength={400}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all text-sm resize-none"
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-all text-sm resize-none"
                   />
                 ) : (
                   <input
@@ -1251,7 +1251,7 @@ const Checkout = () => {
                     onChange={e => setCustomValues(p => ({ ...p, [f.id]: e.target.value }))}
                     placeholder={f.placeholder}
                     maxLength={200}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all text-sm"
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-all text-sm"
                   />
                 )}
               </div>
@@ -1367,7 +1367,7 @@ const Checkout = () => {
                     onChange={e => setTransactionId(e.target.value)}
                     placeholder={paymentMethod === 'bank_transfer' ? 'যেমন: TRN123456789' : 'যেমন: 8F3K2P9X'}
                     maxLength={50}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-mono text-sm"
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-all font-mono text-sm"
                   />
                 </div>
 
@@ -1441,7 +1441,7 @@ const Checkout = () => {
               placeholder={checkoutCfg.notesPlaceholder}
               rows={3}
               maxLength={500}
-              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all text-sm resize-none"
+              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-all text-sm resize-none"
             />
             <p className="text-xs text-muted-foreground text-right">{orderNotes.length}/500</p>
           </div>
@@ -1625,7 +1625,7 @@ const Checkout = () => {
                             onKeyDown={e => e.key === 'Enter' && handleApplyCoupon()}
                             placeholder="Coupon code"
                             maxLength={30}
-                            className="w-full bg-muted/30 border border-border rounded-xl pl-8 pr-3 py-2.5 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary text-sm"
+                            className="w-full bg-muted/30 border border-border rounded-xl pl-8 pr-3 py-2.5 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:border-primary text-sm"
                           />
                         </div>
                         <button

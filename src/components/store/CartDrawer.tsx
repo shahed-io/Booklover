@@ -100,7 +100,7 @@ const CartDrawer = () => {
             <label className="flex items-center gap-2 cursor-pointer select-none text-xs font-medium text-foreground">
               <span
                 onClick={() => allSelected ? clearSelected() : selectAll()}
-                className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${allSelected ? 'bg-primary border-primary' : 'border-muted-foreground/40 hover:border-primary'}`}
+                className={`w-4 h-4 rounded-[0.25rem] border-2 flex items-center justify-center transition-colors ${allSelected ? 'bg-primary border-primary' : 'border-muted-foreground/40 hover:border-primary'}`}
               >
                 {allSelected && <Check size={11} className="text-background" strokeWidth={3} />}
               </span>
@@ -200,7 +200,7 @@ const CartDrawer = () => {
                       onKeyDown={e => e.key === 'Enter' && applyCoupon()}
                       placeholder="Coupon code"
                       maxLength={30}
-                      className="w-full bg-muted/30 border border-border rounded-xl pl-8 pr-3 py-2 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary text-xs"
+                      className="w-full bg-muted/30 border border-border rounded-xl pl-8 pr-3 py-2 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:border-primary text-xs"
                     />
                   </div>
                   <button

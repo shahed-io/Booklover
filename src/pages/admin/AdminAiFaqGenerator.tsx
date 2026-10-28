@@ -296,11 +296,11 @@ const AdminAiFaqGenerator = () => {
                     <div className="flex gap-2 items-start">
                       <span className="text-xs font-bold text-primary mt-1">Q{i + 1}.</span>
                       <input value={f.q} onChange={e => setPreviewFaqs(prev => prev.map((x, j) => j === i ? { ...x, q: e.target.value } : x))}
-                        className="flex-1 bg-transparent text-sm font-semibold text-foreground outline-none border-b border-border/50 pb-1" />
+                        className="flex-1 bg-transparent text-sm font-semibold text-foreground outline-hidden border-b border-border/50 pb-1" />
                       <button onClick={() => setPreviewFaqs(prev => prev.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-destructive"><X size={13} /></button>
                     </div>
                     <textarea value={f.a} onChange={e => setPreviewFaqs(prev => prev.map((x, j) => j === i ? { ...x, a: e.target.value } : x))}
-                      rows={3} className="w-full bg-transparent text-xs text-muted-foreground outline-none resize-none" />
+                      rows={3} className="w-full bg-transparent text-xs text-muted-foreground outline-hidden resize-none" />
                   </div>
                 ))
               )}

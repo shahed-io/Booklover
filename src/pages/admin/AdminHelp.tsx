@@ -16,7 +16,7 @@ const CATEGORIES = [
   { value: 'support', label: 'সাপোর্ট' },
 ];
 
-const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 const labelCls = "block text-xs font-semibold text-muted-foreground mb-1 uppercase tracking-wide";
 
 const EMPTY = {
@@ -125,7 +125,7 @@ const AdminHelp = () => {
         <div className="relative flex-1 min-w-48">
           <Search size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="আর্টিকেল খুঁজুন..."
-            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors" />
+            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors" />
         </div>
         {['all', ...CATEGORIES.map(c => c.value)].map(cat => (
           <button key={cat} onClick={() => setCatFilter(cat)}
@@ -216,7 +216,7 @@ const AdminHelp = () => {
                   {preview ? 'সম্পাদনা' : 'Preview'}
                 </button>
                 <select value={editArt.status} onChange={e => setEditArt((p: any) => ({ ...p, status: e.target.value }))}
-                  className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary">
+                  className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary">
                   <option value="published">প্রকাশিত</option>
                   <option value="draft">ড্রাফট</option>
                 </select>

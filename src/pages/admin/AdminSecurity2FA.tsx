@@ -522,7 +522,7 @@ const AdminSecurity2FA = () => {
             They will <strong>not</strong> be shown again — copy, download, or print before leaving this page.
           </p>
           <div className="grid grid-cols-2 gap-2 font-mono text-sm bg-muted/40 p-4 rounded-xl">
-            {backupCodes.map((c) => <div key={c} className="px-2 py-1 bg-background/60 rounded text-center tracking-wider">{c}</div>)}
+            {backupCodes.map((c) => <div key={c} className="px-2 py-1 bg-background/60 rounded-[0.25rem] text-center tracking-wider">{c}</div>)}
           </div>
           <div className="flex flex-wrap gap-2">
             <button onClick={() => copy(backupCodes.join('\n'))} className="px-3 py-2 bg-primary text-primary-foreground rounded-lg text-sm flex items-center gap-1.5">

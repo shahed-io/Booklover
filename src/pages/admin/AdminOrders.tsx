@@ -79,7 +79,7 @@ const PM_LABELS: Record<string, string> = {
   bank_transfer: 'Bank Transfer', wallet: 'Wallet',
 };
 
-const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 
 // ─── Invoice Component (printable) ─────────────────────────────────────────
 const OrderInvoice = ({ order, onClose }: { order: any; onClose: () => void }) => {
@@ -364,7 +364,7 @@ const CreateOrderModal = ({ onClose, onSuccess }: { onClose: () => void; onSucce
     }
   };
 
-  const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
@@ -1593,7 +1593,7 @@ const AdminOrders = () => {
             <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="অর্ডার ID, নাম, ইমেইল, TrxID..."
-              className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors" />
+              className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors" />
           </div>
           <button onClick={() => setShowFilters(!showFilters)}
             className={`px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 border transition-all ${showFilters ? 'btn-glow border-transparent' : 'glass-card border-border text-muted-foreground hover:text-foreground'}`}>
@@ -1637,7 +1637,7 @@ const AdminOrders = () => {
         <div className="glass-card rounded-2xl p-3 flex flex-wrap items-center gap-3">
           <span className="text-xs font-semibold text-primary">{selectedIds.size}টি সিলেক্ট করা হয়েছে</span>
           <select value={bulkAction} onChange={e => setBulkAction(e.target.value)}
-            className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary">
+            className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary">
             <option value="">অ্যাকশন নির্বাচন করুন</option>
             {ALL_STATUSES.map(s => <option key={s} value={s}>{STATUS_CONFIG[s]?.label || s}</option>)}
           </select>
@@ -1673,7 +1673,7 @@ const AdminOrders = () => {
                   <div key={order.id} className={`p-3 ${selectedIds.has(order.id) ? 'bg-primary/5' : ''}`}>
                     <div className="flex items-start gap-2.5">
                       <input type="checkbox" checked={selectedIds.has(order.id)}
-                        onChange={() => toggleSelect(order.id)} className="w-4 h-4 mt-1 accent-primary rounded flex-shrink-0" />
+                        onChange={() => toggleSelect(order.id)} className="w-4 h-4 mt-1 accent-primary rounded-[0.25rem] flex-shrink-0" />
                       <button onClick={() => setSelectedOrder(order)} className="flex-1 min-w-0 text-left">
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <span className="font-mono font-bold text-primary text-xs truncate">#{order.order_number}</span>
@@ -1748,7 +1748,7 @@ const AdminOrders = () => {
                 <tr className="border-b border-border bg-muted/20">
                   <th className="px-3 py-3 w-8">
                     <input type="checkbox" checked={selectedIds.size === filtered.length && filtered.length > 0}
-                      onChange={toggleSelectAll} className="w-3.5 h-3.5 accent-primary rounded" />
+                      onChange={toggleSelectAll} className="w-3.5 h-3.5 accent-primary rounded-[0.25rem]" />
                   </th>
                   <th className="text-left px-4 py-3 text-xs text-muted-foreground font-medium">Order #</th>
                   <th className="text-left px-4 py-3 text-xs text-muted-foreground font-medium">কাস্টমার</th>
@@ -1767,7 +1767,7 @@ const AdminOrders = () => {
                     <tr key={order.id} className={`hover:bg-muted/10 transition-colors group ${selectedIds.has(order.id) ? 'bg-primary/5' : ''}`}>
                       <td className="px-3 py-3">
                         <input type="checkbox" checked={selectedIds.has(order.id)}
-                          onChange={() => toggleSelect(order.id)} className="w-3.5 h-3.5 accent-primary rounded" />
+                          onChange={() => toggleSelect(order.id)} className="w-3.5 h-3.5 accent-primary rounded-[0.25rem]" />
                       </td>
                       <td className="px-4 py-3">
                         <span className="font-mono font-bold text-primary text-xs">{order.order_number}</span>

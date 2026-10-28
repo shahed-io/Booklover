@@ -165,7 +165,7 @@ const AdminTestimonials = () => {
                 <div>
                   <label className="text-xs text-muted-foreground mb-1.5 block">রিভিউ টেক্সট</label>
                   <textarea value={item.text} rows={3} onChange={e => update(item.id, 'text', e.target.value)}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none" />
                 </div>
 
                 <div>
@@ -208,7 +208,7 @@ const Field = ({ label, value, onChange }: { label: string; value: string; onCha
   <div>
     <label className="text-xs text-muted-foreground mb-1.5 block">{label}</label>
     <input value={value} onChange={e => onChange(e.target.value)}
-      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
   </div>
 );
 

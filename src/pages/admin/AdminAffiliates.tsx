@@ -713,7 +713,7 @@ const StatCard = ({ icon: Icon, label, value, color, onClick }: any) => (
   <button
     type="button"
     onClick={onClick}
-    className="bg-card border border-border rounded-2xl p-3 text-left transition-all hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-primary/40"
+    className="bg-card border border-border rounded-2xl p-3 text-left transition-all hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 active:translate-y-0 focus:outline-hidden focus:ring-2 focus:ring-primary/40"
   >
     <div className="flex items-center gap-2 mb-1">
       <Icon size={14} className={color} />

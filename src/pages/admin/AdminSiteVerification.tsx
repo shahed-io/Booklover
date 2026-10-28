@@ -72,7 +72,7 @@ const AdminSiteVerification = () => {
       </div>
 
       <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 p-4 text-xs text-amber-900 dark:text-amber-200">
-        <strong>💡 Tip:</strong> শুধু <code className="px-1 bg-amber-100 dark:bg-amber-900/50 rounded">content="..."</code> অংশের value paste করুন, পুরো meta tag নয়। সাইটের <code>{`<head>`}</code>-এ automatic inject হবে।
+        <strong>💡 Tip:</strong> শুধু <code className="px-1 bg-amber-100 dark:bg-amber-900/50 rounded-[0.25rem]">content="..."</code> অংশের value paste করুন, পুরো meta tag নয়। সাইটের <code>{`<head>`}</code>-এ automatic inject হবে।
       </div>
 
       <div className="grid grid-cols-1 gap-3">

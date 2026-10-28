@@ -57,12 +57,12 @@ const AdminKeywords = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           <input value={newKw.keyword} onChange={e => setNewKw(p => ({ ...p, keyword: e.target.value }))}
             placeholder="e.g. Windows 11 key Bangladesh" onKeyDown={e => e.key === 'Enter' && add()}
-            className="md:col-span-2 bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+            className="md:col-span-2 bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
           <input value={newKw.volume} onChange={e => setNewKw(p => ({ ...p, volume: e.target.value }))}
             placeholder="Search volume (e.g. 1200/mo)"
-            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
           <select value={newKw.difficulty} onChange={e => setNewKw(p => ({ ...p, difficulty: e.target.value as any }))}
-            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary">
+            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary">
             <option value="low">Low Difficulty</option>
             <option value="medium">Medium Difficulty</option>
             <option value="high">High Difficulty</option>
@@ -74,7 +74,7 @@ const AdminKeywords = () => {
         <div className="mt-3">
           <input value={newKw.target_page} onChange={e => setNewKw(p => ({ ...p, target_page: e.target.value }))}
             placeholder="Target page URL (e.g. /shop or /product/windows-11-pro)"
-            className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+            className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
         </div>
       </div>
 

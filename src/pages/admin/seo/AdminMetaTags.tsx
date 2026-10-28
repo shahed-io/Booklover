@@ -71,7 +71,7 @@ const AdminMetaTags = () => {
                   value={settings[f.key] || ''}
                   onChange={e => setSettings(p => ({ ...p, [f.key]: e.target.value }))}
                   placeholder={f.placeholder}
-                  className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                  className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors"
                 />
               </div>
             ))}

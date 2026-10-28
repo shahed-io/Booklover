@@ -5,7 +5,7 @@
  * preview modal, then snapshot it with html2canvas and embed into a single
  * jsPDF page. This preserves:
  *  - Bengali fonts and emojis exactly as displayed
- *  - Logo, gradients, rounded cards, brand colors
+ *  - Logo, gradients, rounded-[0.25rem] cards, brand colors
  *  - Pixel-perfect parity between on-screen preview and downloaded PDF
  *
  * Two ways to use:

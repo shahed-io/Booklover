@@ -129,14 +129,14 @@ const AdminPageSeo = () => {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{page.label}</span>
                     {hasData && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-500/15 text-green-500">Configured</span>
+                      <span className="px-1.5 py-0.5 rounded-[0.25rem] text-[10px] font-medium bg-green-500/15 text-green-500">Configured</span>
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground font-mono">{SITE_URL}{page.path}</span>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   {data.noindex && (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/15 text-red-400">NOINDEX</span>
+                    <span className="px-2 py-0.5 rounded-[0.25rem] text-[10px] font-bold bg-red-500/15 text-red-400">NOINDEX</span>
                   )}
                   <a
                     href={page.path} target="_blank" rel="noopener noreferrer"
@@ -166,7 +166,7 @@ const AdminPageSeo = () => {
                         value={data.title}
                         onChange={e => set(page.key, 'title', e.target.value)}
                         placeholder={`${page.label} | Booklover`}
-                        className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors"
                       />
                     </div>
 
@@ -177,7 +177,7 @@ const AdminPageSeo = () => {
                         value={data.og_title}
                         onChange={e => set(page.key, 'og_title', e.target.value)}
                         placeholder="Leave blank to use SEO title"
-                        className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors"
                       />
                     </div>
                   </div>
@@ -195,7 +195,7 @@ const AdminPageSeo = () => {
                       onChange={e => set(page.key, 'description', e.target.value)}
                       placeholder="Brief description shown in Google search results..."
                       rows={2}
-                      className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none"
                     />
                   </div>
 
@@ -207,7 +207,7 @@ const AdminPageSeo = () => {
                       onChange={e => set(page.key, 'og_description', e.target.value)}
                       placeholder="Leave blank to use meta description"
                       rows={2}
-                      className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none"
                     />
                   </div>
 
@@ -219,7 +219,7 @@ const AdminPageSeo = () => {
                         value={data.canonical}
                         onChange={e => set(page.key, 'canonical', e.target.value)}
                         placeholder={`${SITE_URL}${page.path}`}
-                        className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground font-mono focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary transition-colors"
                       />
                     </div>
 
@@ -230,7 +230,7 @@ const AdminPageSeo = () => {
                           onClick={() => set(page.key, 'noindex', !data.noindex)}
                           className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 ${data.noindex ? 'bg-red-500' : 'bg-muted'}`}
                         >
-                          <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${data.noindex ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                          <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${data.noindex ? 'translate-x-5' : 'translate-x-0.5'}`} />
                         </div>
                         <div>
                           <div className="text-sm font-medium text-foreground">No Index</div>

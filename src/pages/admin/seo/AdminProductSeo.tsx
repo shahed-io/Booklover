@@ -199,7 +199,7 @@ const AdminProductSeo = () => {
             <div className="flex items-center gap-2 mb-1">
               <Wand2 size={16} className="text-primary" />
               <h3 className="font-semibold text-sm text-foreground">AI বাল্ক SEO জেনারেটর</h3>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/15 text-primary font-medium">Bangladesh Optimized</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-[0.25rem] bg-primary/15 text-primary font-medium">Bangladesh Optimized</span>
             </div>
             <p className="text-xs text-muted-foreground">
               AI স্বয়ংক্রিয়ভাবে প্রতিটি প্রোডাক্টের জন্য বাংলাদেশ-কেন্দ্রিক SEO Title ও Meta Description তৈরি করবে।
@@ -272,7 +272,7 @@ const AdminProductSeo = () => {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="প্রোডাক্ট নাম বা slug দিয়ে খুঁজুন…"
-          className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+          className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors"
         />
       </div>
 
@@ -300,12 +300,12 @@ const AdminProductSeo = () => {
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-semibold text-sm text-foreground truncate">{p.name}</h3>
                       {!hasSeo && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 font-medium flex items-center gap-0.5">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-[0.25rem] bg-red-500/15 text-red-400 font-medium flex items-center gap-0.5">
                           <AlertCircle size={9} /> Missing SEO
                         </span>
                       )}
-                      {isEdited && <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/15 text-primary font-medium">Edited</span>}
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${p.status === 'active' ? 'bg-green-500/15 text-green-400' : 'bg-muted text-muted-foreground'}`}>{p.status}</span>
+                      {isEdited && <span className="text-[10px] px-1.5 py-0.5 rounded-[0.25rem] bg-primary/15 text-primary font-medium">Edited</span>}
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-[0.25rem] font-medium ${p.status === 'active' ? 'bg-green-500/15 text-green-400' : 'bg-muted text-muted-foreground'}`}>{p.status}</span>
                     </div>
                     <div className="flex items-center gap-3 mt-0.5">
                       <a href={`/product/${p.slug}`} target="_blank" rel="noopener noreferrer"
@@ -348,7 +348,7 @@ const AdminProductSeo = () => {
                       value={titleVal}
                       onChange={e => set(p.id, 'seo_title', e.target.value)}
                       placeholder={`${p.name} কিনুন | সেরা দাম | Booklover`}
-                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors"
                     />
                     {titleLen > 0 && titleLen <= 60 && (
                       <p className="text-[10px] text-muted-foreground mt-1 truncate">
@@ -368,7 +368,7 @@ const AdminProductSeo = () => {
                       onChange={e => set(p.id, 'seo_description', e.target.value)}
                       placeholder="বাংলা-ইংরেজি মিক্স, BDT মূল্য, 'বাংলাদেশ' ও 'genuine' কীওয়ার্ড সহ…"
                       rows={2}
-                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none"
                     />
                   </div>
                 </div>

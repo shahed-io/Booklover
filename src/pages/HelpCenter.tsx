@@ -34,7 +34,7 @@ const renderMarkdown = (content: string): string => {
     })
     .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-black text-foreground mt-6 mb-4">$1</h1>')
     .replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground font-semibold">$1</strong>')
-    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded text-xs font-mono" style="background:var(--neon-violet-dim);color:hsl(var(--primary))">$1</code>')
+    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-[0.25rem] text-xs font-mono" style="background:var(--neon-violet-dim);color:hsl(var(--primary))">$1</code>')
     .replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre class="glass-card rounded-xl p-4 overflow-x-auto my-4 text-sm font-mono text-foreground/80 border border-border"><code>$1</code></pre>')
     .replace(/^> (.+)$/gm, '<blockquote class="border-l-4 pl-4 my-3 italic text-muted-foreground" style="border-color:hsl(var(--primary))">$1</blockquote>')
     .replace(/^\- (.+)$/gm, '<li class="flex items-start gap-2 text-muted-foreground text-sm mb-1"><span class="text-primary mt-1">▸</span><span>$1</span></li>')
@@ -276,7 +276,7 @@ const HelpCenter = () => {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="যা জানতে চান লিখুন..."
-              className="w-full bg-card border border-border rounded-2xl pl-11 pr-5 py-3.5 text-sm focus:outline-none focus:border-primary transition-colors"
+              className="w-full bg-card border border-border rounded-2xl pl-11 pr-5 py-3.5 text-sm focus:outline-hidden focus:border-primary transition-colors"
             />
           </div>
         </div>

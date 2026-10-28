@@ -188,7 +188,7 @@ const AdminTopicalAuthority = () => {
                   const exists = existingTitles.has(t.title.toLowerCase().trim());
                   return (
                     <div key={i} className={`flex items-start gap-2 p-2 rounded-md text-xs ${t.pillar ? 'bg-primary/5 border border-primary/20' : 'hover:bg-muted/50'}`}>
-                      {t.pillar && <span className="px-1.5 py-0.5 rounded bg-primary text-primary-foreground text-[10px] font-bold shrink-0">PILLAR</span>}
+                      {t.pillar && <span className="px-1.5 py-0.5 rounded-[0.25rem] bg-primary text-primary-foreground text-[10px] font-bold shrink-0">PILLAR</span>}
                       <span className="flex-1">{t.title}</span>
                       {exists ? (
                         <CheckCircle2 size={14} className="text-green-500 shrink-0" />
@@ -243,7 +243,7 @@ const AdminTopicalAuthority = () => {
               <div className="flex-1 min-w-0">
                 <div className="font-medium truncate">{q.title}</div>
                 <div className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
-                  <span className="px-1.5 py-0.5 rounded bg-muted">{q.niche}</span>
+                  <span className="px-1.5 py-0.5 rounded-[0.25rem] bg-muted">{q.niche}</span>
                   <span>{q.intent}</span>
                   {q.message && <span className="truncate">• {q.message}</span>}
                   {q.blog_slug && (

@@ -178,7 +178,7 @@ const AdminFacebookPixel = () => {
       onClick={(e) => { e.stopPropagation(); onChange(!checked); }}
       className={`relative w-11 h-6 rounded-full transition-colors duration-200 flex-shrink-0 ${checked ? 'bg-primary' : 'bg-muted-foreground/30'}`}
     >
-      <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
+      <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
     </button>
   );
 
@@ -302,7 +302,7 @@ const AdminFacebookPixel = () => {
                         value={pixel.name}
                         onChange={e => updatePixel(pixel.id, { name: e.target.value })}
                         placeholder="যেমন: Main Store Pixel"
-                        className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
                       />
                     </div>
                     <div className="flex gap-1.5 pt-5">
@@ -324,7 +324,7 @@ const AdminFacebookPixel = () => {
                       value={pixel.pixel_id}
                       onChange={e => updatePixel(pixel.id, { pixel_id: e.target.value })}
                       placeholder="যেমন: 1234567890123456"
-                      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors font-mono"
+                      className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors font-mono"
                     />
                     <p className="text-[11px] text-muted-foreground mt-1.5 flex items-center gap-2">
                       <Info size={11} />
@@ -352,7 +352,7 @@ const AdminFacebookPixel = () => {
                               value={pixel.capi_token}
                               onChange={e => updatePixel(pixel.id, { capi_token: e.target.value })}
                               placeholder="EAAxxxxxxxxxxxx..."
-                              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors font-mono"
+                              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors font-mono"
                             />
                             <button
                               type="button"
@@ -372,7 +372,7 @@ const AdminFacebookPixel = () => {
                             value={pixel.capi_test_event_code}
                             onChange={e => updatePixel(pixel.id, { capi_test_event_code: e.target.value })}
                             placeholder="যেমন: TEST12345"
-                            className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors font-mono"
+                            className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors font-mono"
                           />
                         </div>
 

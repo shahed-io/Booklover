@@ -997,7 +997,7 @@ const UserDashboard = () => {
     </div>
   );
 
-  const inputCls = "w-full rounded-xl pl-10 pr-4 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80 placeholder:text-muted-foreground";
+  const inputCls = "w-full rounded-xl pl-10 pr-4 py-3 text-sm outline-hidden transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80 placeholder:text-muted-foreground";
   const labelCls = "block text-xs font-semibold uppercase tracking-wide mb-2 text-muted-foreground";
   const gradBtn = "text-white font-semibold rounded-xl transition-all hover:opacity-90 active:scale-[0.98]";
   const gradBtnStyle = { background: 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' };
@@ -1220,7 +1220,7 @@ const UserDashboard = () => {
                     </span>
                     <span className="relative flex-1 text-left truncate">{label}</span>
                     {badge !== undefined && badge > 0 && (
-                      <span className="relative text-[10px] font-black px-2 min-w-[20px] h-[20px] rounded-full flex items-center justify-center text-white shadow-sm"
+                      <span className="relative text-[10px] font-black px-2 min-w-[20px] h-[20px] rounded-full flex items-center justify-center text-white shadow-xs"
                         style={{ background: id === 'notifications' ? 'linear-gradient(135deg, hsl(0,84%,60%), hsl(355,80%,55%))' : 'linear-gradient(135deg, hsl(243,75%,59%), hsl(263,70%,58%))' }}>{badge}</span>
                     )}
                   </button>
@@ -1658,7 +1658,7 @@ const UserDashboard = () => {
                   ) : (
                     <div className="grid sm:grid-cols-2 gap-3">
                       {wishlistItems.map(item => (
-                        <div key={item.product_id} className="flex items-center gap-3 p-3 rounded-2xl transition-all hover:shadow-sm"
+                        <div key={item.product_id} className="flex items-center gap-3 p-3 rounded-2xl transition-all hover:shadow-xs"
                           style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
                           <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0" style={{ background: 'hsl(240,20%,96%)' }}>
                             {item.product_image ? <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Heart size={16} className="text-muted-foreground" /></div>}
@@ -1702,11 +1702,11 @@ const UserDashboard = () => {
                         <div key={field}>
                           <label className={labelCls}>{label}</label>
                           <input type="text" value={(addressForm as any)[field]} onChange={e => setAddressForm(f => ({ ...f, [field]: e.target.value }))} placeholder={placeholder}
-                            className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80" />
+                            className="w-full rounded-xl px-4 py-3 text-sm outline-hidden transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80" />
                         </div>
                       ))}
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={addressForm.is_default} onChange={e => setAddressForm(f => ({ ...f, is_default: e.target.checked }))} className="rounded" />
+                        <input type="checkbox" checked={addressForm.is_default} onChange={e => setAddressForm(f => ({ ...f, is_default: e.target.checked }))} className="rounded-[0.25rem]" />
                         <span className="text-sm text-foreground">{t(selectedLang, 'set_default')}</span>
                       </label>
                       <div className="flex gap-3">
@@ -1728,7 +1728,7 @@ const UserDashboard = () => {
                   ) : (
                     <div className="space-y-3">
                       {addresses.map(addr => (
-                        <div key={addr.id} className="p-4 rounded-2xl transition-all hover:shadow-sm"
+                        <div key={addr.id} className="p-4 rounded-2xl transition-all hover:shadow-xs"
                           style={{ background: 'rgba(255,255,255,0.65)', border: '1px solid hsla(258,78%,75%,0.2)', backdropFilter: 'blur(8px)' }}>
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
@@ -1910,7 +1910,7 @@ const UserDashboard = () => {
                                   max={pointsBalance}
                                   value={redeemPoints}
                                   onChange={e => setRedeemPoints(e.target.value)}
-                                  className="w-full rounded-xl px-4 py-2.5 text-sm border bg-white/60 text-foreground border-border focus:border-primary outline-none"
+                                  className="w-full rounded-xl px-4 py-2.5 text-sm border bg-white/60 text-foreground border-border focus:border-primary outline-hidden"
                                   placeholder={t(selectedLang, 'points_min_placeholder')}
                                 />
                                 {redeemPoints && parseInt(redeemPoints) >= 20 && parseInt(redeemPoints) % 2 === 0 && parseInt(redeemPoints) <= pointsBalance && (
@@ -2159,7 +2159,7 @@ const UserDashboard = () => {
                       <div className="relative">
                         <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                         <input type={f.show ? 'text' : 'password'} value={f.value} onChange={e => f.set(e.target.value)}
-                          className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-none transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80"
+                          className="w-full rounded-xl pl-10 pr-11 py-3 text-sm outline-hidden transition-all border bg-white/60 text-foreground border-border focus:border-primary focus:bg-white/80"
                           placeholder={f.placeholder} />
                         <button type="button" onClick={f.toggle} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
                           {f.show ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -2501,7 +2501,7 @@ const UserDashboard = () => {
                           <div>
                             <label className={labelCls}>Or enter custom amount</label>
                             <input type="number" min="10" value={topupAmount} onChange={e => setTopupAmount(e.target.value)} placeholder="Min ৳10"
-                              className="w-full rounded-xl px-4 py-3 text-sm outline-none border border-border bg-white/60 text-foreground focus:border-primary focus:bg-white/80" />
+                              className="w-full rounded-xl px-4 py-3 text-sm outline-hidden border border-border bg-white/60 text-foreground focus:border-primary focus:bg-white/80" />
                           </div>
                           <button onClick={() => { if (!topupAmount || parseFloat(topupAmount) < 10) { toast.error('Minimum ৳10'); return; } setTopupStep(1); }}
                             className={`w-full py-3 text-sm flex items-center justify-center gap-2 ${gradBtn}`} style={gradBtnStyle}>
@@ -2585,7 +2585,7 @@ const UserDashboard = () => {
                                     onChange={e => setTopupTxId(e.target.value)}
                                     placeholder="যেমন: 8F3K2P9X"
                                     maxLength={50}
-                                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all font-mono text-sm"
+                                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-all font-mono text-sm"
                                   />
                                 </div>
                                 {/* Optional screenshot */}

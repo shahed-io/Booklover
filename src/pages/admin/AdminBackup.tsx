@@ -877,7 +877,7 @@ Restore:
                       <select
                         value={importPreview.table}
                         onChange={e => setImportPreview(p => p ? { ...p, table: e.target.value } : null)}
-                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors">
+                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors">
                         <option value="">— টেবিল বাছুন —</option>
                         {TABLES.map(t => <option key={t.table} value={t.table}>{t.label} ({t.table})</option>)}
                       </select>
@@ -1042,7 +1042,7 @@ Restore:
               </h4>
               <div className="space-y-1 max-h-64 overflow-y-auto font-mono text-[11px]">
                 {restoreLog.map((line, i) => (
-                  <div key={i} className={`px-2 py-1 rounded ${line.includes('❌') ? 'bg-destructive/10 text-destructive' : line.includes('✅') ? 'bg-emerald-500/10 text-emerald-400' : 'text-muted-foreground'}`}>
+                  <div key={i} className={`px-2 py-1 rounded-[0.25rem] ${line.includes('❌') ? 'bg-destructive/10 text-destructive' : line.includes('✅') ? 'bg-emerald-500/10 text-emerald-400' : 'text-muted-foreground'}`}>
                     {line}
                   </div>
                 ))}

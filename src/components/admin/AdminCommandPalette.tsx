@@ -278,7 +278,7 @@ const AdminCommandPalette = ({ open, onClose }: Props) => {
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Search pages, orders, products, customers…"
-            className="flex-1 bg-transparent border-0 outline-none text-base text-foreground placeholder:text-muted-foreground/70 font-medium"
+            className="flex-1 bg-transparent border-0 outline-hidden text-base text-foreground placeholder:text-muted-foreground/70 font-medium"
           />
           {loading && (
             <div className="flex items-center gap-1.5 text-[10px] font-semibold text-violet-600 bg-violet-100 dark:bg-violet-900/40 dark:text-violet-300 px-2 py-1 rounded-md">
@@ -352,7 +352,7 @@ const AdminCommandPalette = ({ open, onClose }: Props) => {
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold truncate">{data.label}</span>
                       {'badge' in data && data.badge && (
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-[0.25rem] ${
                           isActive ? 'bg-white/25 text-white' : 'bg-red-500/15 text-red-600 dark:text-red-400'
                         }`}>
                           {data.badge}
@@ -378,17 +378,17 @@ const AdminCommandPalette = ({ open, onClose }: Props) => {
         <div className="border-t border-border/60 px-4 py-2.5 flex items-center justify-between bg-muted/30 text-[11px] text-muted-foreground">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 rounded border border-border bg-background font-mono text-[10px] font-semibold">↑↓</kbd>
+              <kbd className="px-1.5 py-0.5 rounded-[0.25rem] border border-border bg-background font-mono text-[10px] font-semibold">↑↓</kbd>
               navigate
             </span>
             <span className="hidden sm:flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 rounded border border-border bg-background font-mono text-[10px] font-semibold flex items-center gap-0.5">
+              <kbd className="px-1.5 py-0.5 rounded-[0.25rem] border border-border bg-background font-mono text-[10px] font-semibold flex items-center gap-0.5">
                 <CornerDownLeft size={9} />
               </kbd>
               select
             </span>
             <span className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 rounded border border-border bg-background font-mono text-[10px] font-semibold">esc</kbd>
+              <kbd className="px-1.5 py-0.5 rounded-[0.25rem] border border-border bg-background font-mono text-[10px] font-semibold">esc</kbd>
               close
             </span>
           </div>

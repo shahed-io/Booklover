@@ -112,7 +112,7 @@ const AdminSitemap = () => {
             </a>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground mt-3">Submit URL: <code className="bg-muted/40 px-1.5 py-0.5 rounded">{SITE_URL}/sitemap.xml</code></p>
+        <p className="text-xs text-muted-foreground mt-3">Submit URL: <code className="bg-muted/40 px-1.5 py-0.5 rounded-[0.25rem]">{SITE_URL}/sitemap.xml</code></p>
       </div>
     </div>
   );

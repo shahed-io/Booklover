@@ -151,7 +151,7 @@ const AdminInventoryAlerts = () => {
         <div className="relative flex-1 min-w-[200px]">
           <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="প্রোডাক্ট সার্চ..."
-            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
         </div>
         <div className="flex gap-1.5">
           {(['all', 'critical', 'low', 'ok'] as const).map(f => (
@@ -232,7 +232,7 @@ const AdminInventoryAlerts = () => {
                 <p className="text-xs text-muted-foreground/70 mb-3">এই সংখ্যার নিচে স্টক হলে "স্টক কম" হিসেবে দেখাবে</p>
                 <input type="number" min={1} max={100} value={tempThreshold}
                   onChange={e => setTempThreshold(parseInt(e.target.value) || 1)}
-                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
               </div>
               <div className="flex gap-3 pt-2">
                 <button onClick={() => setShowSettings(false)} className="flex-1 glass-card py-2.5 rounded-xl text-sm text-muted-foreground">বাতিল</button>

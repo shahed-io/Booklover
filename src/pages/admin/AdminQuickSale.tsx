@@ -26,14 +26,14 @@ const PriceDiscountFields = forwardRef<HTMLDivElement, PriceDiscountFieldsProps>
       <input type="number" min={0} value={entry.original_price || ''}
         onChange={e => onOriginalChange(Number(e.target.value))}
         placeholder="0"
-        className="w-full bg-background border border-border rounded-lg px-2.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+        className="w-full bg-background border border-border rounded-lg px-2.5 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
     </div>
     <div>
       <label className="text-[10px] font-semibold text-muted-foreground mb-1 block">ডিসকাউন্ট (৳)</label>
       <input type="number" min={0} value={entry.discount_amount || ''}
         onChange={e => onDiscountAmountChange(Number(e.target.value))}
         placeholder="0"
-        className="w-full bg-background border border-border rounded-lg px-2.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+        className="w-full bg-background border border-border rounded-lg px-2.5 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
     </div>
     <div>
       <label className="text-[10px] font-semibold text-muted-foreground mb-1 block">ডিসকাউন্ট (%)</label>
@@ -41,7 +41,7 @@ const PriceDiscountFields = forwardRef<HTMLDivElement, PriceDiscountFieldsProps>
         <input type="number" min={0} max={100} value={entry.discount_percent || ''}
           onChange={e => onDiscountPercentChange(Number(e.target.value))}
           placeholder="0"
-          className="w-full bg-background border border-border rounded-lg px-2.5 pr-7 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+          className="w-full bg-background border border-border rounded-lg px-2.5 pr-7 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
         <Percent size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
       </div>
     </div>
@@ -114,7 +114,7 @@ const KEY_TYPES: Record<string, string> = {
   custom: '📝 Custom',
 };
 
-const iconInputClass = 'w-full bg-background border border-border rounded-lg pl-16 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all';
+const iconInputClass = 'w-full bg-background border border-border rounded-lg pl-16 pr-4 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all';
 const iconSlotClass = 'pointer-events-none absolute inset-y-0 left-4 flex w-12 items-center justify-center text-muted-foreground transition-colors group-focus-within:text-primary';
 
 const AdminQuickSale = () => {
@@ -429,7 +429,7 @@ const AdminQuickSale = () => {
           <div className="w-5 h-5 rounded-md bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-black">1</div>
           <h2 className="text-sm font-bold text-foreground">কাস্টমার তথ্য</h2>
         </div>
-        <div className="bg-card rounded-xl border border-border p-4 shadow-sm">
+        <div className="bg-card rounded-xl border border-border p-4 shadow-xs">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="text-[11px] font-semibold text-muted-foreground mb-1 block">নাম <span className="text-destructive">*</span></label>
@@ -470,14 +470,14 @@ const AdminQuickSale = () => {
             <h2 className="text-sm font-bold text-foreground">প্রোডাক্ট ও লাইসেন্স</h2>
           </div>
           <button onClick={addEntry}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-primary-foreground bg-primary hover:bg-primary/90 transition-all shadow-sm">
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-primary-foreground bg-primary hover:bg-primary/90 transition-all shadow-xs">
             <Plus size={12} /> আইটেম যোগ
           </button>
         </div>
 
         <div className="space-y-3">
           {entries.map((entry, idx) => (
-            <div key={idx} className="bg-card rounded-xl border border-border shadow-sm">
+            <div key={idx} className="bg-card rounded-xl border border-border shadow-xs">
               {/* Item header */}
               <div className="flex items-center justify-between px-4 py-2.5 bg-muted/30 border-b border-border">
                 <div className="flex items-center gap-2">
@@ -546,14 +546,14 @@ const AdminQuickSale = () => {
                         <div className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm flex items-center justify-between">
                           <div className="flex items-center gap-2 min-w-0">
                             {entry.product.image_url ? (
-                              <img src={entry.product.image_url} alt="" className="w-6 h-6 rounded object-cover shrink-0 border border-border" />
+                              <img src={entry.product.image_url} alt="" className="w-6 h-6 rounded-[0.25rem] object-cover shrink-0 border border-border" />
                             ) : (
-                              <div className="w-6 h-6 rounded bg-muted/50 flex items-center justify-center shrink-0"><Package size={10} className="text-muted-foreground" /></div>
+                              <div className="w-6 h-6 rounded-[0.25rem] bg-muted/50 flex items-center justify-center shrink-0"><Package size={10} className="text-muted-foreground" /></div>
                             )}
                             <span className="font-medium truncate text-foreground">{entry.product.name}</span>
                           </div>
                           <button onClick={() => updateEntry(idx, { product: null, custom_price: 0, license: null, manual_key: '', manual_extra: '' })}
-                            className="p-1 rounded text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all shrink-0 ml-2">
+                            className="p-1 rounded-[0.25rem] text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all shrink-0 ml-2">
                             <X size={14} />
                           </button>
                         </div>
@@ -644,13 +644,13 @@ const AdminQuickSale = () => {
                         <label className="text-[10px] text-muted-foreground mb-0.5 block">Key / Email / ID</label>
                         <input value={entry.manual_key} onChange={e => updateEntry(idx, { manual_key: e.target.value })}
                           placeholder="License key বা Email"
-                          className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono" />
+                          className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono" />
                       </div>
                       <div>
                         <label className="text-[10px] text-muted-foreground mb-0.5 block">Password / Extra Info</label>
                         <input value={entry.manual_extra} onChange={e => updateEntry(idx, { manual_extra: e.target.value })}
                           placeholder="Password বা অতিরিক্ত তথ্য"
-                          className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono" />
+                          className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono" />
                       </div>
                     </div>
                     {entry.license && (
@@ -683,7 +683,7 @@ const AdminQuickSale = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="bg-card rounded-xl border border-border p-4 shadow-sm space-y-3">
+          <div className="bg-card rounded-xl border border-border p-4 shadow-xs space-y-3">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <CreditCard size={14} className="text-primary" />
               <span className="text-xs font-bold text-foreground">পেমেন্ট</span>
@@ -691,7 +691,7 @@ const AdminQuickSale = () => {
             <div>
               <label className="text-[11px] font-semibold text-muted-foreground mb-1 block">মেথড</label>
               <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)}
-                className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
                 <option value="bkash">বিকাশ</option>
                 <option value="nagad">নগদ</option>
                 <option value="rocket">রকেট</option>
@@ -705,7 +705,7 @@ const AdminQuickSale = () => {
             <div>
               <label className="text-[11px] font-semibold text-muted-foreground mb-1 block">স্ট্যাটাস</label>
               <select value={paymentStatus} onChange={e => setPaymentStatus(e.target.value)}
-                className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
                 <option value="paid">পেইড ✅</option>
                 <option value="pending">পেন্ডিং ⏳</option>
                 <option value="partial">আংশিক</option>
@@ -715,11 +715,11 @@ const AdminQuickSale = () => {
               <label className="text-[11px] font-semibold text-muted-foreground mb-1 block">ট্রানজেকশন আইডি</label>
               <input value={transactionId} onChange={e => setTransactionId(e.target.value)}
                 placeholder="TrxID (optional)"
-                className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
             </div>
           </div>
 
-          <div className="bg-card rounded-xl border border-border p-4 shadow-sm space-y-3">
+          <div className="bg-card rounded-xl border border-border p-4 shadow-xs space-y-3">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <Truck size={14} className="text-primary" />
               <span className="text-xs font-bold text-foreground">ডেলিভারি মেথড</span>
@@ -734,7 +734,7 @@ const AdminQuickSale = () => {
                   onClick={() => setDeliveryMethod(opt.value)}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border text-left transition-all ${
                     deliveryMethod === opt.value
-                      ? 'border-primary bg-primary/5 shadow-sm'
+                      ? 'border-primary bg-primary/5 shadow-xs'
                       : 'border-border hover:border-primary/30 hover:bg-muted/20'
                   }`}>
                   <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 ${
@@ -755,14 +755,14 @@ const AdminQuickSale = () => {
               <textarea value={notes} onChange={e => setNotes(e.target.value)}
                 placeholder="অতিরিক্ত নোট (optional)"
                 rows={2}
-                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none" />
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none" />
             </div>
           </div>
         </div>
       </section>
 
       {/* SUBMIT */}
-      <div className="bg-card rounded-xl border-2 border-primary/20 p-4 shadow-sm">
+      <div className="bg-card rounded-xl border-2 border-primary/20 p-4 shadow-xs">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -819,7 +819,7 @@ const AdminQuickSale = () => {
                         </span>
                         <button
                           onClick={(e) => { e.stopPropagation(); setShowLicenseValues(prev => ({ ...prev, [lic.id]: !prev[lic.id] })); }}
-                          className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors">
+                          className="p-1 rounded-[0.25rem] text-muted-foreground hover:text-foreground transition-colors">
                           {showLicenseValues[lic.id] ? <EyeOff size={12} /> : <Eye size={12} />}
                         </button>
                       </div>

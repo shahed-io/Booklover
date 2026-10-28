@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 const labelCls = "block text-xs font-semibold text-muted-foreground mb-1 uppercase tracking-wide";
 
 const EMPTY_POST = {
@@ -268,7 +268,7 @@ const AdminBlog = () => {
             <div className="relative flex-1">
               <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="পোস্ট খুঁজুন..."
-                className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2 text-sm focus:outline-none focus:border-primary transition-colors text-foreground" />
+                className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2 text-sm focus:outline-hidden focus:border-primary transition-colors text-foreground" />
             </div>
             {(['all', 'published', 'draft'] as const).map(s => (
               <button key={s} onClick={() => setStatusFilter(s)}
@@ -503,7 +503,7 @@ const AdminBlog = () => {
             <label className="flex items-center gap-3 cursor-pointer">
               <div onClick={() => setAutoPublish(p => !p)}
                 className={`w-11 h-6 rounded-full transition-colors relative ${autoPublish ? 'bg-primary' : 'bg-muted'}`}>
-                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${autoPublish ? 'translate-x-6' : 'translate-x-1'}`} />
+                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${autoPublish ? 'translate-x-6' : 'translate-x-1'}`} />
               </div>
               <span className="text-sm text-foreground">সাথে সাথে Publish করুন <span className="text-muted-foreground">(off রাখলে Draft হবে)</span></span>
             </label>
@@ -570,7 +570,7 @@ const AdminBlog = () => {
                   type="checkbox"
                   checked={newProducts.length > 0 && selectedProducts.length === newProducts.length}
                   onChange={(e) => setSelectedProducts(e.target.checked ? newProducts.map(p => p.id) : [])}
-                  className="w-4 h-4 rounded border-border accent-primary cursor-pointer"
+                  className="w-4 h-4 rounded-[0.25rem] border-border accent-primary cursor-pointer"
                   disabled={newProducts.length === 0}
                 />
                 <h3 className="font-bold text-foreground text-sm">নতুন প্রোডাক্ট — সিলেক্ট করে ব্লগ তৈরি করুন</h3>
@@ -595,7 +595,7 @@ const AdminBlog = () => {
                       onChange={(e) => setSelectedProducts(prev =>
                         e.target.checked ? [...prev, prod.id] : prev.filter(id => id !== prod.id)
                       )}
-                      className="w-4 h-4 rounded border-border accent-primary cursor-pointer flex-shrink-0"
+                      className="w-4 h-4 rounded-[0.25rem] border-border accent-primary cursor-pointer flex-shrink-0"
                     />
                     {prod.image_url ? (
                       <img src={prod.image_url} alt={prod.name} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
@@ -630,7 +630,7 @@ const AdminBlog = () => {
               <h2 className="font-bold text-foreground">{editPost.id ? 'পোস্ট সম্পাদনা' : 'নতুন পোস্ট'}</h2>
               <div className="flex items-center gap-2">
                 <select value={editPost.status} onChange={e => setEditPost((p: any) => ({ ...p, status: e.target.value }))}
-                  className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary transition-colors">
+                  className="bg-muted/30 border border-border rounded-xl px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary transition-colors">
                   <option value="draft">ড্রাফট</option>
                   <option value="published">প্রকাশ করুন</option>
                 </select>

@@ -306,7 +306,7 @@ const AdminDashboard = () => {
       </div>
       <p className="relative z-[1] text-muted-foreground text-[11px] uppercase tracking-[1.2px] font-semibold mb-1">{label}</p>
       <p className="relative z-[1] text-2xl font-bold text-foreground leading-tight" style={{ fontFamily: 'Sora, sans-serif' }}>
-        {loading ? <span className="inline-block w-20 h-7 bg-muted/40 rounded animate-pulse" /> : `${prefix}${typeof value === 'number' ? value.toLocaleString() : value}`}
+        {loading ? <span className="inline-block w-20 h-7 bg-muted/40 rounded-[0.25rem] animate-pulse" /> : `${prefix}${typeof value === 'number' ? value.toLocaleString() : value}`}
       </p>
       {change && <p className="relative z-[1] text-[11px] text-muted-foreground mt-1">{change}</p>}
     </div>
@@ -539,7 +539,7 @@ const AdminDashboard = () => {
                     {/* rank ribbon */}
                     <div className="flex items-center justify-between mb-2 gap-2">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${isTop ? 'bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-sm' : 'bg-muted/60 text-muted-foreground'}`}>
+                        <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${isTop ? 'bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-xs' : 'bg-muted/60 text-muted-foreground'}`}>
                           {isTop ? <Crown size={11} /> : `#${i + 1}`}
                         </span>
                         <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: pm.color, boxShadow: `0 0 8px ${pm.color}80` }} />
@@ -548,7 +548,7 @@ const AdminDashboard = () => {
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <span className="text-xs font-bold text-foreground tabular-nums">{pm.value}</span>
-                        <span className="text-[10px] font-semibold text-muted-foreground tabular-nums bg-muted/40 px-1.5 py-0.5 rounded">{pm.pct}%</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground tabular-nums bg-muted/40 px-1.5 py-0.5 rounded-[0.25rem]">{pm.pct}%</span>
                       </div>
                     </div>
                     {/* gradient progress bar */}

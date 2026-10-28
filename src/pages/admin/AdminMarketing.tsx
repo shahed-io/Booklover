@@ -184,7 +184,7 @@ const AdminMarketing = () => {
                 value={emailForm.subject}
                 onChange={e => setEmailForm({ ...emailForm, subject: e.target.value })}
                 placeholder="যেমন: 🎉 বিশেষ ঈদ অফার — ৫০% ছাড় পান!"
-                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
               />
             </div>
 
@@ -196,7 +196,7 @@ const AdminMarketing = () => {
                 onChange={e => setEmailForm({ ...emailForm, body: e.target.value })}
                 rows={5}
                 placeholder="প্রিয় গ্রাহক,&#10;&#10;আমাদের বিশেষ অফারে স্বাগতম! এই সপ্তাহে সব প্রোডাক্টে ৫০% ছাড় পাচ্ছেন..."
-                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+                className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors resize-none"
               />
             </div>
 
@@ -208,7 +208,7 @@ const AdminMarketing = () => {
                   value={emailForm.ctaText}
                   onChange={e => setEmailForm({ ...emailForm, ctaText: e.target.value })}
                   placeholder="যেমন: এখনই কিনুন"
-                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
                 />
               </div>
               <div>
@@ -217,7 +217,7 @@ const AdminMarketing = () => {
                   value={emailForm.ctaUrl}
                   onChange={e => setEmailForm({ ...emailForm, ctaUrl: e.target.value })}
                   placeholder="https://booklover.com.bd/shop"
-                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
                 />
               </div>
             </div>
@@ -261,14 +261,14 @@ const AdminMarketing = () => {
                   <label className="text-xs text-muted-foreground mb-1 block">Key (identifier)</label>
                   <input value={form.key} onChange={e => setForm({ ...form, key: e.target.value })} required
                     placeholder="যেমন: announcement_text"
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
                 </div>
               )}
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">Value / Content *</label>
                 <textarea value={form.value} onChange={e => setForm({ ...form, value: e.target.value })} required rows={4}
                   placeholder="মার্কেটিং কন্টেন্ট লিখুন..."
-                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors resize-none" />
+                  className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors resize-none" />
               </div>
               <div className="flex gap-3 pt-1">
                 <button type="button" onClick={() => setShowForm(false)} className="flex-1 glass-card py-2.5 rounded-xl text-sm text-muted-foreground">বাতিল</button>

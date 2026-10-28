@@ -447,7 +447,7 @@ const AdminLayout = () => {
                                 </span>
                               )}
                               {item.badge === 'new' && (
-                                <span className="text-[9px] font-bold text-white bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 px-1.5 py-0.5 rounded-md shadow-sm">NEW</span>
+                                <span className="text-[9px] font-bold text-white bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 px-1.5 py-0.5 rounded-md shadow-xs">NEW</span>
                               )}
                             </>
                           )}

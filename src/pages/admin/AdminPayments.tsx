@@ -668,7 +668,7 @@ export default function AdminPayments() {
             onClick={() => setActiveTab(key)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === key
-                ? 'bg-background text-foreground shadow-sm border border-border/50'
+                ? 'bg-background text-foreground shadow-xs border border-border/50'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >

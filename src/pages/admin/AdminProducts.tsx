@@ -136,7 +136,7 @@ const emptyForm = {
 type FormState = typeof emptyForm;
 type TabId = 'basic' | 'pricing' | 'media' | 'details' | 'seo';
 
-const ic = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground";
+const ic = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground";
 const lc = "text-xs text-muted-foreground mb-1 block font-medium";
 
 const DELIVERY_TYPES = [
@@ -869,7 +869,7 @@ const AdminProducts = () => {
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search by name, SKU, brand..."
-            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
           />
         </div>
         <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
@@ -2029,7 +2029,7 @@ const AdminProducts = () => {
                           <div className="flex items-center gap-2 flex-wrap mt-0.5">
                             {product.brand && <span className="text-xs text-muted-foreground">{product.brand}</span>}
                             {product.is_featured && <span className="text-xs text-primary">⭐</span>}
-                            {product.badge && <span className="text-xs bg-primary/10 text-primary px-1.5 rounded">{product.badge}</span>}
+                            {product.badge && <span className="text-xs bg-primary/10 text-primary px-1.5 rounded-[0.25rem]">{product.badge}</span>}
                           </div>
                         </div>
                       </div>

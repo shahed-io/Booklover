@@ -133,7 +133,7 @@ const AdminTelegramBot = () => {
     cancelled: 'বাতিল',
   };
 
-  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   if (loading) {
     return (
@@ -323,7 +323,7 @@ const AdminTelegramBot = () => {
             <div key={f.cmd} className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
               <span className="text-lg">{f.icon}</span>
               <div>
-                <code className="text-xs font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded">{f.cmd}</code>
+                <code className="text-xs font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded-[0.25rem]">{f.cmd}</code>
                 <p className="text-xs text-muted-foreground mt-1">{f.desc}</p>
               </div>
             </div>

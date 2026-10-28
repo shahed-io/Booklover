@@ -126,7 +126,7 @@ const Blog = () => {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="আর্টিকেল খুঁজুন..."
-                className="w-full bg-transparent pl-12 pr-5 py-4 text-sm focus:outline-none"
+                className="w-full bg-transparent pl-12 pr-5 py-4 text-sm focus:outline-hidden"
               />
               {search && (
                 <button onClick={() => setSearch('')}

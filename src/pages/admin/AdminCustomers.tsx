@@ -702,7 +702,7 @@ export default function AdminCustomers() {
                               <select
                                 defaultValue={order.status}
                                 onChange={e => updateOrderStatus(order.id, e.target.value)}
-                                className="text-xs bg-background border border-border rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                                className="text-xs bg-background border border-border rounded-lg px-2 py-1.5 focus:outline-hidden focus:ring-2 focus:ring-primary/20">
                                 {Object.entries(STATUS_CONFIG).map(([k, v]) => (
                                   <option key={k} value={k}>{v.label}</option>
                                 ))}
@@ -755,11 +755,11 @@ export default function AdminCustomers() {
                                         <span className="text-[10px] font-semibold text-muted-foreground uppercase">ডেলিভার্ড কি</span>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded flex-1 break-all">
+                                        <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded-[0.25rem] flex-1 break-all">
                                           {item.license_key}
                                         </code>
                                         <button onClick={() => copyKey(item.license_key!)}
-                                          className="p-1 rounded text-muted-foreground hover:text-primary transition-colors shrink-0">
+                                          className="p-1 rounded-[0.25rem] text-muted-foreground hover:text-primary transition-colors shrink-0">
                                           {copiedKey === item.license_key ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
                                         </button>
                                       </div>
@@ -784,7 +784,7 @@ export default function AdminCustomers() {
                                                     <select
                                                       value={editLicenseStatus}
                                                       onChange={e => setEditLicenseStatus(e.target.value)}
-                                                      className="text-[10px] bg-background border border-border rounded px-1.5 py-0.5 focus:outline-none">
+                                                      className="text-[10px] bg-background border border-border rounded-[0.25rem] px-1.5 py-0.5 focus:outline-hidden">
                                                       {Object.entries(LICENSE_STATUS).map(([k, v]) => (
                                                         <option key={k} value={k}>{v.label}</option>
                                                       ))}
@@ -796,7 +796,7 @@ export default function AdminCustomers() {
                                                   </div>
                                                 ) : (
                                                   <>
-                                                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border ${ls.color}`}>
+                                                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-[0.25rem] text-[9px] font-semibold border ${ls.color}`}>
                                                       {ls.label}
                                                     </span>
                                                     <button onClick={() => { setEditingLicense(lic.id); setEditLicenseStatus(lic.status); }}
@@ -808,11 +808,11 @@ export default function AdminCustomers() {
                                               </div>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                              <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded flex-1 break-all">
+                                              <code className="text-[11px] font-mono text-foreground bg-muted/30 px-2 py-1 rounded-[0.25rem] flex-1 break-all">
                                                 {lic.key_value}{lic.extra_info ? ` | ${lic.extra_info}` : ''}
                                               </code>
                                               <button onClick={() => copyKey(lic.key_value)}
-                                                className="p-1 rounded text-muted-foreground hover:text-primary transition-colors shrink-0">
+                                                className="p-1 rounded-[0.25rem] text-muted-foreground hover:text-primary transition-colors shrink-0">
                                                 {copiedKey === lic.key_value ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
                                               </button>
                                             </div>
@@ -842,7 +842,7 @@ export default function AdminCustomers() {
                             <div className="flex gap-2">
                               <input value={editNoteValue} onChange={e => setEditNoteValue(e.target.value)}
                                 placeholder="নোট লিখুন..."
-                                className="flex-1 text-xs bg-background border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                                className="flex-1 text-xs bg-background border border-border rounded-lg px-3 py-2 focus:outline-hidden focus:ring-2 focus:ring-primary/20" />
                               <button onClick={() => saveAdminNote(order.id)}
                                 className="px-2 py-1 rounded-lg bg-primary text-primary-foreground text-[10px] font-semibold"><Save size={10} /></button>
                               <button onClick={() => setEditingNote(null)}
@@ -1029,7 +1029,7 @@ export default function AdminCustomers() {
                           <div className="font-medium text-foreground text-xs flex items-center gap-1.5">
                             {c.display_name ?? 'No Name'}
                             {c.is_suspended && (
-                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0 rounded text-[9px] font-bold bg-red-500/15 text-red-600 border border-red-500/30">
+                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0 rounded-[0.25rem] text-[9px] font-bold bg-red-500/15 text-red-600 border border-red-500/30">
                                 <Ban size={8} /> SUSPENDED
                               </span>
                             )}

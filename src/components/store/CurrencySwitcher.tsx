@@ -27,7 +27,7 @@ const CurrencySwitcher = ({ className }: Props) => {
           type="button"
           aria-label={`Currency: ${active.code}. Click to change`}
           title="Change currency"
-          className={`group relative flex items-center gap-2 h-10 pl-1.5 pr-3 rounded-full bg-background border border-primary/25 hover:border-primary/60 hover:bg-primary/[0.04] transition-all duration-300 cursor-pointer shadow-sm hover:shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.35)] active:scale-[0.97] ${className || ""}`}
+          className={`group relative flex items-center gap-2 h-10 pl-1.5 pr-3 rounded-full bg-background border border-primary/25 hover:border-primary/60 hover:bg-primary/[0.04] transition-all duration-300 cursor-pointer shadow-xs hover:shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.35)] active:scale-[0.97] ${className || ""}`}
         >
           {/* Currency symbol badge (brand primary violet) */}
           <span

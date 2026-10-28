@@ -145,7 +145,7 @@ const AdminMarketingPixels = () => {
       ))}
 
       <div className="rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 p-4 text-xs text-blue-900 dark:text-blue-200">
-        <strong>📌 Note:</strong> Pixel save করার পর website পেজ reload করুন। সব social pixel-এ <code className="px-1 bg-blue-100 dark:bg-blue-900/50 rounded">PageView, ViewContent, AddToCart, InitiateCheckout, Purchase, Lead</code> events automatic ট্র্যাক হবে।
+        <strong>📌 Note:</strong> Pixel save করার পর website পেজ reload করুন। সব social pixel-এ <code className="px-1 bg-blue-100 dark:bg-blue-900/50 rounded-[0.25rem]">PageView, ViewContent, AddToCart, InitiateCheckout, Purchase, Lead</code> events automatic ট্র্যাক হবে।
       </div>
     </div>
   );

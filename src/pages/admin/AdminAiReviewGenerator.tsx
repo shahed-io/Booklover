@@ -326,17 +326,17 @@ const AdminAiReviewGenerator = () => {
                   <div key={i} className="bg-muted/20 rounded-xl p-3 space-y-2">
                     <div className="flex items-center gap-2">
                       <input value={r.name} onChange={e => setPreviewReviews(prev => prev.map((x, j) => j === i ? { ...x, name: e.target.value } : x))}
-                        className="flex-1 bg-transparent text-sm font-bold text-foreground outline-none border-b border-border/50 pb-1" />
+                        className="flex-1 bg-transparent text-sm font-bold text-foreground outline-hidden border-b border-border/50 pb-1" />
                       <select value={r.rating} onChange={e => setPreviewReviews(prev => prev.map((x, j) => j === i ? { ...x, rating: Number(e.target.value) } : x))}
-                        className="bg-muted/30 rounded px-2 py-1 text-xs text-yellow-400 font-bold border border-border">
+                        className="bg-muted/30 rounded-[0.25rem] px-2 py-1 text-xs text-yellow-400 font-bold border border-border">
                         {[1,2,3,4,5].map(n => <option key={n} value={n}>{n} ★</option>)}
                       </select>
                       <button onClick={() => setPreviewReviews(prev => prev.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-destructive"><X size={13} /></button>
                     </div>
                     <input value={r.title} placeholder="Title" onChange={e => setPreviewReviews(prev => prev.map((x, j) => j === i ? { ...x, title: e.target.value } : x))}
-                      className="w-full bg-transparent text-xs font-semibold text-foreground outline-none border-b border-border/30 pb-1" />
+                      className="w-full bg-transparent text-xs font-semibold text-foreground outline-hidden border-b border-border/30 pb-1" />
                     <textarea value={r.body} onChange={e => setPreviewReviews(prev => prev.map((x, j) => j === i ? { ...x, body: e.target.value } : x))}
-                      rows={2} className="w-full bg-transparent text-xs text-muted-foreground outline-none resize-none" />
+                      rows={2} className="w-full bg-transparent text-xs text-muted-foreground outline-hidden resize-none" />
                   </div>
                 ))
               )}

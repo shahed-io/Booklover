@@ -165,7 +165,7 @@ const AdminSettings = () => {
     setTestingWA(false);
   };
 
-  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   return (
     <div className="space-y-6">
@@ -229,7 +229,7 @@ const AdminSettings = () => {
                 type="checkbox"
                 checked={(settings['hide_orphan_products'] ?? 'true') !== 'false'}
                 onChange={e => setSettings({ ...settings, hide_orphan_products: e.target.checked ? 'true' : 'false' })}
-                className="mt-1 h-4 w-4 rounded border-border accent-primary"
+                className="mt-1 h-4 w-4 rounded-[0.25rem] border-border accent-primary"
               />
               <div>
                 <div className="text-sm font-semibold text-foreground">Hide orphan products (partial last row)</div>
@@ -366,7 +366,7 @@ const AdminSettings = () => {
               <p className="text-xs text-foreground font-semibold mb-2">📲 কীভাবে Chat ID পাবেন:</p>
               <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
                 <li>Telegram খুলুন এবং <strong className="text-[#229ED9]">@userinfobot</strong> সার্চ করুন</li>
-                <li>Bot-কে <code className="bg-muted px-1 rounded">/start</code> মেসেজ পাঠান</li>
+                <li>Bot-কে <code className="bg-muted px-1 rounded-[0.25rem]">/start</code> মেসেজ পাঠান</li>
                 <li>Bot আপনার Chat ID দেখাবে — সেটি এখানে পেস্ট করুন</li>
                 <li>Save করুন এবং টেস্ট বাটনে ক্লিক করুন</li>
               </ol>
@@ -464,7 +464,7 @@ const AdminSettings = () => {
               value={settings['turnstile_site_key'] || ''}
               onChange={(e) => setSettings({ ...settings, turnstile_site_key: e.target.value.trim() })}
               placeholder="0x4AAAAAAA..."
-              className="w-full px-4 py-2.5 rounded-xl bg-muted/20 border border-border text-sm text-foreground outline-none focus:border-sky-500"
+              className="w-full px-4 py-2.5 rounded-xl bg-muted/20 border border-border text-sm text-foreground outline-hidden focus:border-sky-500"
             />
             <ul className="text-xs text-muted-foreground space-y-1 mt-4">
               <li>✅ Honeypot field + form submit-timing check (always on)</li>

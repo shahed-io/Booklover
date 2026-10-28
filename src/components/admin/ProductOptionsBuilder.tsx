@@ -31,7 +31,7 @@ interface Props {
   basePrice: number;
 }
 
-const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground';
+const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground';
 const lc = 'text-xs text-muted-foreground mb-1 block font-medium';
 
 const DISPLAY_TYPES: { value: 'button' | 'radio' | 'dropdown'; icon: React.ReactNode; label: string }[] = [

@@ -49,7 +49,7 @@ const renderMarkdown = (content: string): string => {
     .replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground font-semibold">$1</strong>')
     .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
     // Inline code
-    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded text-xs font-mono" style="background:var(--neon-violet-dim);color:hsl(var(--primary))">$1</code>')
+    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-[0.25rem] text-xs font-mono" style="background:var(--neon-violet-dim);color:hsl(var(--primary))">$1</code>')
     // Code blocks
     .replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre class="glass-card rounded-xl p-4 overflow-x-auto my-4 text-sm font-mono text-foreground/80 border border-border"><code>$1</code></pre>')
     // Blockquote
@@ -113,7 +113,7 @@ const CommentSection = ({ postId }: { postId: string }) => {
     toast.success('✅ মন্তব্য পাঠানো হয়েছে! অনুমোদনের পর দেখা যাবে।');
   };
 
-  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+  const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 
   return (
     <div className="mt-12 space-y-6">
@@ -236,7 +236,7 @@ const BlogPost = () => {
       <div className="max-w-4xl mx-auto px-4 pt-24 pb-16 space-y-4">
         <div className="h-10 w-1/3 bg-muted/30 rounded-xl animate-pulse" />
         <div className="h-64 bg-muted/20 rounded-2xl animate-pulse" />
-        <div className="space-y-2">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-4 bg-muted/20 rounded animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />)}</div>
+        <div className="space-y-2">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-4 bg-muted/20 rounded-[0.25rem] animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />)}</div>
       </div>
       <Footer />
     </div>

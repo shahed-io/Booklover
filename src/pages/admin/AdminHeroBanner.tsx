@@ -234,11 +234,11 @@ const AdminHeroBanner = () => {
             {stats.map((s, i) => (
               <div key={i} className="flex gap-2 items-center">
                 <input value={s.icon} onChange={e => setStats(p => p.map((x, j) => j === i ? { ...x, icon: e.target.value } : x))}
-                  className="w-10 bg-background border border-border rounded-lg px-1 py-1.5 text-center text-sm focus:outline-none focus:border-primary" />
+                  className="w-10 bg-background border border-border rounded-lg px-1 py-1.5 text-center text-sm focus:outline-hidden focus:border-primary" />
                 <input value={s.value} onChange={e => setStats(p => p.map((x, j) => j === i ? { ...x, value: e.target.value } : x))}
-                  className="w-16 bg-background border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-none focus:border-primary" />
+                  className="w-16 bg-background border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-hidden focus:border-primary" />
                 <input value={s.label} onChange={e => setStats(p => p.map((x, j) => j === i ? { ...x, label: e.target.value } : x))}
-                  className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-primary" />
+                  className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs focus:outline-hidden focus:border-primary" />
                 <button onClick={() => setStats(p => p.filter((_, j) => j !== i))}
                   className="p-1 text-muted-foreground hover:text-destructive"><Trash2 size={11} /></button>
               </div>
@@ -306,7 +306,7 @@ const AdminHeroBanner = () => {
                   <label className="text-[11px] font-semibold text-muted-foreground mb-1 block">বিবরণ</label>
                   <textarea value={selectedSlide.desc} rows={2}
                     onChange={e => updateSlide(selectedSlide.id, 'desc', e.target.value)}
-                    className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none" />
+                    className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -317,10 +317,10 @@ const AdminHeroBanner = () => {
                     </label>
                     <input value={selectedSlide.logoImg || ''} onChange={e => updateSlide(selectedSlide.id, 'logoImg', e.target.value)}
                       placeholder="https://..."
-                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                      className="w-full bg-background border border-border rounded-lg px-3 py-2 text-xs font-mono focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
                     {selectedSlide.logoImg && (
                       <div className="flex items-center gap-2 mt-1.5">
-                        <img src={selectedSlide.logoImg} alt="" className="w-7 h-7 object-contain rounded border border-border" />
+                        <img src={selectedSlide.logoImg} alt="" className="w-7 h-7 object-contain rounded-[0.25rem] border border-border" />
                         <button onClick={() => updateSlide(selectedSlide.id, 'logoImg', '')} className="text-[10px] text-destructive hover:underline">রিমুভ</button>
                       </div>
                     )}
@@ -378,7 +378,7 @@ const AdminHeroBanner = () => {
                     value={selectedSlide.bgImage || ''}
                     onChange={e => updateSlide(selectedSlide.id, 'bgImage', e.target.value)}
                     placeholder="অথবা URL পেস্ট করুন: https://..."
-                    className="w-full bg-background border border-border rounded-lg px-3 py-2 text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full bg-background border border-border rounded-lg px-3 py-2 text-[11px] font-mono focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   />
                   {selectedSlide.bgImage && (
                     <div className="mt-1 rounded-lg overflow-hidden border border-border bg-muted/40">
@@ -397,7 +397,7 @@ const AdminHeroBanner = () => {
                     <input value={selectedSlide.productSlug}
                       onChange={e => updateSlide(selectedSlide.id, 'productSlug', e.target.value.toLowerCase().replace(/\s+/g, '-'))}
                       placeholder="product-slug"
-                      className="flex-1 bg-background border border-border rounded-r-lg px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                      className="flex-1 bg-background border border-border rounded-r-lg px-3 py-2 text-xs font-mono focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
                   </div>
                 </div>
 
@@ -409,7 +409,7 @@ const AdminHeroBanner = () => {
                         onChange={e => updateSlide(selectedSlide.id, 'accentFrom', hexToHsl(e.target.value))}
                         className="w-8 h-8 rounded-lg border border-border cursor-pointer shrink-0" />
                       <input value={selectedSlide.accentFrom} onChange={e => updateSlide(selectedSlide.id, 'accentFrom', e.target.value)}
-                        className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-none focus:border-primary" />
+                        className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-hidden focus:border-primary" />
                     </div>
                   </div>
                   <div>
@@ -419,7 +419,7 @@ const AdminHeroBanner = () => {
                         onChange={e => updateSlide(selectedSlide.id, 'accentTo', hexToHsl(e.target.value))}
                         className="w-8 h-8 rounded-lg border border-border cursor-pointer shrink-0" />
                       <input value={selectedSlide.accentTo} onChange={e => updateSlide(selectedSlide.id, 'accentTo', e.target.value)}
-                        className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-none focus:border-primary" />
+                        className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-hidden focus:border-primary" />
                     </div>
                   </div>
                 </div>
@@ -433,7 +433,7 @@ const AdminHeroBanner = () => {
                     {selectedSlide.features.map((feat, fi) => (
                       <div key={fi} className="flex gap-2 items-center">
                         <input value={feat} onChange={e => updateFeature(selectedSlide.id, fi, e.target.value)}
-                          className="flex-1 bg-background border border-border rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-primary" />
+                          className="flex-1 bg-background border border-border rounded-lg px-3 py-1.5 text-xs focus:outline-hidden focus:border-primary" />
                         <button onClick={() => removeFeature(selectedSlide.id, fi)} className="p-1 text-muted-foreground hover:text-destructive"><Trash2 size={11} /></button>
                       </div>
                     ))}
@@ -464,7 +464,7 @@ const AdminHeroBanner = () => {
                 <input type="color" value={bgSettings.bgColor} onChange={e => setBgSettings(p => ({ ...p, bgColor: e.target.value }))}
                   className="w-8 h-8 rounded-lg border border-border cursor-pointer" />
                 <input value={bgSettings.bgColor} onChange={e => setBgSettings(p => ({ ...p, bgColor: e.target.value }))}
-                  className="flex-1 bg-background border border-border rounded-lg px-3 py-1.5 text-xs font-mono focus:outline-none focus:border-primary" />
+                  className="flex-1 bg-background border border-border rounded-lg px-3 py-1.5 text-xs font-mono focus:outline-hidden focus:border-primary" />
               </div>
             )}
             {bgSettings.bgType === 'gradient' && (
@@ -473,14 +473,14 @@ const AdminHeroBanner = () => {
                   <input type="color" value={bgSettings.bgGradientFrom} onChange={e => setBgSettings(p => ({ ...p, bgGradientFrom: e.target.value }))}
                     className="w-7 h-7 rounded-md border border-border cursor-pointer" />
                   <input value={bgSettings.bgGradientFrom} onChange={e => setBgSettings(p => ({ ...p, bgGradientFrom: e.target.value }))}
-                    className="w-24 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-none focus:border-primary" />
+                    className="w-24 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-hidden focus:border-primary" />
                 </div>
                 <span className="text-[10px] text-muted-foreground">→</span>
                 <div className="flex gap-1.5 items-center">
                   <input type="color" value={bgSettings.bgGradientTo} onChange={e => setBgSettings(p => ({ ...p, bgGradientTo: e.target.value }))}
                     className="w-7 h-7 rounded-md border border-border cursor-pointer" />
                   <input value={bgSettings.bgGradientTo} onChange={e => setBgSettings(p => ({ ...p, bgGradientTo: e.target.value }))}
-                    className="w-24 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-none focus:border-primary" />
+                    className="w-24 bg-background border border-border rounded-lg px-2 py-1.5 text-[10px] font-mono focus:outline-hidden focus:border-primary" />
                 </div>
                 <div className="w-16 h-7 rounded-md" style={{ background: `linear-gradient(90deg, ${bgSettings.bgGradientFrom}, ${bgSettings.bgGradientTo})` }} />
               </div>
@@ -492,9 +492,9 @@ const AdminHeroBanner = () => {
             {trust.map((t, i) => (
               <div key={i} className="flex gap-2 items-center">
                 <input value={t.icon} onChange={e => setTrust(p => p.map((x, j) => j === i ? { ...x, icon: e.target.value } : x))}
-                  className="w-10 bg-background border border-border rounded-lg px-1 py-1.5 text-center text-sm focus:outline-none focus:border-primary" />
+                  className="w-10 bg-background border border-border rounded-lg px-1 py-1.5 text-center text-sm focus:outline-hidden focus:border-primary" />
                 <input value={t.text} onChange={e => setTrust(p => p.map((x, j) => j === i ? { ...x, text: e.target.value } : x))}
-                  className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-primary" />
+                  className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs focus:outline-hidden focus:border-primary" />
                 <button onClick={() => setTrust(p => p.filter((_, j) => j !== i))} className="p-1 text-muted-foreground hover:text-destructive"><Trash2 size={11} /></button>
               </div>
             ))}
@@ -507,11 +507,11 @@ const AdminHeroBanner = () => {
             {floating.map((f, i) => (
               <div key={i} className="flex gap-2 items-center">
                 <input value={f.icon} onChange={e => setFloating(p => p.map((x, j) => j === i ? { ...x, icon: e.target.value } : x))}
-                  className="w-10 bg-background border border-border rounded-lg px-1 py-1.5 text-center text-sm focus:outline-none focus:border-primary" />
+                  className="w-10 bg-background border border-border rounded-lg px-1 py-1.5 text-center text-sm focus:outline-hidden focus:border-primary" />
                 <input value={f.value} onChange={e => setFloating(p => p.map((x, j) => j === i ? { ...x, value: e.target.value } : x))}
-                  className="w-16 bg-background border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-none focus:border-primary" />
+                  className="w-16 bg-background border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-hidden focus:border-primary" />
                 <input value={f.label} onChange={e => setFloating(p => p.map((x, j) => j === i ? { ...x, label: e.target.value } : x))}
-                  className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-primary" />
+                  className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-xs focus:outline-hidden focus:border-primary" />
                 <button onClick={() => setFloating(p => p.filter((_, j) => j !== i))} className="p-1 text-muted-foreground hover:text-destructive"><Trash2 size={11} /></button>
               </div>
             ))}
@@ -532,7 +532,7 @@ const SmartField = ({ label, value, onChange, small }: { label: string; value: s
   <div>
     <label className="text-[11px] font-semibold text-muted-foreground mb-1 block">{label}</label>
     <input value={value} onChange={e => onChange(e.target.value)}
-      className={`w-full bg-background border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all ${small ? 'text-lg text-center' : 'text-sm'
+      className={`w-full bg-background border border-border rounded-lg px-3 py-2 focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all ${small ? 'text-lg text-center' : 'text-sm'
         }`} />
   </div>
 );

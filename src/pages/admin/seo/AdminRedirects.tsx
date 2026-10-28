@@ -51,16 +51,16 @@ const AdminRedirects = () => {
         <h3 className="font-bold text-foreground mb-4 text-sm">Add New Redirect</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
           <select value={newR.type} onChange={e => setNewR(p => ({ ...p, type: e.target.value as any }))}
-            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary">
+            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary">
             <option value="301">301 — Permanent</option>
             <option value="302">302 — Temporary</option>
           </select>
           <input value={newR.from_path} onChange={e => setNewR(p => ({ ...p, from_path: e.target.value }))}
             placeholder="/old-url" onKeyDown={e => e.key === 'Enter' && add()}
-            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground font-mono focus:outline-none focus:border-primary" />
+            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary" />
           <input value={newR.to_path} onChange={e => setNewR(p => ({ ...p, to_path: e.target.value }))}
             placeholder="/new-url or https://…" onKeyDown={e => e.key === 'Enter' && add()}
-            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground font-mono focus:outline-none focus:border-primary" />
+            className="bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary" />
           <button onClick={add} className="btn-glow rounded-xl text-sm font-medium flex items-center justify-center gap-2">
             <Plus size={14} /> Add
           </button>

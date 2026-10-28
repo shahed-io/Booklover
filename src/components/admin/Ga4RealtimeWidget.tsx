@@ -155,7 +155,7 @@ const Ga4RealtimeWidget = ({ gaId }: { gaId: string }) => {
             </div>
             {connected && <p className="text-xs font-mono text-muted-foreground mt-0.5">{gaId}</p>}
             <p className="text-[11px] text-muted-foreground/80 mt-0.5">
-              Auto-fires <code className="px-1 rounded bg-muted/40">page_view</code>, <code className="px-1 rounded bg-muted/40">purchase</code>, <code className="px-1 rounded bg-muted/40">sign_up</code>
+              Auto-fires <code className="px-1 rounded-[0.25rem] bg-muted/40">page_view</code>, <code className="px-1 rounded-[0.25rem] bg-muted/40">purchase</code>, <code className="px-1 rounded-[0.25rem] bg-muted/40">sign_up</code>
             </p>
           </div>
         </div>
@@ -271,7 +271,7 @@ const Ga4RealtimeWidget = ({ gaId }: { gaId: string }) => {
         <ul className="space-y-2 text-xs text-muted-foreground">
           <li className="flex gap-2">
             <span className="text-primary mt-1">•</span>
-            <span><strong className="text-foreground">Purchases &amp; Revenue:</strong> from your <code className="px-1 rounded bg-muted/40">orders</code> table (real-time, all orders incl. unpaid)</span>
+            <span><strong className="text-foreground">Purchases &amp; Revenue:</strong> from your <code className="px-1 rounded-[0.25rem] bg-muted/40">orders</code> table (real-time, all orders incl. unpaid)</span>
           </li>
           <li className="flex gap-2">
             <span className="text-primary mt-1">•</span>
@@ -279,7 +279,7 @@ const Ga4RealtimeWidget = ({ gaId }: { gaId: string }) => {
           </li>
           <li className="flex gap-2">
             <span className="text-primary mt-1">•</span>
-            <span><strong className="text-foreground">GA4 Realtime:</strong> events fire client-side via <code className="px-1 rounded bg-muted/40">gtag.js</code> — view live in Google Analytics → Realtime</span>
+            <span><strong className="text-foreground">GA4 Realtime:</strong> events fire client-side via <code className="px-1 rounded-[0.25rem] bg-muted/40">gtag.js</code> — view live in Google Analytics → Realtime</span>
           </li>
           <li className="flex gap-2">
             <span className="text-primary mt-1">•</span>

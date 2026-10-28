@@ -29,7 +29,7 @@ interface Props {
   productId: string;
 }
 
-const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground';
+const ic = 'w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground';
 
 let tc = 0;
 const gid = () => `t_${++tc}`;
@@ -410,7 +410,7 @@ const ProductAttributesEditor = ({ productId }: Props) => {
         <div className="flex gap-2 items-center p-3 rounded-xl border border-primary/20 bg-primary/5">
           <Globe size={14} className="text-primary flex-shrink-0" />
           <select value={selectedGlobalId} onChange={e => setSelectedGlobalId(e.target.value)}
-            className="flex-1 bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+            className="flex-1 bg-muted/30 border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary">
             <option value="">— Select Attribute —</option>
             {availableGlobals.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>

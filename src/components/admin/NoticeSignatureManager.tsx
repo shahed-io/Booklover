@@ -104,7 +104,7 @@ export default function NoticeSignatureManager({ onChanged }: Props) {
 
             <div className="rounded-lg border bg-muted/30 p-4">
               <div className="text-xs font-semibold text-muted-foreground mb-2">Signature Image Preview</div>
-              <div className="bg-white border rounded p-4 flex items-center justify-center min-h-[110px]">
+              <div className="bg-white border rounded-[0.25rem] p-4 flex items-center justify-center min-h-[110px]">
                 {sig.imageDataUrl ? (
                   <img src={sig.imageDataUrl} alt="Signature"
                        style={{ maxHeight: 90, maxWidth: 320, mixBlendMode: 'multiply' }} />

@@ -60,7 +60,7 @@ const AdminImageSeo = () => {
         <div className="relative flex-1">
           <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products…"
-            className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+            className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
         </div>
         <div className="flex glass-card rounded-xl overflow-hidden border border-border">
           {(['all', 'missing'] as const).map(f => (
@@ -88,7 +88,7 @@ const AdminImageSeo = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <p className="text-sm font-semibold text-foreground truncate">{p.name}</p>
-                    {!p.image_url && <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 font-medium flex-shrink-0">No Image</span>}
+                    {!p.image_url && <span className="text-[10px] px-1.5 py-0.5 rounded-[0.25rem] bg-red-500/15 text-red-400 font-medium flex-shrink-0">No Image</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <label className="text-xs text-muted-foreground flex-shrink-0">Alt Text:</label>
@@ -96,7 +96,7 @@ const AdminImageSeo = () => {
                       value={getAlt(p)}
                       onChange={e => setAlts(prev => ({ ...prev, [p.id]: e.target.value }))}
                       placeholder={`${p.name} — Booklover`}
-                      className="flex-1 bg-background border border-border rounded-lg px-2.5 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary transition-colors"
+                      className="flex-1 bg-background border border-border rounded-lg px-2.5 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary transition-colors"
                     />
                     <button onClick={() => save(p)} disabled={saving === p.id}
                       className="flex-shrink-0 btn-glow px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 disabled:opacity-60">

@@ -66,7 +66,7 @@ export default function AdminSemrush() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
-            <span className="inline-block w-2 h-8 bg-gradient-to-b from-fuchsia-500 to-violet-600 rounded" />
+            <span className="inline-block w-2 h-8 bg-gradient-to-b from-fuchsia-500 to-violet-600 rounded-[0.25rem]" />
             Semrush SEO Dashboard
           </h1>
           <p className="text-sm text-muted-foreground mt-1">Live SEO performance, keywords & backlinks for ranking</p>

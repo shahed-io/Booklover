@@ -359,7 +359,7 @@ const AdminOutreach = () => {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search…"
-            className="bg-background border border-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary w-56"
+            className="bg-background border border-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:border-primary w-56"
           />
         </div>
       </div>
@@ -479,7 +479,7 @@ const AdminOutreach = () => {
                       <select
                         value={p.status}
                         onChange={e => setStatus(p.id, e.target.value)}
-                        className="bg-transparent border border-border rounded-md px-1.5 py-0.5 text-[11px] text-foreground focus:outline-none focus:border-primary"
+                        className="bg-transparent border border-border rounded-md px-1.5 py-0.5 text-[11px] text-foreground focus:outline-hidden focus:border-primary"
                       >
                         {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                       </select>
@@ -535,49 +535,49 @@ const AdminOutreach = () => {
               <label className="col-span-2 text-xs">
                 <span className="text-muted-foreground">Site Name *</span>
                 <input value={editing.site_name || ''} onChange={e => setEditing({ ...editing, site_name: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </label>
               <label className="col-span-2 text-xs">
                 <span className="text-muted-foreground">Site URL</span>
                 <input value={editing.site_url || ''} onChange={e => setEditing({ ...editing, site_url: e.target.value })}
                   placeholder="https://"
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Contact Name</span>
                 <input value={editing.contact_name || ''} onChange={e => setEditing({ ...editing, contact_name: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Contact Email</span>
                 <input value={editing.contact_email || ''} onChange={e => setEditing({ ...editing, contact_email: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Channel</span>
                 <select value={editing.contact_channel || 'email'} onChange={e => setEditing({ ...editing, contact_channel: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary capitalize">
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary capitalize">
                   {CHANNELS.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Category</span>
                 <select value={editing.category || 'tech_blog'} onChange={e => setEditing({ ...editing, category: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary">
                   {CATEGORIES.map(c => <option key={c} value={c}>{c.replace('_', ' ')}</option>)}
                 </select>
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Pitch Template</span>
                 <select value={editing.pitch_template || 'guest_post'} onChange={e => setEditing({ ...editing, pitch_template: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary">
                   {TEMPLATES.map(t => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
                 </select>
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Status</span>
                 <select value={editing.status || 'prospect'} onChange={e => setEditing({ ...editing, status: e.target.value })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary">
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary">
                   {STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
               </label>
@@ -587,19 +587,19 @@ const AdminOutreach = () => {
                   type="date"
                   value={editing.follow_up_at ? new Date(editing.follow_up_at).toISOString().slice(0, 10) : ''}
                   onChange={e => setEditing({ ...editing, follow_up_at: e.target.value ? new Date(e.target.value).toISOString() : null })}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </label>
               <label className="text-xs">
                 <span className="text-muted-foreground">Published URL</span>
                 <input value={editing.published_url || ''} onChange={e => setEditing({ ...editing, published_url: e.target.value })}
                   placeholder="https://"
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </label>
               <label className="col-span-2 text-xs">
                 <span className="text-muted-foreground">Notes</span>
                 <textarea value={editing.notes || ''} onChange={e => setEditing({ ...editing, notes: e.target.value })}
                   rows={3}
-                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary resize-none" />
+                  className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary resize-none" />
               </label>
             </div>
             <div className="flex justify-end gap-2 pt-2">
@@ -658,7 +658,7 @@ const AdminOutreach = () => {
                   </button>
                 </div>
                 <textarea readOnly value={t.body} rows={14}
-                  className="w-full bg-muted/20 rounded-lg p-3 text-sm text-foreground border border-border font-mono resize-none focus:outline-none" />
+                  className="w-full bg-muted/20 rounded-lg p-3 text-sm text-foreground border border-border font-mono resize-none focus:outline-hidden" />
               </div>
               <div className="flex justify-between items-center pt-2 gap-2 flex-wrap">
                 <div className="flex items-center gap-2">

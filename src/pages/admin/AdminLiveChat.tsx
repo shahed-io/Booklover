@@ -933,7 +933,7 @@ const AdminLiveChat = () => {
                           type="color"
                           value={set.icon_color}
                           onChange={e => updateLiveSet(set.id, 'icon_color', e.target.value)}
-                          className="w-10 h-10 rounded cursor-pointer border-0"
+                          className="w-10 h-10 rounded-[0.25rem] cursor-pointer border-0"
                         />
                         <Input
                           value={set.icon_color}

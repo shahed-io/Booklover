@@ -75,7 +75,7 @@ const AdminSchema = () => {
               <label className="text-xs font-medium text-muted-foreground mb-1 block">{f.label}</label>
               <input value={(org as any)[f.key]} onChange={e => setOrg(p => ({ ...p, [f.key]: e.target.value }))}
                 placeholder={f.placeholder}
-                className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+                className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
             </div>
           ))}
         </div>

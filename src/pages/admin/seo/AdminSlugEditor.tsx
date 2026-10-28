@@ -57,7 +57,7 @@ const AdminSlugEditor = () => {
       <div className="relative">
         <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products…"
-          className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+          className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
       </div>
 
       {loading ? (
@@ -77,14 +77,14 @@ const AdminSlugEditor = () => {
                 <div key={p.id} className="grid grid-cols-3 gap-4 items-center px-5 py-3 hover:bg-muted/10 transition-colors">
                   <div>
                     <p className="text-sm font-medium text-foreground truncate">{p.name}</p>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${p.status === 'active' ? 'bg-green-500/15 text-green-400' : 'bg-muted text-muted-foreground'}`}>{p.status}</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-[0.25rem] font-medium ${p.status === 'active' ? 'bg-green-500/15 text-green-400' : 'bg-muted text-muted-foreground'}`}>{p.status}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs text-muted-foreground">/product/</span>
                     <input
                       value={currentSlug}
                       onChange={e => setSlugEdits(prev => ({ ...prev, [p.id]: sanitize(e.target.value) }))}
-                      className={`flex-1 min-w-0 bg-background border rounded-lg px-2 py-1.5 text-xs font-mono text-foreground focus:outline-none transition-colors ${changed ? 'border-yellow-500/50 focus:border-yellow-500' : 'border-border focus:border-primary'}`}
+                      className={`flex-1 min-w-0 bg-background border rounded-lg px-2 py-1.5 text-xs font-mono text-foreground focus:outline-hidden transition-colors ${changed ? 'border-yellow-500/50 focus:border-yellow-500' : 'border-border focus:border-primary'}`}
                     />
                   </div>
                   <div className="flex items-center gap-2">

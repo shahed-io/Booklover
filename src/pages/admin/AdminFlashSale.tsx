@@ -112,18 +112,18 @@ const AdminFlashSale = () => {
           <div>
             <label className="text-xs text-muted-foreground mb-1.5 block">শিরোনাম (Title)</label>
             <input value={settings.title} onChange={e => setSettings(p => ({ ...p, title: e.target.value }))}
-              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
           </div>
           <div>
             <label className="text-xs text-muted-foreground mb-1.5 block">সর্বোচ্চ প্রোডাক্ট সংখ্যা</label>
             <input type="number" min={1} max={20} value={settings.maxProducts}
               onChange={e => setSettings(p => ({ ...p, maxProducts: Number(e.target.value) }))}
-              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
           </div>
           <div className="md:col-span-2">
             <label className="text-xs text-muted-foreground mb-1.5 block">সাব-টাইটেল</label>
             <input value={settings.subtitle} onChange={e => setSettings(p => ({ ...p, subtitle: e.target.value }))}
-              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+              className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
           </div>
         </div>
       </div>
@@ -135,7 +135,7 @@ const AdminFlashSale = () => {
           <label className="text-xs text-muted-foreground mb-1.5 block">সেল শেষের তারিখ ও সময়</label>
           <input type="datetime-local" value={settings.endDate}
             onChange={e => setSettings(p => ({ ...p, endDate: e.target.value }))}
-            className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+            className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
         </div>
         {settings.endDate && (
           <div className="flex items-center gap-3 mt-2">
@@ -154,7 +154,7 @@ const AdminFlashSale = () => {
         <div className="relative">
           <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input value={search} onChange={e => handleSearch(e.target.value)} placeholder="প্রোডাক্ট খুঁজুন..."
-            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
           {search && (
             <button onClick={() => { setSearch(''); setSearchResults([]); }}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">

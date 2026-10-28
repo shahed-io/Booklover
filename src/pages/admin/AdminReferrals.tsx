@@ -244,7 +244,7 @@ const AdminReferrals = () => {
             placeholder="নাম, ইমেইল বা কোড দিয়ে খুঁজুন..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+            className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
           />
         </div>
         <div className="flex gap-2">
@@ -334,7 +334,7 @@ const AdminReferrals = () => {
                             value={r.status}
                             disabled={updatingId === r.id}
                             onChange={e => handleStatusChange(r.id, e.target.value)}
-                            className={`text-xs font-bold px-3 py-1.5 rounded-xl border cursor-pointer outline-none transition-all appearance-none pr-7 ${st.color}`}
+                            className={`text-xs font-bold px-3 py-1.5 rounded-xl border cursor-pointer outline-hidden transition-all appearance-none pr-7 ${st.color}`}
                             style={{ background: 'transparent' }}
                           >
                             {STATUS_OPTIONS.map(opt => (

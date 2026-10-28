@@ -296,7 +296,7 @@ const AdminCategories = () => {
                         value={aiCustomPrompt}
                         onChange={e => setAiCustomPrompt(e.target.value)}
                         placeholder="e.g. blue tech icons with circuit board pattern..."
-                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-muted/30 border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-hidden focus:border-primary transition-colors"
                       />
                     </div>
 
@@ -337,7 +337,7 @@ const AdminCategories = () => {
                   <input required={required} type={type || 'text'} value={(form as any)[field]}
                     onChange={e => setForm({...form, [field]: e.target.value})}
                     placeholder={placeholder}
-                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors" />
+                    className="w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors" />
                 </div>
               ))}
 

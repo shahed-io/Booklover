@@ -46,7 +46,7 @@ export default function PaymentLinkTrack() {
             <h1 className="text-2xl font-bold">{s.label}</h1>
             <p className="text-sm text-muted-foreground mt-2">{s.msg}</p>
             {sub.admin_note && (
-              <p className="text-sm mt-3 p-3 bg-muted/40 rounded">অ্যাডমিন নোট: {sub.admin_note}</p>
+              <p className="text-sm mt-3 p-3 bg-muted/40 rounded-[0.25rem]">অ্যাডমিন নোট: {sub.admin_note}</p>
             )}
           </div>
           {sub.order_number && (

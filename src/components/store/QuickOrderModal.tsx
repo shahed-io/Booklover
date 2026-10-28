@@ -47,7 +47,7 @@ interface PaymentOption {
   isWallet?: boolean;
 }
 
-const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all";
+const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-hidden focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all";
 
 const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOrderModalProps) => {
   const { user } = useAuth();
@@ -757,7 +757,7 @@ const QuickOrderModal = ({ product, onClose, quantity: initialQty = 1 }: QuickOr
               {paymentMethod === 'cod' && (
                 <div className="relative overflow-hidden rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-4 space-y-2.5">
                   <div className="flex items-center gap-2.5">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-emerald-400/20">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-xs ring-1 ring-emerald-400/20">
                       <img src={getPaymentLogo('cod')} alt="Cash on Delivery" className="h-7 w-7 object-contain" loading="lazy" />
                     </span>
                     <div>

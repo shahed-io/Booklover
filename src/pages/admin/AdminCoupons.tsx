@@ -28,7 +28,7 @@ const couponSchema = z.object({
   }
 });
 
-const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground";
+const inputClass = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground";
 const labelClass = "text-xs text-muted-foreground mb-1 block";
 
 const emptyForm = {

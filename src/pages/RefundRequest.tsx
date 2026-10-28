@@ -274,7 +274,7 @@ ${isChangeOfMind ? `⚠️ মন পরিবর্তনের কারণে
     }
   };
 
-  const inputCls = `w-full rounded-xl px-4 py-3 text-sm outline-none transition-all bg-white/70 border border-white/60 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/15 placeholder:text-slate-400`;
+  const inputCls = `w-full rounded-xl px-4 py-3 text-sm outline-hidden transition-all bg-white/70 border border-white/60 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/15 placeholder:text-slate-400`;
   const labelCls = `block text-[12.5px] font-semibold mb-1.5`;
 
   return (
@@ -657,7 +657,7 @@ ${isChangeOfMind ? `⚠️ মন পরিবর্তনের কারণে
                               <X size={14} />
                             </button>
                           </div>
-                          <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[10px] font-bold text-white"
+                          <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded-[0.25rem] text-[10px] font-bold text-white"
                             style={{ background: 'rgba(0,0,0,0.55)' }}>
                             {idx + 1}
                           </div>

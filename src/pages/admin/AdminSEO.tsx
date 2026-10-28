@@ -230,7 +230,7 @@ const AdminSEO = () => {
                 Google Analytics ID <span className="opacity-60">(G-XXXXXXXXXX)</span>
               </label>
               <input value={settings.google_analytics || ''} onChange={e => setSettings(p => ({ ...p, google_analytics: e.target.value.toUpperCase() }))}
-                placeholder="G-XXXXXXXXXX" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-none focus:border-primary" />
+                placeholder="G-XXXXXXXXXX" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary" />
               {settings.google_analytics && <p className="text-xs text-green-400 mt-1">✓ অটোমেটিক সকল পেজে যোগ হবে</p>}
             </div>
             <div>
@@ -238,7 +238,7 @@ const AdminSEO = () => {
                 Search Console Verification Code
               </label>
               <input value={settings.google_site_verification || ''} onChange={e => setSettings(p => ({ ...p, google_site_verification: e.target.value }))}
-                placeholder="content= এর ভ্যালু পেস্ট করুন" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-none focus:border-primary" />
+                placeholder="content= এর ভ্যালু পেস্ট করুন" className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground font-mono focus:outline-hidden focus:border-primary" />
               {settings.google_site_verification && <p className="text-xs text-green-400 mt-1">✓ ভেরিফিকেশন ট্যাগ অটো-ইনজেক্ট হবে</p>}
             </div>
           </div>
@@ -268,20 +268,20 @@ const AdminSEO = () => {
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">ডিফল্ট OG Image URL</label>
               <input value={settings.og_image || ''} onChange={e => setSettings(p => ({ ...p, og_image: e.target.value }))}
                 placeholder="https://booklover.com.bd/og-image.png"
-                className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Twitter / X হ্যান্ডেল</label>
               <input value={settings.twitter_site || ''} onChange={e => setSettings(p => ({ ...p, twitter_site: e.target.value }))}
                 placeholder="@booklover"
-                className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
             </div>
             <div className="md:col-span-2">
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">ডিফল্ট মেটা ডেসক্রিপশন <span className="opacity-60">(160 অক্ষর)</span></label>
               <textarea value={settings.meta_description_default || ''} onChange={e => setSettings(p => ({ ...p, meta_description_default: e.target.value }))}
                 placeholder="Booklover – Bangladesh's most trusted digital software shop..."
                 rows={2}
-                className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary resize-none" />
+                className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary resize-none" />
             </div>
           </div>
 
@@ -307,7 +307,7 @@ const AdminSEO = () => {
             <div className="relative flex-1">
               <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input value={productSearch} onChange={e => setProductSearch(e.target.value)} placeholder="প্রোডাক্ট খুঁজুন..."
-                className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                className="w-full bg-background border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
             </div>
             {stats.withSeo < stats.products && (
               <button onClick={autoGenerateAll} disabled={saving} className="btn-glow px-4 py-2.5 rounded-xl text-xs font-medium flex items-center gap-2 whitespace-nowrap disabled:opacity-60">
@@ -327,7 +327,7 @@ const AdminSEO = () => {
                 <div className="flex items-center justify-between mb-2.5">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{p.name}</span>
-                    {!hasSeo && <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 font-medium">SEO নেই</span>}
+                    {!hasSeo && <span className="text-[10px] px-1.5 py-0.5 rounded-[0.25rem] bg-red-500/15 text-red-400 font-medium">SEO নেই</span>}
                   </div>
                   <button onClick={() => saveProductSeo(p)} disabled={savingProduct === p.id}
                     className="btn-glow px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 disabled:opacity-60">
@@ -343,7 +343,7 @@ const AdminSEO = () => {
                     </div>
                     <input value={title} onChange={e => setProductEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], seo_title: e.target.value } }))}
                       placeholder={`${p.name} – Buy at Best Price | Booklover`}
-                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
@@ -352,7 +352,7 @@ const AdminSEO = () => {
                     </div>
                     <input value={desc} onChange={e => setProductEdits(prev => ({ ...prev, [p.id]: { ...prev[p.id], seo_description: e.target.value } }))}
                       placeholder="সংক্ষিপ্ত বিবরণ লিখুন..."
-                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary" />
+                      className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-hidden focus:border-primary" />
                   </div>
                 </div>
               </div>
@@ -425,7 +425,7 @@ const AdminSEO = () => {
                   <span className="text-sm text-foreground">{s.label}</span>
                   <span className="text-xs text-muted-foreground ml-2">— {s.desc}</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground bg-muted/20 px-2 py-0.5 rounded">{s.page}</span>
+                <span className="text-[10px] text-muted-foreground bg-muted/20 px-2 py-0.5 rounded-[0.25rem]">{s.page}</span>
               </div>
             ))}
           </div>
@@ -441,7 +441,7 @@ const AdminSEO = () => {
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">টাইপ</label>
                 <select value={newRedirect.type} onChange={e => setNewRedirect({ ...newRedirect, type: e.target.value as '301' | '302' })}
-                  className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary">
+                  className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary">
                   <option value="301">301 (স্থায়ী)</option>
                   <option value="302">302 (অস্থায়ী)</option>
                 </select>
@@ -449,12 +449,12 @@ const AdminSEO = () => {
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">পুরানো পাথ</label>
                 <input value={newRedirect.from_path} onChange={e => setNewRedirect({ ...newRedirect, from_path: e.target.value })}
-                  placeholder="/old-page" className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  placeholder="/old-page" className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </div>
               <div>
                 <label className="text-xs text-muted-foreground mb-1 block">নতুন পাথ</label>
                 <input value={newRedirect.to_path} onChange={e => setNewRedirect({ ...newRedirect, to_path: e.target.value })}
-                  placeholder="/new-page" className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary" />
+                  placeholder="/new-page" className="w-full bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary" />
               </div>
               <div className="flex items-end">
                 <button onClick={addRedirect} className="btn-glow w-full px-4 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">

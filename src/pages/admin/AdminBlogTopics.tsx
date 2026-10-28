@@ -299,7 +299,7 @@ const AdminBlogTopics = () => {
                     </td>
                     <td className="p-2">
                       {!running && (
-                        <button onClick={() => removeFromQueue(q.id)} className="p-1 rounded hover:bg-accent">
+                        <button onClick={() => removeFromQueue(q.id)} className="p-1 rounded-[0.25rem] hover:bg-accent">
                           <X size={12} />
                         </button>
                       )}

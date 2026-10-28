@@ -53,7 +53,7 @@ const fetchNextInvoiceNumber = async (): Promise<string> => {
   }
 };
 
-const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";
+const inputCls = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors";
 
 const AdminInvoiceGenerator = () => {
   const printRef = useRef<HTMLDivElement>(null);
