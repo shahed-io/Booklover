@@ -622,7 +622,6 @@ const Checkout = () => {
       }
 
       // Attach affiliate ref if present
-      const affRef: { code: string } | null = null;
 
       // Generate the order id client-side so we don't need a RETURNING clause.
       // (Guest checkout can INSERT but cannot SELECT its own row under current RLS,
@@ -653,7 +652,7 @@ const Checkout = () => {
         payment_status: paymentMethod === 'wallet' ? 'paid' : 'pending',
         notes: [customFieldsText, orderNotes.trim(), refCreditApplied > 0 ? `[Referral credit applied: ৳${refCreditApplied}]` : '']
           .filter(Boolean).join('\n') || null,
-        affiliate_referral_code: affRef?.code || null,
+        affiliate_referral_code: null,
       };
 
       const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
