@@ -1,5 +1,9 @@
 # Roadmap
 
+## Footer theme bands
+- [ ] Replace black top/bottom bands with pearl/ruby in white theme and garnet/pearl in dark theme, preserving content and layout.
+- [ ] Verify readability in both themes.
+
 ## Full-width homepage book rows
 - [x] Expand every product row below categories to desktop screen width, adapting visible book count while preserving category design.
 - [x] Verify all five real book rows at 1024–2560px and mobile; next/previous navigation passed with no runtime errors and build OK.

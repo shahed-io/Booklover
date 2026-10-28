@@ -100,7 +100,7 @@ const Footer = () => {
     `}</style>
 
     {/* ── Top: Navy gloss CTA band (mirrors header utility strip) ── */}
-    <div className="relative footer-sheen overflow-hidden"
+    <div className="relative footer-sheen bl-footer-band overflow-hidden"
       style={{
         background: NAVY_PANEL,
         boxShadow: '0 12px 30px -18px hsla(352,70%,22%,0.6), inset 0 1px 0 hsla(0,0%,100%,0.12)',
@@ -298,7 +298,7 @@ const Footer = () => {
     </div>
 
     {/* ── Bottom: Navy gloss bar (payments + status + copyright) ── */}
-    <div className="relative footer-sheen overflow-hidden"
+    <div className="relative footer-sheen bl-footer-band overflow-hidden"
       style={{
         background: NAVY_PANEL,
         boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.10)',
