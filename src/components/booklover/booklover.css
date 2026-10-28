@@ -320,3 +320,7 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 --ft-shadow:0 18px 40px -26px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05);
 --ft-pill:linear-gradient(180deg,#202022,#18181a);--ft-hover:linear-gradient(180deg,rgba(212,175,95,.12),rgba(212,175,95,.04));
 --ft-cta-bg:linear-gradient(180deg,#f3d98f,#c9a84c);--ft-cta-text:#1a1408}
+/* Character banners: keep hero text readable over light left areas */
+.bl-hero:after{background:linear-gradient(90deg,rgb(20 12 10/.78) 0%,rgb(20 12 10/.55) 30%,rgb(20 12 10/.12) 55%,transparent 70%);}
+.bl-hero-copy h1,.bl-hero-copy p{text-shadow:0 2px 18px rgb(0 0 0/.35);}
+@media(max-width:540px){.bl-hero:after{background:linear-gradient(0deg,rgb(20 12 10/.85) 0%,rgb(20 12 10/.45) 45%,transparent 75%);}}
