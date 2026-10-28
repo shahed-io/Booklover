@@ -791,19 +791,6 @@ const UserDashboard = () => {
         status: 'pending',
       });
       if (error) throw error;
-      supabase.functions.invoke('notify-telegram-event', {
-        body: {
-          title: '💰 নতুন Wallet Top-up Request',
-          lines: [
-            `👤 গ্রাহক: ${profile.display_name || user.email}`,
-            `📧 ${user.email}`,
-            `💵 পরিমাণ: ৳${amt.toLocaleString()}`,
-            `💳 পেমেন্ট: ${topupPaymentMethod.toUpperCase()}`,
-            `🔖 TrxID: ${topupTxId.trim()}`,
-          ],
-          footer: '⏳ Admin verification পেন্ডিং',
-        },
-      }).catch(() => {});
       toast.success('✅ Top-up request submitted! Admin will verify and credit your wallet.');
       setTopupStep(2); setTopupTxId(''); removeTopupScreenshot();
     } catch (e: any) {

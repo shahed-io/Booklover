@@ -1354,16 +1354,6 @@ const AdminOrders = () => {
           }).catch((e) => console.error('Status email failed:', e));
         }
         // Telegram status notification
-        supabase.functions.invoke('notify-telegram-event', {
-          body: {
-            title: `🔄 অর্ডার Status Update → ${String(updates.status).toUpperCase()}`,
-            lines: [
-              ord?.order_number ? `🧾 #${ord.order_number}` : null,
-              ord?.customer_name ? `👤 ${ord.customer_name}` : null,
-              ord?.total ? `💵 ৳${Number(ord.total).toLocaleString()}` : null,
-            ],
-          },
-        }).catch(() => {});
       }
       // Refresh orders and update selected order if open
       fetchOrders();

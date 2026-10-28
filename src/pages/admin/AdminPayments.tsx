@@ -599,19 +599,6 @@ export default function AdminPayments() {
       qc.invalidateQueries({ queryKey: ['payment-proofs'] });
       if (selected) {
         const order = (selected as any).orders;
-        supabase.functions.invoke('notify-telegram-event', {
-          body: {
-            title: vars.status === 'approved' ? '✅ Payment Approved' : '❌ Payment Rejected',
-            lines: [
-              order?.order_number ? `🧾 অর্ডার: #${order.order_number}` : null,
-              order?.customer_name ? `👤 ${order.customer_name}` : null,
-              order?.customer_email ? `📧 ${order.customer_email}` : null,
-              `💵 ৳${Number(selected.amount || order?.total || 0).toLocaleString()}`,
-              selected.payment_method ? `💳 ${selected.payment_method.toUpperCase()}` : null,
-              selected.transaction_id ? `🔖 TrxID: ${selected.transaction_id}` : null,
-            ],
-          },
-        }).catch(() => {});
       }
       setSelected(null);
     },
