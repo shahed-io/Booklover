@@ -1,0 +1,11 @@
+DROP TRIGGER IF EXISTS trigger_notify_new_order_telegram ON public.orders;
+DROP TRIGGER IF EXISTS on_order_status_change_notify_telegram ON public.orders;
+DROP TRIGGER IF EXISTS assign_licenses_on_order_complete ON public.orders;
+DROP TRIGGER IF EXISTS trg_auto_credit_cid ON public.orders;
+DROP TRIGGER IF EXISTS trg_notify_abandoned_checkout_telegram ON public.abandoned_checkouts;
+COMMENT ON TABLE public.license_keys IS 'DEPRECATED: software license feature removed for Booklover';
+COMMENT ON TABLE public.cid_generations IS 'DEPRECATED: CID feature removed for Booklover';
+COMMENT ON TABLE public.affiliate_accounts IS 'DEPRECATED: affiliate feature removed for Booklover';
+COMMENT ON TABLE public.referrals IS 'DEPRECATED: referral feature removed for Booklover';
+COMMENT ON TABLE public.telegram_cart IS 'DEPRECATED: Telegram bot removed for Booklover';
+COMMENT ON TABLE public.whatsapp_messages IS 'DEPRECATED: WhatsApp bot removed for Booklover';
