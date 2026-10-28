@@ -171,15 +171,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const userId = user?.id;
 
-  const [items, setItems] = useState<CartItem[]>(() => loadInitialItems());
-  const [wishlist, setWishlist] = useState<CartItem[]>(() => {
-    try { return sanitizeItems(JSON.parse(localStorage.getItem('wishlist') || '[]')); } catch { return []; }
-  });
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [wishlist, setWishlist] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
-  const [coupon, setCouponState] = useState<CouponState>(() => {
-    try { return JSON.parse(localStorage.getItem('cart_coupon') || 'null') || EMPTY_COUPON; } catch { return EMPTY_COUPON; }
-  });
+  const [coupon, setCouponState] = useState<CouponState>(EMPTY_COUPON);
   const [orderNotes, setOrderNotes] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [serviceFee] = useState(DEFAULT_SERVICE_FEE);
@@ -190,8 +186,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Track which user we've synced for, to avoid duplicate syncs
   const syncedUserRef = useRef<string | null>(null);
 
+  // Load saved cart after hydration so server and first client render match.
+  const [localLoaded, setLocalLoaded] = useState(false);
+  useEffect(() => {
+    setItems(loadInitialItems());
+    try { setWishlist(sanitizeItems(JSON.parse(localStorage.getItem('wishlist') || '[]'))); } catch { /* ignore */ }
+    try { setCouponState(JSON.parse(localStorage.getItem('cart_coupon') || 'null') || EMPTY_COUPON); } catch { /* ignore */ }
+    setLocalLoaded(true);
+  }, []);
+
   // Persist locally + keep a rolling backup so an abandoned checkout can be resumed later.
   useEffect(() => {
+    if (!localLoaded) return;
     localStorage.setItem(CART_KEY, JSON.stringify(items));
     if (items.length > 0) {
       writeBackup(items);
@@ -200,9 +206,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       // resurrect on next visit.
       try { localStorage.removeItem(CART_BACKUP_KEY); } catch { /* ignore */ }
     }
-  }, [items]);
-  useEffect(() => { localStorage.setItem('wishlist', JSON.stringify(wishlist)); }, [wishlist]);
-  useEffect(() => { localStorage.setItem('cart_coupon', JSON.stringify(coupon)); }, [coupon]);
+  }, [items, localLoaded]);
+  useEffect(() => { if (localLoaded) localStorage.setItem('wishlist', JSON.stringify(wishlist)); }, [wishlist, localLoaded]);
+  useEffect(() => { if (localLoaded) localStorage.setItem('cart_coupon', JSON.stringify(coupon)); }, [coupon, localLoaded]);
 
 
   // === DB sync helpers ===
