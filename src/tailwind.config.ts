@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
 import typography from "@tailwindcss/typography";
+import plugin from "tailwindcss/plugin";
 
 export default {
-  darkMode: ["class"],
+  darkMode: "class",
   content: ["./**/*.{ts,tsx}"],
   prefix: "",
   theme: {
@@ -165,7 +166,7 @@ export default {
   },
   plugins: [
     typography,
-    function ({ addUtilities }: { addUtilities: (u: Record<string, unknown>) => void }) {
+    plugin(function ({ addUtilities }) {
       addUtilities({
         '.scrollbar-hide': {
           '-ms-overflow-style': 'none',
@@ -173,6 +174,6 @@ export default {
           '&::-webkit-scrollbar': { display: 'none' },
         },
       });
-    },
+    }),
   ],
 } satisfies Config;

@@ -115,8 +115,8 @@ export default function AdminPaymentLinks() {
       return toast.error('Title, product name and amount are required');
     }
     const slug = editor.slug.trim() || slugify(editor.title);
-    const payload = { ...editor, slug, original_amount: editor.original_amount || null, max_uses: editor.max_uses || null, expires_at: editor.expires_at || null };
-    delete (payload as any).id;
+    const { id: _omitId, ...editorRest } = editor;
+    const payload = { ...editorRest, slug, original_amount: editor.original_amount || null, max_uses: editor.max_uses || null, expires_at: editor.expires_at || null };
     try {
       if (editor.id) {
         const { error } = await supabase.from('payment_links').update(payload).eq('id', editor.id);
