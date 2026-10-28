@@ -52,7 +52,7 @@ export function useNavigate(): NavigateFn {
       search: search as never,
       hash: hash!,
       state: options?.state as never,
-      replace: options?.replace,
+      replace: options?.replace!,
     });
   }, [tsNav, router]) as NavigateFn;
 }
@@ -132,7 +132,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
       to={pathname as never}
       search={search as never}
       hash={hash!}
-      replace={replace}
+      replace={replace!}
       state={state as never}
       {...((rest ?? {}) as Record<string, unknown>)}
     >
@@ -146,7 +146,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
 
 export function Navigate({ to, replace, state }: { to: string; replace?: boolean; state?: unknown }) {
   const { pathname, search, hash } = parseTo(to);
-  return <TSNavigate to={pathname as never} search={search as never} hash={hash!} state={state as never} replace={replace} />;
+  return <TSNavigate to={pathname as never} search={search as never} hash={hash!} state={state as never} replace={replace!} />;
 }
 
 // ---------- Outlet ----------

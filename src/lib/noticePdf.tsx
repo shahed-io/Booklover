@@ -31,7 +31,7 @@ export async function downloadNoticePdf(
     <NoticeTemplate
       notice={notice}
       brand={opts.brand!}
-      signatureUrl={opts.signatureUrl}
+      signatureUrl={opts.signatureUrl!}
     />
   );
 

@@ -63,7 +63,7 @@ export const SupportTicketModal = ({ open, onClose }: Props) => {
         customer_email: result.data.customer_email,
         customer_phone: result.data.customer_phone!,
         subject: result.data.subject,
-        order_number: result.data.order_number,
+        order_number: result.data.order_number!,
         priority: result.data.priority,
         message: result.data.message,
         ticket_number,

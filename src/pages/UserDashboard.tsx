@@ -538,7 +538,7 @@ const UserDashboard = () => {
         date: order.created_at,
         customer: {
           name: profile?.display_name || user?.email?.split('@')[0] || 'Customer',
-          email: profile?.email || user?.email || undefined,
+          email: (profile?.email || user?.email || undefined)!,
           phone: (profile?.phone || undefined)!,
         },
         items: (items || []).map(i => ({
