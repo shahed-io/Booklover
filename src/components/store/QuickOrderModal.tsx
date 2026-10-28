@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import AuthModal from '@/components/store/AuthModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { z } from 'zod';
 import PaymentInstructions from '@/components/store/PaymentInstructions';
 import type { PMId } from '@/components/store/PaymentInstructions';

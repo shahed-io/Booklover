@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from '@/lib/router-compat';
 import DOMPurify from 'dompurify';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/store/Navbar';

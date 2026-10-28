@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Search, Eye, CheckCircle, XCircle, Truck, RefreshCw, RotateCcw,

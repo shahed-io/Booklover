@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import BrandLoader from '@/components/store/BrandLoader';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/store/Navbar';
 import Footer from '@/components/store/Footer';

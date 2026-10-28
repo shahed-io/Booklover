@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link,useParams,useSearchParams,useLocation } from 'react-router-dom';
+import { Link,useParams,useSearchParams,useLocation } from '@/lib/router-compat';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import Layout from './Layout';

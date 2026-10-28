@@ -1,6 +1,6 @@
 // Public notice list + detail
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import NoticeTemplate, { NoticeData } from '@/components/notices/NoticeTemplate';
 import SEOHead from '@/components/seo/SEOHead';

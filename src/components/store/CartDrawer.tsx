@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { X, ShoppingCart, Plus, Minus, Trash2, ArrowRight, Tag, Loader2, Heart, CheckCircle, Check } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 

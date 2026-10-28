@@ -5,7 +5,7 @@ import PaymentInstructions from '@/components/store/PaymentInstructions';
 import { usePaymentSettings } from '@/hooks/usePaymentSettings';
 import { useBkashPgwContent } from '@/hooks/useBkashPgwContent';
 import { getPaymentLogo } from '@/lib/paymentLogos';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from '@/lib/router-compat';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useReferralConfig, getReferralTier } from '@/hooks/useReferralConfig';

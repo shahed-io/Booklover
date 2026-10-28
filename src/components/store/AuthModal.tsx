@@ -3,7 +3,7 @@ import { X, Mail, Lock, User, Eye, EyeOff, LogIn, KeyRound, ArrowLeft, Gift, Spa
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { toast } from 'sonner';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from '@/lib/router-compat';
 import BrandLogo from '@/components/store/BrandLogo';
 import { sendWelcomeEmail } from '@/lib/loginNotifier';
 import TurnstileWidget, { useTurnstileSiteKey } from '@/components/store/TurnstileWidget';

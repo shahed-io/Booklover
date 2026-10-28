@@ -8,7 +8,7 @@ import SearchBar, { DesktopSearchPalette, MobileSearchOverlay } from './SearchBa
 import CurrencySwitcher from './CurrencySwitcher';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { prefetchRoute } from '@/hooks/usePrefetchRoute';
 

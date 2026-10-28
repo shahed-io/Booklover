@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from '@/lib/router-compat';
 import { useAdmin2FA, setStoredToken, getStoredToken, type Admin2FAConfig } from '@/hooks/useAdmin2FA';
 import { ShieldCheck, ShieldAlert, Copy, KeyRound, Loader2, AlertTriangle, RefreshCw, MailCheck, Printer, Download, Clock } from 'lucide-react';
 import { toast } from 'sonner';

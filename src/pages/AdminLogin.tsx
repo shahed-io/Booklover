@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import BrandLoader from '@/components/store/BrandLoader';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { Eye, EyeOff, Lock, Mail, ShieldCheck, KeyRound, ArrowLeft, MailCheck } from 'lucide-react';
 import BrandLogo from '@/components/store/BrandLogo';
 import SEOHead from '@/components/seo/SEOHead';

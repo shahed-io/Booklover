@@ -4,7 +4,7 @@ import { Product, isProductOutOfStock } from '@/data/products';
 import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/hooks/useWishlist';
 import QuickOrderModal from './QuickOrderModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { prefetchRoute } from '@/hooks/usePrefetchRoute';
 import { useCurrency } from '@/hooks/useCurrency';
 

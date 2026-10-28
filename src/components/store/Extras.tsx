@@ -2,7 +2,7 @@ import { FloatingSupport } from './FloatingSupport';
 import { Zap } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { useMemo } from 'react';
 
 type TickerItem = { label: string; price: string; off: string; slug?: string };

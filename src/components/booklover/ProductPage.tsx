@@ -1,5 +1,5 @@
 import { useEffect,useState } from 'react';
-import { Link,useNavigate,useParams } from 'react-router-dom';
+import { Link,useNavigate,useParams } from '@/lib/router-compat';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import { BookOpen,Share2,Heart,Star, X } from 'lucide-react';

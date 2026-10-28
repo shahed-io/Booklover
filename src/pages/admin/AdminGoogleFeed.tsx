@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Copy, ExternalLink, RefreshCw, AlertTriangle, CheckCircle2, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 
 const FEED_URL = "https://booklover.com.bd/product-feed.xml";
 
