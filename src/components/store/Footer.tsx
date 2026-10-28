@@ -101,7 +101,7 @@ const Footer = () => {
     <div className="relative footer-sheen overflow-hidden"
       style={{
         background: NAVY_PANEL,
-        boxShadow: '0 12px 30px -18px hsla(222,60%,12%,0.6), inset 0 1px 0 hsla(0,0%,100%,0.12)',
+        boxShadow: '0 12px 30px -18px hsla(352,70%,22%,0.6), inset 0 1px 0 hsla(0,0%,100%,0.12)',
       }}>
       <div className="absolute top-0 left-0 right-0 h-[2px]"
         style={{ background: 'linear-gradient(90deg, transparent, hsla(0,0%,100%,0.7), transparent)' }} />
@@ -195,7 +195,7 @@ const Footer = () => {
                   style={{
                     background: `linear-gradient(180deg, ${NAVY_TOP}, ${NAVY_MID})`,
                     color: AMBER,
-                    boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.22), 0 4px 12px -8px hsla(222,60%,15%,0.8)',
+                    boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.22), 0 4px 12px -8px hsla(352,70%,25%,0.8)',
                   }}>
                   {c.icon}
                 </span>
@@ -213,7 +213,7 @@ const Footer = () => {
                 style={{
                   background: `linear-gradient(180deg, ${NAVY_TOP}, ${NAVY_DEEP})`,
                   color: 'hsla(0,0%,100%,0.85)',
-                  boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.22), 0 8px 18px -12px hsla(222,60%,15%,0.9)',
+                  boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.22), 0 8px 18px -12px hsla(352,70%,25%,0.9)',
                 }}
                 onMouseEnter={e => {
                   const el = e.currentTarget as HTMLElement;
@@ -249,7 +249,7 @@ const Footer = () => {
                     style={{
                       background: `linear-gradient(180deg, ${NAVY_TOP}, ${NAVY_MID})`,
                       color: AMBER,
-                      boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.24), 0 6px 16px -10px hsla(222,60%,15%,0.9)',
+                      boxShadow: 'inset 0 1px 0 hsla(0,0%,100%,0.24), 0 6px 16px -10px hsla(352,70%,25%,0.9)',
                     }}>
                     <IconComp size={14} />
                   </div>
