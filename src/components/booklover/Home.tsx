@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Pause, Play, ArrowRight, BookOpen } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
@@ -28,11 +28,21 @@ function HomeCard({ book }: { book: Book }) {
 }
 
 function Row({ title, books, to, loading }: { title: string; books: Book[]; to: string; loading?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState(1);
   if (!books.length && !loading) return null;
+  const step = () => { const el = ref.current; const card = el?.firstElementChild as HTMLElement | null; return card ? card.offsetWidth + 40 : 300; };
+  const onScroll = () => { const el = ref.current; if (el) setPos(Math.min(books.length, Math.round(el.scrollLeft / step()) + 1)); };
+  const go = (d: number) => ref.current?.scrollBy({ left: d * step(), behavior: 'smooth' });
   return (
     <section className="bl-hsection">
       <div className="bl-hwrap"><h2>{title}</h2></div>
-      <div className="bl-hrow">{books.length ? books.map(b => <HomeCard key={b.id} book={b} />) : Array.from({ length: 5 }, (_, i) => <div key={i} className="bl-skel" />)}</div>
+      <div className="bl-hrow" ref={ref} onScroll={onScroll}>{books.length ? books.map(b => <HomeCard key={b.id} book={b} />) : Array.from({ length: 5 }, (_, i) => <div key={i} className="bl-skel" />)}</div>
+      {books.length > 1 && <div className="bl-rownav">
+        <button aria-label="Previous books" disabled={pos <= 1} onClick={() => go(-1)}><ChevronLeft size={16} /></button>
+        <span>{pos}/{books.length}</span>
+        <button aria-label="Next books" disabled={pos >= books.length} onClick={() => go(1)}><ChevronRight size={16} /></button>
+      </div>}
       <div className="bl-hcenter"><Link to={to} className="bl-pill">View all</Link></div>
     </section>
   );
