@@ -216,7 +216,7 @@ const AdminReports = () => {
               <ResponsiveContainer width="50%" height={200}>
                 <RePieChart>
                   <Pie data={paymentMethods} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} innerRadius={40}>
-                    {paymentMethods.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                    {paymentMethods.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]!} />)}
                   </Pie>
                   <Tooltip contentStyle={tooltipStyle} />
                 </RePieChart>

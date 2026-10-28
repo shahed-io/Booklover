@@ -84,7 +84,7 @@ const AdminCheckoutSettings = () => {
       const next = [...p.customFields];
       const target = index + dir;
       if (target < 0 || target >= next.length) return p;
-      [next[index]!, next[target]!] = [next[target], next[index]];
+      [next[index]!, next[target]!] = [next[target]!, next[index]!];
       return { ...p, customFields: next };
     });
 

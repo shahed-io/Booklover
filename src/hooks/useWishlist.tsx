@@ -91,7 +91,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
         product_id: productId,
         product_name: item.name,
         product_price: item.price,
-        product_image: item.image,
+        product_image: item.image!,
       };
       const updated = [...wishlistItems, newItem];
       setWishlistItems(updated);

@@ -61,7 +61,7 @@ export const SupportTicketModal = ({ open, onClose }: Props) => {
       const { error } = await supabase.from('support_tickets').insert([{
         customer_name: result.data.customer_name,
         customer_email: result.data.customer_email,
-        customer_phone: result.data.customer_phone,
+        customer_phone: result.data.customer_phone!,
         subject: result.data.subject,
         order_number: result.data.order_number,
         priority: result.data.priority,

@@ -91,7 +91,7 @@ const injectTikTok = (accounts: PixelAccount[]) => {
       ttq._i = ttq._i || {}; ttq._i[e] = []; ttq._i[e]._u = r; ttq._t = ttq._t || {}; ttq._t[e] = +new Date();
       ttq._o = ttq._o || {}; ttq._o[e] = n || {};
       const o = d.createElement('script'); o.type = 'text/javascript'; o.async = true; o.src = r + '?sdkid=' + e + '&lib=' + t;
-      const a = d.getElementsByTagName('script')[0]; a!.parentNode!.insertBefore(o, a);
+      const a = d.getElementsByTagName('script')[0]; a!.parentNode!.insertBefore(o, a ?? null);
     };
     accounts.forEach(acc => { ttq.load(acc.pixel_id); });
     ttq.page();
@@ -108,7 +108,7 @@ const injectSnapchat = (accounts: PixelAccount[]) => {
     a.queue = [];
     const s = 'script';
     const r = t.createElement(s); r.async = true; r.src = n;
-    const u = t.getElementsByTagName(s)[0]; u!.parentNode!.insertBefore(r, u);
+    const u = t.getElementsByTagName(s)[0]; u!.parentNode!.insertBefore(r, u ?? null);
   })(window, document, 'https://sc-static.net/scevent.min.js');
   accounts.forEach(acc => {
     window.snaptr('init', acc.pixel_id, acc.user_email ? { user_email: acc.user_email } : {});
@@ -128,7 +128,7 @@ const injectPinterest = (accounts: PixelAccount[]) => {
       const t = document.createElement('script');
       t.async = true; t.src = 'https://s.pinimg.com/ct/core.js';
       const r = document.getElementsByTagName('script')[0];
-      r!.parentNode!.insertBefore(t, r);
+      r!.parentNode!.insertBefore(t, r ?? null);
     }
   })(window);
   accounts.forEach(acc => { window.pintrk('load', acc.pixel_id); });
@@ -157,7 +157,7 @@ const injectLinkedIn = (accounts: PixelAccount[]) => {
     const b = document.createElement('script');
     b.type = 'text/javascript'; b.async = true;
     b.src = 'https://snap.licdn.com/li.lms-analytics/insight.min.js';
-    s!.parentNode!.insertBefore(b, s);
+    s!.parentNode!.insertBefore(b, s ?? null);
   })(window.lintrk);
   /* eslint-enable */
 };
@@ -174,7 +174,7 @@ const injectTwitter = (accounts: PixelAccount[]) => {
     script.async = true;
     script.src = 'https://static.ads-twitter.com/uwt.js';
     const first = document.getElementsByTagName('script')[0];
-    first!.parentNode!.insertBefore(script, first);
+    first!.parentNode!.insertBefore(script, first ?? null);
   }
   accounts.forEach(acc => { w.twq('config', acc.pixel_id); });
 };

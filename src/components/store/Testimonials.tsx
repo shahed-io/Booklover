@@ -91,7 +91,7 @@ const AvatarCircle = ({ initials, index, seed, name }: { initials: string; index
 /* ─── Review Card ─────────────────────────────── */
 const ReviewCard = ({ review, index }: { review: Review; index: number }) => {
   const [hov, setHov] = useState(false);
-  const { from } = PALETTES[index % PALETTES.length];
+  const { from } = PALETTES[index % PALETTES.length]!;
 
   return (
     <div

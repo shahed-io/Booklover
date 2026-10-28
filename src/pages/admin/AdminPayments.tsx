@@ -113,7 +113,7 @@ const MethodEditor = ({
     const arr = [...form.steps];
     const j = i + dir;
     if (j < 0 || j >= arr.length) return;
-    [arr[i]!, arr[j]!] = [arr[j], arr[i]];
+    [arr[i]!, arr[j]!] = [arr[j]!, arr[i]!];
     set('steps', arr);
   };
 
@@ -394,7 +394,7 @@ const PaymentSettingsTab = () => {
     const arr = [...working];
     const j = i + dir;
     if (j < 0 || j >= arr.length) return;
-    [arr[i]!, arr[j]!] = [arr[j], arr[i]];
+    [arr[i]!, arr[j]!] = [arr[j]!, arr[i]!];
     update(arr.map((m, idx) => ({ ...m, sortOrder: idx })));
   };
 

@@ -47,7 +47,7 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
 
   const wishlisted = isWishlisted(String(product.id));
   const inCart     = isInCart(product.id);
-  const outOfStock = isProductOutOfStock({ status: product.status, stockQuantity: product.stockQuantity });
+  const outOfStock = isProductOutOfStock({ status: product.status!, stockQuantity: product.stockQuantity });
 
   const waMsg = () => {
     const msg = encodeURIComponent(`অর্ডার করতে চাই:\n📦 ${product.name}\n💰 ৳${product.price.toLocaleString()}`);
@@ -473,7 +473,7 @@ const ProductCard = ({ product, delay = 0, priority = false }: ProductCardProps)
               </button>
               <button
                 disabled={outOfStock}
-                onClick={e => { e.stopPropagation(); if (outOfStock) return; addToCart({ id: product.id, name: product.name, category: product.category, price: product.price, originalPrice: product.originalPrice, image: product.image }); }}
+                onClick={e => { e.stopPropagation(); if (outOfStock) return; addToCart({ id: product.id, name: product.name, category: product.category, price: product.price, originalPrice: product.originalPrice!, image: product.image }); }}
                 className="btn-vision-cart flex items-center justify-center gap-1 py-2 text-[11px] disabled:opacity-50 disabled:cursor-not-allowed">
                 <ShoppingCart size={11} />
                 {outOfStock ? 'Out' : (inCart ? '✓ Added' : 'Cart')}

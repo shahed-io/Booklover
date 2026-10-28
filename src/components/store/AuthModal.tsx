@@ -507,7 +507,7 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
                   onChange={(v) => setName(v)}
                   onBlur={() => setTouched(t => ({ ...t, name: true }))}
                   valid={nameValid}
-                  invalid={touched.name && !nameValid && name.length > 0}
+                  invalid={(touched.name && !nameValid && name.length > 0)!}
                   errorMsg="নাম কমপক্ষে ২ অক্ষরের হতে হবে"
                   required
                 />
@@ -521,7 +521,7 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
                 onChange={(v) => setEmail(v)}
                 onBlur={() => setTouched(t => ({ ...t, email: true }))}
                 valid={emailValid}
-                invalid={touched.email && !emailValid && email.length > 0}
+                invalid={(touched.email && !emailValid && email.length > 0)!}
                 errorMsg="সঠিক ইমেইল অ্যাড্রেস দিন"
                 required
               />
@@ -538,7 +538,7 @@ const AuthModal = ({ isOpen, onClose, redirectAfterLogin = true, oauthRedirectTo
                     onKeyDown={(e) => setCapsLockOn(e.getModifierState && e.getModifierState('CapsLock'))}
                     onKeyUp={(e) => setCapsLockOn(e.getModifierState && e.getModifierState('CapsLock'))}
                     valid={mode === 'signup' ? passwordValid : pwLen >= 1}
-                    invalid={mode === 'signup' && touched.password && !passwordValid && pwLen > 0}
+                    invalid={(mode === 'signup' && touched.password && !passwordValid && pwLen > 0)!}
                     errorMsg="পাসওয়ার্ড কমপক্ষে ৮ অক্ষর, অক্ষর ও সংখ্যা থাকতে হবে"
                     required
                     rightSlot={

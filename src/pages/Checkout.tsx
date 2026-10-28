@@ -375,7 +375,7 @@ const Checkout = () => {
           name: p.name,
           category: (p as any).categories?.name || '',
           price: Number(p.price) || 0,
-          originalPrice: p.original_price ? Number(p.original_price) : undefined,
+          originalPrice: (p.original_price ? Number(p.original_price) : undefined)!,
           image: p.image_url || '',
         }, qty);
       } catch (e) {
@@ -1024,7 +1024,7 @@ const Checkout = () => {
       gTrackPurchase({
         transaction_id: orderNum,
         value: finalTotal,
-        coupon: coupon.isApplied ? coupon.code : undefined,
+        coupon: (coupon.isApplied ? coupon.code : undefined)!,
         items: items.map(i => ({ item_id: String(i.id), item_name: i.name, price: i.price, quantity: i.quantity })),
       }, { email: form.email, phone: form.phone, name: form.name }).catch(() => { /* silent */ });
       // Fire TikTok (+ CAPI) / Snap / Pin / LinkedIn / X pixels
@@ -1142,7 +1142,7 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead title="Checkout" description="Complete your secure checkout at Booklover." noIndex />
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} redirectAfterLogin={false} oauthRedirectTo={typeof window !== 'undefined' ? window.location.href : undefined} />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} redirectAfterLogin={false} oauthRedirectTo={(typeof window !== 'undefined' ? window.location.href : undefined)!} />
 
 
       {/* Sticky Header */}

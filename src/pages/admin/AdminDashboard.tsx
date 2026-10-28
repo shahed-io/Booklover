@@ -339,7 +339,7 @@ const AdminDashboard = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
             {notifications.map(n => {
-              const { icon: NIcon, color } = notifIcon[n.type];
+              const { icon: NIcon, color } = notifIcon[n.type]!;
               const linkMap: Record<string, string> = {
                 order: '/admin/orders?filter=today',
                 payment: '/admin/orders?status=payment_pending',

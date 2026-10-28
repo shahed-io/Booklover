@@ -117,7 +117,7 @@ const AdminHeroBanner = () => {
       if (idx < 0) return prev;
       const newIdx = idx + dir;
       if (newIdx < 0 || newIdx >= prev.length) return prev;
-      const arr = [...prev]; [arr[idx]!, arr[newIdx]!] = [arr[newIdx], arr[idx]]; return arr;
+      const arr = [...prev]; [arr[idx]!, arr[newIdx]!] = [arr[newIdx]!, arr[idx]!]; return arr;
     });
   };
   const updateSlide = useCallback((id: string, field: keyof Slide, value: unknown) => {

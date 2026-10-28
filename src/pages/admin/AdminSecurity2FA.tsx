@@ -139,7 +139,7 @@ const AdminSecurity2FA = () => {
         resetBackupCode.trim() ||
         resetEmailCode.trim() ||
         undefined;
-      await reset({ token: sessionToken, code: codeInput });
+      await reset({ token: sessionToken!, code: codeInput });
       toast.success('Authenticator reset. Scan the new QR below.');
       setEnabled(false);
       setResetMode(false);
@@ -190,7 +190,7 @@ const AdminSecurity2FA = () => {
     try {
       const sessionToken = getStoredToken() || undefined;
       const codeInput = regenCode.trim() || undefined;
-      const r = await regenerateBackupCodes({ token: sessionToken, code: codeInput });
+      const r = await regenerateBackupCodes({ token: sessionToken!, code: codeInput });
       setBackupCodes(r.backupCodes ?? []);
       setRegenMode(false);
       setRegenCode('');

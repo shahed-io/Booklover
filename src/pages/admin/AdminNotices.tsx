@@ -98,7 +98,7 @@ export default function AdminNotices() {
       const { data: { session } } = await supabase.auth.getSession();
       const { data, error } = await supabase.functions.invoke('ai-generate-notice', {
         body: { prompt: aiPrompt, audience: editing?.audience || 'public', tone: aiTone, language: aiLang },
-        headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : undefined,
+        headers: (session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : undefined)!,
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -189,7 +189,7 @@ export default function AdminNotices() {
       toast.info('PDF তৈরি হচ্ছে...');
       await downloadNoticePdf(n, {
         brand: { name: 'Booklover' },
-        signatureUrl: signature.imageDataUrl || undefined,
+        signatureUrl: (signature.imageDataUrl || undefined)!,
       });
       toast.success('Notice download হয়েছে');
     } catch (e: any) {
@@ -557,7 +557,7 @@ export default function AdminNotices() {
             <TabsContent value="preview" className="pt-4">
               {previewNotice ? (
                 <div className="bg-gray-100 p-4 rounded-lg">
-                  <NoticeTemplate notice={previewNotice} brand={{ name: 'Booklover' }} signatureUrl={signature.imageDataUrl || undefined} />
+                  <NoticeTemplate notice={previewNotice} brand={{ name: 'Booklover' }} signatureUrl={(signature.imageDataUrl || undefined)!} />
                 </div>
               ) : <div className="text-center text-muted-foreground py-10">কিছু তথ্য দিন তারপর preview দেখুন</div>}
             </TabsContent>
@@ -611,7 +611,7 @@ export default function AdminNotices() {
           </DialogHeader>
           {previewing && (
             <div className="bg-gray-100 p-4 rounded-lg print:bg-white print:p-0">
-              <NoticeTemplate notice={previewing} brand={{ name: 'Booklover' }} signatureUrl={signature.imageDataUrl || undefined} />
+              <NoticeTemplate notice={previewing} brand={{ name: 'Booklover' }} signatureUrl={(signature.imageDataUrl || undefined)!} />
             </div>
           )}
         </DialogContent>
@@ -624,7 +624,7 @@ export default function AdminNotices() {
         defaultMessage={notifyNotice ? (notifyNotice.summary || notifyNotice.title || '') : ''}
         defaultLink={notifyNotice ? `/notices/${notifyNotice.slug}` : ''}
         type="notice"
-        sourceLabel={notifyNotice ? 'Notice' : undefined}
+        sourceLabel={(notifyNotice ? 'Notice' : undefined)!}
       />
     </div>
   );

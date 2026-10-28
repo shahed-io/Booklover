@@ -43,7 +43,7 @@ const ColorField = ({
 }) => {
   const isAuto = value === 'auto';
   return (
-    <Field label={label} hint={allowAuto ? 'Set "Auto" to derive automatically from brand color.' : undefined}>
+    <Field label={label} hint={(allowAuto ? 'Set "Auto" to derive automatically from brand color.' : undefined)!}>
       <div className="flex items-center gap-2">
         <input
           type="color"

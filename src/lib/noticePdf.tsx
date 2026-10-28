@@ -30,7 +30,7 @@ export async function downloadNoticePdf(
   root.render(
     <NoticeTemplate
       notice={notice}
-      brand={opts.brand}
+      brand={opts.brand!}
       signatureUrl={opts.signatureUrl}
     />
   );

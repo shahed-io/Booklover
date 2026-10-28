@@ -532,7 +532,7 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query=""
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                   />
                 ))}
@@ -595,7 +595,7 @@ const DesktopSearchPalette = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query={s.query}
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                     isActive={s.activeIdx === s.suggestions.length + idx}
                   />
@@ -793,7 +793,7 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query=""
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                   />
                 ))}
@@ -855,7 +855,7 @@ const MobileSearchOverlay = ({ onClose }: { onClose: () => void }) => {
                     key={product.id}
                     product={product}
                     query={s.query}
-                    categoryName={product.category_id ? s.categoryMap[product.category_id] : null}
+                    categoryName={(product.category_id ? s.categoryMap[product.category_id] : null)!}
                     onClick={() => s.handleSelect(product, close)}
                   />
                 ))}
@@ -1192,7 +1192,7 @@ const CompactDropdown = ({
               <ProductResultItem
                 product={product}
                 query={query}
-                categoryName={product.category_id ? categories[product.category_id] : null}
+                categoryName={(product.category_id ? categories[product.category_id] : null)!}
                 onClick={() => onSelect(product)}
                 isActive={idx === activeIdx}
               />

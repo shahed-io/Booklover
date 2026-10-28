@@ -72,7 +72,7 @@ const AdminTestimonials = () => {
       const nIdx = idx + dir;
       if (nIdx < 0 || nIdx >= prev.length) return prev;
       const a = [...prev];
-      [a[idx]!, a[nIdx]!] = [a[nIdx], a[idx]];
+      [a[idx]!, a[nIdx]!] = [a[nIdx]!, a[idx]!];
       return a;
     });
   };

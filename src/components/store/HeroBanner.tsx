@@ -36,7 +36,7 @@ const dbSlideToSlide = (s: SlideData): Slide => ({
   subtitle: s.subtitle || '', desc: s.desc || '', price: s.price || '',
   original: s.original || '', off: s.off ? (s.off.startsWith('-') ? s.off : `-${s.off}`) : '', badge: s.badge || '',
   accentFrom: s.accentFrom || 'hsl(28,88%,52%)', accentTo: s.accentTo || 'hsl(222,60%,26%)',
-  emoji: s.emoji || '', logoImg: s.logoImg || undefined,
+  emoji: s.emoji || '', logoImg: (s.logoImg || undefined)!,
   bgImage: s.bgImage || undefined,
   features: s.features || [], productSlug: s.productSlug || '',
 });

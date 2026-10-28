@@ -531,7 +531,7 @@ Restore:
         records: totalAdded,
         type: 'import',
         status: totalFailed === 0 ? 'success' : 'error',
-        error: totalFailed ? `${totalFailed} rows failed` : undefined,
+        error: (totalFailed ? `${totalFailed} rows failed` : undefined)!,
       });
       if (totalFailed === 0) toast.success(`✅ Full Restore সম্পন্ন! ✨ ${totalAdded} নতুন যোগ, ⏭️ ${totalSkipped} আগেই ছিল।`);
       else toast.warning(`Restore শেষ — ✨ ${totalAdded} added, ⏭️ ${totalSkipped} skipped, ❌ ${totalFailed} failed। বিস্তারিত log দেখুন।`);
@@ -640,7 +640,7 @@ Restore:
       records: dbRes.added + uploaded,
       type: 'import',
       status: dbRes.failed + failedFiles === 0 ? 'success' : 'error',
-      error: dbRes.failed + failedFiles ? `${dbRes.failed} rows / ${failedFiles} files failed` : undefined,
+      error: (dbRes.failed + failedFiles ? `${dbRes.failed} rows / ${failedFiles} files failed` : undefined)!,
     });
     toast.success(`✅ ZIP রিস্টোর সম্পন্ন — ✨ ${dbRes.added} রেকর্ড + ${uploaded} ফাইল যোগ, ⏭️ ${dbRes.skipped + skippedFiles} আগেই ছিল।`);
     fetchStats();

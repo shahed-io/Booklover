@@ -616,7 +616,7 @@ const AdminLayout = () => {
                         ticket: { icon: Headphones, cls: 'text-blue-500 bg-blue-500/10' },
                         stock: { icon: AlertTriangle, cls: 'text-destructive bg-destructive/10' },
                       };
-                      const { icon: NIcon, cls } = icons[n.type] || icons['order'];
+                      const { icon: NIcon, cls } = (icons[n.type] || icons['order'])!;
                       return (
                         <a key={n.id} href={n.link || '#'} onClick={() => setShowNotifPanel(false)}
                           className="flex items-start gap-3 px-4 py-3 hover:bg-primary/5 transition-colors">
