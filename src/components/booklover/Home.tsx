@@ -37,7 +37,7 @@ function Row({ title, books, to, loading }: { title: string; books: Book[]; to: 
   return (
     <section className="bl-hsection">
       <div className="bl-hwrap"><h2>{title}</h2></div>
-      <div className="bl-hrow" ref={ref} onScroll={onScroll}>{books.length ? books.map(b => <HomeCard key={b.id} book={b} />) : Array.from({ length: 5 }, (_, i) => <div key={i} className="bl-skel" />)}</div>
+      <div className="bl-hwrap"><div className="bl-hrow" ref={ref} onScroll={onScroll}>{books.length ? books.map(b => <HomeCard key={b.id} book={b} />) : Array.from({ length: 5 }, (_, i) => <div key={i} className="bl-skel" />)}</div></div>
       {books.length > 1 && <div className="bl-rownav">
         <button aria-label="Previous books" disabled={pos <= 1} onClick={() => go(-1)}><ChevronLeft size={16} /></button>
         <span>{pos}/{books.length}</span>

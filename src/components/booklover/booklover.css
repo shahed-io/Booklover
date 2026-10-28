@@ -324,3 +324,5 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 @media(max-width:540px){.bl-hero:after{background:linear-gradient(0deg,rgb(20 12 10/.85) 0%,rgb(20 12 10/.45) 45%,transparent 75%);}}
 .bl-hero img.bl-hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease;}
 .bl-hero img.bl-hero-slide.on{opacity:1;}
+/* Keep each book rail inside its heading's available content width. */
+.bl-hwrap > .bl-hrow{max-width:100%;padding-inline:0;scroll-padding-inline:0;}
