@@ -324,3 +324,5 @@ body:has(.booklover):not(.admin-page) {padding-bottom:0;}
 .bl-hero:after{background:linear-gradient(90deg,rgb(20 12 10/.5) 0%,rgb(20 12 10/.3) 32%,rgb(20 12 10/.08) 55%,transparent 68%);}
 .bl-hero-copy h1,.bl-hero-copy p{text-shadow:0 2px 14px rgb(0 0 0/.55),0 1px 3px rgb(0 0 0/.4);}
 @media(max-width:540px){.bl-hero:after{background:linear-gradient(0deg,rgb(20 12 10/.85) 0%,rgb(20 12 10/.45) 45%,transparent 75%);}}
+.bl-hero img.bl-hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease;}
+.bl-hero img.bl-hero-slide.on{opacity:1;}

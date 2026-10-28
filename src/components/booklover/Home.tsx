@@ -67,7 +67,9 @@ export default function Home() {
       <Helmet><title>{cfg.seoTitle}</title><meta name="description" content={cfg.seoDescription} /><link rel="canonical" href="https://booklover.com.bd/" /></Helmet>
 
       <section className="bl-hero" style={{ backgroundImage: HERO_LQIP, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <img key={`${slide % n}-${active!.image}`} src={active!.image || reading} alt="Reading at Booklover" width={1920} height={1024} fetchPriority={slide === 0 ? 'high' : 'auto'} loading="eager" decoding="async" />
+        {cfg.banners.map((b, i) => (
+          <img key={i} className={`bl-hero-slide${i === slide % n ? ' on' : ''}`} src={b.image || reading} alt={i === slide % n ? 'Reading at Booklover' : ''} aria-hidden={i !== slide % n} width={1920} height={1024} fetchPriority={i === 0 ? 'high' : 'low'} loading="eager" decoding="async" />
+        ))}
         <div className="bl-hero-copy">
           <span className="bl-eyebrow">{cfg.eyebrow}</span>
           <h1>{lines(active!.title)}</h1>
