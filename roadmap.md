@@ -1,8 +1,9 @@
 # Roadmap
 
 ## Account login methods
-- [ ] Remove Apple sign-in and disable its provider; retain Google and existing email login.
-- [ ] Verify Google initiation and authenticated account dashboard, noting any external consent limitation.
+- [x] Remove Apple sign-in and request provider disabling; managed configuration succeeded and Google remains enabled, existing email login unchanged.
+- [x] Verify Google-only dialog, managed OAuth initiation, successful-session validation and failure handling; five tests passed and build OK.
+- [ ] Complete real Google consent and authenticated dashboard verification — localhost lacks hosted /~oauth handling, hosted preview was inaccessible to the browser, and no requesting-user account could be minted; requires the user to sign in through the preview.
 
 ## Full-width homepage book rows
 - [x] Expand every product row below categories to desktop screen width, adapting visible book count while preserving category design.
