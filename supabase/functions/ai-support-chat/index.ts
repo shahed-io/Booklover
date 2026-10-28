@@ -427,12 +427,22 @@ serve(async (req) => {
         const orFilter = terms
           .map((t) => `name.ilike.%${t}%,short_description.ilike.%${t}%,brand.ilike.%${t}%,tags.cs.{${t}}`)
           .join(",");
-        const { data: matches } = await supabase
-          .from("products")
-          .select(PRODUCT_FIELDS)
-          .eq("status", "active")
-          .or(orFilter)
-          .limit(6);
+        const nameTerms = terms.filter((t) => !["book", "books", "have", "you", "your", "does", "any", "available", "want", "need", "please", "there", "stock", "this", "that", "with"].includes(t));
+        // Prefer books whose name contains every term, then fall back to any-term matches.
+        let matches: any[] | null = null;
+        if (nameTerms.length) {
+          let q = supabase.from("products").select(PRODUCT_FIELDS).neq("status", "draft");
+          for (const t of nameTerms) q = q.ilike("name", `%${t}%`);
+          ({ data: matches } = await q.limit(6));
+        }
+        if (!matches?.length) {
+          ({ data: matches } = await supabase
+            .from("products")
+            .select(PRODUCT_FIELDS)
+            .eq("status", "active")
+            .or(orFilter)
+            .limit(6));
+        }
         if (matches && matches.length > 0) {
           matchedBlock =
             "\n\n🔍 গ্রাহকের প্রশ্নের সাথে সম্পর্কিত প্রোডাক্ট (সঠিক তথ্য — এখান থেকে উত্তর দিন):\n" +
