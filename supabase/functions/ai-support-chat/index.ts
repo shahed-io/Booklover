@@ -323,7 +323,7 @@ const formatProductBlock = (p: any, full = false) => {
   if (full) {
     if (desc) lines.push(`   বিবরণ: ${truncate(desc, 900)}`);
     if (wyg) lines.push(`   যা পাবেন: ${truncate(wyg, 400)}`);
-    lines.push(`   লিংক: https://booklover.com.bd/product/${p.slug}`);
+    lines.push(`   লিংক: https://booklover.com.bd/products/${p.slug}`);
   }
   return lines.filter(Boolean).join("\n");
 };
@@ -411,80 +411,75 @@ serve(async (req) => {
       }
     }
 
-    // ============ 2) KEYWORD-MATCHED PRODUCTS (from last user message) ============
+    // ============ 2) BOOK KNOWLEDGE SEARCH (whole catalog, from recent user messages) ============
     let matchedBlock = "";
+    const stopwords = new Set([
+      "the","a","an","is","are","of","and","or","to","for","in","on","how","what","which","much","cost","price","book","books","boi","have","has","you","your","do","does","any","available","want","need","please","there","stock","this","that","with","about","tell","me","give","show","some","best","good","দাম","কত","কি","কী","আছে","কীভাবে","কিভাবে","একটি","এর","এটা","এটি","আমি","আপনার","আপনি","বই","বইটি","বইটা","চাই","দেন","ok","hi","hello",
+    ]);
+    const toTerms = (txt: string) =>
+      txt.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/)
+        .filter((t) => t.length >= 3 && !stopwords.has(t)).slice(0, 6);
     try {
-      const stopwords = new Set([
-        "the","a","an","is","are","of","and","or","to","for","in","on","how","what","which","much","cost","price","দাম","কত","কি","কী","আছে","কীভাবে","কিভাবে","একটি","এর","এটা","এটি","আমি","আপনার","আপনি","ok","hi","hello"
-      ]);
-      const terms = lastUserMsg
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}\s]/gu, " ")
-        .split(/\s+/)
-        .filter((t) => t.length >= 3 && !stopwords.has(t))
-        .slice(0, 6);
-      if (terms.length > 0) {
-        const orFilter = terms
-          .map((t) => `name.ilike.%${t}%,short_description.ilike.%${t}%,brand.ilike.%${t}%,tags.cs.{${t}}`)
-          .join(",");
-        const nameTerms = terms.filter((t) => !["book", "books", "have", "you", "your", "does", "any", "available", "want", "need", "please", "there", "stock", "this", "that", "with"].includes(t));
-        // Prefer books whose name contains every term, then fall back to any-term matches.
-        let matches: any[] | null = null;
-        if (nameTerms.length) {
-          let q = supabase.from("products").select(PRODUCT_FIELDS).neq("status", "draft");
-          for (const t of nameTerms) q = q.ilike("name", `%${t}%`);
-          ({ data: matches } = await q.limit(6));
+      const recentUser = messages.filter((m: any) => m.role === "user").slice(-3).map((m: any) => String(m.content || ""));
+      const terms = toTerms(lastUserMsg);
+      const found = new Map<string, any>();
+      const add = (rows: any[] | null) => { for (const r of rows || []) if (found.size < 8 && !found.has(r.slug)) found.set(r.slug, r); };
+      const base = () => supabase.from("products").select(PRODUCT_FIELDS).neq("status", "draft");
+      if (terms.length) {
+        // a) title contains every term (exact book / author)
+        let q = base();
+        for (const t of terms) q = q.ilike("name", `%${t}%`);
+        add((await q.order("total_sales", { ascending: false }).limit(6)).data);
+        // b) any term in title / tags / short description
+        if (found.size < 4) {
+          const or = terms.map((t) => `name.ilike.%${t}%,short_description.ilike.%${t}%,tags.cs.{${t}}`).join(",");
+          add((await base().or(or).order("total_sales", { ascending: false }).limit(6)).data);
         }
-        if (!matches?.length) {
-          ({ data: matches } = await supabase
-            .from("products")
-            .select(PRODUCT_FIELDS)
-            .eq("status", "active")
-            .or(orFilter)
-            .limit(6));
+        // c) topic / genre → category books
+        const catOr = terms.map((t) => `name.ilike.%${t}%`).join(",");
+        const { data: cats } = await supabase.from("categories").select("id, name").or(catOr).limit(3);
+        for (const c of cats || []) {
+          const { data: links } = await supabase.from("product_categories").select("product_id").eq("category_id", c.id).limit(200);
+          const ids = (links || []).map((l: any) => l.product_id);
+          if (ids.length) add((await base().in("id", ids.slice(0, 200)).order("total_sales", { ascending: false }).limit(5)).data);
         }
-        if (matches && matches.length > 0) {
-          matchedBlock =
-            "\n\n🔍 গ্রাহকের প্রশ্নের সাথে সম্পর্কিত প্রোডাক্ট (সঠিক তথ্য — এখান থেকে উত্তর দিন):\n" +
-            matches.map((m: any) => formatProductBlock(m, true)).join("\n\n");
+      }
+      // d) follow-up questions ("price?") → reuse earlier user messages
+      if (!found.size && recentUser.length > 1) {
+        const prevTerms = toTerms(recentUser.slice(0, -1).join(" "));
+        if (prevTerms.length) {
+          let q = base();
+          for (const t of prevTerms.slice(0, 3)) q = q.ilike("name", `%${t}%`);
+          add((await q.limit(4)).data);
         }
+      }
+      if (found.size) {
+        matchedBlock =
+          "\n\n🔍 Booklover ক্যাটালগে খুঁজে পাওয়া বই (এগুলোর তথ্যই সঠিক — দাম/স্টক/লিংক এখান থেকে দিন):\n" +
+          [...found.values()].map((m: any) => formatProductBlock(m, true)).join("\n\n");
+      } else if (terms.length) {
+        matchedBlock = "\n\n🔍 গ্রাহকের খোঁজা নামে কোনো বই ক্যাটালগে পাওয়া যায়নি। দাম বানাবেন না; বলুন এখন পাওয়া যাচ্ছে না এবং কাছাকাছি বিষয়ের বই সাজেস্ট করুন বা ওয়েবসাইটে সার্চ করতে বলুন।";
       }
     } catch (e) {
       console.error("keyword search:", e);
     }
 
-    // ============ 3) FULL CATALOG (compact list for general questions) ============
+    // ============ 3) STORE OVERVIEW (categories + bestsellers) ============
     let productContext = "";
     try {
-      const { data: products } = await supabase
-        .from("products")
-        .select("name, slug, price, discount_percent, short_description, delivery_time, stock_quantity, status, categories:category_id(name)")
-        .eq("status", "active")
-        .order("sort_order", { ascending: true })
-        .limit(80);
-
-      if (products && products.length > 0) {
-        const grouped: Record<string, string[]> = {};
-        for (const p of products as any[]) {
-          const cat = p.categories?.name || "অন্যান্য";
-          if (!grouped[cat]) grouped[cat] = [];
-          const disc = p.discount_percent ? ` (${p.discount_percent}% ছাড়)` : "";
-          const stock =
-            p.status === "out_of_stock" || (typeof p.stock_quantity === "number" && p.stock_quantity <= 0)
-              ? " [Stock Out]"
-              : "";
-          grouped[cat].push(
-            `• ${p.name} — ৳${p.price}${disc}${stock}${p.delivery_time ? " [🚚 " + p.delivery_time + "]" : ""}`,
-          );
-        }
-        productContext = "\n\n📚 সম্পূর্ণ প্রোডাক্ট তালিকা (রেফারেন্স):\n";
-        for (const [cat, items] of Object.entries(grouped)) {
-          productContext += `\n${cat}:\n${items.join("\n")}`;
-        }
-      }
+      const [{ count }, { data: cats }, { data: top }] = await Promise.all([
+        supabase.from("products").select("id", { count: "exact", head: true }).neq("status", "draft"),
+        supabase.from("categories").select("name, slug").eq("is_active", true).order("sort_order").limit(40),
+        supabase.from("products").select("name, slug, price").eq("status", "active").order("total_sales", { ascending: false }).limit(30),
+      ]);
+      productContext = `\n\n📚 Booklover-এ মোট প্রায় ${count ?? "১০,০০০+"} টি বই আছে।`;
+      if (cats?.length) productContext += `\nক্যাটাগরি: ${cats.map((c: any) => `${c.name} (https://booklover.com.bd/collections/${c.slug})`).join(", ")}`;
+      if (top?.length) productContext += `\n\n🔥 বেস্টসেলার বই:\n${top.map((p: any) => `• ${p.name} — ৳${p.price} — https://booklover.com.bd/products/${p.slug}`).join("\n")}`;
+      productContext += "\n\nℹ️ উপরের তালিকায় না থাকলেও বই থাকতে পারে — নির্দিষ্ট বই না পেলে ওয়েবসাইটের সার্চ ব্যবহার করতে বলুন।";
     } catch (e) {
       console.error("catalog fetch:", e);
     }
+
 
     // ============ 4) SUPPORT PHONE ============
     let supportPhone = "";
