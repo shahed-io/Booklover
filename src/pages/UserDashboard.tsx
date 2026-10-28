@@ -324,12 +324,8 @@ const UserDashboard = () => {
     if (activeTab === 'orders') fetchOrders();
     if (activeTab === 'addresses') fetchAddresses();
     if (activeTab === 'notifications') fetchNotifications();
-    if (activeTab === 'referral') fetchReferrals();
     if (activeTab === 'wallet') fetchWallet();
     if (activeTab === 'points') fetchPoints();
-    if (activeTab === 'licenses') fetchLicenses();
-    if (activeTab === 'subscriptions') fetchSubscriptions();
-    if (activeTab === 'downloads') fetchDownloads();
   };
 
   useEffect(() => { if (user) fetchProfile(); }, [user]);
@@ -338,12 +334,8 @@ const UserDashboard = () => {
     if (activeTab === 'orders') fetchOrders();
     if (activeTab === 'addresses') fetchAddresses();
     if (activeTab === 'notifications') fetchNotifications();
-    if (activeTab === 'referral') fetchReferrals();
     if (activeTab === 'wallet') fetchWallet();
     if (activeTab === 'points') fetchPoints();
-    if (activeTab === 'licenses') fetchLicenses();
-    if (activeTab === 'subscriptions') fetchSubscriptions();
-    if (activeTab === 'downloads') fetchDownloads();
   }, [activeTab, user]);
 
   // Refetch when tab/window regains focus or comes back online — fixes "data missing after sleep/switch"
@@ -1280,7 +1272,7 @@ const UserDashboard = () => {
                     {t(selectedLang, `tab_${activeTab}`)}
                   </h2>
                   <p className="text-xs mt-0.5 text-muted-foreground truncate">
-                    {activeTab === 'orders' ? `${orders.length} ${t(selectedLang, 'order')}` : activeTab === 'wishlist' ? `${wishlistItems.length} items` : activeTab === 'notifications' ? `${unreadCount} ${t(selectedLang, 'unread')}` : activeTab === 'points' ? `${t(selectedLang, 'points_balance_label')} ${pointsBalance} pts` : activeTab === 'profile' ? 'Manage your personal information' : activeTab === 'wallet' ? 'Top-up & transactions' : activeTab === 'addresses' ? 'Saved delivery locations' : activeTab === 'security' ? 'Password & account safety' : activeTab === 'referral' ? 'Earn rewards by inviting friends' : activeTab === 'licenses' ? 'Your purchased licenses' : activeTab === 'downloads' ? 'Download links for your purchases' : activeTab === 'subscriptions' ? 'Track expiry & renewal reminders' : ''}
+                    {activeTab === 'orders' ? `${orders.length} ${t(selectedLang, 'order')}` : activeTab === 'wishlist' ? `${wishlistItems.length} items` : activeTab === 'notifications' ? `${unreadCount} ${t(selectedLang, 'unread')}` : activeTab === 'points' ? `${t(selectedLang, 'points_balance_label')} ${pointsBalance} pts` : activeTab === 'profile' ? 'Manage your personal information' : activeTab === 'wallet' ? 'Top-up & transactions' : activeTab === 'addresses' ? 'Saved delivery locations' : activeTab === 'security' ? 'Password & account safety' : ''}
                   </p>
                 </div>
               </div>
