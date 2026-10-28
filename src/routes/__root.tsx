@@ -29,7 +29,6 @@ import { useAdminOrderNotification } from "@/hooks/useAdminOrderNotification";
 import { prefetchOnIdle } from "@/hooks/usePrefetchRoute";
 import { ViewTransitions } from "@/components/ViewTransitions";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { useAffiliateTracking } from "@/hooks/useAffiliateTracking";
 import { useCustomAudiences } from "@/hooks/useCustomAudiences";
 import { useMarketingPixelsPageView } from "@/hooks/useMarketingPixelsPageView";
 import { CartDrawer as BookloverCartDrawer } from "@/components/booklover/Layout";
@@ -230,7 +229,6 @@ function AppShell() {
   const location = useLocation();
   const [deferReady, setDeferReady] = useState(false);
   useTheme();
-  useAffiliateTracking();
   const { subtotal } = useCart();
   const { isAdmin } = useAuth();
   const { settings: maintenance, loading: maintenanceLoading } = useMaintenanceMode();

@@ -71,30 +71,6 @@
         "outputSchema": null
       },
       {
-        "name": "list_my_licenses",
-        "title": "List my licenses",
-        "description": "List the signed-in user's personal software licenses (product, key/email credentials, expiry).",
-        "annotations": {
-          "readOnlyHint": true,
-          "idempotentHint": true,
-          "openWorldHint": false
-        },
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "limit": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 25
-            }
-          },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
-        },
-        "outputSchema": null
-      },
-      {
         "name": "search_products",
         "title": "Search products",
         "description": "Search Booklover's public product catalog by keyword. Returns name, price and slug.",

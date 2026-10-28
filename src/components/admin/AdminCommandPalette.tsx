@@ -67,8 +67,6 @@ const STATIC_COMMANDS: CommandItem[] = [
 
   // Marketing
   { id: 'coupons', label: 'Coupons', description: 'Discount codes', icon: Percent, path: '/admin/coupons', group: 'Marketing', keywords: 'coupon code discount promo' },
-  { id: 'referrals', label: 'Referrals', description: 'Referral program', icon: Gift, path: '/admin/referrals', group: 'Marketing', keywords: 'referral invite friend reward' },
-  { id: 'affiliates', label: 'Affiliates', description: 'Affiliate partner program', icon: TrendingUp, path: '/admin/affiliates', group: 'Marketing', keywords: 'affiliate partner commission' },
   { id: 'mkt-hub', label: 'Marketing Hub', description: 'Marketing tools overview', icon: Megaphone, path: '/admin/marketing', group: 'Marketing', keywords: 'marketing campaign promotion' },
   { id: 'fb-pixel', label: 'Facebook Pixel', description: 'FB tracking setup', icon: Facebook, path: '/admin/facebook-pixel', group: 'Marketing', keywords: 'facebook pixel meta tracking' },
   { id: 'fb-aud', label: 'FB Custom Audiences', description: 'Facebook audience builder', icon: Users, path: '/admin/custom-audiences', group: 'Marketing', keywords: 'facebook audience custom' },

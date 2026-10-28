@@ -93,7 +93,6 @@ const TAB_IDS: { id: TabId; key: string; icon: any }[] = [
   { id: 'wishlist',      key: 'tab_wishlist',      icon: Heart },
   { id: 'addresses',     key: 'tab_addresses',     icon: MapPin },
   { id: 'notifications', key: 'tab_notifications', icon: Bell },
-  { id: 'referral',      key: 'tab_referral',      icon: Gift },
   { id: 'security',      key: 'tab_security',      icon: Lock },
   { id: 'language',      key: 'tab_language',      icon: Globe },
   { id: 'install',       key: 'tab_install',       icon: Smartphone },
@@ -792,19 +791,6 @@ const UserDashboard = () => {
         status: 'pending',
       });
       if (error) throw error;
-      supabase.functions.invoke('notify-telegram-event', {
-        body: {
-          title: '💰 নতুন Wallet Top-up Request',
-          lines: [
-            `👤 গ্রাহক: ${profile.display_name || user.email}`,
-            `📧 ${user.email}`,
-            `💵 পরিমাণ: ৳${amt.toLocaleString()}`,
-            `💳 পেমেন্ট: ${topupPaymentMethod.toUpperCase()}`,
-            `🔖 TrxID: ${topupTxId.trim()}`,
-          ],
-          footer: '⏳ Admin verification পেন্ডিং',
-        },
-      }).catch(() => {});
       toast.success('✅ Top-up request submitted! Admin will verify and credit your wallet.');
       setTopupStep(2); setTopupTxId(''); removeTopupScreenshot();
     } catch (e: any) {
@@ -1242,15 +1228,6 @@ const UserDashboard = () => {
                     );
                   })}
                   <div className="h-px my-4 mx-2" style={{ background: 'linear-gradient(90deg, transparent, hsla(258,78%,65%,0.30), transparent)' }} />
-                  <button onClick={() => navigate('/affiliate')} className="group relative w-full flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl text-[13px] font-bold transition-all duration-300 mb-1 overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg, hsla(258,78%,65%,0.18), hsla(280,70%,60%,0.12))', border: '1px solid hsla(258,78%,55%,0.30)', color: 'hsl(258,78%,40%)' }}>
-                    <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-12"
-                      style={{ background: 'linear-gradient(135deg, hsl(258,78%,55%), hsl(280,70%,52%))', boxShadow: '0 4px 12px hsla(258,78%,55%,0.40)' }}>
-                      <Gift size={15} className="text-white" />
-                    </span>
-                    <span className="flex-1 text-left">Affiliate Program</span>
-                    <ChevronRight size={14} className="opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
-                  </button>
                   <button onClick={() => navigate('/shop')} className="group relative w-full flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl text-[13px] font-bold transition-all duration-300 mb-1 overflow-hidden"
                     style={{ background: 'linear-gradient(135deg, hsla(45,95%,55%,0.18), hsla(35,90%,60%,0.12))', border: '1px solid hsla(45,90%,52%,0.30)', color: 'hsl(35,85%,38%)' }}>
                     <span className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-12"

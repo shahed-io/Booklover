@@ -65,7 +65,7 @@ var list_my_orders_default = defineTool2({
   }
 });
 
-// src/lib/mcp/tools/list-my-licenses.ts
+// src/lib/mcp/tools/search-products.ts
 import { createClient as createClient3 } from "npm:@supabase/supabase-js@^2.108.2";
 import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.20.1";
 import { z as z2 } from "npm:zod@^3.25.76";
@@ -75,48 +75,18 @@ function supabaseForUser3(ctx) {
     auth: { persistSession: false, autoRefreshToken: false }
   });
 }
-var list_my_licenses_default = defineTool3({
-  name: "list_my_licenses",
-  title: "List my licenses",
-  description: "List the signed-in user's personal software licenses (product, key/email credentials, expiry).",
-  inputSchema: {
-    limit: z2.number().int().min(1).max(100).default(25)
-  },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: async ({ limit }, ctx) => {
-    if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
-    const supabase = supabaseForUser3(ctx);
-    const { data, error } = await supabase.from("personal_licenses").select("id, product_name, license_key, credential_email, expires_at, status, created_at").eq("user_id", ctx.getUserId()).order("created_at", { ascending: false }).limit(limit);
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
-    return {
-      content: [{ type: "text", text: JSON.stringify(data ?? [], null, 2) }],
-      structuredContent: { licenses: data ?? [] }
-    };
-  }
-});
-
-// src/lib/mcp/tools/search-products.ts
-import { createClient as createClient4 } from "npm:@supabase/supabase-js@^2.108.2";
-import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.20.1";
-import { z as z3 } from "npm:zod@^3.25.76";
-function supabaseForUser4(ctx) {
-  return createClient4(process.env["SUPABASE_URL"], process.env["SUPABASE_PUBLISHABLE_KEY"], {
-    global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-}
-var search_products_default = defineTool4({
+var search_products_default = defineTool3({
   name: "search_products",
   title: "Search products",
   description: "Search Booklover's public product catalog by keyword. Returns name, price and slug.",
   inputSchema: {
-    query: z3.string().trim().min(1).describe("Search term matched against product name/description."),
-    limit: z3.number().int().min(1).max(50).default(10)
+    query: z2.string().trim().min(1).describe("Search term matched against product name/description."),
+    limit: z2.number().int().min(1).max(50).default(10)
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
   handler: async ({ query, limit }, ctx) => {
     if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
-    const supabase = supabaseForUser4(ctx);
+    const supabase = supabaseForUser3(ctx);
     const { data, error } = await supabase.from("products").select("id, name, slug, price, sale_price, stock_status, short_description").or(`name.ilike.%${query}%,short_description.ilike.%${query}%`).eq("status", "publish").order("created_at", { ascending: false }).limit(limit);
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     return {
@@ -127,26 +97,26 @@ var search_products_default = defineTool4({
 });
 
 // src/lib/mcp/tools/list-my-wallet-transactions.ts
-import { createClient as createClient5 } from "npm:@supabase/supabase-js@^2.108.2";
-import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.20.1";
-import { z as z4 } from "npm:zod@^3.25.76";
-function supabaseForUser5(ctx) {
-  return createClient5(process.env["SUPABASE_URL"], process.env["SUPABASE_PUBLISHABLE_KEY"], {
+import { createClient as createClient4 } from "npm:@supabase/supabase-js@^2.108.2";
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.20.1";
+import { z as z3 } from "npm:zod@^3.25.76";
+function supabaseForUser4(ctx) {
+  return createClient4(process.env["SUPABASE_URL"], process.env["SUPABASE_PUBLISHABLE_KEY"], {
     global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
     auth: { persistSession: false, autoRefreshToken: false }
   });
 }
-var list_my_wallet_transactions_default = defineTool5({
+var list_my_wallet_transactions_default = defineTool4({
   name: "list_my_wallet_transactions",
   title: "List my wallet transactions",
   description: "List the signed-in user's wallet credit and debit history.",
   inputSchema: {
-    limit: z4.number().int().min(1).max(100).default(20)
+    limit: z3.number().int().min(1).max(100).default(20)
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ limit }, ctx) => {
     if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
-    const supabase = supabaseForUser5(ctx);
+    const supabase = supabaseForUser4(ctx);
     const { data, error } = await supabase.from("wallet_transactions").select("id, amount, type, description, created_at").eq("user_id", ctx.getUserId()).order("created_at", { ascending: false }).limit(limit);
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     return {
@@ -168,7 +138,7 @@ var mcp_default = defineMcp({
     acceptedAudiences: "authenticated"
   }),
   // @ts-expect-error mcp-js ToolDefinition sets outputSchema: undefined, which its own AnyToolDefinition rejects under exactOptionalPropertyTypes (upstream typing)
-  tools: [get_my_profile_default, list_my_orders_default, list_my_licenses_default, search_products_default, list_my_wallet_transactions_default]
+  tools: [get_my_profile_default, list_my_orders_default, search_products_default, list_my_wallet_transactions_default]
 });
 
 // lovable-mcp-supabase-entry.ts

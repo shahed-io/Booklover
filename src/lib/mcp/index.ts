@@ -2,7 +2,6 @@
 import { auth, defineMcp } from "@lovable.dev/mcp-js";
 import getMyProfile from "./tools/get-my-profile";
 import listMyOrders from "./tools/list-my-orders";
-import listMyLicenses from "./tools/list-my-licenses";
 import searchProducts from "./tools/search-products";
 import listMyWalletTransactions from "./tools/list-my-wallet-transactions";
 
@@ -21,5 +20,5 @@ export default defineMcp({
     acceptedAudiences: "authenticated",
   }),
   // @ts-expect-error mcp-js ToolDefinition sets outputSchema: undefined, which its own AnyToolDefinition rejects under exactOptionalPropertyTypes (upstream typing)
-  tools: [getMyProfile, listMyOrders, listMyLicenses, searchProducts, listMyWalletTransactions],
+  tools: [getMyProfile, listMyOrders, searchProducts, listMyWalletTransactions],
 });
