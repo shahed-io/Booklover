@@ -110,7 +110,7 @@ const Footer = () => {
           <div className="flex items-center gap-4">
             <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
               style={{
-                background: 'linear-gradient(180deg, #ffffff, #ffe9ea)',
+                background: 'var(--ft-cta-bg)',
                 boxShadow: '0 8px 20px -8px hsla(0,0%,0%,0.35), inset 0 1px 0 hsla(0,0%,100%,0.45)',
                 color: 'var(--ft-red)',
               }}>
@@ -118,10 +118,10 @@ const Footer = () => {
             </div>
             <div className="text-center sm:text-left">
               <h3 className="font-sora font-black text-lg sm:text-xl tracking-tight" style={{ color: 'hsl(0,0%,100%)' }}>
-                Need help choosing a product?
+                Looking for your next great read?
               </h3>
               <p className="text-[13px] mt-0.5" style={{ color: 'hsla(0,0%,100%,0.88)' }}>
-                Our experts are available 24/7 to assist you
+                Message us anytime — we'll help you find the perfect book
               </p>
             </div>
           </div>
@@ -140,11 +140,11 @@ const Footer = () => {
             <a href="/shop"
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all hover:-translate-y-0.5"
               style={{
-                background: 'linear-gradient(180deg, #ffffff, #ffe9ea)',
-                color: 'var(--ft-red)',
+                background: 'var(--ft-cta-bg)',
+                color: 'var(--ft-cta-text)',
                 boxShadow: '0 10px 24px -10px hsla(0,0%,0%,0.35), inset 0 1px 0 hsla(0,0%,100%,0.45)',
               }}>
-              Shop Now <ArrowUpRight size={15} />
+              Browse Books <ArrowUpRight size={15} />
             </a>
           </div>
         </div>
@@ -308,7 +308,7 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Payments */}
           <div className="flex items-center gap-2 flex-wrap justify-center">
-            <span className="text-[10px] font-fira font-bold tracking-widest mr-1" style={{ color: 'hsla(0,0%,100%,0.8)' }}>PAYMENTS</span>
+            <span className="text-[10px] font-fira font-bold tracking-widest mr-1" style={{ color: 'hsla(0,0%,100%,0.9)' }}>WE ACCEPT</span>
             {paymentMethods.map(pm => (
               <span key={pm}
                 className="px-3 py-1.5 rounded-lg text-[10.5px] font-bold font-fira cursor-default transition-all hover:-translate-y-0.5"
