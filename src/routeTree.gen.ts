@@ -13,11 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AffiliateRouteImport } from './routes/affiliate'
 import { Route as AntivirusPriceInBdRouteImport } from './routes/antivirus-price-in-bd'
 import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
 import { Route as CartRouteImport } from './routes/cart'
-import { Route as CheckKeyRouteImport } from './routes/check-key'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
@@ -26,7 +24,6 @@ import { Route as DeliveryInfoRouteImport } from './routes/delivery-info'
 import { Route as DeveloperRouteImport } from './routes/developer'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as FeedDotxmlRouteImport } from './routes/feed[.]xml'
-import { Route as GetCidRouteImport } from './routes/get-cid'
 import { Route as InstallRouteImport } from './routes/install'
 import { Route as OrderPolicyRouteImport } from './routes/order-policy'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
@@ -43,7 +40,6 @@ import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAbandonedCheckoutsRouteImport } from './routes/admin.abandoned-checkouts'
-import { Route as AdminAffiliatesRouteImport } from './routes/admin.affiliates'
 import { Route as AdminAiConfigRouteImport } from './routes/admin.ai-config'
 import { Route as AdminAiFaqGeneratorRouteImport } from './routes/admin.ai-faq-generator'
 import { Route as AdminAiReviewGeneratorRouteImport } from './routes/admin.ai-review-generator'
@@ -88,7 +84,6 @@ import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
 import { Route as AdminPopupBannerRouteImport } from './routes/admin.popup-banner'
 import { Route as AdminProductReviewsRouteImport } from './routes/admin.product-reviews'
 import { Route as AdminQuickSaleRouteImport } from './routes/admin.quick-sale'
-import { Route as AdminReferralsRouteImport } from './routes/admin.referrals'
 import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminRolesRouteImport } from './routes/admin.roles'
 import { Route as AdminSecurityRouteImport } from './routes/admin.security'
@@ -98,7 +93,6 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSiteVerificationRouteImport } from './routes/admin.site-verification'
 import { Route as AdminSslcommerzPgwRouteImport } from './routes/admin.sslcommerz-pgw'
 import { Route as AdminStaffRouteImport } from './routes/admin.staff'
-import { Route as AdminTelegramBotRouteImport } from './routes/admin.telegram-bot'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminTextManagerRouteImport } from './routes/admin.text-manager'
 import { Route as AdminThemesRouteImport } from './routes/admin.themes'
@@ -172,11 +166,6 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AffiliateRoute = AffiliateRouteImport.update({
-  id: '/affiliate',
-  path: '/affiliate',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AntivirusPriceInBdRoute = AntivirusPriceInBdRouteImport.update({
   id: '/antivirus-price-in-bd',
   path: '/antivirus-price-in-bd',
@@ -190,11 +179,6 @@ const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckKeyRoute = CheckKeyRouteImport.update({
-  id: '/check-key',
-  path: '/check-key',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -235,11 +219,6 @@ const FaqsRoute = FaqsRouteImport.update({
 const FeedDotxmlRoute = FeedDotxmlRouteImport.update({
   id: '/feed.xml',
   path: '/feed.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GetCidRoute = GetCidRouteImport.update({
-  id: '/get-cid',
-  path: '/get-cid',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InstallRoute = InstallRouteImport.update({
@@ -320,11 +299,6 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminAbandonedCheckoutsRoute = AdminAbandonedCheckoutsRouteImport.update({
   id: '/abandoned-checkouts',
   path: '/abandoned-checkouts',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
-  id: '/affiliates',
-  path: '/affiliates',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAiConfigRoute = AdminAiConfigRouteImport.update({
@@ -547,11 +521,6 @@ const AdminQuickSaleRoute = AdminQuickSaleRouteImport.update({
   path: '/quick-sale',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminReferralsRoute = AdminReferralsRouteImport.update({
-  id: '/referrals',
-  path: '/referrals',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminReportsRoute = AdminReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -595,11 +564,6 @@ const AdminSslcommerzPgwRoute = AdminSslcommerzPgwRouteImport.update({
 const AdminStaffRoute = AdminStaffRouteImport.update({
   id: '/staff',
   path: '/staff',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTelegramBotRoute = AdminTelegramBotRouteImport.update({
-  id: '/telegram-bot',
-  path: '/telegram-bot',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
@@ -870,11 +834,9 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
-  '/affiliate': typeof AffiliateRoute
   '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
-  '/check-key': typeof CheckKeyRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/contact-us': typeof ContactUsRoute
@@ -883,7 +845,6 @@ export interface FileRoutesByFullPath {
   '/developer': typeof DeveloperRoute
   '/faqs': typeof FaqsRoute
   '/feed.xml': typeof FeedDotxmlRoute
-  '/get-cid': typeof GetCidRoute
   '/install': typeof InstallRoute
   '/order-policy': typeof OrderPolicyRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -899,7 +860,6 @@ export interface FileRoutesByFullPath {
   '/unsubscribe': typeof UnsubscribeRoute
   '/wishlist': typeof WishlistRoute
   '/admin/abandoned-checkouts': typeof AdminAbandonedCheckoutsRoute
-  '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/ai-config': typeof AdminAiConfigRoute
   '/admin/ai-faq-generator': typeof AdminAiFaqGeneratorRoute
   '/admin/ai-review-generator': typeof AdminAiReviewGeneratorRoute
@@ -944,7 +904,6 @@ export interface FileRoutesByFullPath {
   '/admin/popup-banner': typeof AdminPopupBannerRoute
   '/admin/product-reviews': typeof AdminProductReviewsRoute
   '/admin/quick-sale': typeof AdminQuickSaleRoute
-  '/admin/referrals': typeof AdminReferralsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/security': typeof AdminSecurityRoute
@@ -954,7 +913,6 @@ export interface FileRoutesByFullPath {
   '/admin/site-verification': typeof AdminSiteVerificationRoute
   '/admin/sslcommerz-pgw': typeof AdminSslcommerzPgwRoute
   '/admin/staff': typeof AdminStaffRoute
-  '/admin/telegram-bot': typeof AdminTelegramBotRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/text-manager': typeof AdminTextManagerRoute
   '/admin/themes': typeof AdminThemesRoute
@@ -1013,11 +971,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
-  '/affiliate': typeof AffiliateRoute
   '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
-  '/check-key': typeof CheckKeyRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/contact-us': typeof ContactUsRoute
@@ -1026,7 +982,6 @@ export interface FileRoutesByTo {
   '/developer': typeof DeveloperRoute
   '/faqs': typeof FaqsRoute
   '/feed.xml': typeof FeedDotxmlRoute
-  '/get-cid': typeof GetCidRoute
   '/install': typeof InstallRoute
   '/order-policy': typeof OrderPolicyRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -1042,7 +997,6 @@ export interface FileRoutesByTo {
   '/unsubscribe': typeof UnsubscribeRoute
   '/wishlist': typeof WishlistRoute
   '/admin/abandoned-checkouts': typeof AdminAbandonedCheckoutsRoute
-  '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/ai-config': typeof AdminAiConfigRoute
   '/admin/ai-faq-generator': typeof AdminAiFaqGeneratorRoute
   '/admin/ai-review-generator': typeof AdminAiReviewGeneratorRoute
@@ -1087,7 +1041,6 @@ export interface FileRoutesByTo {
   '/admin/popup-banner': typeof AdminPopupBannerRoute
   '/admin/product-reviews': typeof AdminProductReviewsRoute
   '/admin/quick-sale': typeof AdminQuickSaleRoute
-  '/admin/referrals': typeof AdminReferralsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/security': typeof AdminSecurityRoute
@@ -1097,7 +1050,6 @@ export interface FileRoutesByTo {
   '/admin/site-verification': typeof AdminSiteVerificationRoute
   '/admin/sslcommerz-pgw': typeof AdminSslcommerzPgwRoute
   '/admin/staff': typeof AdminStaffRoute
-  '/admin/telegram-bot': typeof AdminTelegramBotRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/text-manager': typeof AdminTextManagerRoute
   '/admin/themes': typeof AdminThemesRoute
@@ -1158,11 +1110,9 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
-  '/affiliate': typeof AffiliateRoute
   '/antivirus-price-in-bd': typeof AntivirusPriceInBdRoute
   '/atom.xml': typeof AtomDotxmlRoute
   '/cart': typeof CartRoute
-  '/check-key': typeof CheckKeyRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/contact-us': typeof ContactUsRoute
@@ -1171,7 +1121,6 @@ export interface FileRoutesById {
   '/developer': typeof DeveloperRoute
   '/faqs': typeof FaqsRoute
   '/feed.xml': typeof FeedDotxmlRoute
-  '/get-cid': typeof GetCidRoute
   '/install': typeof InstallRoute
   '/order-policy': typeof OrderPolicyRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
@@ -1187,7 +1136,6 @@ export interface FileRoutesById {
   '/unsubscribe': typeof UnsubscribeRoute
   '/wishlist': typeof WishlistRoute
   '/admin/abandoned-checkouts': typeof AdminAbandonedCheckoutsRoute
-  '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/ai-config': typeof AdminAiConfigRoute
   '/admin/ai-faq-generator': typeof AdminAiFaqGeneratorRoute
   '/admin/ai-review-generator': typeof AdminAiReviewGeneratorRoute
@@ -1232,7 +1180,6 @@ export interface FileRoutesById {
   '/admin/popup-banner': typeof AdminPopupBannerRoute
   '/admin/product-reviews': typeof AdminProductReviewsRoute
   '/admin/quick-sale': typeof AdminQuickSaleRoute
-  '/admin/referrals': typeof AdminReferralsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/security': typeof AdminSecurityRoute
@@ -1242,7 +1189,6 @@ export interface FileRoutesById {
   '/admin/site-verification': typeof AdminSiteVerificationRoute
   '/admin/sslcommerz-pgw': typeof AdminSslcommerzPgwRoute
   '/admin/staff': typeof AdminStaffRoute
-  '/admin/telegram-bot': typeof AdminTelegramBotRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/text-manager': typeof AdminTextManagerRoute
   '/admin/themes': typeof AdminThemesRoute
@@ -1304,11 +1250,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/admin'
-    | '/affiliate'
     | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
-    | '/check-key'
     | '/checkout'
     | '/contact'
     | '/contact-us'
@@ -1317,7 +1261,6 @@ export interface FileRouteTypes {
     | '/developer'
     | '/faqs'
     | '/feed.xml'
-    | '/get-cid'
     | '/install'
     | '/order-policy'
     | '/privacy-policy'
@@ -1333,7 +1276,6 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/wishlist'
     | '/admin/abandoned-checkouts'
-    | '/admin/affiliates'
     | '/admin/ai-config'
     | '/admin/ai-faq-generator'
     | '/admin/ai-review-generator'
@@ -1378,7 +1320,6 @@ export interface FileRouteTypes {
     | '/admin/popup-banner'
     | '/admin/product-reviews'
     | '/admin/quick-sale'
-    | '/admin/referrals'
     | '/admin/reports'
     | '/admin/roles'
     | '/admin/security'
@@ -1388,7 +1329,6 @@ export interface FileRouteTypes {
     | '/admin/site-verification'
     | '/admin/sslcommerz-pgw'
     | '/admin/staff'
-    | '/admin/telegram-bot'
     | '/admin/testimonials'
     | '/admin/text-manager'
     | '/admin/themes'
@@ -1447,11 +1387,9 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/account'
-    | '/affiliate'
     | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
-    | '/check-key'
     | '/checkout'
     | '/contact'
     | '/contact-us'
@@ -1460,7 +1398,6 @@ export interface FileRouteTypes {
     | '/developer'
     | '/faqs'
     | '/feed.xml'
-    | '/get-cid'
     | '/install'
     | '/order-policy'
     | '/privacy-policy'
@@ -1476,7 +1413,6 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/wishlist'
     | '/admin/abandoned-checkouts'
-    | '/admin/affiliates'
     | '/admin/ai-config'
     | '/admin/ai-faq-generator'
     | '/admin/ai-review-generator'
@@ -1521,7 +1457,6 @@ export interface FileRouteTypes {
     | '/admin/popup-banner'
     | '/admin/product-reviews'
     | '/admin/quick-sale'
-    | '/admin/referrals'
     | '/admin/reports'
     | '/admin/roles'
     | '/admin/security'
@@ -1531,7 +1466,6 @@ export interface FileRouteTypes {
     | '/admin/site-verification'
     | '/admin/sslcommerz-pgw'
     | '/admin/staff'
-    | '/admin/telegram-bot'
     | '/admin/testimonials'
     | '/admin/text-manager'
     | '/admin/themes'
@@ -1591,11 +1525,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/admin'
-    | '/affiliate'
     | '/antivirus-price-in-bd'
     | '/atom.xml'
     | '/cart'
-    | '/check-key'
     | '/checkout'
     | '/contact'
     | '/contact-us'
@@ -1604,7 +1536,6 @@ export interface FileRouteTypes {
     | '/developer'
     | '/faqs'
     | '/feed.xml'
-    | '/get-cid'
     | '/install'
     | '/order-policy'
     | '/privacy-policy'
@@ -1620,7 +1551,6 @@ export interface FileRouteTypes {
     | '/unsubscribe'
     | '/wishlist'
     | '/admin/abandoned-checkouts'
-    | '/admin/affiliates'
     | '/admin/ai-config'
     | '/admin/ai-faq-generator'
     | '/admin/ai-review-generator'
@@ -1665,7 +1595,6 @@ export interface FileRouteTypes {
     | '/admin/popup-banner'
     | '/admin/product-reviews'
     | '/admin/quick-sale'
-    | '/admin/referrals'
     | '/admin/reports'
     | '/admin/roles'
     | '/admin/security'
@@ -1675,7 +1604,6 @@ export interface FileRouteTypes {
     | '/admin/site-verification'
     | '/admin/sslcommerz-pgw'
     | '/admin/staff'
-    | '/admin/telegram-bot'
     | '/admin/testimonials'
     | '/admin/text-manager'
     | '/admin/themes'
@@ -1736,11 +1664,9 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AffiliateRoute: typeof AffiliateRoute
   AntivirusPriceInBdRoute: typeof AntivirusPriceInBdRoute
   AtomDotxmlRoute: typeof AtomDotxmlRoute
   CartRoute: typeof CartRoute
-  CheckKeyRoute: typeof CheckKeyRoute
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   ContactUsRoute: typeof ContactUsRoute
@@ -1749,7 +1675,6 @@ export interface RootRouteChildren {
   DeveloperRoute: typeof DeveloperRoute
   FaqsRoute: typeof FaqsRoute
   FeedDotxmlRoute: typeof FeedDotxmlRoute
-  GetCidRoute: typeof GetCidRoute
   InstallRoute: typeof InstallRoute
   OrderPolicyRoute: typeof OrderPolicyRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
@@ -1814,13 +1739,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/affiliate': {
-      id: '/affiliate'
-      path: '/affiliate'
-      fullPath: '/affiliate'
-      preLoaderRoute: typeof AffiliateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/antivirus-price-in-bd': {
       id: '/antivirus-price-in-bd'
       path: '/antivirus-price-in-bd'
@@ -1840,13 +1758,6 @@ declare module '@tanstack/react-router' {
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/check-key': {
-      id: '/check-key'
-      path: '/check-key'
-      fullPath: '/check-key'
-      preLoaderRoute: typeof CheckKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -1903,13 +1814,6 @@ declare module '@tanstack/react-router' {
       path: '/feed.xml'
       fullPath: '/feed.xml'
       preLoaderRoute: typeof FeedDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/get-cid': {
-      id: '/get-cid'
-      path: '/get-cid'
-      fullPath: '/get-cid'
-      preLoaderRoute: typeof GetCidRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/install': {
@@ -2022,13 +1926,6 @@ declare module '@tanstack/react-router' {
       path: '/abandoned-checkouts'
       fullPath: '/admin/abandoned-checkouts'
       preLoaderRoute: typeof AdminAbandonedCheckoutsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/affiliates': {
-      id: '/admin/affiliates'
-      path: '/affiliates'
-      fullPath: '/admin/affiliates'
-      preLoaderRoute: typeof AdminAffiliatesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/ai-config': {
@@ -2339,13 +2236,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuickSaleRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/referrals': {
-      id: '/admin/referrals'
-      path: '/referrals'
-      fullPath: '/admin/referrals'
-      preLoaderRoute: typeof AdminReferralsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/reports': {
       id: '/admin/reports'
       path: '/reports'
@@ -2407,13 +2297,6 @@ declare module '@tanstack/react-router' {
       path: '/staff'
       fullPath: '/admin/staff'
       preLoaderRoute: typeof AdminStaffRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/telegram-bot': {
-      id: '/admin/telegram-bot'
-      path: '/telegram-bot'
-      fullPath: '/admin/telegram-bot'
-      preLoaderRoute: typeof AdminTelegramBotRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/testimonials': {
@@ -2785,7 +2668,6 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAbandonedCheckoutsRoute: typeof AdminAbandonedCheckoutsRoute
-  AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminAiConfigRoute: typeof AdminAiConfigRoute
   AdminAiFaqGeneratorRoute: typeof AdminAiFaqGeneratorRoute
   AdminAiReviewGeneratorRoute: typeof AdminAiReviewGeneratorRoute
@@ -2830,7 +2712,6 @@ interface AdminRouteChildren {
   AdminPopupBannerRoute: typeof AdminPopupBannerRoute
   AdminProductReviewsRoute: typeof AdminProductReviewsRoute
   AdminQuickSaleRoute: typeof AdminQuickSaleRoute
-  AdminReferralsRoute: typeof AdminReferralsRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRolesRoute: typeof AdminRolesRoute
   AdminSecurityRoute: typeof AdminSecurityRoute
@@ -2840,7 +2721,6 @@ interface AdminRouteChildren {
   AdminSiteVerificationRoute: typeof AdminSiteVerificationRoute
   AdminSslcommerzPgwRoute: typeof AdminSslcommerzPgwRoute
   AdminStaffRoute: typeof AdminStaffRoute
-  AdminTelegramBotRoute: typeof AdminTelegramBotRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminTextManagerRoute: typeof AdminTextManagerRoute
   AdminThemesRoute: typeof AdminThemesRoute
@@ -2880,7 +2760,6 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAbandonedCheckoutsRoute: AdminAbandonedCheckoutsRoute,
-  AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminAiConfigRoute: AdminAiConfigRoute,
   AdminAiFaqGeneratorRoute: AdminAiFaqGeneratorRoute,
   AdminAiReviewGeneratorRoute: AdminAiReviewGeneratorRoute,
@@ -2925,7 +2804,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPopupBannerRoute: AdminPopupBannerRoute,
   AdminProductReviewsRoute: AdminProductReviewsRoute,
   AdminQuickSaleRoute: AdminQuickSaleRoute,
-  AdminReferralsRoute: AdminReferralsRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminRolesRoute: AdminRolesRoute,
   AdminSecurityRoute: AdminSecurityRoute,
@@ -2935,7 +2813,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSiteVerificationRoute: AdminSiteVerificationRoute,
   AdminSslcommerzPgwRoute: AdminSslcommerzPgwRoute,
   AdminStaffRoute: AdminStaffRoute,
-  AdminTelegramBotRoute: AdminTelegramBotRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminTextManagerRoute: AdminTextManagerRoute,
   AdminThemesRoute: AdminThemesRoute,
@@ -2980,11 +2857,9 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
   AdminRoute: AdminRouteWithChildren,
-  AffiliateRoute: AffiliateRoute,
   AntivirusPriceInBdRoute: AntivirusPriceInBdRoute,
   AtomDotxmlRoute: AtomDotxmlRoute,
   CartRoute: CartRoute,
-  CheckKeyRoute: CheckKeyRoute,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   ContactUsRoute: ContactUsRoute,
@@ -2993,7 +2868,6 @@ const rootRouteChildren: RootRouteChildren = {
   DeveloperRoute: DeveloperRoute,
   FaqsRoute: FaqsRoute,
   FeedDotxmlRoute: FeedDotxmlRoute,
-  GetCidRoute: GetCidRoute,
   InstallRoute: InstallRoute,
   OrderPolicyRoute: OrderPolicyRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
