@@ -1498,6 +1498,7 @@ const Checkout = () => {
               </span>
             </button>
           ) : (() => {
+            const isWallet = paymentMethod === 'wallet';
             const gradient = 'linear-gradient(135deg, #ef404e 0%, #d21f2f 45%, #8e1326 100%)';
             const shadow = 'shadow-[0_12px_40px_-8px_rgba(210,31,47,0.55)] hover:shadow-[0_18px_55px_-8px_rgba(210,31,47,0.75)]';
             return (
