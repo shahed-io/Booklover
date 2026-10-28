@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Account sign-in design
+- [ ] Match the account palette to Booklover white/red and its dark theme; do not change other website colors.
 - [ ] Present premium design choices for the /account sign-in shown in the supplied screenshot and get approval.
 - [ ] Redesign only the account sign-in presentation; preserve Google/email functionality, storefront header/footer, admin and signed-in dashboard.
 - [ ] Verify both themes and account sign-in interactions.
