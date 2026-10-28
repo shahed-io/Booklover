@@ -276,7 +276,7 @@ const AppContent = () => {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/wishlist" element={<CartPage />} />
           <Route path="/account" element={<AccountPage />} />
-          <Route path="/checkout" element={<div className="booklover booklover-checkout"><BookloverHeader /><Checkout /><BookloverFooter /></div>} />
+          <Route path="/checkout" element={<div className="booklover bl-dark booklover-checkout"><BookloverHeader /><Checkout /><BookloverFooter /></div>} />
           <Route path="/product/:slug" element={<BookloverProduct />} />
           <Route path="/products/:slug" element={<BookloverProduct />} />
           <Route path="/blog" element={<Blog />} />
