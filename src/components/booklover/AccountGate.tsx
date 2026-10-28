@@ -11,7 +11,7 @@ export default function AccountGate() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   if (loading) return <Layout><div className="bl-container bl-section min-h-[50vh]" /></Layout>;
-  if (user) return <Suspense fallback={<div className="min-h-screen" />}><UserDashboard /></Suspense>;
+  if (user) return <Layout><Suspense fallback={<div className="min-h-screen" />}><UserDashboard /></Suspense></Layout>;
   return (
     <Layout>
       <div className="bl-container bl-section min-h-[50vh]" />
