@@ -1,5 +1,9 @@
 # Roadmap
 
+## Account login methods
+- [ ] Remove Apple sign-in and disable its provider; retain Google and existing email login.
+- [ ] Verify Google initiation and authenticated account dashboard, noting any external consent limitation.
+
 ## Full-width homepage book rows
 - [x] Expand every product row below categories to desktop screen width, adapting visible book count while preserving category design.
 - [x] Verify all five real book rows at 1024–2560px and mobile; next/previous navigation passed with no runtime errors and build OK.
