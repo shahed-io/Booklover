@@ -12,6 +12,7 @@ import BookMetadataFields from '@/components/admin/BookMetadataFields';
 import { Button } from '@/components/ui/button';
 import BookVariantsEditor, { type BookVariantGroup } from '@/components/admin/BookVariantsEditor';
 import { bookInventorySchema, emptyBookMetadata, lowStock, readBookMetadata, writeBookMetadata } from '@/lib/bookAdministration';
+import { variantsOf } from '@/components/booklover/catalog';
 import { toast } from 'sonner';
 import { handleDbError } from '@/lib/errorHandler';
 import { z } from 'zod';
@@ -507,7 +508,7 @@ const AdminProducts = () => {
   const filtered = products.filter(p => {
     const attrs = p.attributes || [];
     const threshold = Number(attrs.find(a => a.key === '__low_stock_threshold')?.value ?? 5);
-    const variantLow = (p.variants as BookVariantGroup[] | null)?.some(g => g.options.some(o => o.stock != null && o.stock !== '' && lowStock(Number(o.stock), threshold)));
+    const variantLow = variantsOf(p.variants as never).some(g => g.options.some(o => lowStock(o.stock, threshold)));
     if (inventoryFilter === 'low' && !lowStock(p.stock_quantity, threshold) && !variantLow) return false;
     if (inventoryFilter === 'out' && p.stock_quantity !== 0 && p.status !== 'out_of_stock') return false;
     return [p.name, p.sku, p.brand, ...attrs.map(a => a.value)].some(v => v?.toLowerCase().includes(search.toLowerCase()));
@@ -772,7 +773,7 @@ const AdminProducts = () => {
       description: product.description || '',
       brand: product.brand || '',
       badge: product.badge || '',
-      product_type: product.product_type || 'digital',
+      product_type: product.product_type || 'physical',
       account_type: accountTypeAttr?.value || '',
       requires_customer_email: allTags.includes('requires-email'),
       duration_plans: parsedDurationPlans,
@@ -793,7 +794,7 @@ const AdminProducts = () => {
       images: product.images || [],
       video_url: product.video_url || '',
       delivery_time: product.delivery_time || '',
-      delivery_type: product.delivery_type || 'instant',
+      delivery_type: product.delivery_type || 'shipping',
       download_link: product.download_link || '',
       demo_url: product.demo_url || '',
       warranty_note: product.warranty_note || '',

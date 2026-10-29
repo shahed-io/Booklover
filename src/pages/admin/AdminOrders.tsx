@@ -458,6 +458,7 @@ const OrderDetailModal = ({
   onUpdate: (id: string, updates: any, msg: string) => Promise<void>;
 }) => {
   const [adminNote, setAdminNote] = useState(order.admin_notes || '');
+  const [shipmentUpdates, setShipmentUpdates] = useState<Record<string, unknown>>({});
   const [deliveryNote, setDeliveryNote] = useState('');
   const [timeline, setTimeline] = useState<any[]>([]);
   const [timelineLoading, setTimelineLoading] = useState(true);
@@ -570,7 +571,7 @@ const OrderDetailModal = ({
           <div className="overflow-y-auto flex-1 p-5 space-y-4">
             {activeTab === 'details' ? (
               <>
-                <OrderShipmentEditor key={order.id} order={order} onSaved={updates => { Object.assign(order, updates); fetchTimeline(); }} />
+                <OrderShipmentEditor key={order.id} order={{ ...order, ...shipmentUpdates }} onSaved={updates => { setShipmentUpdates(updates); fetchTimeline(); }} />
                 {/* Customer + Payment */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="glass-card rounded-xl p-4 space-y-2">
