@@ -29,6 +29,13 @@
       "when": 1793197239909,
       "tag": "0003_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793252256234,
+      "tag": "0004_bookstore_order_shipments",
+      "breakpoints": true
     }
   ]
 }

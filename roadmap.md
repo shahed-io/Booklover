@@ -1,5 +1,11 @@
 # Roadmap
 
+## Bookstore administration
+- [ ] Add dedicated book metadata fields while preserving existing product information.
+- [ ] Support binding-specific prices and stock, preserve inventory when editing, and add low-stock filtering.
+- [ ] Add courier/tracking/dispatch controls and show saved delivery details in customer orders.
+- [ ] Run rule tests and verify authenticated book/order editing where an owner session is available.
+
 ## Account sign-in design
 - [x] Match the account palette to Booklover white/red and its dark theme; other website colors unchanged.
 - [x] Present premium design choices; user delegated brand matching and skipped the choice, so use the clean white/red account form.

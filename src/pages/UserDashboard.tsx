@@ -47,6 +47,10 @@ interface TimelineEvent {
   id: string; status: string; note: string | null; created_at: string;
 }
 interface Order {
+  courier_name?: string | null;
+  tracking_number?: string | null;
+  tracking_url?: string | null;
+  shipment_status?: string;
   id: string; order_number: string; status: string;
   total: number; subtotal: number; discount_amount: number | null;
   created_at: string; payment_status: string | null;
@@ -500,7 +504,7 @@ const UserDashboard = () => {
 
   const fetchOrders = async () => {
     if (!user) return; setOrdersLoading(true);
-    const { data } = await supabase.from('orders').select('id, order_number, status, total, subtotal, discount_amount, created_at, payment_status, payment_method, transaction_id, notes, coupon_code').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50);
+    const { data } = await supabase.from('orders').select('id, order_number, status, total, subtotal, discount_amount, created_at, payment_status, payment_method, transaction_id, notes, coupon_code,courier_name,tracking_number,tracking_url,shipment_status,shipped_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(50);
     const list = (data || []) as Order[];
     const ids = list.map(o => o.id);
     if (ids.length) {
@@ -510,7 +514,7 @@ const UserDashboard = () => {
       ]);
       for (const o of list) {
         o.book_names = (itemsRes.data || []).filter(i => i.order_id === o.id).map(i => i.product_name);
-        o.shipped_at = (tlRes.data || []).find(t => t.order_id === o.id)?.created_at ?? null;
+        o.shipped_at = o.shipped_at ?? (tlRes.data || []).find(t => t.order_id === o.id && t.status === 'delivered')?.created_at ?? null;
       }
     }
     setOrders(list); setOrdersLoading(false);
@@ -1536,6 +1540,7 @@ const UserDashboard = () => {
                                 </div>
 
                                 {/* Notes */}
+                                {order.tracking_number && <div className="text-sm text-foreground space-y-1 border-t border-border pt-3"><p>কুরিয়ার: {order.courier_name}</p><p>ট্র্যাকিং নম্বর: {order.tracking_number}</p>{order.tracking_url?.startsWith('https://') && <a className="text-primary underline" href={order.tracking_url} target="_blank" rel="noopener noreferrer">ডেলিভারি ট্র্যাক করুন</a>}</div>}
                                 {order.notes && (
                                   <div className="flex items-start gap-2 text-xs px-3 py-2 rounded-xl bg-muted/30 border border-border">
                                     <Info size={12} className="text-muted-foreground mt-0.5 flex-shrink-0" />
