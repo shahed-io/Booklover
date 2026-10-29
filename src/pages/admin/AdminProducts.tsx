@@ -9,6 +9,7 @@ import {
 import ProductOptionsBuilder from '@/components/admin/ProductOptionsBuilder';
 import ProductAttributesEditor from '@/components/admin/ProductAttributesEditor';
 import BookMetadataFields from '@/components/admin/BookMetadataFields';
+import { Button } from '@/components/ui/button';
 import BookVariantsEditor, { type BookVariantGroup } from '@/components/admin/BookVariantsEditor';
 import { bookInventorySchema, emptyBookMetadata, lowStock, readBookMetadata, writeBookMetadata } from '@/lib/bookAdministration';
 import { toast } from 'sonner';
@@ -182,6 +183,8 @@ const AdminProducts = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [inventoryFilter, setInventoryFilter] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(50);
+  useEffect(() => { setVisibleCount(50); }, [search, inventoryFilter]);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -1957,6 +1960,7 @@ const AdminProducts = () => {
         </div>
       )}
 
+      {filtered.length > visibleCount && <Button type="button" variant="outline" onClick={() => setVisibleCount(n => n + 50)}>আরও বই দেখুন ({visibleCount} / {filtered.length})</Button>}
       {/* ======= PRODUCTS TABLE ======= */}
       <div className="glass-card rounded-2xl overflow-hidden">
 
@@ -2043,7 +2047,7 @@ const AdminProducts = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/30">
-                {filtered.map((product) => (
+                {filtered.slice(0, visibleCount).map((product) => (
                   <tr key={product.id} className={`hover:bg-muted/10 transition-colors ${selectedIds.has(product.id) ? 'bg-primary/5' : ''}`}>
                     <td className="px-4 py-3">
                       <button onClick={() => toggleSelect(product.id)} className="text-muted-foreground hover:text-primary transition-colors">
@@ -2056,7 +2060,7 @@ const AdminProducts = () => {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                           {product.image_url ?
-                            <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" onError={e => { (e.target as any).style.display = 'none'; }} /> :
+                            <img loading="lazy" src={product.image_url} alt={product.name} className="w-full h-full object-cover" onError={e => { (e.target as any).style.display = 'none'; }} /> :
                             <Package size={20} className="m-2.5 text-muted-foreground" />}
                         </div>
                         <div>
