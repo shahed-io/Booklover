@@ -9,8 +9,10 @@ import {
 import ProductOptionsBuilder from '@/components/admin/ProductOptionsBuilder';
 import ProductAttributesEditor from '@/components/admin/ProductAttributesEditor';
 import BookMetadataFields from '@/components/admin/BookMetadataFields';
+import { Button } from '@/components/ui/button';
 import BookVariantsEditor, { type BookVariantGroup } from '@/components/admin/BookVariantsEditor';
 import { bookInventorySchema, emptyBookMetadata, lowStock, readBookMetadata, writeBookMetadata } from '@/lib/bookAdministration';
+import { variantsOf } from '@/components/booklover/catalog';
 import { toast } from 'sonner';
 import { handleDbError } from '@/lib/errorHandler';
 import { z } from 'zod';
@@ -182,6 +184,8 @@ const AdminProducts = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [inventoryFilter, setInventoryFilter] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(50);
+  useEffect(() => { setVisibleCount(50); }, [search, inventoryFilter]);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -473,13 +477,13 @@ const AdminProducts = () => {
     // Use admin RPC to include cost_price (which is hidden from regular SELECT for security).
     // RPC responses are paginated too; never silently hide books beyond the first 1000.
     const rows: Product[] = [];
-    for (let offset = 0; ; offset += 1000) {
-      const result = await supabase.rpc('admin_list_products_with_cost').range(offset, offset + 999);
-      if (result.error) { toast.error(result.error.message); setLoading(false); return; }
-      const page = (result.data || []) as unknown as Product[];
-      rows.push(...page);
-      if (page.length < 1000) break;
-    }
+    const countResult = await supabase.from('products').select('id', { count: 'exact', head: true });
+    if (countResult.error) { toast.error(countResult.error.message); setLoading(false); return; }
+    const pageCount = Math.max(1, Math.ceil((countResult.count ?? 0) / 1000));
+    const results = await Promise.all(Array.from({ length: pageCount }, (_, i) => supabase.rpc('admin_list_products_with_cost').range(i * 1000, i * 1000 + 999)));
+    const failed = results.find(r => r.error);
+    if (failed?.error) { toast.error(failed.error.message); setLoading(false); return; }
+    for (const result of results) rows.push(...(result.data || []) as unknown as Product[]);
     let merged: any[] = rows;
     if (merged.length) {
       const catIds = Array.from(new Set(merged.map(p => p.category_id).filter(Boolean)));
@@ -504,7 +508,7 @@ const AdminProducts = () => {
   const filtered = products.filter(p => {
     const attrs = p.attributes || [];
     const threshold = Number(attrs.find(a => a.key === '__low_stock_threshold')?.value ?? 5);
-    const variantLow = (p.variants as BookVariantGroup[] | null)?.some(g => g.options.some(o => o.stock != null && o.stock !== '' && lowStock(Number(o.stock), threshold)));
+    const variantLow = variantsOf(p.variants as never).some(g => g.options.some(o => lowStock(o.stock, threshold)));
     if (inventoryFilter === 'low' && !lowStock(p.stock_quantity, threshold) && !variantLow) return false;
     if (inventoryFilter === 'out' && p.stock_quantity !== 0 && p.status !== 'out_of_stock') return false;
     return [p.name, p.sku, p.brand, ...attrs.map(a => a.value)].some(v => v?.toLowerCase().includes(search.toLowerCase()));
@@ -769,7 +773,7 @@ const AdminProducts = () => {
       description: product.description || '',
       brand: product.brand || '',
       badge: product.badge || '',
-      product_type: product.product_type || 'digital',
+      product_type: product.product_type || 'physical',
       account_type: accountTypeAttr?.value || '',
       requires_customer_email: allTags.includes('requires-email'),
       duration_plans: parsedDurationPlans,
@@ -790,7 +794,7 @@ const AdminProducts = () => {
       images: product.images || [],
       video_url: product.video_url || '',
       delivery_time: product.delivery_time || '',
-      delivery_type: product.delivery_type || 'instant',
+      delivery_type: product.delivery_type || 'shipping',
       download_link: product.download_link || '',
       demo_url: product.demo_url || '',
       warranty_note: product.warranty_note || '',
@@ -1957,6 +1961,7 @@ const AdminProducts = () => {
         </div>
       )}
 
+      {filtered.length > visibleCount && <Button type="button" variant="outline" onClick={() => setVisibleCount(n => n + 50)}>আরও বই দেখুন ({visibleCount} / {filtered.length})</Button>}
       {/* ======= PRODUCTS TABLE ======= */}
       <div className="glass-card rounded-2xl overflow-hidden">
 
@@ -2043,7 +2048,7 @@ const AdminProducts = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/30">
-                {filtered.map((product) => (
+                {filtered.slice(0, visibleCount).map((product) => (
                   <tr key={product.id} className={`hover:bg-muted/10 transition-colors ${selectedIds.has(product.id) ? 'bg-primary/5' : ''}`}>
                     <td className="px-4 py-3">
                       <button onClick={() => toggleSelect(product.id)} className="text-muted-foreground hover:text-primary transition-colors">
@@ -2056,7 +2061,7 @@ const AdminProducts = () => {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                           {product.image_url ?
-                            <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" onError={e => { (e.target as any).style.display = 'none'; }} /> :
+                            <img loading="lazy" src={product.image_url} alt={product.name} className="w-full h-full object-cover" onError={e => { (e.target as any).style.display = 'none'; }} /> :
                             <Package size={20} className="m-2.5 text-muted-foreground" />}
                         </div>
                         <div>

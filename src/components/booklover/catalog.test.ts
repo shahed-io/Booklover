@@ -1,6 +1,7 @@
 import {describe,it,expect} from 'vitest';
 import {variantsOf,money,slugify,whatsappOrderMessage} from './catalog';
 describe('book catalog data',()=>{
+ it('preserves binding-specific zero and positive stock without making untracked inventory zero',()=>{const groups=variantsOf([{name:'Binding',options:[{label:'Paperback',price:'280',stock:0},{label:'Hardcover',stock:7},{label:'Other',stock:null}]}]);expect(groups[0]?.options.map(o=>o.stock)).toEqual([0,7,undefined]);});
  it('uses the admin supplied cover prices',()=>{expect(variantsOf([{name:'Book Cover Type',options:[{label:'Paperback',price:'280'},{label:'Hardcover',price:'390'}]}])).toEqual([{name:'Book Cover Type',options:[{label:'Paperback',price:280},{label:'Hardcover',price:390}]}]);});
  it('does not create cover options when none are configured',()=>{expect(variantsOf(null)).toEqual([]);});
  it('preserves string options without inventing prices',()=>{expect(variantsOf([{name:'Cover',options:['Paperback']}])).toEqual([{name:'Cover',options:[{label:'Paperback'}]}]);});
