@@ -476,13 +476,13 @@ const AdminProducts = () => {
     // Use admin RPC to include cost_price (which is hidden from regular SELECT for security).
     // RPC responses are paginated too; never silently hide books beyond the first 1000.
     const rows: Product[] = [];
-    for (let offset = 0; ; offset += 1000) {
-      const result = await supabase.rpc('admin_list_products_with_cost').range(offset, offset + 999);
-      if (result.error) { toast.error(result.error.message); setLoading(false); return; }
-      const page = (result.data || []) as unknown as Product[];
-      rows.push(...page);
-      if (page.length < 1000) break;
-    }
+    const countResult = await supabase.from('products').select('id', { count: 'exact', head: true });
+    if (countResult.error) { toast.error(countResult.error.message); setLoading(false); return; }
+    const pageCount = Math.max(1, Math.ceil((countResult.count ?? 0) / 1000));
+    const results = await Promise.all(Array.from({ length: pageCount }, (_, i) => supabase.rpc('admin_list_products_with_cost').range(i * 1000, i * 1000 + 999)));
+    const failed = results.find(r => r.error);
+    if (failed?.error) { toast.error(failed.error.message); setLoading(false); return; }
+    for (const result of results) rows.push(...(result.data || []) as unknown as Product[]);
     let merged: any[] = rows;
     if (merged.length) {
       const catIds = Array.from(new Set(merged.map(p => p.category_id).filter(Boolean)));

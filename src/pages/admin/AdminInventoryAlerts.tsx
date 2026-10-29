@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AlertTriangle, Package, Bell, Settings2, RefreshCw, Check, XCircle, Search, Filter } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { variantsOf } from '@/components/booklover/catalog';
+import type { Book } from '@/components/booklover/catalog';
 
 interface Product {
   id: string;
@@ -12,6 +15,8 @@ interface Product {
   status: string;
   price: number;
   total_sales: number | null;
+  attributes: Book['attributes'];
+  variants: Book['variants'];
 }
 
 const DEFAULT_THRESHOLD = 5;
@@ -24,14 +29,16 @@ const AdminInventoryAlerts = () => {
   const [filter, setFilter] = useState<'all' | 'critical' | 'low' | 'ok'>('all');
   const [showSettings, setShowSettings] = useState(false);
   const [tempThreshold, setTempThreshold] = useState(DEFAULT_THRESHOLD);
+  const [visibleCount, setVisibleCount] = useState(50);
+  useEffect(() => { setVisibleCount(50); }, [search, filter]);
 
   const fetchProducts = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('products')
-      .select('id, name, slug, image_url, stock_quantity, status, price, total_sales')
-      .order('stock_quantity', { ascending: true });
-    setProducts(data || []);
+    const count = await supabase.from('products').select('id', { count: 'exact', head: true });
+    const results = await Promise.all(Array.from({ length: Math.max(1, Math.ceil((count.count || 0) / 1000)) }, (_, i) => supabase.from('products').select('id,name,slug,image_url,stock_quantity,status,price,total_sales,attributes,variants').order('id').range(i * 1000, i * 1000 + 999)));
+    const error = count.error || results.find(r => r.error)?.error;
+    if (error) toast.error(error.message);
+    else setProducts(results.flatMap(r => r.data || []));
     setLoading(false);
   };
 
@@ -53,10 +60,16 @@ const AdminInventoryAlerts = () => {
     toast.success('থ্রেশহোল্ড সেভ হয়েছে');
   };
 
-  const getStockStatus = (qty: number | null) => {
+  const getStockStatus = (product: Product) => {
+    const stocks = [product.stock_quantity, ...variantsOf(product.variants).flatMap(g => g.options.map(o => o.stock))].filter((s): s is number => s != null);
+    const qty = stocks.length ? Math.min(...stocks) : null;
+    const attrs = Array.isArray(product.attributes) ? product.attributes : [];
+    const setting = attrs.find(a => a && typeof a === 'object' && !Array.isArray(a) && a['key'] === '__low_stock_threshold');
+    const limit = setting && typeof setting === 'object' && !Array.isArray(setting) ? Number(setting['value']) : threshold;
+    if (product.status === 'out_of_stock') return 'critical';
     if (qty === null || qty === undefined) return 'unknown';
     if (qty <= 0) return 'critical';
-    if (qty <= threshold) return 'low';
+    if (qty <= limit) return 'low';
     return 'ok';
   };
 
@@ -68,16 +81,16 @@ const AdminInventoryAlerts = () => {
   };
 
   const filteredProducts = products.filter(p => {
-    const status = getStockStatus(p.stock_quantity);
+    const status = getStockStatus(p);
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === 'all' || status === filter;
     return matchesSearch && matchesFilter;
   });
 
   const counts = {
-    critical: products.filter(p => getStockStatus(p.stock_quantity) === 'critical').length,
-    low: products.filter(p => getStockStatus(p.stock_quantity) === 'low').length,
-    ok: products.filter(p => getStockStatus(p.stock_quantity) === 'ok').length,
+    critical: products.filter(p => getStockStatus(p) === 'critical').length,
+    low: products.filter(p => getStockStatus(p) === 'low').length,
+    ok: products.filter(p => getStockStatus(p) === 'ok').length,
     total: products.length,
   };
 
@@ -180,14 +193,14 @@ const AdminInventoryAlerts = () => {
           </div>
         ) : (
           <div className="divide-y divide-border/30">
-            {filteredProducts.map(product => {
-              const status = getStockStatus(product.stock_quantity);
+            {filteredProducts.slice(0, visibleCount).map(product => {
+              const status = getStockStatus(product);
               const cfg = statusConfig[status];
               return (
                 <div key={product.id} className="flex items-center gap-4 p-4 hover:bg-muted/10 transition-colors">
                   <div className="w-12 h-12 rounded-xl bg-muted/20 overflow-hidden flex-shrink-0">
                     {product.image_url ? (
-                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                      <img loading="lazy" src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Package size={18} className="text-muted-foreground/50" />
@@ -219,6 +232,7 @@ const AdminInventoryAlerts = () => {
       </div>
 
       {/* Settings Modal */}
+      {filteredProducts.length > visibleCount && <Button variant="outline" onClick={() => setVisibleCount(n => n + 50)}>আরও বই দেখুন</Button>}
       {showSettings && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="glass-card rounded-2xl p-6 w-full max-w-md">
