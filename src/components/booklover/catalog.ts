@@ -32,7 +32,7 @@ export function useCatalog() {
     return {books:books.data || [],categories:categories.data || [],links:links.data || []};
   }});
 }
-export type VariantGroup = {name:string;options:{label:string;price?:number}[]};
+export type VariantGroup = {name:string;options:{label:string;price?:number;stock?:number}[]};
 export function variantsOf(raw: Book['variants']): VariantGroup[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap(v=>{
@@ -41,7 +41,8 @@ export function variantsOf(raw: Book['variants']): VariantGroup[] {
       if(typeof o==='string') return [{label:o}];
       if(!o || typeof o!=='object' || Array.isArray(o) || typeof o['label']!=='string') return [];
       const price=Number(o['price']);
-      return [{label:o['label'],price:Number.isFinite(price)&&price>0?price:undefined}];
+      const stock=o['stock']==null||o['stock']===''?undefined:Number(o['stock']);
+      return [{label:o['label'],price:Number.isFinite(price)&&price>0?price:undefined,stock:Number.isFinite(stock)?stock:undefined}];
     }):[];
     return options.length?[{name:typeof v['name']==='string'?v['name']:'Book Cover Type',options}]:[];
   });

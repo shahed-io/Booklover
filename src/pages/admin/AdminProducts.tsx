@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import ProductOptionsBuilder from '@/components/admin/ProductOptionsBuilder';
 import ProductAttributesEditor from '@/components/admin/ProductAttributesEditor';
+import BookMetadataFields from '@/components/admin/BookMetadataFields';
+import BookVariantsEditor, { type BookVariantGroup } from '@/components/admin/BookVariantsEditor';
+import { bookInventorySchema, emptyBookMetadata, lowStock, readBookMetadata, writeBookMetadata } from '@/lib/bookAdministration';
 import { toast } from 'sonner';
 import { handleDbError } from '@/lib/errorHandler';
 import { z } from 'zod';
@@ -37,6 +40,7 @@ const productSchema = z.object({
 interface Category { id: string; name: string; parent_id: string | null; }
 
 interface Product {
+  stock_quantity?: number | null;
   id: string; name: string; price: number; original_price: number | null;
   cost_price?: number | null | undefined; discount_percent: number | null; status: string | undefined;
   image_url: string | null; images?: string[] | null | undefined; video_url?: string | null | undefined;
@@ -95,6 +99,7 @@ export interface CustomField {
 const emptyForm = {
   // Basic
   name: '', slug: '', short_description: '', description: '',
+  book_metadata: { ...emptyBookMetadata }, low_stock_threshold: '5',
   brand: 'Booklover', badge: '', product_type: 'physical',
   // Subtitle (custom text below product title)
   subtitle: '' as string,
@@ -123,7 +128,7 @@ const emptyForm = {
   what_you_get: [''] as string[],
   // Bullet points for short description (each item = one bullet)
   short_desc_bullets: [''] as string[],
-  variants: [{ name: '', options: [{ label: '', price: '' }] }] as { name: string; options: { label: string; price: string }[] }[],
+  variants: [] as BookVariantGroup[],
   attributes: [{ key: '', value: '' }] as { key: string; value: string }[],
   faq: [{ q: '', a: '' }] as { q: string; a: string }[],
   tags: '' as string,
@@ -134,7 +139,7 @@ const emptyForm = {
 };
 
 type FormState = typeof emptyForm;
-type TabId = 'basic' | 'pricing' | 'media' | 'details' | 'seo';
+type TabId = 'basic' | 'book' | 'pricing' | 'media' | 'details' | 'seo';
 
 const ic = "w-full bg-muted/30 border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:border-primary transition-colors placeholder:text-muted-foreground";
 const lc = "text-xs text-muted-foreground mb-1 block font-medium";
@@ -176,6 +181,7 @@ const AdminProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [inventoryFilter, setInventoryFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -465,8 +471,16 @@ const AdminProducts = () => {
   const fetchProducts = async () => {
     setLoading(true);
     // Use admin RPC to include cost_price (which is hidden from regular SELECT for security).
-    const { data: rows } = await supabase.rpc('admin_list_products_with_cost');
-    let merged: any[] = (rows as any[]) || [];
+    // RPC responses are paginated too; never silently hide books beyond the first 1000.
+    const rows: Product[] = [];
+    for (let offset = 0; ; offset += 1000) {
+      const result = await supabase.rpc('admin_list_products_with_cost').range(offset, offset + 999);
+      if (result.error) { toast.error(result.error.message); setLoading(false); return; }
+      const page = (result.data || []) as unknown as Product[];
+      rows.push(...page);
+      if (page.length < 1000) break;
+    }
+    let merged: any[] = rows;
     if (merged.length) {
       const catIds = Array.from(new Set(merged.map(p => p.category_id).filter(Boolean)));
       if (catIds.length) {
@@ -487,14 +501,24 @@ const AdminProducts = () => {
 
   useEffect(() => { fetchProducts(); fetchCategories(); }, []);
 
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.sku?.toLowerCase().includes(search.toLowerCase()) ||
-    p.brand?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = products.filter(p => {
+    const attrs = p.attributes || [];
+    const threshold = Number(attrs.find(a => a.key === '__low_stock_threshold')?.value ?? 5);
+    const variantLow = (p.variants as BookVariantGroup[] | null)?.some(g => g.options.some(o => o.stock != null && o.stock !== '' && lowStock(Number(o.stock), threshold)));
+    if (inventoryFilter === 'low' && !lowStock(p.stock_quantity, threshold) && !variantLow) return false;
+    if (inventoryFilter === 'out' && p.stock_quantity !== 0 && p.status !== 'out_of_stock') return false;
+    return [p.name, p.sku, p.brand, ...attrs.map(a => a.value)].some(v => v?.toLowerCase().includes(search.toLowerCase()));
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const inventory = bookInventorySchema.safeParse({ stock: form.stock_quantity, threshold: form.low_stock_threshold, pages: form.book_metadata.pages, year: form.book_metadata.year });
+    if (!inventory.success) { toast.error(inventory.error.issues[0]?.message || 'Check book inventory'); return; }
+    for (const g of form.variants) for (const o of g.options) {
+      if (o.stock != null && o.stock !== '' && !/^\d+$/.test(String(o.stock))) { toast.error('Binding stock must be a non-negative whole number'); return; }
+      if (o.price && (!Number.isFinite(Number(o.price)) || Number(o.price) < 0)) { toast.error('Binding price must be non-negative'); return; }
+    }
 
     // Validate with Zod before saving
     const validation = productSchema.safeParse({
@@ -524,16 +548,17 @@ const AdminProducts = () => {
       ? (form.slug || generateSlug(form.name))
       : `${baseSlug}`;
 
-    const cleanVariants = form.variants.filter(v => v.name.trim() && v.options.some(o => o.label.trim()));
+    const cleanVariants = form.variants.filter(v => v.name.trim() && v.options.some(o => o.label.trim())).map(v => ({ ...v, options: v.options.filter(o => o.label.trim()).map(o => ({ ...o, stock: o.stock == null || o.stock === '' ? null : Number(o.stock) })) }));
     const cleanWYG = form.what_you_get.filter(w => w.trim());
     const cleanFaq = form.faq.filter(f => f.q.trim());
-    const cleanAttrs = form.attributes.filter(a => a.key.trim());
+    const cleanAttrs = writeBookMetadata(form.book_metadata, form.attributes.filter(a => a.key.trim() && a.key !== '__low_stock_threshold'));
     const tagList = form.tags.split(',').map(t => t.trim()).filter(Boolean);
     if (form.is_flash_sale && !tagList.includes('flash-sale')) tagList.push('flash-sale');
     if (form.requires_customer_email && !tagList.includes('requires-email')) tagList.push('requires-email');
 
     // Build hidden attributes for subtitle, account_type, duration_plans
     const hiddenAttrs: { key: string; value: string }[] = [];
+    hiddenAttrs.push({ key: '__low_stock_threshold', value: form.low_stock_threshold || '5' });
     if (form.account_type) hiddenAttrs.push({ key: '__account_type', value: form.account_type });
     if (form.subtitle.trim()) hiddenAttrs.push({ key: '__subtitle', value: form.subtitle.trim() });
     const validPlans = form.duration_plans.filter(p => p.duration.trim() && p.price.trim());
@@ -696,7 +721,8 @@ const AdminProducts = () => {
     const accountTypeAttr = attrRaw.find((a: any) => a.key === '__account_type');
     const subtitleAttr = attrRaw.find((a: any) => a.key === '__subtitle');
     const durationPlansAttr = attrRaw.find((a: any) => a.key === '__duration_plans');
-    const cleanAttrs = attrRaw.filter((a: any) => a.key !== '__account_type' && a.key !== '__subtitle' && a.key !== '__duration_plans');
+    const cleanAttrs = attrRaw.filter((a: any) => a.key !== '__account_type' && a.key !== '__subtitle' && a.key !== '__duration_plans' && a.key !== '__low_stock_threshold');
+    const book = readBookMetadata(cleanAttrs);
     const parsedDurationPlans = (() => {
       try { return durationPlansAttr ? JSON.parse(durationPlansAttr.value) : []; } catch { return []; }
     })();
@@ -731,6 +757,8 @@ const AdminProducts = () => {
     }
 
     setForm({
+      book_metadata: book.metadata,
+      low_stock_threshold: attrRaw.find((a: any) => a.key === '__low_stock_threshold')?.value ?? '5',
       name: product.name,
       slug: (product as any).slug && !/^[0-9a-f-]{36}$/.test((product as any).slug)
         ? (product as any).slug
@@ -751,7 +779,7 @@ const AdminProducts = () => {
       cost_price: product.cost_price ? String(product.cost_price) : '',
       status: product.status ?? 'active',
       sku: product.sku || '',
-      stock_quantity: '',
+      stock_quantity: product.stock_quantity == null ? '' : String(product.stock_quantity),
       category_id: product.category_id || '',
       subcategory_id: product.subcategory_id || '',
       extra_category_ids: extraCatIds,
@@ -777,7 +805,7 @@ const AdminProducts = () => {
         }
         return raw;
       })(),
-      attributes: cleanAttrs.length ? cleanAttrs : [{ key: '', value: '' }],
+      attributes: book.custom.length ? book.custom : [{ key: '', value: '' }],
       faq: (product.faq as any)?.length ? (product.faq as any) : [{ q: '', a: '' }],
       seo_title: product.seo_title || '',
       seo_description: product.seo_description || '',
@@ -854,6 +882,7 @@ const AdminProducts = () => {
 
   const tabs: { id: TabId; label: string }[] = [
     { id: 'basic',      label: '📦 General' },
+    { id: 'book',       label: '📚 Book information' },
     { id: 'pricing',    label: '💰 Inventory' },
     { id: 'media',      label: '🖼️ Media' },
     { id: 'details',    label: '📋 Details' },
@@ -868,11 +897,14 @@ const AdminProducts = () => {
           <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
             value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search by name, SKU, brand..."
+            placeholder="Search books, author, publisher, ISBN, SKU..."
             className="w-full bg-muted/30 border border-border rounded-xl pl-16 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
           />
         </div>
         <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
+          <select aria-label="Inventory filter" value={inventoryFilter} onChange={e => setInventoryFilter(e.target.value)} className={ic}>
+            <option value="all">সব বই</option><option value="low">কম স্টক</option><option value="out">স্টক নেই</option>
+          </select>
           <span className="text-xs text-muted-foreground hidden sm:inline">{products.length} products</span>
           {/* Auto SEO bulk button */}
           <button
@@ -1019,6 +1051,7 @@ const AdminProducts = () => {
               <div className="overflow-y-auto flex-1 p-6 space-y-4">
 
                 {/* ======= BASIC TAB ======= */}
+                {activeTab === 'book' && <BookMetadataFields value={form.book_metadata} onChange={book_metadata => setForm(p => ({ ...p, book_metadata }))} />}
                 {activeTab === 'basic' && (
                   <div className="space-y-4">
 
@@ -1487,10 +1520,12 @@ const AdminProducts = () => {
                           <label className={lc}>Stock Quantity</label>
                           <input type="number" value={form.stock_quantity}
                             onChange={e => setForm(p => ({ ...p, stock_quantity: e.target.value }))}
-                            placeholder="∞" className={ic} />
+                            min="0" step="1" placeholder="Untracked" className={ic} />
                         </div>
+                        <div><label className={lc}>Low-stock alert quantity</label><input aria-label="Low-stock alert quantity" type="number" min="0" step="1" className={ic} value={form.low_stock_threshold} onChange={e => setForm(p => ({ ...p, low_stock_threshold: e.target.value }))} /></div>
                       </div>
                     </div>
+                    <BookVariantsEditor value={form.variants} onChange={variants => setForm(p => ({ ...p, variants }))} />
                   </div>
                 )}
 

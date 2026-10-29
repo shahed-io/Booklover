@@ -62,7 +62,9 @@ export default function ProductPage(){const {slug}=useParams();const nav=useNavi
  let price=product.price;const labels:string[]=[];
  for(const g of groups){const v=g.options.find(o=>o.label===(selections[g.name]||g.options[0]?.label));if(v){labels.push(`${g.name}: ${v.label}`);if(v.price)price=v.price;}}
  let replaced=false;for(const g of options.data||[]){const values=g.product_option_values;const v=values.find(v=>v.id===selections[g.id])||values.find(v=>v.is_default)||values[0];if(v){labels.push(`${g.name}: ${v.label}`);if(!replaced&&v.price_adjustment>0){price=v.price_adjustment;replaced=true;}}}
- const soldOut=product.status==='out_of_stock'||product.stock_quantity===0;
+ const selectedStocks=groups.flatMap(g=>{const o=g.options.find(o=>o.label===(selections[g.name]||g.options[0]?.label));return o?.stock===undefined?[]:[o.stock];});
+ const quantityUnavailable=selectedStocks.some(stock=>qty>stock)||(product.stock_quantity!=null&&qty>product.stock_quantity);
+ const soldOut=product.status==='out_of_stock'||product.stock_quantity===0||quantityUnavailable;
  const waNumber=wa.data||null;
  const item={id:product.id,name:product.name,category:catalog.data?.categories.find(g=>g.id===product.category_id)?.name||'',price,originalPrice:product.original_price||undefined,image:product.image_url||'',variant:labels.join(' / ')||undefined};
  const submitReview=async(e:React.FormEvent<HTMLFormElement>)=>{e.preventDefault();const form=e.currentTarget;const fd=new FormData(form);setBusy(true);const {error}=await supabase.from('product_reviews').insert({product_id:product.id,product_slug:product.slug,author_name:String(fd.get('name')||'').trim(),author_email:String(fd.get('email')||'').trim()||null,title:String(fd.get('title')||'').trim(),body:String(fd.get('body')||'').trim(),rating,user_id:user?.id||null,status:'pending'});setBusy(false);setReviewStatus(error?'Review could not be submitted. Please try again.':'Thank you. Your review has been submitted for approval.');if(!error){setReviewOpen(false);form.reset();}};

@@ -1,5 +1,8 @@
 # Architecture rules
 
+- Store dedicated book metadata as standardized public product attributes and binding inventory in existing product variants; shared parsing preserves imported custom details without parallel catalogs.
+- Shipment state is separate from order/payment state and validated on orders in the database; dispatch must not mark an unpaid order as paid.
+
 - Storefront Google sign-in uses the managed OAuth helper and validates the returned user before closing the login dialog; this keeps preview popups and published redirects on the same session flow.
 - The account route uses its own sign-in presentation with shared AuthModal handlers and account-scoped theme tokens; checkout modals, admin screens and the signed-in dashboard remain independent.
 

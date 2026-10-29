@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { handleDbError } from '@/lib/errorHandler';
 import { downloadInvoicePdf, downloadInvoicePdfFromElement, type InvoiceData } from '@/lib/invoicePdf';
 import { getInvoiceHeaderTheme } from '@/lib/invoiceTheme';
+import OrderShipmentEditor from '@/components/admin/OrderShipmentEditor';
 
 const logoIcon = '/logo.png';
 
@@ -569,6 +570,7 @@ const OrderDetailModal = ({
           <div className="overflow-y-auto flex-1 p-5 space-y-4">
             {activeTab === 'details' ? (
               <>
+                <OrderShipmentEditor key={order.id} order={order} onSaved={updates => { Object.assign(order, updates); fetchTimeline(); }} />
                 {/* Customer + Payment */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="glass-card rounded-xl p-4 space-y-2">
@@ -1322,7 +1324,9 @@ const AdminOrders = () => {
         o.customer_name?.toLowerCase().includes(q) ||
         o.customer_email?.toLowerCase().includes(q) ||
         o.customer_phone?.includes(q) ||
-        o.transaction_id?.toLowerCase().includes(q);
+        o.transaction_id?.toLowerCase().includes(q) ||
+        o.tracking_number?.toLowerCase().includes(q) ||
+        o.order_items?.some((i: any) => i.product_name?.toLowerCase().includes(q));
     }
     return true;
   });
