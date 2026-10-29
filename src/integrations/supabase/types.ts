@@ -2383,6 +2383,7 @@ export type Database = {
           affiliate_referral_code: string | null
           coupon_code: string | null
           coupon_id: string | null
+          courier_name: string | null
           created_at: string
           customer_email: string
           customer_email_enc: string | null
@@ -2401,9 +2402,13 @@ export type Database = {
           payment_status: string | null
           paypal_capture_id: string | null
           paypal_order_id: string | null
+          shipment_status: string
+          shipped_at: string | null
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
           total: number
+          tracking_number: string | null
+          tracking_url: string | null
           transaction_id: string | null
           updated_at: string
           user_id: string | null
@@ -2414,6 +2419,7 @@ export type Database = {
           affiliate_referral_code?: string | null
           coupon_code?: string | null
           coupon_id?: string | null
+          courier_name?: string | null
           created_at?: string
           customer_email: string
           customer_email_enc?: string | null
@@ -2432,9 +2438,13 @@ export type Database = {
           payment_status?: string | null
           paypal_capture_id?: string | null
           paypal_order_id?: string | null
+          shipment_status?: string
+          shipped_at?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
+          tracking_number?: string | null
+          tracking_url?: string | null
           transaction_id?: string | null
           updated_at?: string
           user_id?: string | null
@@ -2445,6 +2455,7 @@ export type Database = {
           affiliate_referral_code?: string | null
           coupon_code?: string | null
           coupon_id?: string | null
+          courier_name?: string | null
           created_at?: string
           customer_email?: string
           customer_email_enc?: string | null
@@ -2463,9 +2474,13 @@ export type Database = {
           payment_status?: string | null
           paypal_capture_id?: string | null
           paypal_order_id?: string | null
+          shipment_status?: string
+          shipped_at?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
+          tracking_number?: string | null
+          tracking_url?: string | null
           transaction_id?: string | null
           updated_at?: string
           user_id?: string | null
